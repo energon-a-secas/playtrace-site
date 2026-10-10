@@ -10,11 +10,12 @@
     "INGESTION_ENABLED": "true",
     "SIGNAL_PROTECTION": "account-rate-limit",
     "TURNSTILE_HOSTNAME": "playtrace.neorgon.com",
-    "PREVIEW_ALLOWED_HOSTS": "i.redd.it,preview.redd.it,external-preview.redd.it,cdn.cloudflare.steamstatic.com,shared.fastly.steamstatic.com"
+    "PREVIEW_ALLOWED_HOSTS": "i.redd.it,preview.redd.it,external-preview.redd.it,cdn.cloudflare.steamstatic.com,shared.fastly.steamstatic.com,shared.akamai.steamstatic.com,cdn.akamai.steamstatic.com"
   },
-  "triggers": { "crons": ["35 * * * *"] },
+  "triggers": { "crons": ["35 * * * *", "5 * * * *"] },
   "d1_databases": [{ "binding": "DB", "database_name": "playtrace-db", "database_id": "1775b331-55d4-436a-a1c1-a58ab75cc15b", "migrations_dir": "migrations" }],
   "r2_buckets": [{ "binding": "PREVIEWS", "bucket_name": "playtrace-previews" }]
   // Root owns provisioning and secrets. The initial archive window is verified.
-  // Hourly UTC collection resumes any saved cursor and prunes expired rate limits.
+  // UTC :35 collects the archive; :05 maintains store metadata and eligible media.
+  // Separate invocations keep each complete task below the D1 statement budget.
 }

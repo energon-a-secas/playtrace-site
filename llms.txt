@@ -1,13 +1,14 @@
 # Playtrace
 
-> Discover games shared on r/aigamedev, follow their development, and explore nonbinding community price feedback.
+> Discover games shared on r/aigamedev, follow their development, and share public feedback and an optional ideal price.
 
 - [Browse Playtrace](https://playtrace.neorgon.com/): Search games by genre, stage, maker, and recent activity.
-- [Current catalogue](https://playtrace-api.neorgon.workers.dev/api/v1/catalog): Public JSON with source-linked project timelines and collection dates.
+- [About the index](https://playtrace.neorgon.com/about.html): Collection history, source limits, feedback, and corrections.
+- [Current catalogue](https://playtrace-api.neorgon.workers.dev/api/v1/catalog): Paginated public JSON with source-linked timelines, collection dates, and available Steam metadata. Follow pagination.nextCursor until null.
 - [Service status](https://playtrace-api.neorgon.workers.dev/api/v1/status): Available features and the latest archive collection state.
 - [Source community](https://www.reddit.com/r/aigamedev/): Original game posts and author updates.
 
-Browsing is public. Following games and submitting a price response require a Neorgon account. Responses are editable opinions in USD, not payments, purchase offers, or auctions. Public price distributions appear only after five accounts respond.
+Browsing and contributing feedback require no account. A note, optional display name, and optional ideal price are public. A browser edit key allows editing or removal from the same browser. Ideal prices are nonbinding USD suggestions. Browser and network rate limits reduce spam; contribution counts do not establish unique people. Visitor change requests go to a private admin inbox. Private following remains unavailable while account setup is completed.
 
 The catalogue combines reviewed entries with source-described archive discoveries. Being listed does not verify a creator or a game's availability. Source dates, original posts, and review status accompany entries. Preview images remain at their source unless a creator permits managed storage.
 

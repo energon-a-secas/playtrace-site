@@ -3,7 +3,13 @@
   <url>
     <loc>https://playtrace.neorgon.com/</loc>
     <lastmod>2026-10-10</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://playtrace.neorgon.com/about.html</loc>
+    <lastmod>2026-10-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 </urlset>
