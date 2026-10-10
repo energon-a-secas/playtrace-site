@@ -12,9 +12,9 @@
     "TURNSTILE_HOSTNAME": "playtrace.neorgon.com",
     "PREVIEW_ALLOWED_HOSTS": "i.redd.it,preview.redd.it,external-preview.redd.it,cdn.cloudflare.steamstatic.com,shared.fastly.steamstatic.com"
   },
-  "triggers": { "crons": [] },
+  "triggers": { "crons": ["35 * * * *"] },
   "d1_databases": [{ "binding": "DB", "database_name": "playtrace-db", "database_id": "1775b331-55d4-436a-a1c1-a58ab75cc15b", "migrations_dir": "migrations" }],
   "r2_buckets": [{ "binding": "PREVIEWS", "bucket_name": "playtrace-previews" }]
-  // Root owns provisioning and secrets. Scheduled collection stays disabled
-  // until a successful operator run and the account configuration are verified.
+  // Root owns provisioning and secrets. The initial archive window is verified.
+  // Hourly UTC collection resumes any saved cursor and prunes expired rate limits.
 }
