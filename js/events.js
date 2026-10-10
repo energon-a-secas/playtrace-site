@@ -7,6 +7,7 @@ import { createQueryHistory } from './neorgon-navigation.js';
 import { prepareFollowing, followGame, deleteMyData, confirmDelete, clearSignals } from './accounts.js';
 import { clearChallenge } from './challenge.js';
 import { bindFeedback, resetFeedback, loadFeedback, clearFeedback, renderFeedback } from './feedback.js';
+import { bindProject, prepareProject, closeProject } from './project.js';
 
 export const navigation = createQueryHistory(href => locationForState(href, state));
 function clearFilters() {
@@ -26,22 +27,22 @@ export function syncDetail() {
     navigation.replace(); showToast('This project is no longer in the collection.'); return;
   }
   if (state.detail?.id === game.id && $('itemDialog').open) {
-    if (state.detail !== game) {
-      renderDetail(game); resetFeedback(game.id); loadFeedback(game.id);
+    if (state.detail !== game && JSON.stringify(state.detail) !== JSON.stringify(game)) {
+      renderDetail(game); prepareProject(game); resetFeedback(game.id); loadFeedback(game.id);
     }
     return;
   }
-  renderDetail(game); resetFeedback(game.id); openDialog($('itemDialog'), $('searchInput')); loadFeedback(game.id);
+  renderDetail(game); prepareProject(game); resetFeedback(game.id); openDialog($('itemDialog'), $('searchInput')); loadFeedback(game.id);
 }
 
 export function catalogueReady() { render(); syncDetail(); }
 
 export function bindEvents() {
-  bindFeedback();
+  bindFeedback(); bindProject();
   const dialog = $('itemDialog');
   bindDialog(dialog, $('searchInput')); bindDialog($('infoDialog'), $('searchInput'));
   dialog.addEventListener('close', () => {
-    clearChallenge(); clearSignals(); clearFeedback(); state.detail = null;
+    clearChallenge(); clearSignals(); clearFeedback(); closeProject(); state.detail = null;
     if (state.game) { state.game = ''; navigation.replace(); }
   });
   $('infoDialog').addEventListener('close', () => { $('deleteConfirm').hidden = true; });
@@ -75,7 +76,7 @@ export function bindEvents() {
       const game = state.games.find(entry => entry.id === item.dataset.item);
       if (!game) return;
       navigation.push(() => { state.game = game.id; });
-      renderDetail(game); resetFeedback(game.id); openDialog(dialog, item); loadFeedback(game.id); return;
+      renderDetail(game); prepareProject(game); resetFeedback(game.id); openDialog(dialog, item); loadFeedback(game.id); return;
     }
     if (event.target.closest('[data-open-info]')) { openDialog($('infoDialog'), event.target.closest('button')); return; }
     if (event.target.closest('#shareGame')) {

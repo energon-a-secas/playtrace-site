@@ -27,6 +27,35 @@ function redditPost(url, id) {
     || !new RegExp(`^/r/aigamedev/comments/${id}/(?:[^/]+/)?$`, 'i').test(value.pathname)) throw new Error('Invalid Reddit source');
   return value.href;
 }
+export function validateSteam(steam, projectUrl) {
+  if (!steam || !/^[1-9]\d{0,9}$/.test(steam.appId) || steam.url !== `https://store.steampowered.com/app/${steam.appId}/`
+    || !['released', 'coming-soon', 'listed'].includes(steam.state) || typeof steam.isFree !== 'boolean') throw new Error('Invalid store details');
+  const project = new URL(safeUrl(projectUrl));
+  if (project.hostname !== 'store.steampowered.com' || !new RegExp(`^/app/${steam.appId}(?:/|$)`).test(project.pathname)) throw new Error('Mismatched store listing');
+  text(steam.title, 300); date(steam.checkedAt);
+  for (const amount of [steam.priceCents, steam.originalPriceCents]) {
+    if (amount !== null && (!Number.isInteger(amount) || amount < 0 || amount > 1000000)) throw new Error('Invalid store price');
+  }
+  if ((steam.priceCents === null ? steam.currency !== null : steam.currency !== 'USD') || (steam.state !== 'released' && steam.priceCents !== null)) throw new Error('Invalid store price');
+  if (steam.headerUrl !== null) {
+    const url = new URL(safeUrl(steam.headerUrl));
+    if (!['shared.akamai.steamstatic.com', 'shared.fastly.steamstatic.com', 'cdn.akamai.steamstatic.com', 'cdn.cloudflare.steamstatic.com'].includes(url.hostname) || url.port) throw new Error('Invalid store image');
+  }
+  return steam;
+}
+export function validateAssets(assets) {
+  if (!Array.isArray(assets) || assets.length > 6) throw new Error('Invalid project media');
+  for (const asset of assets) {
+    if (!['image', 'video', 'gif'].includes(asset?.kind)) throw new Error('Invalid project media');
+    const url = new URL(safeUrl(asset.url));
+    const hosts = asset.kind === 'video' ? ['v.redd.it', 'preview.redd.it', 'i.redd.it'] : ['i.redd.it', 'preview.redd.it', 'external-preview.redd.it', 'a.thumbs.redditmedia.com', 'b.thumbs.redditmedia.com'];
+    if (!hosts.includes(url.hostname) || url.port) throw new Error('Invalid media host');
+    if (asset.posterUrl !== null) {
+      const poster = new URL(safeUrl(asset.posterUrl));
+      if (!['i.redd.it', 'preview.redd.it', 'external-preview.redd.it', 'a.thumbs.redditmedia.com', 'b.thumbs.redditmedia.com'].includes(poster.hostname) || poster.port) throw new Error('Invalid poster host');
+    }
+  }
+}
 export function validateCatalog(value) {
   if (value?.schemaVersion !== 1 || !Array.isArray(value.games) || value.source?.subreddit !== 'aigamedev') throw new Error('Invalid catalogue');
   const source = value.source;
@@ -45,6 +74,7 @@ export function validateCatalog(value) {
     if (!Array.isArray(game.tags) || game.tags.length > 12 || !Array.isArray(game.platforms) || game.platforms.length > 8) throw new Error('Invalid game tags');
     game.tags.forEach(tag => text(tag, 40)); game.platforms.forEach(platform => text(platform, 80));
     safeUrl(game.projectUrl, true); date(game.firstSeenAt); date(game.updatedAt);
+    if (game.steam != null) validateSteam(game.steam, game.projectUrl);
     const preview = game.preview;
     if (!preview || !['image', 'video', 'link'].includes(preview.kind) || !['external', 'r2'].includes(preview.storage)
       || !['source-linked', 'owner-consent'].includes(preview.rights)) throw new Error('Invalid preview');
@@ -55,6 +85,7 @@ export function validateCatalog(value) {
       postIds.add(post.id); redditPost(post.url, post.id); text(post.title, 400); text(post.author, 80); date(post.createdAt); text(post.excerpt, 600, true);
       if (post.author.toLowerCase() !== game.author.name.toLowerCase()) throw new Error('Mismatched source author');
       if (!['showcase', 'update', 'release'].includes(post.kind)) throw new Error('Invalid source kind');
+      if (post.assets !== undefined) validateAssets(post.assets);
     });
     const dates = game.posts.map(post => post.createdAt).sort();
     if (Date.parse(game.firstSeenAt) !== Date.parse(dates[0]) || Date.parse(game.updatedAt) !== Date.parse(dates.at(-1))) throw new Error('Mismatched project dates');

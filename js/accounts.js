@@ -25,7 +25,8 @@ export function startAccounts(render) {
     if (changed || !auth.signedIn) {
       accountRequest++; state.follows = []; state.prices = []; state.accountLoaded = false; state.accountError = '';
       if ($('priceAmount')) $('priceAmount').value = '';
-      $('deleteConfirm').hidden = true; $('privacyMessage').textContent = ''; $('priceMessage').textContent = '';
+      $('deleteConfirm').hidden = true; $('privacyMessage').textContent = '';
+      if ($('priceMessage')) $('priceMessage').textContent = '';
       clearChallenge();
     }
     render(); renderAccount();

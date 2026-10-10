@@ -27,3 +27,7 @@ No auction pressure, invented revenue projections, cryptocurrency cues or decora
 ## Accessibility and system
 
 Use the canonical Neorgon tokens and Header, Footer, Auth, DOM and navigation kits. Native controls and dialogs support keyboards and touch. Keep visible focus, useful image fallbacks, reduced motion and layouts that fit narrow screens. The report-inspired visual dialect is scoped in `css/report.css`, preserving shared kit behavior. Brand amber is `#f9b73f`; action text uses navy for contrast.
+
+## Editorial care
+
+Primary project actions belong beside the title, before media and feedback. The index explanation is a separate About article. Updates are subsequent source posts after the first showcase. Public change requests feed a private admin inbox; administrators can maintain previews without overwriting source history. Steam store prices stay visibly separate from player price suggestions. Only a verified server-side identity grants administrative access.

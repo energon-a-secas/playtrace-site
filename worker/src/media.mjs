@@ -66,9 +66,9 @@ export async function storePreview(db, env, gameId, body, request, deps) {
 export async function serveMedia(db, env, id) {
   if (!env.PREVIEWS) throw unavailable();
   const suffix = `/api/v1/media/${id}`;
-  const asset = await query(db, `SELECT a.object_key,a.mime_type FROM media_assets a JOIN games g ON g.id=a.game_id
+  const asset = await query(db, `SELECT a.object_key,a.mime_type FROM media_assets a JOIN games g ON g.id=a.game_id LEFT JOIN preview_overrides o ON o.game_id=g.id
     WHERE a.id=? AND g.status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id)
-    AND substr(json_extract(g.payload_json,'$.preview.url'),-?)=?`, id, suffix.length, suffix).first();
+    AND substr(json_extract(COALESCE(o.preview_json,json_extract(g.payload_json,'$.preview')),'$.url'),-?)=?`, id, suffix.length, suffix).first();
   if (!asset) throw notFound();
   const object = await env.PREVIEWS.get(asset.object_key);
   if (!object) throw notFound();

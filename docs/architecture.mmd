@@ -3,8 +3,10 @@ flowchart LR
     Browser -->|"Browse history; read and contribute<br/>public feedback without login"| API["Cloudflare Worker<br/>Public and authenticated API"]
     Browser -->|"Optional sign-in for private follows"| Clerk["Clerk<br/>Neorgon accounts"]
     Clerk -->|"Signed session token"| Browser
-    API -->|"Pinned public signing keys"| Clerk
-    API -->|"Games, source posts, public feedback,<br/>private follows/prices, quotas and tombstones"| D1[("Cloudflare D1")]
+    API -->|"Pinned signing keys; verified admin email<br/>via server-only Clerk API key"| Clerk
+    Admin["Verified owner / invited admin"] -->|"Private inbox, image edits, role management"| Browser
+    API -->|"Exact app ID, US price, 24h cache"| Steam["Steam Storefront"]
+    API -->|"Games, source posts, public feedback,<br/>admin roles, requests, preview overrides,<br/>private follows/prices, quotas and tombstones"| D1[("Cloudflare D1")]
     Browser -->|"Original previews and post links"| Sources["Creator media hosts<br/>and Reddit posts"]
     Cron["Hourly schedule"] --> Collector["Recent updates + historical pass<br/>from December 2022"]
     Collector -->|"Bounded, paced requests"| Archive["Arctic Shift archive<br/>r/aigamedev"]

@@ -1,5 +1,6 @@
 import { unavailable, notFound, invalid } from './http.mjs';
 import { validateCatalog, canonicalProjectUrl } from './validation.mjs';
+import { enrichGames } from './steam.mjs';
 
 export function database(env) { if (!env.DB) throw unavailable(); return env.DB; }
 export const query = (db, sql, ...args) => db.prepare(sql).bind(...args);
@@ -45,6 +46,7 @@ export async function catalog(db, page = null) {
       result.pagination = { total: total.count, nextCursor: data.results.length > limit
         ? btoa(JSON.stringify([last.updatedAt, last.id])).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '') : null };
     }
+    result.games = await enrichGames(db, result.games);
     return result;
   }
   catch { throw unavailable(); }
@@ -79,12 +81,14 @@ export async function importCatalog(db, input) {
         updated_at=excluded.updated_at,payload_json=CASE WHEN json_extract(games.payload_json,'$.preview.storage')='r2'
           THEN json_set(excluded.payload_json,'$.preview',json_extract(games.payload_json,'$.preview')) ELSE excluded.payload_json END,
         status='published' RETURNING id`, payload),
-    query(db, `INSERT INTO source_posts(id,game_id,author_key,created_at,retrieved_at,payload_json,status)
+    query(db, `INSERT INTO source_posts(id,game_id,author_key,created_at,retrieved_at,payload_json,status,media_checked_at)
       SELECT json_extract(p.value,'$.id'),json_extract(j.value,'$.id'),lower(json_extract(p.value,'$.author')),
-        json_extract(p.value,'$.createdAt'),?,p.value,'published'
+        json_extract(p.value,'$.createdAt'),?,p.value,'published',CASE WHEN json_type(p.value,'$.assets')='array' THEN ? ELSE NULL END
       FROM json_each(?) j JOIN json_each(j.value,'$.posts') p WHERE ${eligible}
       ON CONFLICT(id) DO UPDATE SET game_id=excluded.game_id,author_key=excluded.author_key,created_at=excluded.created_at,
-        retrieved_at=excluded.retrieved_at,payload_json=excluded.payload_json,status='published' RETURNING id`, head.source.retrievedAt, payload),
+        retrieved_at=excluded.retrieved_at,payload_json=CASE WHEN json_type(source_posts.payload_json,'$.assets')='array' AND json_type(excluded.payload_json,'$.assets') IS NULL
+          THEN json_set(excluded.payload_json,'$.assets',json_extract(source_posts.payload_json,'$.assets')) ELSE excluded.payload_json END,
+        media_checked_at=COALESCE(excluded.media_checked_at,source_posts.media_checked_at),status='published' RETURNING id`, head.source.retrievedAt, head.source.retrievedAt, payload),
     // Preserve already-published timeline entries when reimporting an older seed.
     query(db, `UPDATE games SET payload_json=json_set(payload_json,'$.posts',
       json((SELECT json_group_array(json(payload_json)) FROM
@@ -116,6 +120,8 @@ export async function removal(db, bucket, id, reason, now) {
     query(db, 'DELETE FROM price_signals WHERE game_id=?', id),
     query(db, 'DELETE FROM follows WHERE game_id=?', id),
     query(db, 'DELETE FROM feedback WHERE game_id=?', id),
+    query(db, 'DELETE FROM change_requests WHERE game_id=?', id),
+    query(db, 'DELETE FROM preview_overrides WHERE game_id=?', id),
     query(db, 'DELETE FROM source_posts WHERE game_id=?', id),
   ]);
   const { acquire, release } = await import('./lease.mjs');

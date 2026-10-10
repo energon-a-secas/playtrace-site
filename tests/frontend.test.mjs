@@ -146,13 +146,17 @@ test('background catalogue pages preserve visible card nodes while same-timestam
   const originalDocument = globalThis.document, originalLocation = globalThis.location;
   globalThis.document = { querySelectorAll: () => [], querySelector: selector => $(selector) };
   globalThis.location = { href: 'https://playtrace.example/' };
-  let replacements = 0, html = '';
+  let replacements = 0, html = '', featureReplacements = 0, featureHtml = '';
+  Object.defineProperty($('featuredGame'), 'innerHTML', { get: () => featureHtml, set: value => { featureReplacements++; featureHtml = value; } });
   Object.defineProperty($('itemList'), 'innerHTML', { get: () => html, set: value => { replacements++; html = value; } });
   try {
     const renderer = await isolatedModule('render.js', { state, $, ...collection, CONFIG: {}, e: String });
     renderer.render(); assert.equal(replacements, 1);
     state.games = all; state.catalogPartial = false; state.status = 'ready'; renderer.render();
     assert.equal(replacements, 1, 'Unchanged visible cards retain their existing DOM and focus');
+    const priorFeatures = featureReplacements;
+    state.games = structuredClone(all); renderer.render();
+    assert.equal(featureReplacements, priorFeatures, 'The same featured record keeps its DOM when background pages or copies arrive');
     state.games = all.map((game, i) => i ? game : { ...game, title: 'Changed without a timestamp change' });
     renderer.render(); assert.equal(replacements, 2); assert.match(html, /Changed without a timestamp change/);
   } finally { globalThis.document = originalDocument; globalThis.location = originalLocation; }

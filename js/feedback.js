@@ -9,7 +9,7 @@ const empty = () => ({ gameId: '', entries: [], count: 0, prices: null, nextCurs
   moderated: false, loading: false, busy: false, loaded: false, error: '', ownError: false, dirty: false, message: '' });
 let feedback = empty();
 
-function editKey(create = false) {
+export function editKey(create = false) {
   if (memoryKey) return memoryKey;
   try { const value = localStorage.getItem(storageKey); if (/^[a-f0-9]{64}$/.test(value || '')) memoryKey = value; }
   catch { persistent = false; }

@@ -34,6 +34,7 @@ class SchemaTests(unittest.TestCase):
         self.assertEqual(actual, {
             "games", "source_posts", "price_signals", "follows",
             "app_meta", "rate_limits", "media_assets", "removals", "feedback",
+            "admins", "change_requests", "preview_overrides", "steam_cache",
         })
         self.assertEqual(self.db.execute("PRAGMA foreign_keys").fetchone()[0], 1)
         with self.assertRaises(sqlite3.IntegrityError):
@@ -106,9 +107,9 @@ class SchemaTests(unittest.TestCase):
         self.add_game()
         self.add_price()
         self.db.execute("INSERT INTO follows VALUES(?,?,?)", ("fixture_account", "g_test01", NOW))
-        self.db.execute("INSERT INTO source_posts VALUES(?,?,?,?,?,?,?)",
+        self.db.execute("INSERT INTO source_posts(id,game_id,author_key,created_at,retrieved_at,payload_json,status) VALUES(?,?,?,?,?,?,?)",
                         ("post01", "g_test01", "fixture_author", NOW, NOW, "{}", "published"))
-        self.db.execute("INSERT INTO source_posts VALUES(?,?,?,?,?,?,?)",
+        self.db.execute("INSERT INTO source_posts(id,game_id,author_key,created_at,retrieved_at,payload_json,status) VALUES(?,?,?,?,?,?,?)",
                         ("post02", None, "another_author", NOW, NOW, "{}", "pending"))
         self.db.execute("INSERT INTO media_assets VALUES(?,?,?,?,?,?,?,?,?,?)", (
             "media01", "g_test01", "previews/test.webp", "https://example.com/test.webp",
@@ -146,6 +147,22 @@ class SchemaTests(unittest.TestCase):
         self.db.executescript(FORWARD)
         self.assertEqual(self.db.execute("PRAGMA foreign_key_check").fetchall(), [])
         self.assertEqual(self.db.execute("SELECT count(*) FROM games").fetchone()[0], 0)
+
+    def test_editorial_roles_requests_and_previews_are_constrained_and_cascade(self):
+        self.add_game()
+        owner = self.db.execute("SELECT email,role,subject FROM admins").fetchone()
+        self.assertEqual(owner, ("luciano.adonis.villarroel@gmail.com", "owner", None))
+        with self.assertRaises(sqlite3.IntegrityError):
+            self.db.execute("INSERT INTO admins VALUES(?,?,?,?,?,?)", ("test@example.com", None, "superuser", 1, NOW, "owner"))
+        insert = "INSERT INTO change_requests(id,game_id,kind,body,reporter_hash,created_at) VALUES(?,?,?,?,?,?)"
+        with self.assertRaises(sqlite3.IntegrityError):
+            self.db.execute(insert, ("request1", "g_test01", "image", "short", "hash", NOW))
+        self.db.execute(insert, ("request1", "g_test01", "image", "A new preview is needed", "hash", NOW))
+        self.db.execute("INSERT INTO preview_overrides VALUES(?,?,?,?)", ("g_test01", "{}", "user_owner", NOW))
+        self.db.execute("DELETE FROM games")
+        self.assertEqual(self.db.execute("SELECT count(*) FROM change_requests").fetchone()[0], 0)
+        self.assertEqual(self.db.execute("SELECT count(*) FROM preview_overrides").fetchone()[0], 0)
+        self.assertEqual(self.db.execute("SELECT count(*) FROM admins").fetchone()[0], 1)
 
     def test_public_feedback_constraints_and_additive_rollback_preserve_legacy_prices(self):
         self.add_game()

@@ -46,6 +46,8 @@ Public feedback uses a random browser edit key so visitors can update or remove 
 - **Following** -- Signed-in users keep a private list of games to revisit for updates.
 - **Visitor controls** -- Browser and network limits reduce spam. Contributions have report links and operator moderation. Clearing browser storage loses editing access; the correction link remains available for help. A browser key does not prove a unique person.
 - **Private account data** -- Existing account prices, their thresholded aggregates, follows, and account-data deletion remain separate from public feedback. Guest contributions never reveal or import old private responses.
+- **Editorial tools** -- A private change-request inbox, verified admin roles with the requested default owner, persistent image edits, and a video-frame picker. See [activation and endpoint details](docs/editorial-api.md).
+- **Store and media context** -- Confirmed Steam app badges, cached US prices, source videos/GIFs as secondary media, and an original-post fallback.
 - **Managed previews** -- R2 can store bounded, validated images with a recorded creator permission. Initial previews remain at their original hosts. Removal hides a game immediately and cleans up its stored data and media.
 
 The initial reviewed snapshot contains 90 games and 96 source posts. The live catalogue grows separately. No votes, demand figures, or user accounts are seeded.

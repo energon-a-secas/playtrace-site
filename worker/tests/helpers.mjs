@@ -14,6 +14,7 @@ export class TestDB {
     this.sql.exec(readFileSync(new URL('../migrations/0001_initial.sql', import.meta.url), 'utf8'));
     this.sql.exec(readFileSync(new URL('../migrations/0002_public_feedback.sql', import.meta.url), 'utf8'));
     this.sql.exec(readFileSync(new URL('../migrations/0003_history_pagination.sql', import.meta.url), 'utf8'));
+    this.sql.exec(readFileSync(new URL('../migrations/0004_editorial_tools.sql', import.meta.url), 'utf8'));
   }
   prepare(sql) {
     const db = this;

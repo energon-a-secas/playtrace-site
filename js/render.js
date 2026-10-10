@@ -2,6 +2,7 @@ import { state } from './state.js';
 import { categories, selectGames, collectionPulse, label, dateLabel, money } from './collection.js';
 import { CONFIG } from './config.js';
 import { $, escHtml as e } from './utils.js';
+import { storeLabel } from './project.js';
 
 const arrow = '<span aria-hidden="true">↗</span>';
 const stageBadge = game => `<span class="stage-badge stage-badge--${e(game.stage)}"><span class="status-dot" aria-hidden="true"></span>${e(label(game.stage))}</span>`;
@@ -13,7 +14,7 @@ function image(game, priority = false) {
 }
 
 let optionsGames;
-let featureGames;
+let featureVersion = '';
 let listVersion = '';
 let filterVersion = '';
 export function render() {
@@ -76,7 +77,7 @@ export function render() {
 
 function card(game) {
   return `<li><article class="collection-item"><button class="collection-item__preview" type="button" data-item="${e(game.id)}" aria-label="Explore ${e(game.title)}">${image(game)}<span class="preview-label">${game.preview.kind === 'video' ? 'View preview' : 'Explore project'} ${arrow}</span></button>
-    <div class="collection-item__body"><div class="game-meta"><span>${e(label(game.category))}</span>${stageBadge(game)}</div><h3><button type="button" data-item="${e(game.id)}">${e(game.title)}</button></h3><button class="maker-link" type="button" data-author="${e(game.author.name)}">by u/${e(game.author.name)}</button><p class="collection-item__description">${e(game.summary)}</p><div class="collection-item__foot"><time datetime="${e(game.updatedAt)}">${e(dateLabel(game.updatedAt))}</time><button class="text-button" type="button" data-item="${e(game.id)}">Feedback &amp; history ${arrow}</button></div>${game.reviewStatus === 'source-described' ? '<span class="review-label">Source-described</span>' : ''}</div></article></li>`;
+    <div class="collection-item__body"><div class="game-meta"><span>${e(label(game.category))}</span>${stageBadge(game)}</div><h3><button type="button" data-item="${e(game.id)}">${e(game.title)}</button></h3><button class="maker-link" type="button" data-author="${e(game.author.name)}">by u/${e(game.author.name)}</button><p class="collection-item__description">${e(game.summary)}</p>${game.steam ? `<div class="card-store">${storeLabel(game.steam)}</div>` : ''}<div class="collection-item__foot"><div class="project-date"><time datetime="${e(game.updatedAt)}">${e(dateLabel(game.updatedAt))}</time><span>${game.posts.length > 1 ? `${game.posts.length - 1} ${game.posts.length === 2 ? 'update' : 'updates'}` : 'First post'}</span></div><button class="text-button" type="button" data-item="${e(game.id)}">Feedback &amp; history ${arrow}</button></div>${game.reviewStatus === 'source-described' ? '<span class="review-label">Source-described</span>' : ''}</div></article></li>`;
 }
 
 function renderOverview() {
@@ -102,10 +103,10 @@ function renderOverview() {
     removalUrl.pathname = '/report/'; removalUrl.hash = encodeURIComponent(JSON.stringify({ v: 1, site: 'playtrace-site', url: location.href, target: null }));
   }
   $('removalLink').href = removalUrl.href;
-  document.querySelector('.collection-notes__fine').textContent = 'An archive snapshot, with original source dates. Collection can lag behind Reddit. Stages reflect the maker’s post; availability may change. Previews belong to their creators.';
-  if (featureGames === state.games) return;
-  featureGames = state.games;
   const featured = [...state.games].sort((a, b) => b.posts.length - a.posts.length).find(game => game.preview.posterUrl || game.preview.kind === 'image') || state.games[0];
+  const nextFeature = JSON.stringify(featured || null);
+  if (featureVersion === nextFeature) return;
+  featureVersion = nextFeature;
   $('featuredGame').classList.remove('spotlight--loading'); $('featuredGame').setAttribute('aria-busy', 'false');
   if (!featured) { $('featuredGame').hidden = true; $('featuredGame').innerHTML = ''; return; }
   $('featuredGame').hidden = false;
@@ -123,7 +124,7 @@ export function renderDetail(game) {
   $('itemDialogTags').innerHTML = game.tags.map(tag => `<li>${e(tag)}</li>`).join('');
   $('itemDialogLinks').innerHTML = (game.projectUrl ? sourceLink(game.projectUrl, 'Visit game page', 'btn btn--primary') : '') + sourceLink(game.posts[0].url, game.preview.kind === 'video' ? 'Watch on Reddit' : 'Original post', 'btn btn--secondary') + '<button type="button" class="text-button" id="shareGame">Copy project link</button>';
   $('gameTimeline').innerHTML = game.posts.map(post => `<li><div class="timeline__date"><time datetime="${e(post.createdAt)}">${e(dateLabel(post.createdAt))}</time><span>${e(label(post.kind))}</span></div><h4>${sourceLink(post.url, post.title)}</h4><p>${e(post.excerpt)}</p></li>`).join('');
-  $('itemDialogSource').textContent = `${game.preview.storage === 'r2' ? 'Preview stored with creator permission.' : 'Preview hosted at its original source.'} Listing does not imply creator verification or an offer for sale.`;
+  $('itemDialogSource').textContent = `${game.preview.storage === 'r2' ? 'Preview stored with permission recorded.' : 'Preview hosted at its original source.'} Listing does not imply creator verification or an offer for sale.`;
   $('timelineCount').textContent = `${game.posts.length} source ${game.posts.length === 1 ? 'post' : 'posts'}`;
   renderAccount();
 }

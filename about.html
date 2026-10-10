@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" data-season="off">
+<head>
+  <meta charset="UTF-8">
+  <!-- Strict CSP. An inline script runs only if its sha256 is listed: the one hash is the theme
+       guard further down, so editing that script means re-hashing it (smoke check 29 reports a
+       mismatch). Inline on*="" handlers never run; attach listeners from a script file. Add a
+       source only when the page loads from it, as an exact host or a pinned path, never a whole
+       package CDN: a Convex deployment adds its https and wss URLs to connect-src, and sign-in
+       adds the CSP table in packages/neorgon-ui/auth/README.md. frame-ancestors, report-uri and
+       sandbox are ignored in a meta tag, so they are left out. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-na6phygP/tfoCIp4oBeQgGJJpQsZob/udrLum+20QTI=' https://gc.zgo.at https://static.cloudflareinsights.com https://clerk.neorgon.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.neorgon.org/v1.0.0/; img-src 'self' data: https://playtrace-api.neorgon.workers.dev https://neorgon.goatcounter.com https://img.clerk.com https://preview.redd.it https://external-preview.redd.it https://i.redd.it https://b.thumbs.redditmedia.com https://a.thumbs.redditmedia.com; font-src 'self'; connect-src 'self' https://playtrace-api.neorgon.workers.dev https://neorgon.goatcounter.com https://cloudflareinsights.com https://clerk.neorgon.com https://challenges.cloudflare.com; manifest-src 'self'; frame-src https://challenges.cloudflare.com; worker-src blob:; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Playtrace">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="neo-mark" content="on">
+  <title>About the index | Playtrace</title>
+  <meta name="description" content="Explore the history of games shared on r/aigamedev. Leave public feedback and an optional ideal price, no account needed.">
+  <meta property="og:title" content="Playtrace | Games in the Making">
+  <meta property="og:description" content="Explore the history of games shared on r/aigamedev. Leave public feedback and an optional ideal price, no account needed.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://playtrace.neorgon.com/about.html">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Playtrace | Games in the Making">
+  <meta name="twitter:description" content="Explore the history of games shared on r/aigamedev. Leave public feedback and an optional ideal price, no account needed.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://playtrace.neorgon.com/about.html">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#f3f4f7">
+  <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <meta property="og:image" content="https://playtrace.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Playtrace: discover games and follow what happens next">
+  <meta name="twitter:image" content="https://playtrace.neorgon.com/og-preview.jpg">
+  <!-- Fleet design tokens: canonical, do not redeclare locally (docs/references/new-project-context.md, Design) -->
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/styles/base.css">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- template:styles -->
+<link rel="stylesheet" href="css/collection.css">
+  <!-- /template:styles -->
+  <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN). Keep after style.css, the kit owns the header. -->
+  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
+  <!-- Neorgon Footer Kit (vendored). Pins the footer to the viewport floor on short
+       pages and builds the meta bar + back-to-top. See packages/neorgon-ui/footer/README.md.
+       Optional stamps: <meta name="neo-repo"|"neo-version"|"neo-updated"> -->
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
+  <meta name="clerk-publishable-key" content="pk_live_Y2xlcmsubmVvcmdvbi5jb20k">
+  <link rel="stylesheet" href="css/neorgon-auth.css">
+  <!-- Neorgon Beacon Kit (vendored). Bottom-left correction reporter: it
+       carries page context to balise.neorgon.com in a URL fragment and the
+       visitor writes there. No form on this page and no request from it.
+       Opt out per page with <meta name="beacon" content="off">.
+       See packages/neorgon-ui/beacon/README.md. -->
+  <meta name="beacon-site" content="playtrace-site">
+  <link rel="stylesheet" href="css/neorgon-beacon.css">
+  <script defer src="js/neorgon-beacon.js"></script>
+  <link rel="stylesheet" href="css/report.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Neorgon Header Kit contract (packages/neorgon-ui/header/README.md).
+       data-header-mode: hub (glass) | content (sticky gradient) | app (slim, auto-hides on scroll).
+       Pick content for learning/content sites, app for tool-dense sites. -->
+  <header class="header-bar" data-header-mode="content" data-header-skin="custom">
+    <div class="header-logo">
+      <!-- PATTERN: one link: mark + name go to THIS site's home (root or #home)
+           so clicking either resets the view. The hub icon in .header-right
+           is the only header link to neorgon.com. -->
+      <a href="./" class="header-title-link">
+        <img src="energon-classic-logo.png" class="header-logo-img" alt="">
+        <div class="header-title-wrap">
+          <h1>Playtrace</h1>
+          <div class="header-subtitle">Games in the making</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- .header-right owns margin-left:auto; home icon is always last. -->
+    <div class="header-right">
+      <!-- template:actions -->
+<div class="header-actions">
+  <a class="btn btn--ghost btn--sm" href="./#discover">Discover</a>
+  <a class="btn btn--ghost btn--sm" href="about.html">About the index</a>
+
+
+</div>
+  <!-- /template:actions -->
+
+      <div class="neo-auth" data-neo-auth data-keep-mobile hidden></div>
+
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg class="nh-hub-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 4.4 18.58 8.2 18.58 15.8 12 19.6 5.42 15.8 5.42 8.2Z" fill="currentColor" stroke="none"/>
+          <g class="nh-orbit">
+            <path d="M2.47 17.50 A11.0 11.0 0 0 1 14.85 1.37" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <path d="M21.53 6.50 A11.0 11.0 0 0 1 9.15 22.63" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <circle cx="21.71" cy="6.84" r="1.25" fill="currentColor"/>
+            <circle cx="2.29" cy="17.16" r="1.25" fill="currentColor"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1"><div class="container collection about-page">
+    <article aria-labelledby="aboutTitle">
+      <header class="article-intro"><p class="eyebrow">A NOTE ON THE INDEX · OCTOBER 2026</p><h2 id="aboutTitle">A shared history.<br>An open conversation.</h2><p>Small projects deserve a place where their progress, players, and ideas can stay together.</p></header>
+      <section><h3>Follow the game through its posts</h3><p>Playtrace brings together games shared on <a href="https://www.reddit.com/r/aigamedev/" target="_blank" rel="noopener noreferrer">r/aigamedev</a>. A project’s original showcase and later updates sit on one timeline, with a direct link to every source.</p><p>We’re collecting the available history from the community’s creation in December 2022. The collection shows its progress as older records arrive. Newest updates appear first; choose <strong>Most updates</strong> to find projects with a longer development story. The first post starts the timeline, and each later post counts as an update.</p></section>
+      <section><h3>Useful feedback, open to everyone</h3><p>Read the conversation or leave a note without signing in. Tell a maker what you enjoyed, where you got stuck, or what you’d like to try. Your display name, note, and optional ideal price are public.</p><p>“Your ideal price” is a suggestion for the maker, with no purchase commitment. Their pricing is always their choice. A Steam store price, when available, is shown separately in USD.</p><p>A random edit key stays in your browser so you can update or remove your contribution. Clearing browser data removes that editing access. Older account-based price responses stay private.</p></section>
+      <section><h3>Sources, with their limits visible</h3><p>The <a href="https://arctic-shift.photon-reddit.com/" target="_blank" rel="noopener noreferrer">Arctic Shift archive</a> helps preserve the community’s history. Records can be delayed or incomplete. Projects are grouped only when the source author and project link support the match. Source-described entries await editorial review.</p><p>Development stages reflect the maker’s posts. A Steam badge means the linked app was found in the store; a released badge requires Steam to list it as released. It does not verify the maker’s identity. Prices are for the US store, can change, and may differ in your region.</p></section>
+      <section><h3>Keep the picture accurate</h3><p>Previews belong to their creators. Original videos and GIFs stay linked to their source, with playback where the host supports it. Admins can select a clearer image or store an authorized replacement when a clip opens on a black frame.</p><p>Use <strong>Request a change</strong> at the top of a project to flag its image, link, details, or a removal. Requests go privately to the admin inbox. For wider site issues, <a href="https://balise.neorgon.com/report/" target="_blank" rel="noopener noreferrer">send a correction</a>.</p></section>
+      <div class="article-return"><a class="btn btn--primary" href="./#discover">Explore the collection <span aria-hidden="true">↗</span></a></div>
+    </article>
+  </div></main>
+  <footer class="neo-footer" data-footer-mode="minimal"><p class="neo-footer-note">Playtrace · Follow the idea. <a href="admin.html">Admin</a></p></footer>
+</body>
+</html>

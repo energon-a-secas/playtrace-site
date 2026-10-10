@@ -9,7 +9,7 @@
        package CDN: a Convex deployment adds its https and wss URLs to connect-src, and sign-in
        adds the CSP table in packages/neorgon-ui/auth/README.md. frame-ancestors, report-uri and
        sandbox are ignored in a meta tag, so they are left out. -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-na6phygP/tfoCIp4oBeQgGJJpQsZob/udrLum+20QTI=' https://gc.zgo.at https://static.cloudflareinsights.com https://clerk.neorgon.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.neorgon.org/v1.0.0/; img-src 'self' data: https://playtrace-api.neorgon.workers.dev https://neorgon.goatcounter.com https://img.clerk.com https://preview.redd.it https://external-preview.redd.it https://i.redd.it https://b.thumbs.redditmedia.com https://a.thumbs.redditmedia.com; font-src 'self'; connect-src 'self' https://playtrace-api.neorgon.workers.dev https://neorgon.goatcounter.com https://cloudflareinsights.com https://clerk.neorgon.com https://challenges.cloudflare.com; manifest-src 'self'; frame-src https://challenges.cloudflare.com; worker-src blob:; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-na6phygP/tfoCIp4oBeQgGJJpQsZob/udrLum+20QTI=' https://gc.zgo.at https://static.cloudflareinsights.com https://clerk.neorgon.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.neorgon.org/v1.0.0/; img-src 'self' data: https://playtrace-api.neorgon.workers.dev https://neorgon.goatcounter.com https://img.clerk.com https://preview.redd.it https://external-preview.redd.it https://i.redd.it https://b.thumbs.redditmedia.com https://a.thumbs.redditmedia.com https://shared.akamai.steamstatic.com https://shared.fastly.steamstatic.com https://cdn.akamai.steamstatic.com https://cdn.cloudflare.steamstatic.com; media-src https://v.redd.it https://preview.redd.it https://i.redd.it; font-src 'self'; connect-src 'self' https://playtrace-api.neorgon.workers.dev https://neorgon.goatcounter.com https://cloudflareinsights.com https://clerk.neorgon.com https://challenges.cloudflare.com; manifest-src 'self'; frame-src https://challenges.cloudflare.com; worker-src blob:; object-src 'none'; base-uri 'none'; form-action 'self'">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
@@ -106,7 +106,7 @@
       <!-- template:actions -->
 <div class="header-actions">
   <a class="btn btn--ghost btn--sm" href="#discover">Discover</a>
-  <a class="btn btn--ghost btn--sm" href="#aboutCollection">About the index</a>
+  <a class="btn btn--ghost btn--sm" href="about.html">About the index</a>
   <button type="button" class="btn btn--ghost btn--sm" id="shareView" data-keep-mobile>
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-2 2M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l2-2"/></svg>
     <span>Share view</span>
@@ -145,7 +145,7 @@
       <div class="edition">
         <span class="edition__label">An open community archive</span>
         <p>Small teams.<br>Unexpected worlds.</p>
-        <a href="#aboutCollection" class="text-link">Every project has a source <span aria-hidden="true">↗</span></a>
+        <a href="about.html" class="text-link">Every project has a source <span aria-hidden="true">↗</span></a>
       </div>
     </section>
 
@@ -184,19 +184,19 @@
       <p id="historyStatus" class="archive-status" role="status">Newest updates first. Building a history of the community’s games.</p>
       <form id="collectionFilters" class="collection__filters" role="search" aria-label="Search games">
         <div class="field collection__search">
-          <label class="sr-only" for="searchInput">Search games, creators, or tags</label>
+          <label for="searchInput">Find a project</label>
           <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
           <input type="search" class="input" id="searchInput" name="q" placeholder="Search games, creators, or tags…" maxlength="200" autocomplete="off" enterkeyhint="search">
         </div>
         <div class="field">
-          <label class="sr-only" for="categorySelect">Genre</label>
+          <label for="categorySelect">Genre</label>
           <select class="select" id="categorySelect" name="cat"><option value="all">All genres</option></select>
         </div>
         <div class="field collection__sort">
-          <label class="sr-only" for="sortSelect">Sort games</label>
-          <select class="select" id="sortSelect"><option value="newest">Newest updates</option><option value="updates">Most updates</option><option value="name">Name, A to Z</option><option value="oldest">Oldest projects</option></select>
+          <label for="sortSelect">Sort by</label>
+          <select class="select" id="sortSelect"><option value="newest">Newest update</option><option value="updates">Most updates</option><option value="name">Name, A to Z</option><option value="oldest">First shared</option></select>
         </div>
-        <div class="field"><label class="sr-only" for="authorSelect">Maker</label><select class="select" id="authorSelect"><option value="">All makers</option></select></div>
+        <div class="field"><label for="authorSelect">Maker</label><select class="select" id="authorSelect"><option value="">All makers</option></select></div>
         <button type="button" class="btn btn--ghost" id="clearFilters" disabled>Reset filters</button>
       </form>
 
@@ -235,16 +235,7 @@
       <div class="collection__endnote"><span class="index-mark" aria-hidden="true"></span><p>Every project has a story. Add something useful to its next chapter.</p></div>
     </section>
 
-    <section class="collection-notes" id="aboutCollection" aria-labelledby="aboutTitle">
-      <div><p class="eyebrow">A NOTE ON THE INDEX</p><h2 id="aboutTitle">A shared history.<br>An open conversation.</h2></div>
-      <div class="collection-notes__body">
-        <p>Playtrace brings together games from r/aigamedev, with an archive reaching back toward the group’s beginnings. Each project keeps its source posts together alongside public player feedback. Anyone can contribute a note or an optional ideal price, without an account.</p>
-        <div class="provenance"><span class="status-dot status-dot--released" aria-hidden="true"></span><span id="collectionProvenance">Curated from archived posts on r/aigamedev.</span></div>
-        <p class="collection-notes__fine">This is a dated collection, not a live feed. Stages reflect the creator’s post; availability may change. Previews belong to their creators and load from the original source.</p>
-        <a class="text-link" href="https://www.reddit.com/r/aigamedev/" target="_blank" rel="noopener noreferrer">Visit r/aigamedev <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>
-      </div>
-    </section>
-    <div class="collection-policy"><button type="button" class="text-button" data-open-info>Sources, privacy &amp; removals ↗</button></div>
+    <div class="collection-policy"><span id="collectionProvenance">Sources: r/aigamedev and Arctic Shift</span><a class="text-link" href="about.html">About the index ↗</a><button type="button" class="text-button" data-open-info>Sources &amp; privacy</button><a class="text-link" href="admin.html">Admin</a></div>
     <noscript><p class="status-panel">Enable JavaScript to search and browse the collection. You can also <a href="https://www.reddit.com/r/aigamedev/">visit the source community</a>.</p></noscript>
   </div>
 </main>
@@ -254,12 +245,27 @@
     <span class="eyebrow">PROJECT NOTES</span>
     <button type="button" class="btn btn--ghost" data-dialog-close autofocus>Close <span aria-hidden="true">×</span></button>
   </div>
-  <div id="itemDialogMedia"></div>
   <div class="dialog__body">
-    <p id="itemDialogCategory" class="eyebrow"></p>
-    <h2 id="itemDialogTitle">Project details</h2>
-    <p id="itemDialogAuthor" class="dialog__author"></p>
-    <p id="itemDialogDescription"></p>
+    <div class="project-heading">
+      <div class="project-heading__text"><p id="itemDialogCategory" class="eyebrow"></p>
+        <h2 id="itemDialogTitle">Project details</h2>
+        <p id="itemDialogAuthor" class="dialog__author"></p>
+      </div>
+      <aside class="project-actions" aria-label="Project actions"><div id="itemDialogStore"></div><div id="itemDialogLinks"></div><div class="project-follow"><button type="button" class="btn btn--secondary" id="followGame">Follow this game</button><p id="followHint" class="field__hint">Keep its progress in your following list.</p></div><button type="button" class="text-button" id="jumpFeedback">Leave feedback ↓</button><button type="button" class="text-button" id="requestChange">Request a change</button></aside>
+      <p id="itemDialogDescription" class="project-description"></p>
+    </div>
+    <section id="changeRequestPanel" class="change-request" aria-labelledby="changeRequestTitle" hidden>
+      <div class="feedback-heading"><h3 id="changeRequestTitle">Help improve this listing</h3><button type="button" class="text-button" id="closeChangeRequest">Cancel</button></div>
+      <p>Your request goes privately to the Playtrace admins. No account needed.</p>
+      <form id="changeRequestForm" class="stack">
+        <label for="changeKind">What needs attention?</label><select id="changeKind" class="select"><option value="image">Preview image</option><option value="details">Project details or link</option><option value="media">Video or GIF</option><option value="removal">Removal request</option><option value="other">Something else</option></select>
+        <label for="changeBody">Tell us what to change</label><textarea id="changeBody" class="input" rows="3" minlength="12" maxlength="1500" required></textarea>
+        <label for="changeUrl">Suggested image or source link <span class="field-optional">(optional)</span></label><input id="changeUrl" class="input" type="url" maxlength="2048" placeholder="https://…">
+        <div><button type="submit" class="btn btn--primary" id="sendChangeRequest">Send request</button></div>
+      </form><p id="changeRequestMessage" role="status"></p>
+    </section>
+    <div id="itemDialogMedia"></div>
+    <section id="projectMedia" class="project-media" aria-label="More from the maker" hidden></section>
     <dl id="itemDialogFacts" class="project-facts"></dl>
     <ul id="itemDialogTags" class="tag-list" aria-label="Tags"></ul>
     <section class="project-feedback" aria-labelledby="feedbackTitle">
@@ -296,10 +302,8 @@
       </div>
     </section>
     <details class="project-history" open><summary><span>Project history</span><span id="timelineCount"></span></summary><ol id="gameTimeline" class="timeline"></ol></details>
-    <div class="project-follow"><button type="button" class="btn btn--secondary" id="followGame">Follow this game</button><p id="followHint" class="field__hint">Keep its progress in your following list.</p></div>
     <div id="itemDialogSource" class="project-source"></div>
   </div>
-  <div class="dialog__footer" id="itemDialogLinks"></div>
 </dialog>
 
 <dialog class="dialog" id="infoDialog" aria-labelledby="infoTitle"><div class="dialog__header"><h2 id="infoTitle">A clear trail to the source</h2><button type="button" class="btn btn--ghost btn--sm" data-dialog-close autofocus>Close</button></div><div class="dialog__body stack">

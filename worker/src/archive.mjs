@@ -1,5 +1,6 @@
 import { AUTHOR, POST_ID, sourceUrl, httpsUrl, canonicalProjectUrl } from './validation.mjs';
 import { classifySource } from './taxonomy.mjs';
+import { extractAssets } from './assets.mjs';
 
 const unavailableText = value => typeof value === 'string' && /^\[(deleted|removed)\]$/i.test(value.trim());
 export function decodeEntities(value) {
@@ -66,6 +67,8 @@ export function normalizePost(raw, nowMs) {
     createdAt: new Date(raw.created_utc * 1000).toISOString(),
     kind: /\b(released|launched|available now)\b/i.test(title) ? 'release' : /\b(update|progress|devlog|added|patch)\b/i.test(title) ? 'update' : 'showcase',
     excerpt: `Source post by u/${raw.author}: ${title}`.slice(0, 600) };
+  const assets = extractAssets(raw);
+  post.assets = assets;
   return { post, projectUrl, preview, clear, authorKey: raw.author.toLowerCase(), taxonomy: classifySource(title, body) };
 }
 export function sourceGame(candidate) {

@@ -16,7 +16,7 @@ test('unconfigured features report unavailable; routes, methods, CORS and no-sto
   assert.equal(response.status, 403);
   response = await worker.fetch(request('/status', { origin: null }), {});
   const data = await response.json();
-  assert.equal(response.status, 200); assert.deepEqual(Object.values(data.capabilities), [false, false, false, false, false, false]);
+  assert.equal(response.status, 200); assert.ok(Object.values(data.capabilities).every(value => value === false));
   assert.equal(data.signalProtection, 'unconfigured');
   response = await worker.fetch(request('/catalog', { origin: null }), {}); assert.equal(response.status, 503);
   response = await worker.fetch(request('/not-a-route', { origin: null }), {}); assert.equal(response.status, 404);

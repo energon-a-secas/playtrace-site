@@ -1,4 +1,5 @@
 import { exactKeys, invalid } from './http.mjs';
+import { validateAssets } from './assets.mjs';
 
 export const GAME_ID = /^g_[a-z0-9]{5,12}$/;
 export const POST_ID = /^[a-z0-9]{5,12}$/;
@@ -41,7 +42,8 @@ function stringList(value, maxItems, maxLength) {
   value.forEach(item => text(item, maxLength));
 }
 export function validatePost(post, author) {
-  exactKeys(post, ['id', 'url', 'title', 'author', 'createdAt', 'kind', 'excerpt']);
+  exactKeys(post, ['id', 'url', 'title', 'author', 'createdAt', 'kind', 'excerpt', ...(Object.hasOwn(post || {}, 'assets') ? ['assets'] : [])]);
+  if (post.assets !== undefined) validateAssets(post.assets);
   if (typeof post.id !== 'string' || typeof post.author !== 'string' || !POST_ID.test(post.id) || !AUTHOR.test(post.author) || post.author.toLowerCase() !== author.toLowerCase()) throw invalid();
   if (post.url !== sourceUrl(post.id)) throw invalid('Source posts must use their canonical Reddit URL.');
   text(post.title, 300); text(post.excerpt, 600, 0); iso(post.createdAt);
