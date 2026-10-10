@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+  "name": "playtrace-api",
+  "main": "src/index.mjs",
+  "compatibility_date": "2026-10-10",
+  "workers_dev": true,
+  "vars": {
+    "ALLOWED_ORIGINS": "https://playtrace.neorgon.com",
+    "CLERK_ISSUER": "https://clerk.neorgon.com",
+    "INGESTION_ENABLED": "true",
+    "SIGNAL_PROTECTION": "account-rate-limit",
+    "TURNSTILE_HOSTNAME": "playtrace.neorgon.com",
+    "PREVIEW_ALLOWED_HOSTS": "i.redd.it,preview.redd.it,external-preview.redd.it,cdn.cloudflare.steamstatic.com,shared.fastly.steamstatic.com"
+  },
+  "triggers": { "crons": [] },
+  "d1_databases": [{ "binding": "DB", "database_name": "playtrace-db", "database_id": "1775b331-55d4-436a-a1c1-a58ab75cc15b", "migrations_dir": "migrations" }],
+  "r2_buckets": [{ "binding": "PREVIEWS", "bucket_name": "playtrace-previews" }]
+  // Root owns provisioning and secrets. Scheduled collection stays disabled
+  // until a successful operator run and the account configuration are verified.
+}
