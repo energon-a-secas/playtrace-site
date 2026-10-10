@@ -135,7 +135,7 @@ export function createWorker(overrides = {}) {
           const db = database(env);
           await refreshSteamBatch(db, deps);
           const recent = await meta(db, 'ingestion'), history = await meta(db, 'history');
-          if (recent?.state === 'ok' && history?.state === 'ok') await hydrateMedia(env, deps);
+          if (ingestionConfigured(env) && recent?.state === 'ok' && history?.state === 'ok') await hydrateMedia(env, deps);
           return;
         }
         const recent = await ingest(env, deps);

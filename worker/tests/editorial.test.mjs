@@ -212,3 +212,13 @@ test('complete operator enrich route stays below 50 D1 statements for six cold a
   assert.equal(response.status,200);const result=await response.json();assert.equal(result.steam.checked,6);assert.equal(result.media.checked,10);
   assert.ok(env.DB.statementCount<50,`Operator enrich used ${env.DB.statementCount} D1 statements`);env.DB.close();
 });
+
+test('disabling ingestion stops scheduled archive hydration even with completed checkpoints',async()=>{
+  const env=fixtureEnv(undefined,{INGESTION_ENABLED:'false'}),calls=[],worker=fixtureWorker(maintenanceUpstream(calls));
+  await importCatalog(env.DB,maintenanceFixture());
+  for(const key of ['ingestion','history'])await query(env.DB,'INSERT INTO app_meta(key,value_json) VALUES(?,?)',key,JSON.stringify({state:'ok'})).run();
+  await worker.scheduled({cron:'5 * * * *'},env);
+  assert.equal(calls.length,6);assert.ok(calls.every(url=>new URL(url).hostname==='store.steampowered.com'));
+  assert.equal(env.DB.sql.prepare('SELECT count(*) AS n FROM source_posts WHERE media_checked_at IS NOT NULL').get().n,0);
+  env.DB.close();
+});
