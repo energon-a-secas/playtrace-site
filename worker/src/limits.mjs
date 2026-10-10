@@ -45,9 +45,9 @@ export async function verifyChallenge(db, env, token, deps) {
   try {
     const response = await deps.fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
       method: 'POST', body: new URLSearchParams({ secret: env.TURNSTILE_SECRET_KEY, response: token }),
-      signal: AbortSignal.timeout(10000), redirect: 'error',
+      signal: AbortSignal.timeout(10000), redirect: 'manual',
     });
-    if (!response.ok) throw challengeFailed();
+    if (!response.ok) { await response.body?.cancel(); throw challengeFailed(); }
     const result = await response.json();
     const timestamp = Date.parse(result.challenge_ts);
     if (result.success !== true || result.action !== 'price_signal' || result.hostname !== env.TURNSTILE_HOSTNAME ||

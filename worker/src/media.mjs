@@ -30,8 +30,10 @@ export async function storePreview(db, env, gameId, body, request, deps) {
   const id = crypto.randomUUID();
   let key, recorded = false;
   try {
-    const response = await deps.fetch(source, { redirect: 'error', signal: AbortSignal.timeout(20000) });
-    if (!response.ok || response.redirected) throw invalid('The preview could not be fetched.');
+    const response = await deps.fetch(source, { redirect: 'manual', signal: AbortSignal.timeout(20000) });
+    if (!response.ok || response.redirected) {
+      await response.body?.cancel(); throw invalid('The preview could not be fetched.');
+    }
     if (Number(response.headers.get('Content-Length')) > 5 * 1024 * 1024) throw invalid('The preview exceeds 5 MiB.');
     const mime = response.headers.get('Content-Type')?.split(';')[0].trim().toLowerCase();
     const bytes = await readBytes(response.body, 5 * 1024 * 1024);

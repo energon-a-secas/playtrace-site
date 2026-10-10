@@ -21,7 +21,9 @@ async function archivePage(after, before, deps) {
   for (let attempt = 0; attempt < 3; attempt++) {
     let delay = 1000 * 2 ** attempt;
     try {
-      const response = await deps.fetch(url.href, { signal: AbortSignal.timeout(15000), redirect: 'error',
+      // Workers supports manual redirects; rejecting non-2xx prevents following
+      // a Location header while keeping every request on the fixed archive URL.
+      const response = await deps.fetch(url.href, { signal: AbortSignal.timeout(15000), redirect: 'manual',
         headers: { Accept: 'application/json', 'User-Agent': 'Playtrace/1.0 (+https://playtrace.neorgon.com)' } });
       if (!response.ok) {
         const retry = response.headers.get('Retry-After');

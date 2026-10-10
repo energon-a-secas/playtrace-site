@@ -20,12 +20,28 @@ test('image fetch rejects unexpected hosts, credentials, ports, IPs, redirects a
   assert.throws(() => imageType(png, 'text/html'));
   await importCatalog(env.DB, fixtureCatalog());
   await assert.rejects(storePreview(env.DB, env, 'g_abc12', consent, request('/admin/games/g_abc12/preview'), {
-    now: () => NOW, fetch: async (_url, options) => { assert.equal(options.redirect, 'error'); throw new Error('redirect rejected'); },
+    now: () => NOW, fetch: async (_url, options) => { assert.equal(options.redirect, 'manual'); throw new Error('Network failure'); },
   }));
   await assert.rejects(storePreview(env.DB, env, 'g_abc12', consent, request('/admin/games/g_abc12/preview'), {
     now: () => NOW, fetch: async () => new Response(new Uint8Array(5 * 1024 * 1024 + 1), { headers: { 'Content-Type': 'image/png' } }),
   }));
   assert.equal(env.PREVIEWS.objects.size, 0); assert.equal(env.DB.sql.prepare('SELECT count(*) AS n FROM media_assets').get().n, 0); env.DB.close();
+});
+test('preview manual redirects reject 3xx without fetching another host or storing an asset', async () => {
+  const env = fixtureEnv(undefined, { PREVIEWS: bucket(), PREVIEW_ALLOWED_HOSTS: 'preview.redd.it' });
+  await importCatalog(env.DB, fixtureCatalog());
+  for (const status of [301, 302, 303, 307, 308]) {
+    const calls = [];
+    await assert.rejects(storePreview(env.DB, env, 'g_abc12', consent, request('/admin/games/g_abc12/preview'), {
+      now: () => NOW, fetch: async (url, options) => {
+        calls.push({ url, options });
+        return new Response(png, { status, headers: { Location: 'https://attacker.example/private.png', 'Content-Type': 'image/png' } });
+      },
+    }), error => error.code === 'INVALID_REQUEST');
+    assert.equal(calls.length, 1); assert.equal(calls[0].url, consent.sourceUrl); assert.equal(calls[0].options.redirect, 'manual');
+  }
+  assert.equal(env.PREVIEWS.objects.size, 0); assert.equal(env.DB.sql.prepare('SELECT count(*) AS n FROM media_assets').get().n, 0);
+  assert.equal((await catalog(env.DB)).games[0].preview.storage, 'external'); env.DB.close();
 });
 test('consented UUID preview route serves bounded images; removal suppresses access before retryable cleanup', async () => {
   const env = fixtureEnv(undefined, { PREVIEWS: bucket(), PREVIEW_ALLOWED_HOSTS: 'preview.redd.it' });

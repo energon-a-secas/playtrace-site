@@ -19,9 +19,11 @@ async function keys(base, deps, refresh) {
   const cached = jwksCache.get(base);
   if (!refresh && cached && cached.until > deps.now()) return cached.keys;
   const response = await deps.fetch(`${base}/.well-known/jwks.json`, {
-    redirect: 'error', signal: AbortSignal.timeout(8000), headers: { Accept: 'application/json' },
+    redirect: 'manual', signal: AbortSignal.timeout(8000), headers: { Accept: 'application/json' },
   });
-  if (!response.ok || Number(response.headers.get('Content-Length')) > 65536) throw unauthenticated();
+  if (!response.ok || Number(response.headers.get('Content-Length')) > 65536) {
+    await response.body?.cancel(); throw unauthenticated();
+  }
   const { readBytes } = await import('./http.mjs');
   const data = JSON.parse(new TextDecoder().decode(await readBytes(response.body, 65536)));
   if (!Array.isArray(data.keys) || data.keys.length < 1 || data.keys.length > 20) throw unauthenticated();

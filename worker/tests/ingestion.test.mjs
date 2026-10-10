@@ -163,6 +163,21 @@ test('archive requests identify Playtrace truthfully and never forward credentia
   } });
   assert.equal(new URL(observed.url).origin + new URL(observed.url).pathname, ARCHIVE_URL);
   assert.deepEqual(observed.options.headers, { Accept: 'application/json', 'User-Agent': 'Playtrace/1.0 (+https://playtrace.neorgon.com)' });
-  assert.equal(observed.options.redirect, 'error');
+  assert.equal(observed.options.redirect, 'manual');
   env.DB.close();
+});
+test('archive manual redirects reject 3xx without fetching the target or advancing coverage', async () => {
+  for (const status of [301, 302, 303, 307, 308]) {
+    const env = fixtureEnv(), calls = [];
+    await assert.rejects(ingest(env, { now: () => NOW, sleep: async () => {}, fetch: async (url, options) => {
+      calls.push({ url, options });
+      return Response.json({ data: [rawPost()] }, { status, headers: { Location: 'https://attacker.example/archive' } });
+    } }), error => error.code === 'SERVICE_UNAVAILABLE');
+    assert.equal(calls.length, 1); assert.equal(new URL(calls[0].url).origin + new URL(calls[0].url).pathname, ARCHIVE_URL);
+    assert.equal(calls[0].options.redirect, 'manual');
+    const run = await meta(env.DB, 'ingestion');
+    assert.equal(run.errorCode, `ARCHIVE_HTTP_${status}`); assert.equal(run.fetched, 0);
+    assert.equal(run.coverageThrough, null); assert.equal(run.lastSuccessAt, null); assert.equal(await meta(env.DB, 'catalog'), null);
+    env.DB.close();
+  }
 });

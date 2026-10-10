@@ -31,6 +31,20 @@ test('unknown key refreshes the pinned issuer once, never a token key URL', asyn
     { now: () => NOW, fetch: async url => { calls.push(url); return Response.json({ keys: [jwk] }); } }));
   assert.deepEqual(calls, [`${env.CLERK_ISSUER}/.well-known/jwks.json`, `${env.CLERK_ISSUER}/.well-known/jwks.json`]); env.DB.close();
 });
+test('JWKS manual redirects reject 3xx without following or authenticating redirected keys', async () => {
+  for (const status of [301, 302, 303, 307, 308]) {
+    const env = fixtureEnv(undefined, { CLERK_ISSUER: `https://redirect-${status}.clerk.example` });
+    const calls = [];
+    await assert.rejects(authenticate(request('/me', { auth: await token({ iss: env.CLERK_ISSUER }) }), env,
+      { now: () => NOW, fetch: async (url, options) => {
+        calls.push({ url, options });
+        return Response.json({ keys: [jwk] }, { status, headers: { Location: 'https://attacker.example/keys' } });
+      } }), error => error.code === 'UNAUTHENTICATED');
+    assert.equal(calls.length, 1); assert.equal(calls[0].url, `${env.CLERK_ISSUER}/.well-known/jwks.json`);
+    assert.equal(calls[0].options.redirect, 'manual');
+    assert.deepEqual(calls[0].options.headers, { Accept: 'application/json' }); env.DB.close();
+  }
+});
 test('operator credential is independent and server-fixed; weak/missing setup fails closed', async () => {
   const env = fixtureEnv();
   assert.equal(await authenticateOperator(request('/admin/catalog', { auth: OPERATOR }), env), 'operator');
@@ -51,6 +65,20 @@ test('challenge requires action, hostname, timestamp and success, then rejects r
   const challengeDeps = { now: () => NOW, fetch: async () => { calls++; return Response.json(valid); } };
   const attempts = await Promise.allSettled(Array.from({ length: 12 }, () => verifyChallenge(env.DB, env, 'same-challenge', challengeDeps)));
   assert.equal(attempts.filter(item => item.status === 'fulfilled').length, 1); assert.equal(calls, 1); env.DB.close();
+});
+test('Turnstile manual redirects fail closed without forwarding the verification secret', async () => {
+  const env = fixtureEnv();
+  for (const status of [301, 302, 303, 307, 308]) {
+    const calls = [];
+    await assert.rejects(verifyChallenge(env.DB, env, `redirect-${status}`, { now: () => NOW, fetch: async (url, options) => {
+      calls.push({ url, options });
+      return Response.json({ success: true, action: 'price_signal', hostname: env.TURNSTILE_HOSTNAME,
+        challenge_ts: new Date(NOW).toISOString() }, { status, headers: { Location: 'https://attacker.example/verify' } });
+    } }), error => error.code === 'CHALLENGE_FAILED');
+    assert.equal(calls.length, 1); assert.equal(calls[0].url, 'https://challenges.cloudflare.com/turnstile/v0/siteverify');
+    assert.equal(calls[0].options.redirect, 'manual'); assert.equal(calls[0].options.method, 'POST');
+  }
+  env.DB.close();
 });
 test('atomic rate upserts cannot race above cap; expiry starts a fresh bucket', async () => {
   const env = fixtureEnv();
