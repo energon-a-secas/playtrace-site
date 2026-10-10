@@ -111,3 +111,24 @@ test('request bodies enforce streaming size limits', async () => {
   const response = await worker.fetch(request('/me', { method: 'DELETE', auth: await token(), body: { confirm: 'x'.repeat(9000) } }), env);
   assert.equal(response.status, 400); env.DB.close();
 });
+
+test('guest and private withdrawals accept empty runtime streams and reject actual body bytes', async () => {
+  const env = fixtureEnv(), worker = fixtureWorker(); await importCatalog(env.DB, fixtureCatalog());
+  const auth = await token();
+  for (const action of ['feedback', 'follow', 'price']) {
+    const path = `/games/g_abc12/${action}`;
+    for (const payload of ['', '{}']) {
+      const base = request(path, { method: 'DELETE', auth });
+      base.headers.set('X-Feedback-Key', '01'.repeat(32));
+      const body = new ReadableStream({ start(controller) {
+        if (payload) controller.enqueue(new TextEncoder().encode(payload));
+        controller.close();
+      } });
+      const incoming = new Request(base, { body, duplex: 'half' });
+      assert.notEqual(incoming.body, null);
+      const response = await worker.fetch(incoming, env);
+      assert.equal(response.status, payload ? 400 : 200, `${action}: ${payload || 'empty stream'}`);
+    }
+  }
+  env.DB.close();
+});

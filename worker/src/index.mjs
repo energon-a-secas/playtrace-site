@@ -1,4 +1,4 @@
-import { ApiError, json, errorResponse, exactKeys, readJson, checkOrigin, withCors, notFound, invalid, strongSecret } from './http.mjs';
+import { json, errorResponse, exactKeys, readJson, readBytes, checkOrigin, withCors, notFound, strongSecret } from './http.mjs';
 import { authenticate, authenticateOperator, accountConfigured } from './auth.mjs';
 import { database, catalog, importCatalog, meta, removal } from './store.mjs';
 import { signals, getMe, deleteMe, mutateGame } from './accounts.mjs';
@@ -68,7 +68,8 @@ export function createWorker(overrides = {}) {
           const db = database(env);
           if (request.method === 'GET') result = json(await publicFeedback(db, match[1], url.searchParams.get('cursor')));
           else {
-            if (request.method === 'DELETE' && request.body) throw invalid('This action does not accept a request body.');
+            // Workerd can expose an empty stream for a bodyless DELETE.
+            if (request.method === 'DELETE') await readBytes(request.body, 0);
             result = json(await writeFeedback(db, env, request, match[1], request.method === 'PUT' ? await readJson(request) : null, deps));
           }
         }
@@ -79,7 +80,7 @@ export function createWorker(overrides = {}) {
           const subject = await authenticate(request, env, deps);
           if (action === 'me') result = json(request.method === 'GET' ? await getMe(db, subject) : await deleteMe(db, env, subject, request, await readJson(request), deps));
           else {
-            if (request.method === 'DELETE' && request.body) throw invalid('This action does not accept a request body.');
+            if (request.method === 'DELETE') await readBytes(request.body, 0);
             result = json(await mutateGame(db, env, subject, request, match[1], match[2], request.method === 'PUT' ? await readJson(request) : null, deps));
           }
         } else {
