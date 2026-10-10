@@ -164,3 +164,51 @@ test('media hydration stops on throttling and never marks unreceived media as ch
   assert.equal(calls,1);assert.equal(env.DB.sql.prepare('SELECT media_checked_at FROM source_posts').get().media_checked_at,null);
   assert.equal(env.DB.sql.prepare("SELECT count(*) AS n FROM app_meta WHERE key='ingestion_lock'").get().n,0);env.DB.close();
 });
+
+function maintenanceFixture() {
+  return fixtureCatalog(Array.from({length:16},(_,i)=>({...fixtureGame(`sched${String(i).padStart(2,'0')}`),
+    ...(i<6?{projectUrl:`https://store.steampowered.com/app/${620+i}/`}:{})})));
+}
+function maintenanceUpstream(calls) {
+  return async url=>{
+    calls.push(url);const u=new URL(url);
+    if(u.hostname==='store.steampowered.com'){
+      const id=u.searchParams.get('appids');const data=steamPayload()['620'].data;
+      return Response.json({[id]:{success:true,data:{...data,steam_appid:Number(id)}}});
+    }
+    if(u.pathname==='/api/posts/ids')return Response.json({data:u.searchParams.get('ids').split(',').map(id=>({id,author:'MakerName',subreddit:'aigamedev',media:{reddit_video:{fallback_url:`https://v.redd.it/${id}/DASH_720.mp4`}}}))});
+    return Response.json({data:[]});
+  };
+}
+test('full scheduled handlers stay below 50 D1 statements with cold Steam caches and ten unchecked media posts',async()=>{
+  const env=fixtureEnv(),calls=[],worker=fixtureWorker(maintenanceUpstream(calls));await importCatalog(env.DB,maintenanceFixture());
+  env.DB.statementCount=0;
+  await worker.scheduled({cron:'35 * * * *'},env);
+  assert.ok(env.DB.statementCount<50,`Archive handler used ${env.DB.statementCount} D1 statements`);
+  assert.equal(calls.length,2);assert.ok(calls.every(url=>new URL(url).pathname==='/api/posts/search'));
+  env.DB.statementCount=0;calls.length=0;
+  await worker.scheduled({cron:'5 * * * *'},env);
+  assert.ok(env.DB.statementCount<50,`Maintenance handler used ${env.DB.statementCount} D1 statements`);
+  assert.equal(calls.filter(url=>new URL(url).hostname==='store.steampowered.com').length,6);
+  assert.equal(calls.filter(url=>new URL(url).pathname==='/api/posts/ids').length,1);
+  assert.equal(env.DB.sql.prepare('SELECT count(*) AS n FROM source_posts WHERE media_checked_at IS NOT NULL').get().n,10);
+  env.DB.close();
+});
+test('maintenance refreshes Steam independently but defers media when either archive checkpoint is incomplete',async()=>{
+  for(const [recent,history] of [['partial','ok'],['ok','partial'],['error','ok']]){
+    const env=fixtureEnv(),calls=[],worker=fixtureWorker(maintenanceUpstream(calls));await importCatalog(env.DB,maintenanceFixture());
+    await query(env.DB,'INSERT INTO app_meta(key,value_json) VALUES(?,?)','ingestion',JSON.stringify({state:recent})).run();
+    await query(env.DB,'INSERT INTO app_meta(key,value_json) VALUES(?,?)','history',JSON.stringify({state:history})).run();
+    env.DB.statementCount=0;
+    await worker.scheduled({cron:'5 * * * *'},env);
+    assert.ok(env.DB.statementCount<50);assert.equal(calls.length,6);assert.ok(calls.every(url=>new URL(url).hostname==='store.steampowered.com'));
+    assert.equal(env.DB.sql.prepare('SELECT count(*) AS n FROM source_posts WHERE media_checked_at IS NOT NULL').get().n,0);env.DB.close();
+  }
+});
+test('complete operator enrich route stays below 50 D1 statements for six cold apps plus media hydration',async()=>{
+  const env=fixtureEnv(),calls=[],worker=fixtureWorker(maintenanceUpstream(calls));await importCatalog(env.DB,maintenanceFixture());
+  env.DB.statementCount=0;
+  const response=await worker.fetch(request('/admin/enrich',{method:'POST',auth:env.OPERATOR_TOKEN,body:{}}),env);
+  assert.equal(response.status,200);const result=await response.json();assert.equal(result.steam.checked,6);assert.equal(result.media.checked,10);
+  assert.ok(env.DB.statementCount<50,`Operator enrich used ${env.DB.statementCount} D1 statements`);env.DB.close();
+});

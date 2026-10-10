@@ -127,15 +127,19 @@ export function createWorker(overrides = {}) {
         return withCors(result, origin);
       } catch (error) { return withCors(errorResponse(error), origin); }
     },
-    async scheduled(_event, env, context) {
+    async scheduled(event, env, context) {
       const run = (async () => {
-        try {
-          const recent = await ingest(env, deps);
-          if (recent.status === 'ok') {
-            const history = await ingest(env, deps, true);
-            if (history.status === 'ok') await hydrateMedia(env, deps);
-          }
-        } finally { await refreshSteamBatch(database(env), deps); }
+        // Separate invocations keep the complete handler below the D1 budget,
+        // including six cold Steam caches and a ten-post media hydration batch.
+        if (event?.cron === '5 * * * *') {
+          const db = database(env);
+          await refreshSteamBatch(db, deps);
+          const recent = await meta(db, 'ingestion'), history = await meta(db, 'history');
+          if (recent?.state === 'ok' && history?.state === 'ok') await hydrateMedia(env, deps);
+          return;
+        }
+        const recent = await ingest(env, deps);
+        if (recent.status === 'ok') await ingest(env, deps, true);
       })();
       if (context?.waitUntil) context.waitUntil(run);
       else await run;

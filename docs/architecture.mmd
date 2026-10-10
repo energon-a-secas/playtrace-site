@@ -8,8 +8,9 @@ flowchart LR
     API -->|"Exact app ID, US price, 24h cache"| Steam["Steam Storefront"]
     API -->|"Games, source posts, public feedback,<br/>admin roles, requests, preview overrides,<br/>private follows/prices, quotas and tombstones"| D1[("Cloudflare D1")]
     Browser -->|"Original previews and post links"| Sources["Creator media hosts<br/>and Reddit posts"]
-    Cron["Hourly schedule"] --> Collector["Recent updates + historical pass<br/>from December 2022"]
+    Cron["Hourly archive at :35"] --> Collector["Recent updates + historical pass<br/>from December 2022"]
     Collector -->|"Bounded, paced requests"| Archive["Arctic Shift archive<br/>r/aigamedev"]
+    Maintenance["Hourly maintenance at :05<br/>6 store apps + 10 source posts"] --> API
     Collector -->|"Source-described games,<br/>review candidates and coverage"| D1
     Operator["Operator with separate credential"] -->|"Review, import, moderate, remove;<br/>approve image permission"| API
     API -->|"Validated creator-approved images"| R2[("Private R2 preview bucket")]
