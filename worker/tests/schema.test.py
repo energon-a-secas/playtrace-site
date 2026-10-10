@@ -6,8 +6,8 @@ import unittest
 
 
 WORKER = Path(__file__).resolve().parents[1]
-FORWARD = (WORKER / "migrations" / "0001_initial.sql").read_text()
-ROLLBACK = (WORKER / "rollback" / "0001_initial.sql").read_text()
+FORWARD = "\n".join(path.read_text() for path in sorted((WORKER / "migrations").glob("*.sql")))
+ROLLBACK = "\n".join(path.read_text() for path in sorted((WORKER / "rollback").glob("*.sql"), reverse=True))
 NOW = "2026-10-10T12:00:00.000Z"
 
 
@@ -33,7 +33,7 @@ class SchemaTests(unittest.TestCase):
         actual = {row[0] for row in self.db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
         self.assertEqual(actual, {
             "games", "source_posts", "price_signals", "follows",
-            "app_meta", "rate_limits", "media_assets", "removals",
+            "app_meta", "rate_limits", "media_assets", "removals", "feedback",
         })
         self.assertEqual(self.db.execute("PRAGMA foreign_keys").fetchone()[0], 1)
         with self.assertRaises(sqlite3.IntegrityError):
@@ -146,6 +146,24 @@ class SchemaTests(unittest.TestCase):
         self.db.executescript(FORWARD)
         self.assertEqual(self.db.execute("PRAGMA foreign_key_check").fetchall(), [])
         self.assertEqual(self.db.execute("SELECT count(*) FROM games").fetchone()[0], 0)
+
+    def test_public_feedback_constraints_and_additive_rollback_preserve_legacy_prices(self):
+        self.add_game()
+        self.add_price()
+        insert = "INSERT INTO feedback(id,game_id,guest_key_hash,display_name,body,ideal_price_cents,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)"
+        for body, price in (("", None), ("Valid note", -1), ("Valid note", 1.5), ("Valid note", 10001)):
+            with self.subTest(body=body, price=price), self.assertRaises(sqlite3.IntegrityError):
+                self.db.execute(insert, ("entry", "g_test01", "guest-key-hash", "Guest", body, price, NOW, NOW))
+        self.db.execute(insert, ("entry", "g_test01", "guest-key-hash", "Guest", "", 0, NOW, NOW))
+        with self.assertRaises(sqlite3.IntegrityError):
+            self.db.execute(insert, ("other", "g_test01", "guest-key-hash", "Guest", "Valid note", None, NOW, NOW))
+        self.db.executescript((WORKER / "rollback" / "0002_public_feedback.sql").read_text())
+        self.assertEqual(self.db.execute("SELECT amount_cents FROM price_signals").fetchone()[0], 1500)
+        self.assertEqual(self.db.execute("SELECT count(*) FROM games").fetchone()[0], 1)
+        self.db.executescript((WORKER / "migrations" / "0002_public_feedback.sql").read_text())
+        self.db.execute(insert, ("entry", "g_test01", "guest-key-hash", "Guest", "Valid note", None, NOW, NOW))
+        self.db.execute("DELETE FROM games")
+        self.assertEqual(self.db.execute("SELECT count(*) FROM feedback").fetchone()[0], 0)
 
 
 if __name__ == "__main__":

@@ -10,7 +10,7 @@ export function signalProtection(env) {
   return 'unconfigured';
 }
 export async function digest(value) { return hex(await crypto.subtle.digest('SHA-256', encode.encode(value))); }
-async function hmac(secret, value) {
+export async function hmac(secret, value) {
   const key = await crypto.subtle.importKey('raw', encode.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
   return hex(await crypto.subtle.sign('HMAC', key, encode.encode(value)));
 }

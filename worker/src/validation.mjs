@@ -62,7 +62,9 @@ export function validateGame(game) {
   if (!Array.isArray(game.posts) || game.posts.length < 1 || game.posts.length > 1000) throw invalid();
   game.posts.forEach(post => validatePost(post, game.author.name));
   const ordered = [...game.posts].sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt) || a.id.localeCompare(b.id));
-  if (game.id !== `g_${ordered[0].id}` || Date.parse(game.firstSeenAt) !== Date.parse(ordered[0].createdAt) ||
+  // The source post that first established this ID remains its anchor. Older
+  // matching posts can extend the timeline without breaking links or feedback.
+  if (!game.posts.some(post => game.id === `g_${post.id}`) || Date.parse(game.firstSeenAt) !== Date.parse(ordered[0].createdAt) ||
     Date.parse(game.updatedAt) !== Date.parse(ordered.at(-1).createdAt)) throw invalid('Game dates and identity must match their source timeline.');
   exactKeys(game.preview, ['kind', 'url', 'posterUrl', 'alt', 'storage', 'rights', 'sourceUrl']);
   const preview = game.preview;

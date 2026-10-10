@@ -4,6 +4,9 @@ import { normalizePost, sourceGame } from './archive.mjs';
 import { acquire, release } from './lease.mjs';
 
 export const ARCHIVE_URL = 'https://arctic-shift.photon-reddit.com/api/posts/search';
+// r/aigamedev creation timestamp, confirmed by the archive's subreddit record
+// and first post (zipbkg). This is a fixed historical boundary, not a lookback.
+export const COMMUNITY_CREATED_AT = '2022-12-11T12:00:48.000Z';
 export const ingestionConfigured = env => Boolean(env.DB && env.INGESTION_ENABLED === 'true');
 const MAX_RETRY_WAIT_MS = 5000;
 function retryDelay(headers, now, minimum) {
@@ -25,9 +28,9 @@ function classifyArchiveFailure(error) {
   if (error.code === 'INVALID_REQUEST') return archiveFailure('ARCHIVE_RESPONSE_TOO_LARGE', false);
   return archiveFailure('ARCHIVE_NETWORK_ERROR', true);
 }
-async function archivePage(after, before, deps) {
+async function archivePage(after, before, deps, ascending = false) {
   const url = new URL(ARCHIVE_URL);
-  url.search = new URLSearchParams({ subreddit: 'aigamedev', sort: 'desc', limit: '100', after: String(after), before: String(before) });
+  url.search = new URLSearchParams({ subreddit: 'aigamedev', sort: ascending ? 'asc' : 'desc', limit: '100', after: String(after), before: String(before) });
   for (let attempt = 0; attempt < 3; attempt++) {
     let delay = 1000 * 2 ** attempt;
     try {
@@ -55,11 +58,11 @@ async function archivePage(after, before, deps) {
 async function planCandidates(db, candidates) {
   const ids = JSON.stringify(candidates.map(candidate => candidate.post.id));
   const [sourceRows, gameRows, removedRows] = await db.batch([
-    query(db, 'SELECT id FROM source_posts WHERE id IN(SELECT value FROM json_each(?))', ids),
-    query(db, "SELECT id,author_key,project_url,payload_json FROM games WHERE status='published' ORDER BY id LIMIT 2001"),
+    query(db, "SELECT id FROM source_posts WHERE id IN(SELECT value FROM json_each(?)) AND status<>'pending'", ids),
+    query(db, `SELECT id,author_key,project_url,payload_json FROM games WHERE status='published'
+      AND author_key IN(SELECT DISTINCT json_extract(value,'$.authorKey') FROM json_each(?)) ORDER BY id`, JSON.stringify(candidates)),
     query(db, 'SELECT game_id,source_post_ids_json FROM removals'),
   ]);
-  if (gameRows.results.length > 2000) throw unavailable();
   const seen = new Set(sourceRows.results.map(row => row.id));
   const blockedGames = new Set(removedRows.results.map(row => row.game_id));
   const blockedPosts = new Set(removedRows.results.flatMap(row => JSON.parse(row.source_post_ids_json)));
@@ -72,8 +75,8 @@ async function planCandidates(db, candidates) {
   };
   for (const row of gameRows.results) if (games.has(row.id)) addMatch(row.author_key, row.project_url, games.get(row.id));
   const changed = new Map(), pending = [];
-  // Oldest first makes a new game's ID stable across all posts in this bounded
-  // batch. Earlier posts found in a later page/run still require review.
+  // New games use the oldest source in this batch as their permanent anchor.
+  // Older sources found later extend the same timeline without changing its ID.
   const ordered = [...candidates].sort((a, b) => Date.parse(a.post.createdAt) - Date.parse(b.post.createdAt) || a.post.id.localeCompare(b.post.id));
   for (const candidate of ordered) {
     const { post, projectUrl, authorKey } = candidate;
@@ -81,12 +84,13 @@ async function planCandidates(db, candidates) {
     seen.add(post.id);
     const found = projectUrl ? matches.get(`${authorKey}\n${projectUrl}`) || [] : [];
     const match = found.length === 1 ? found[0] : null;
-    if (match && Date.parse(post.createdAt) >= Date.parse(match.firstSeenAt) && match.posts.length < 1000) {
+    if (match && match.posts.length < 1000) {
       match.posts.push(post);
       match.posts.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt) || a.id.localeCompare(b.id));
+      match.firstSeenAt = match.posts[0].createdAt;
       match.updatedAt = match.posts.at(-1).createdAt;
       changed.set(match.id, match);
-    } else if (candidate.clear && found.length === 0 && games.size < 2000) {
+    } else if (candidate.clear && found.length === 0) {
       const game = sourceGame(candidate);
       games.set(game.id, game); changed.set(game.id, game); addMatch(authorKey, projectUrl, game);
     } else pending.push(candidate);
@@ -101,51 +105,62 @@ async function savePending(db, pending, retrievedAt) {
     ON CONFLICT(id) DO NOTHING RETURNING id`, retrievedAt, JSON.stringify(pending)).all();
   return result.results.length;
 }
-export async function ingest(env, deps) {
+export async function ingest(env, deps, historical = false) {
   if (!ingestionConfigured(env)) throw unavailable();
   const db = env.DB, start = deps.now(), attemptAt = new Date(start).toISOString();
   const owner = await acquire(db, 'ingestion_lock', start);
   if (!owner) throw unavailable();
+  const checkpointKey = historical ? 'history' : 'ingestion';
   let run, previous;
   try {
-    previous = await meta(db, 'ingestion');
+    previous = await meta(db, checkpointKey);
+    if (historical && previous?.state === 'ok') return { status: 'ok', fetched: 0, candidates: 0, updatedGames: 0 };
     const resuming = Number.isInteger(previous?.resumeBefore) && Number.isInteger(previous?.resumeAfter) &&
       previous.resumeBefore > previous.resumeAfter && Number.isFinite(Date.parse(previous.targetCoverageThrough));
-    const after = resuming ? previous.resumeAfter : Math.max(1104537600,
-      Math.floor((previous?.coverageThrough ? Date.parse(previous.coverageThrough) - 172800000 : start - 604800000) / 1000));
+    let after = resuming ? previous.resumeAfter : Math.max(1104537600,
+      Math.floor((historical ? Date.parse(COMMUNITY_CREATED_AT) - 1000
+        : previous?.coverageThrough ? Date.parse(previous.coverageThrough) - 172800000 : start - 604800000) / 1000));
     let before = resuming ? previous.resumeBefore : Math.floor(start / 1000);
     const target = resuming ? previous.targetCoverageThrough : attemptAt;
     run = { runId: crypto.randomUUID(), state: 'error', lastAttemptAt: attemptAt,
       lastSuccessAt: previous?.lastSuccessAt || null, coverageThrough: previous?.coverageThrough || null,
       fetched: 0, candidates: 0, updatedGames: 0, errorCode: null,
       resumeBefore: before, resumeAfter: after, targetCoverageThrough: target };
-    await db.batch([putMeta(db, 'ingestion', run), query(db, 'DELETE FROM rate_limits WHERE expires_at<=?', Math.floor(start / 1000))]);
+    if (historical) Object.assign(run, { startedAt: previous?.startedAt || attemptAt,
+      scannedThrough: previous?.scannedThrough || null, communityCreatedAt: COMMUNITY_CREATED_AT });
+    await db.batch([putMeta(db, checkpointKey, run), query(db, 'DELETE FROM rate_limits WHERE expires_at<=?', Math.floor(start / 1000))]);
     let complete = false, pageFailure = false;
     const seen = new Set(), candidates = [];
     for (let page = 0; page < 3; page++) {
       let rows;
-      try { rows = await archivePage(after, before, deps); }
+      try { rows = await archivePage(after, before, deps, historical); }
       catch (error) { run.errorCode = classifyArchiveFailure(error).code; pageFailure = true; break; }
-      let oldest = before;
+      let oldest = before, newest = after;
       for (const raw of rows) {
-        if (Number.isFinite(raw?.created_utc)) oldest = Math.min(oldest, Math.floor(raw.created_utc));
+        if (Number.isFinite(raw?.created_utc)) {
+          oldest = Math.min(oldest, Math.floor(raw.created_utc));
+          newest = Math.max(newest, Math.floor(raw.created_utc));
+        }
         if (typeof raw?.id !== 'string' || seen.has(raw.id)) continue;
         seen.add(raw.id); run.fetched++;
         const candidate = normalizePost(raw, start);
         if (candidate && raw.created_utc > after && raw.created_utc <= Date.parse(target) / 1000) candidates.push(candidate);
       }
+      if (historical && newest > after) run.scannedThrough = new Date(Math.min(newest * 1000, Date.parse(target))).toISOString();
       if (rows.length < 100) { complete = true; break; }
-      const next = oldest + 1;
+      const next = historical ? newest - 1 : oldest + 1;
       if (next >= before || next <= after) { run.errorCode = 'CURSOR_STALLED'; break; }
-      before = next;
+      if (historical) after = next;
+      else before = next;
       if (page < 2) await deps.sleep(600);
     }
     run.state = complete ? 'ok' : pageFailure && !run.fetched ? 'error' : 'partial';
     if (complete) {
       run.lastSuccessAt = new Date(deps.now()).toISOString(); run.coverageThrough = target;
       run.resumeBefore = null; run.resumeAfter = null; run.targetCoverageThrough = null;
+      if (historical) run.scannedThrough = target;
     } else {
-      run.resumeBefore = before;
+      run.resumeBefore = before; run.resumeAfter = after;
       if (!run.errorCode) run.errorCode = 'PAGE_CAP';
     }
     let finalHead;
@@ -156,13 +171,16 @@ export async function ingest(env, deps) {
         coverageThrough: null, mode: 'scheduled', lastSuccessfulIngestAt: null } };
       const plan = await planCandidates(db, candidates);
       finalHead = { ...head, generatedAt: attemptAt, source: { ...head.source, archiveUrl: ARCHIVE_URL,
-        retrievedAt: attemptAt, mode: 'scheduled', coverageThrough: run.coverageThrough, lastSuccessfulIngestAt: run.lastSuccessAt } };
+        retrievedAt: attemptAt, mode: 'scheduled',
+        coverageThrough: historical ? head.source.coverageThrough : run.coverageThrough,
+        lastSuccessfulIngestAt: historical ? head.source.lastSuccessfulIngestAt : run.lastSuccessAt } };
       const imported = await importCatalog(db, { ...finalHead, source: { ...finalHead.source,
-        coverageThrough: previous?.coverageThrough || null, lastSuccessfulIngestAt: previous?.lastSuccessAt || null }, games: plan.changed });
+        coverageThrough: historical ? head.source.coverageThrough : previous?.coverageThrough || null,
+        lastSuccessfulIngestAt: historical ? head.source.lastSuccessfulIngestAt : previous?.lastSuccessAt || null }, games: plan.changed });
       run.updatedGames = imported.importedGames;
       run.candidates = await savePending(db, plan.pending, attemptAt);
     }
-    await db.batch([...(finalHead ? [putMeta(db, 'catalog', finalHead)] : []), putMeta(db, 'ingestion', run)]);
+    await db.batch([...(finalHead ? [putMeta(db, 'catalog', finalHead)] : []), putMeta(db, checkpointKey, run)]);
     if (run.state === 'error') throw unavailable();
     return { runId: run.runId, status: run.state, fetched: run.fetched, candidates: run.candidates, updatedGames: run.updatedGames };
   } catch (error) {
@@ -173,7 +191,8 @@ export async function ingest(env, deps) {
       run.lastSuccessAt = previous?.lastSuccessAt || null; run.coverageThrough = previous?.coverageThrough || null;
       run.resumeBefore = previous?.resumeBefore || null; run.resumeAfter = previous?.resumeAfter || null;
       run.targetCoverageThrough = previous?.targetCoverageThrough || null;
-      await putMeta(db, 'ingestion', run).run();
+      if (historical) run.scannedThrough = previous?.scannedThrough || null;
+      await putMeta(db, checkpointKey, run).run();
     }
     throw error;
   } finally { await release(db, 'ingestion_lock', owner); }

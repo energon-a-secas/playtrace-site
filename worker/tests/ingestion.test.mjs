@@ -2,10 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { normalizePost } from '../src/archive.mjs';
 import { classifySource } from '../src/taxonomy.mjs';
-import { ingest, ARCHIVE_URL } from '../src/ingestion.mjs';
+import { ingest, ARCHIVE_URL, COMMUNITY_CREATED_AT } from '../src/ingestion.mjs';
 import { catalog, importCatalog, meta, removal } from '../src/store.mjs';
 import { acquire } from '../src/lease.mjs';
-import { NOW, fixtureEnv, fixtureCatalog, rawPost } from './helpers.mjs';
+import { NOW, fixtureEnv, fixtureCatalog, rawPost, fixtureWorker, request } from './helpers.mjs';
 
 const deps = data => ({ now: () => NOW, sleep: async () => {}, fetch: async () => Response.json({ data }) });
 test('normalizer rejects removed/adult/discussion/malformed rows and decodes preview URLs once', () => {
@@ -24,7 +24,7 @@ test('normalizer rejects removed/adult/discussion/malformed rows and decodes pre
 });
 test('real ingestion auto-publishes clear showcases, keeps ambiguous pending and is idempotent', async () => {
   const env = fixtureEnv();
-  const rows = [rawPost(), rawPost('maybe', { title: 'A puzzle game experiment', selftext: 'An interesting game.' })];
+  const rows = [rawPost(), rawPost('maybe', { title: 'A puzzle game experiment', selftext: 'An interesting game.', url: 'https://newmaker.itch.io/another' })];
   const first = await ingest(env, deps(rows));
   assert.equal(first.status, 'ok'); assert.equal(first.updatedGames, 1); assert.equal(first.candidates, 1);
   const publicCatalog = await catalog(env.DB); assert.equal(publicCatalog.games.length, 1);
@@ -33,18 +33,22 @@ test('real ingestion auto-publishes clear showcases, keeps ambiguous pending and
   const second = await ingest(env, deps(rows)); assert.equal(second.updatedGames, 0); assert.equal(second.candidates, 0);
   assert.equal(env.DB.sql.prepare('SELECT count(*) AS n FROM source_posts').get().n, 2); env.DB.close();
 });
-test('only same author plus canonical project URL attaches; earlier-than-identity stays pending', async () => {
+test('earlier matching sources extend history without changing project identity or private associations', async () => {
   const env = fixtureEnv(); await importCatalog(env.DB, fixtureCatalog());
+  env.DB.sql.exec("INSERT INTO follows VALUES('member','g_abc12','2026-10-10T12:00:00.000Z'); INSERT INTO price_signals VALUES('member','g_abc12',1200,'USD','2026-10-10T12:00:00.000Z')");
   const rows = [rawPost('later', { author: 'MakerName', title: 'I updated my puzzle game', url: 'https://maker.itch.io/puzzle?utm_source=reddit' }),
     rawPost('other', { author: 'MakerName', url: 'https://maker.itch.io/other' }),
     rawPost('early', { author: 'MakerName', url: 'https://maker.itch.io/puzzle', created_utc: Date.parse('2026-10-08T00:00:00Z') / 1000 })];
   await ingest(env, deps(rows));
   const data = await catalog(env.DB), existing = data.games.find(game => game.id === 'g_abc12');
-  assert.equal(existing.posts.length, 2); assert.ok(existing.posts.some(post => post.id === 'later'));
+  assert.equal(existing.posts.length, 3); assert.ok(existing.posts.some(post => post.id === 'later'));
+  assert.equal(existing.firstSeenAt, '2026-10-08T00:00:00.000Z');
   assert.ok(data.games.some(game => game.id === 'g_other'));
-  const pending = env.DB.sql.prepare("SELECT game_id,status FROM source_posts WHERE id='early'").get();
-  assert.equal(pending.game_id, null); assert.equal(pending.status, 'pending');
-  await importCatalog(env.DB, fixtureCatalog()); assert.equal((await catalog(env.DB)).games.find(game => game.id === 'g_abc12').posts.length, 2);
+  const attached = env.DB.sql.prepare("SELECT game_id,status FROM source_posts WHERE id='early'").get();
+  assert.equal(attached.game_id, 'g_abc12'); assert.equal(attached.status, 'published');
+  assert.equal(env.DB.sql.prepare('SELECT game_id FROM follows').get().game_id, 'g_abc12');
+  assert.equal(env.DB.sql.prepare('SELECT amount_cents FROM price_signals').get().amount_cents, 1200);
+  await importCatalog(env.DB, fixtureCatalog()); assert.equal((await catalog(env.DB)).games.find(game => game.id === 'g_abc12').posts.length, 3);
   env.DB.close();
 });
 test('removed source IDs cannot reimport under the same or another game', async () => {
@@ -233,4 +237,58 @@ test('an archive long reset after a page saves partial progress and safely resum
   assert.equal(next.status, 'ok'); assert.equal(Number(resumed.searchParams.get('before')), checkpoint.resumeBefore);
   assert.equal(Number(resumed.searchParams.get('after')), checkpoint.resumeAfter);
   assert.equal((await meta(env.DB, 'ingestion')).coverageThrough, checkpoint.targetCoverageThrough); env.DB.close();
+});
+
+test('historical collection starts at group creation, scans forward, resumes and preserves recent coverage', async () => {
+  const env = fixtureEnv(); await ingest(env, deps([rawPost()]));
+  const recent = await meta(env.DB, 'ingestion'), urls = [];
+  const creation = Date.parse(COMMUNITY_CREATED_AT) / 1000;
+  let calls = 0;
+  const first = await ingest(env, { ...deps([]), fetch: async url => {
+    urls.push(new URL(url)); const page = calls++;
+    return Response.json({ data: Array.from({ length: 100 }, (_, i) => rawPost((700000 + page * 100 + i).toString(36).padStart(5, '0'), {
+      created_utc: creation + page * 1000 + i * 2,
+      url: `https://maker.itch.io/history-${page}-${i}`,
+    })) });
+  } }, true);
+  assert.equal(first.status, 'partial'); assert.equal(first.updatedGames, 300);
+  assert.equal(urls[0].searchParams.get('sort'), 'asc');
+  assert.equal(Number(urls[0].searchParams.get('after')), creation - 1);
+  const history = await meta(env.DB, 'history');
+  assert.equal(history.scannedThrough, new Date((creation + 2198) * 1000).toISOString());
+  assert.equal(history.resumeAfter, creation + 2197); assert.equal(history.resumeBefore, NOW / 1000);
+  assert.deepEqual(await meta(env.DB, 'ingestion'), recent);
+  assert.equal((await catalog(env.DB)).source.coverageThrough, recent.coverageThrough);
+  let resume;
+  await ingest(env, { now: () => NOW + 3600000, sleep: async () => {}, fetch: async url => { resume = new URL(url); return Response.json({ data: [] }); } }, true);
+  assert.equal(Number(resume.searchParams.get('after')), history.resumeAfter);
+  assert.equal(Number(resume.searchParams.get('before')), history.resumeBefore);
+  const complete = await meta(env.DB, 'history');
+  assert.equal(complete.state, 'ok'); assert.equal(complete.coverageThrough, new Date(NOW).toISOString());
+  assert.equal(complete.scannedThrough, complete.coverageThrough);
+  const again = await ingest(env, { ...deps([]), fetch: () => { throw new Error('Completed backfill fetched again'); } }, true);
+  assert.equal(again.fetched, 0);
+  const status = await (await fixtureWorker().fetch(request('/status'), env)).json();
+  assert.equal(status.history.completedThrough, complete.coverageThrough);
+  assert.equal(status.history.communityCreatedAt, COMMUNITY_CREATED_AT); env.DB.close();
+});
+
+test('historical archive failure keeps its checkpoint and never invents scanned dates', async () => {
+  const env = fixtureEnv(); await importCatalog(env.DB, fixtureCatalog());
+  const baseline = await meta(env.DB, 'catalog');
+  await assert.rejects(ingest(env, { ...deps([]), fetch: async () => new Response('', { status: 429, headers: { 'Retry-After': '999' } }) }, true));
+  const history = await meta(env.DB, 'history');
+  assert.equal(history.state, 'error'); assert.equal(history.scannedThrough, null);
+  assert.equal(history.resumeAfter, Date.parse(COMMUNITY_CREATED_AT) / 1000 - 1);
+  assert.deepEqual(await meta(env.DB, 'catalog'), baseline);
+  assert.equal(await meta(env.DB, 'ingestion'), null); env.DB.close();
+});
+
+test('scheduled partial recent scans defer history rather than retrying a throttled archive', async () => {
+  const env = fixtureEnv(); let calls = 0;
+  const rows = Array.from({ length: 100 }, (_, i) => rawPost((800000 + i).toString(36).padStart(5, '0'), { created_utc: NOW / 1000 - i - 10 }));
+  const worker = fixtureWorker(async () => ++calls === 1 ? Response.json({ data: rows }) : new Response('', { status: 429, headers: { 'Retry-After': '999' } }));
+  await worker.scheduled({}, env);
+  assert.equal(calls, 2); assert.equal((await meta(env.DB, 'ingestion')).state, 'partial');
+  assert.equal(await meta(env.DB, 'history'), null); env.DB.close();
 });

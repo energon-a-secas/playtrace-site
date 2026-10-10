@@ -14,8 +14,8 @@ function image(game, priority = false) {
 
 let optionsGames;
 let featureGames;
-let listGames;
 let listVersion = '';
+let filterVersion = '';
 export function render() {
   if (optionsGames !== state.games) {
     optionsGames = state.games;
@@ -36,18 +36,34 @@ export function render() {
   $('collectionResults').setAttribute('aria-busy', String(loading)); $('refreshCollection').disabled = loading;
   $('collectionLoading').hidden = state.loaded || !loading;
   $('collectionError').hidden = state.status !== 'error';
-  $('collectionErrorText').textContent = state.status !== 'error' ? '' : state.loaded ? 'Could not refresh. The last loaded collection is still here.' : 'The collection could not be loaded. Please try again.';
+  $('collectionErrorText').textContent = state.status !== 'error' ? '' : state.catalogPartial
+    ? 'Older projects could not be loaded. Search and filters currently cover the loaded projects. Retry to load the full collection.'
+    : state.loaded ? 'Could not refresh. The last loaded collection is still here.' : 'The collection could not be loaded. Please try again.';
   const games = selectGames(state.games, state);
-  $('resultCount').textContent = !state.loaded ? loading ? 'Loading collection…' : 'Collection unavailable' : `${games.length} of ${state.games.length} projects${loading ? ' · Refreshing…' : ''}`;
+  const filters = JSON.stringify([state.query, state.category, state.stage, state.author, state.following, state.sort]);
+  if (filters !== filterVersion) { filterVersion = filters; state.visibleLimit = 60; }
+  const visible = games.slice(0, state.visibleLimit || 60);
+  $('resultCount').textContent = !state.loaded ? loading ? 'Loading collection…' : 'Collection unavailable'
+    : state.catalogPartial ? `${games.length} matches · ${state.games.length} of ${state.catalogTotal} projects loaded${loading ? ' · Loading older projects…' : ''}`
+      : `${games.length} of ${state.games.length} projects${loading ? ' · Refreshing…' : ''}`;
   const list = $('itemList'); list.hidden = !state.loaded || !games.length; list.dataset.view = state.view;
-  const nextList = games.map(game => game.id).join(',');
-  if (listGames !== state.games || nextList !== listVersion) { listGames = state.games; listVersion = nextList; list.innerHTML = games.map(card).join(''); }
+  // Background pages must not replace unchanged cards and steal keyboard focus.
+  // Full records still invalidate same-ID edits, even at the same timestamp.
+  const nextList = JSON.stringify(visible);
+  if (nextList !== listVersion) { listVersion = nextList; list.innerHTML = visible.map(card).join(''); }
+  $('collectionMore').hidden = visible.length >= games.length;
+  $('collectionShown').textContent = `Showing ${visible.length} of ${games.length} matching projects`;
+  $('showMoreGames').textContent = `Show ${Math.min(60, games.length - visible.length)} more projects`;
   $('collectionEmpty').hidden = !state.loaded || Boolean(games.length);
   $('emptyTitle').textContent = state.following ? state.signedIn ? 'Your next find is waiting' : 'Your following list lives with your account' : 'No projects match this view';
   $('emptyDescription').textContent = state.following ? state.signedIn ? 'Follow a game to collect its progress here. New source posts stay together on its timeline.' : 'Sign in with the account you use to follow games, or explore the public collection.' : 'Try another genre, maker or search. The whole collection is one reset away.';
   if (state.following && CONFIG.accountsReady !== true) {
     $('emptyTitle').textContent = 'Following is not available yet';
     $('emptyDescription').textContent = 'Reset this filter to explore the public collection.';
+  }
+  if (state.catalogPartial && !state.following) {
+    $('emptyTitle').textContent = 'No matches in the projects loaded so far';
+    $('emptyDescription').textContent = loading ? 'Older projects are still loading. Results will update as they arrive.' : 'Retry loading the archive to search all projects.';
   }
   $('emptyReset').hidden = !filtered;
   $('authorContext').hidden = !state.author;
@@ -60,12 +76,12 @@ export function render() {
 
 function card(game) {
   return `<li><article class="collection-item"><button class="collection-item__preview" type="button" data-item="${e(game.id)}" aria-label="Explore ${e(game.title)}">${image(game)}<span class="preview-label">${game.preview.kind === 'video' ? 'View preview' : 'Explore project'} ${arrow}</span></button>
-    <div class="collection-item__body"><div class="game-meta"><span>${e(label(game.category))}</span>${stageBadge(game)}</div><h3><button type="button" data-item="${e(game.id)}">${e(game.title)}</button></h3><button class="maker-link" type="button" data-author="${e(game.author.name)}">by u/${e(game.author.name)}</button><p class="collection-item__description">${e(game.summary)}</p><div class="collection-item__foot"><time datetime="${e(game.updatedAt)}">${e(dateLabel(game.updatedAt))}</time><button class="text-button" type="button" data-item="${e(game.id)}">${game.posts.length > 1 ? `${game.posts.length} source posts` : 'Project notes'} ${arrow}</button></div>${game.reviewStatus === 'source-described' ? '<span class="review-label">Source-described</span>' : ''}</div></article></li>`;
+    <div class="collection-item__body"><div class="game-meta"><span>${e(label(game.category))}</span>${stageBadge(game)}</div><h3><button type="button" data-item="${e(game.id)}">${e(game.title)}</button></h3><button class="maker-link" type="button" data-author="${e(game.author.name)}">by u/${e(game.author.name)}</button><p class="collection-item__description">${e(game.summary)}</p><div class="collection-item__foot"><time datetime="${e(game.updatedAt)}">${e(dateLabel(game.updatedAt))}</time><button class="text-button" type="button" data-item="${e(game.id)}">Feedback &amp; history ${arrow}</button></div>${game.reviewStatus === 'source-described' ? '<span class="review-label">Source-described</span>' : ''}</div></article></li>`;
 }
 
 function renderOverview() {
   const pulse = collectionPulse(state.games);
-  $('snapshotCount').textContent = `${pulse.games} projects · ${pulse.authors} makers`;
+  $('snapshotCount').textContent = `${pulse.games}${state.catalogPartial ? ' loaded' : ''} projects · ${pulse.authors} makers`;
   const concepts = state.games.filter(game => game.stage === 'concept').length;
   const unspecified = state.games.filter(game => game.stage === 'unknown').length;
   const snapshotNote = $('snapshotCount').nextElementSibling;
@@ -73,6 +89,11 @@ function renderOverview() {
   for (const node of document.querySelectorAll('[data-stage-count]')) node.textContent = String(node.dataset.stageCount === 'all' ? pulse.games : state.games.filter(game => game.stage === node.dataset.stageCount).length);
   for (const node of document.querySelectorAll('[data-stage-bar]')) node.style.width = `${pulse.games ? 100 * state.games.filter(game => game.stage === node.dataset.stageBar).length / pulse.games : 0}%`;
   const source = state.catalog.source;
+  const history = state.service?.history;
+  $('historyStatus').textContent = history?.state === 'ok'
+    ? `Available history checked from ${dateLabel(history.communityCreatedAt)}. Newest updates appear first.`
+    : history?.scannedThrough ? `History checked from ${dateLabel(history.communityCreatedAt)} through ${dateLabel(history.scannedThrough)}. Historical projects are being added alongside new updates.`
+      : 'Newest updates first. Collecting the community’s history from December 2022.';
   const stamp = `${source.mode === 'scheduled' && source.lastSuccessfulIngestAt ? 'Archive refreshed' : 'Archive snapshot'} ${dateLabel(source.retrievedAt)} · ${pulse.posts} source posts`;
   $('collectionProvenance').textContent = stamp;
   $('sourceDetails').textContent = `Retrieved ${new Date(source.retrievedAt).toLocaleString('en-US', { timeZone: 'UTC' })} UTC. ${source.coverageThrough ? `Latest included source date: ${dateLabel(source.coverageThrough)}.` : 'Archive coverage is not yet confirmed.'}`;
@@ -103,35 +124,27 @@ export function renderDetail(game) {
   $('itemDialogLinks').innerHTML = (game.projectUrl ? sourceLink(game.projectUrl, 'Visit game page', 'btn btn--primary') : '') + sourceLink(game.posts[0].url, game.preview.kind === 'video' ? 'Watch on Reddit' : 'Original post', 'btn btn--secondary') + '<button type="button" class="text-button" id="shareGame">Copy project link</button>';
   $('gameTimeline').innerHTML = game.posts.map(post => `<li><div class="timeline__date"><time datetime="${e(post.createdAt)}">${e(dateLabel(post.createdAt))}</time><span>${e(label(post.kind))}</span></div><h4>${sourceLink(post.url, post.title)}</h4><p>${e(post.excerpt)}</p></li>`).join('');
   $('itemDialogSource').textContent = `${game.preview.storage === 'r2' ? 'Preview stored with creator permission.' : 'Preview hosted at its original source.'} Listing does not imply creator verification or an offer for sale.`;
-  const own = state.prices.find(price => price.gameId === game.id);
-  $('priceAmount').value = own ? (own.amountCents / 100).toFixed(2) : '';
-  $('priceAmount').removeAttribute('aria-invalid'); $('priceMessage').textContent = '';
-  renderAccount(); renderSignals();
+  $('timelineCount').textContent = `${game.posts.length} source ${game.posts.length === 1 ? 'post' : 'posts'}`;
+  renderAccount();
 }
 
 export function renderAccount() {
-  if (!$('submitPrice')) return;
   const accountsReady = CONFIG.accountsReady === true;
-  const mode = state.service?.signalProtection;
-  const signals = accountsReady && state.service?.capabilities?.signals && (mode === 'account-rate-limit' || (mode === 'turnstile' && CONFIG.turnstileSiteKey));
-  const own = accountsReady && state.prices.find(price => price.gameId === state.detail?.id);
   const following = accountsReady && state.follows.includes(state.detail?.id);
   $('followGame').textContent = following ? 'Following this game ✓' : 'Follow this game';
   $('followGame').disabled = !accountsReady || state.accountBusy || !state.service?.capabilities?.following;
   $('followGame').setAttribute('aria-pressed', String(following));
+  $('followGame').hidden = !accountsReady;
+  $('followHint').hidden = !accountsReady;
   $('followingFilter').disabled = !accountsReady || !state.service?.capabilities?.following;
   $('followingFilter').title = accountsReady ? 'Show followed games' : 'Following is not available yet.';
-  $('submitPrice').disabled = state.accountBusy || !signals;
-  $('submitPrice').textContent = !accountsReady ? 'Price responses unavailable' : state.accountBusy ? 'Please wait…' : own ? 'Update your price' : state.signedIn ? 'Share your price' : 'Sign in to share your price';
-  $('priceAmount').disabled = state.accountBusy || !signals;
-  $('withdrawPrice').hidden = !own; $('withdrawPrice').disabled = !accountsReady || state.accountBusy;
-  $('accountAvailability').textContent = !accountsReady ? 'Following and price responses are not available yet. You can still explore games and public price signals.' : signals ? mode === 'account-rate-limit' ? 'Signed-in accounts, one estimate each.' : 'Signed-in accounts, with a bot challenge for submissions.' : state.serviceError || 'Price responses are temporarily unavailable. You can still explore the project.';
   $('deleteMyData').disabled = !accountsReady || state.accountBusy || !state.service?.capabilities?.following;
   $('confirmDelete').disabled = !accountsReady || state.accountBusy;
   if (!accountsReady) { $('deleteConfirm').hidden = true; $('privacyMessage').textContent = 'Account features are not available yet.'; }
 }
 
 export function renderSignals() {
+  if (!$('priceSignals')) return;
   const summary = state.detailSignals;
   $('retrySignals').hidden = !state.detailSignalError || !state.service?.capabilities?.signals;
   if (state.detailSignalError) { $('priceSignals').textContent = state.detailSignalError; return; }

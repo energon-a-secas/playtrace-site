@@ -156,7 +156,8 @@ export async function confirmDelete() {
     if (state.userId !== user) return;
     accountRequest++; clearSignals();
     state.follows = []; state.prices = []; state.accountLoaded = true; state.accountError = '';
-    $('priceAmount').value = ''; $('priceMessage').textContent = '';
+    if ($('priceAmount')) $('priceAmount').value = '';
+    if ($('priceMessage')) $('priceMessage').textContent = '';
     state.detailSignalError = 'Refresh to see the latest price signals.'; renderSignals(); rerender();
     deleted = true; $('deleteConfirm').hidden = true; $('privacyMessage').textContent = 'Your Playtrace follows and price responses have been deleted.';
   } catch (error) { if (state.userId === user) { $('privacyMessage').textContent = error.message; state.detailSignalError = 'Price signals need to be refreshed.'; renderSignals(); } }

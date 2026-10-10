@@ -28,7 +28,7 @@ function redditPost(url, id) {
   return value.href;
 }
 export function validateCatalog(value) {
-  if (value?.schemaVersion !== 1 || !Array.isArray(value.games) || value.games.length > 5000 || value.source?.subreddit !== 'aigamedev') throw new Error('Invalid catalogue');
+  if (value?.schemaVersion !== 1 || !Array.isArray(value.games) || value.source?.subreddit !== 'aigamedev') throw new Error('Invalid catalogue');
   const source = value.source;
   if (safeUrl(source.subredditUrl) !== 'https://www.reddit.com/r/aigamedev/') throw new Error('Invalid source community');
   safeUrl(source.archiveUrl, true);

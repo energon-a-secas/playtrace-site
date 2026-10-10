@@ -1,15 +1,15 @@
 flowchart LR
     Visitor["Player or maker"] --> Browser["Playtrace browser app<br/>GitHub Pages"]
-    Browser -->|"Browse catalogue and source histories"| API["Cloudflare Worker<br/>Public and authenticated API"]
-    Browser -->|"Sign in for follows and feedback"| Clerk["Clerk<br/>Neorgon accounts"]
+    Browser -->|"Browse history; read and contribute<br/>public feedback without login"| API["Cloudflare Worker<br/>Public and authenticated API"]
+    Browser -->|"Optional sign-in for private follows"| Clerk["Clerk<br/>Neorgon accounts"]
     Clerk -->|"Signed session token"| Browser
     API -->|"Pinned public signing keys"| Clerk
-    API -->|"Games, source posts, private follows,<br/>price responses, quotas and tombstones"| D1[("Cloudflare D1")]
+    API -->|"Games, source posts, public feedback,<br/>private follows/prices, quotas and tombstones"| D1[("Cloudflare D1")]
     Browser -->|"Original previews and post links"| Sources["Creator media hosts<br/>and Reddit posts"]
-    Cron["Hourly schedule"] --> Collector["Resumable archive collector"]
+    Cron["Hourly schedule"] --> Collector["Recent updates + historical pass<br/>from December 2022"]
     Collector -->|"Bounded, paced requests"| Archive["Arctic Shift archive<br/>r/aigamedev"]
     Collector -->|"Source-described games,<br/>review candidates and coverage"| D1
-    Operator["Operator with separate credential"] -->|"Review, import, remove;<br/>approve image permission"| API
+    Operator["Operator with separate credential"] -->|"Review, import, moderate, remove;<br/>approve image permission"| API
     API -->|"Validated creator-approved images"| R2[("Private R2 preview bucket")]
     API -->|"Checked media response"| Browser
     classDef primary fill:#fff4da,stroke:#946413,color:#111d32;

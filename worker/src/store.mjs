@@ -16,14 +16,37 @@ export async function getGame(db, id) {
   if (!row) throw notFound();
   return JSON.parse(row.payload_json);
 }
-export async function catalog(db) {
+export async function catalog(db, page = null) {
+  let position = null;
+  const limit = page ? Number(page.limit || 200) : 2000;
+  if (!Number.isInteger(limit) || limit < 1 || limit > (page ? 200 : 2000)) throw invalid('Invalid catalogue page size.');
+  if (page?.cursor) {
+    try {
+      if (page.cursor.length > 200) throw new Error();
+      position = JSON.parse(atob(page.cursor.replace(/-/g, '+').replace(/_/g, '/')));
+      if (!Array.isArray(position) || position.length !== 2 || !/^\d{4}-\d\d-\d\dT.*Z$/.test(position[0])
+        || !Number.isFinite(Date.parse(position[0])) || !/^g_[a-z0-9]{5,12}$/.test(position[1])) throw new Error();
+    } catch { throw invalid('Invalid catalogue page.'); }
+  }
   const [head, data] = await Promise.all([
     meta(db, 'catalog'),
     query(db, `SELECT payload_json FROM games WHERE status='published'
-      AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id) ORDER BY updated_at DESC,id LIMIT 2001`).all(),
+      AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id)
+      ${position ? 'AND (updated_at<? OR (updated_at=? AND id>?))' : ''}
+      ORDER BY updated_at DESC,id LIMIT ?`, ...(position ? [position[0], position[0], position[1]] : []), limit + 1).all(),
   ]);
-  if (!head || data.results.length > 2000) throw unavailable();
-  try { return validateCatalog({ ...head, games: data.results.map(row => JSON.parse(row.payload_json)) }); }
+  if (!head || (!page && data.results.length > 2000)) throw unavailable();
+  try {
+    const result = validateCatalog({ ...head, games: data.results.slice(0, limit).map(row => JSON.parse(row.payload_json)) });
+    if (page) {
+      const total = await query(db, `SELECT count(*) AS count FROM games WHERE status='published'
+        AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id)`).first();
+      const last = result.games.at(-1);
+      result.pagination = { total: total.count, nextCursor: data.results.length > limit
+        ? btoa(JSON.stringify([last.updatedAt, last.id])).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '') : null };
+    }
+    return result;
+  }
   catch { throw unavailable(); }
 }
 const eligible = `NOT EXISTS(SELECT 1 FROM removals r WHERE r.game_id=json_extract(j.value,'$.id')
@@ -92,6 +115,7 @@ export async function removal(db, bucket, id, reason, now) {
     query(db, "UPDATE games SET status='removed',author_key='',project_url=NULL,payload_json='{}' WHERE id=?", id),
     query(db, 'DELETE FROM price_signals WHERE game_id=?', id),
     query(db, 'DELETE FROM follows WHERE game_id=?', id),
+    query(db, 'DELETE FROM feedback WHERE game_id=?', id),
     query(db, 'DELETE FROM source_posts WHERE game_id=?', id),
   ]);
   const { acquire, release } = await import('./lease.mjs');

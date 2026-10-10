@@ -138,6 +138,26 @@ test('same-timestamp catalogue refresh removes featured content and updates card
   } finally { globalThis.document = originalDocument; globalThis.location = originalLocation; }
 });
 
+test('background catalogue pages preserve visible card nodes while same-timestamp edits still replace them', async () => {
+  const catalogue = validateCatalog(copy()), $ = fakeNodes();
+  const all = selectGames(catalogue.games, { ...defaults, follows: [] });
+  const state = { ...defaults, games: all.slice(0, 60), catalog: catalogue, loaded: true, status: 'loading',
+    catalogPartial: true, catalogTotal: all.length, follows: [], prices: [], detail: null };
+  const originalDocument = globalThis.document, originalLocation = globalThis.location;
+  globalThis.document = { querySelectorAll: () => [], querySelector: selector => $(selector) };
+  globalThis.location = { href: 'https://playtrace.example/' };
+  let replacements = 0, html = '';
+  Object.defineProperty($('itemList'), 'innerHTML', { get: () => html, set: value => { replacements++; html = value; } });
+  try {
+    const renderer = await isolatedModule('render.js', { state, $, ...collection, CONFIG: {}, e: String });
+    renderer.render(); assert.equal(replacements, 1);
+    state.games = all; state.catalogPartial = false; state.status = 'ready'; renderer.render();
+    assert.equal(replacements, 1, 'Unchanged visible cards retain their existing DOM and focus');
+    state.games = all.map((game, i) => i ? game : { ...game, title: 'Changed without a timestamp change' });
+    renderer.render(); assert.equal(replacements, 2); assert.match(html, /Changed without a timestamp change/);
+  } finally { globalThis.document = originalDocument; globalThis.location = originalLocation; }
+});
+
 test('privacy deletion rejects a stale private read and prevents overlapping account writes', async () => {
   let finishGet, finishDelete; const calls = [];
   const { api, state, $ } = await accountModule(async (path, options = {}) => {
@@ -213,8 +233,135 @@ test('unavailable account controls show availability without a sign-in call to a
   const $ = fakeNodes(), state = { follows: [], prices: [], detail: { id: 'g_abc12' }, service: { capabilities: { signals: true, following: true }, signalProtection: 'account-rate-limit' } };
   const renderer = await isolatedModule('render.js', { state, $, CONFIG: { accountsReady: false }, e: String });
   renderer.renderAccount();
-  for (const id of ['followingFilter', 'followGame', 'submitPrice', 'priceAmount', 'withdrawPrice', 'deleteMyData', 'confirmDelete']) assert.equal($(id).disabled, true, id);
-  assert.doesNotMatch($('submitPrice').textContent, /sign in/i);
-  assert.match($('accountAvailability').textContent, /not available yet/);
+  for (const id of ['followingFilter', 'followGame', 'deleteMyData', 'confirmDelete']) assert.equal($(id).disabled, true, id);
+  assert.equal($('followGame').hidden, true);
+  assert.equal($('followHint').hidden, true);
   assert.match($('privacyMessage').textContent, /not available yet/);
+});
+
+async function catalogueModule(request) {
+  return isolatedModule('state.js', { createStore: () => ({ load: () => ({}), save: () => true }),
+    defaults, readLocation, validateCatalog, apiConfigured: true, request });
+}
+const pageOf = (games, nextCursor = null, total = seed.games.length) => ({ ...copy(), games, pagination: { total, nextCursor } });
+
+test('catalogue first page renders before the next page resolves, then completes without duplicates', async () => {
+  let finish, calls = 0; const renders = [];
+  const module = await catalogueModule(async () => ++calls === 1 ? pageOf(copy().games.slice(0, 40), 'second') : new Promise(resolve => { finish = resolve; }));
+  const pending = module.loadCatalog(() => renders.push({ count: module.state.games.length, partial: module.state.catalogPartial }));
+  await flushRequests();
+  assert.equal(module.state.loaded, true); assert.equal(module.state.status, 'loading');
+  assert.equal(module.state.games.length, 40); assert.equal(module.state.catalogPartial, true);
+  assert.equal(module.state.catalogTotal, seed.games.length);
+  assert.ok(renders.some(render => render.count === 40 && render.partial));
+  finish(pageOf(copy().games.slice(40))); await pending;
+  assert.equal(module.state.status, 'ready'); assert.equal(module.state.catalogPartial, false);
+  assert.equal(module.state.games.length, seed.games.length);
+});
+
+test('partial catalogue failures retain an honest subset; retry replaces it and refresh applies removals atomically', async () => {
+  let attempt = 0;
+  const module = await catalogueModule(async () => {
+    attempt++;
+    if (attempt === 1) return pageOf(copy().games.slice(0, 40), 'second');
+    if (attempt === 2) throw new Error('Network unavailable');
+    if (attempt === 3) return copy();
+    return pageOf(copy().games.slice(1), null, seed.games.length - 1);
+  });
+  await module.loadCatalog(() => {});
+  assert.equal(module.state.status, 'error'); assert.equal(module.state.catalogPartial, true); assert.equal(module.state.games.length, 40);
+  await module.loadCatalog(() => {});
+  assert.equal(module.state.status, 'ready'); assert.equal(module.state.catalogPartial, false);
+  const removed = module.state.games[0].id;
+  await module.loadCatalog(() => {});
+  assert.equal(module.state.games.some(game => game.id === removed), false);
+});
+
+test('catalogue rejects duplicate pages, revision changes and mismatched totals without merging unsafe records', async () => {
+  for (const badPage of [
+    pageOf(copy().games.slice(0, 40), null, 80),
+    { ...pageOf(copy().games.slice(40)), generatedAt: '2026-10-11T12:00:00.000Z' },
+    pageOf(copy().games.slice(40), null, seed.games.length + 1),
+    pageOf([], 'third'),
+  ]) {
+    let calls = 0;
+    const module = await catalogueModule(async () => ++calls === 1 ? pageOf(copy().games.slice(0, 40), 'second') : badPage);
+    await module.loadCatalog(() => {});
+    assert.equal(module.state.status, 'error'); assert.equal(module.state.games.length, 40); assert.equal(module.state.catalogPartial, true);
+  }
+});
+
+const feedbackEntry = (body = 'Useful feedback') => ({ id: '12345678-1234-1234-1234-123456789012', displayName: 'Visitor', body,
+  idealPriceCents: null, currency: 'USD', createdAt: '2026-10-10T12:00:00.000Z', updatedAt: '2026-10-10T12:00:00.000Z' });
+const feedbackPage = (entries = [], gameId = 'g_abc12') => ({ gameId, entries, count: entries.length,
+  idealPrices: { currency: 'USD', count: 0, medianCents: null }, nextCursor: null });
+async function feedbackModule(request) {
+  const $ = fakeNodes(), state = { service: { capabilities: { feedback: true } } };
+  const api = await isolatedModule('feedback.js', { state, $, request, apiConfigured: true, parsePrice,
+    money: collection.money, dateLabel: collection.dateLabel, e: value => String(value).replaceAll('<', '&lt;').replaceAll('>', '&gt;') });
+  return { api, $, state };
+}
+
+test('guest form posts and removes without account state, persists an edit key and escapes public text', async () => {
+  const originals = { localStorage: globalThis.localStorage, location: globalThis.location };
+  const storage = new Map(), calls = []; let saved = null;
+  globalThis.localStorage = { getItem: key => storage.get(key), setItem: (key, value) => storage.set(key, value) };
+  globalThis.location = { href: 'https://playtrace.example/?game=g_abc12' };
+  try {
+    const { api, $ } = await feedbackModule(async (path, options = {}) => {
+      calls.push({ path, ...options });
+      if (options.method === 'PUT') { saved = { ...feedbackEntry(), ...options.body }; return { gameId: 'g_abc12', feedback: saved }; }
+      if (options.method === 'DELETE') { saved = null; return { deleted: true }; }
+      if (path.endsWith('/mine')) return { gameId: 'g_abc12', feedback: saved, moderated: false };
+      return feedbackPage(saved ? [saved] : []);
+    });
+    api.resetFeedback('g_abc12'); await api.loadFeedback();
+    assert.equal($('feedbackSubmit').disabled, false);
+    $('feedbackBody').value = '<img src=x onerror=alert(1)> A useful suggestion';
+    await api.saveFeedback();
+    const write = calls.find(call => call.method === 'PUT');
+    assert.match(write.feedbackKey, /^[a-f0-9]{64}$/); assert.equal(write.token, undefined);
+    assert.equal(write.body.idealPriceCents, null); assert.equal(storage.size, 1);
+    assert.equal($('feedbackRemove').hidden, false); assert.match($('feedbackList').innerHTML, /&lt;img/);
+    assert.doesNotMatch($('feedbackList').innerHTML, /<img/);
+    await api.removeFeedback();
+    assert.equal($('feedbackRemove').hidden, true); assert.equal($('feedbackBody').value, '');
+    assert.equal(calls.some(call => call.path === '/me'), false);
+  } finally { Object.assign(globalThis, originals); }
+});
+
+test('guest own-read failure has a visible retry; unavailable local storage is disclosed before contributing', async () => {
+  const original = globalThis.localStorage;
+  globalThis.localStorage = { getItem: () => 'ab'.repeat(32) };
+  try {
+    const { api, $ } = await feedbackModule(async path => { if (path.endsWith('/mine')) throw new Error('Network'); return feedbackPage(); });
+    api.resetFeedback('g_abc12'); await api.loadFeedback();
+    assert.equal($('feedbackSubmit').disabled, true); assert.equal($('feedbackError').hidden, false);
+    assert.match($('feedbackErrorText').textContent, /Retry before editing/);
+    globalThis.localStorage = { getItem() { throw new Error('Blocked'); } };
+    const blocked = await feedbackModule(async () => feedbackPage());
+    blocked.api.resetFeedback('g_abc12'); await blocked.api.loadFeedback();
+    assert.match(blocked.$('feedbackAvailability').textContent, /during this visit/);
+  } finally { globalThis.localStorage = original; }
+});
+
+test('closing a guest form rejects late reads and writes from the previous project', async () => {
+  const original = globalThis.localStorage;
+  globalThis.localStorage = { getItem: () => null, setItem() {} };
+  try {
+    let resolveRead, resolveWrite;
+    const { api, $ } = await feedbackModule(async (path, options = {}) => {
+      if (options.method === 'PUT') return new Promise(resolve => { resolveWrite = resolve; });
+      if (path.includes('g_other')) return feedbackPage([], 'g_other');
+      return new Promise(resolve => { resolveRead = resolve; });
+    });
+    api.resetFeedback('g_abc12'); const oldRead = api.loadFeedback();
+    api.clearFeedback(); api.resetFeedback('g_other'); await api.loadFeedback();
+    resolveRead(feedbackPage([feedbackEntry('Stale read')])); await oldRead;
+    assert.equal($('feedbackList').innerHTML.includes('Stale read'), false);
+    $('feedbackBody').value = 'A good suggestion'; const oldWrite = api.saveFeedback(); await flushRequests();
+    api.clearFeedback(); api.resetFeedback('g_abc12');
+    resolveWrite({ gameId: 'g_other', feedback: feedbackEntry('Stale write') }); await oldWrite;
+    assert.equal($('feedbackBody').value, ''); assert.equal($('feedbackMessage').textContent, '');
+  } finally { globalThis.localStorage = original; }
 });

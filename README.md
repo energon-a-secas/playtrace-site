@@ -2,7 +2,7 @@
 
 # Playtrace
 
-Discover AI-made games, follow their progress, and share what you would pay
+Discover games, explore their history, and help the next version take shape
 
 [![Live][badge-site]][url-site]
 [![HTML5][badge-html]][url-html]
@@ -30,20 +30,22 @@ Discover AI-made games, follow their progress, and share what you would pay
 
 ## Overview
 
-Playtrace collects games shared on r/aigamedev so players can discover a project, inspect its source history, and follow its progress. Makers get nonbinding willingness-to-pay feedback without turning the catalogue into a payment service.
+Playtrace collects games shared on r/aigamedev so players can discover a project, inspect its source history, and leave useful public feedback. An optional “Your ideal price” field lets visitors share a pricing suggestion. Reading and contributing require no account.
 
 **Live:** [playtrace.neorgon.com](https://playtrace.neorgon.com/) · **API:** [service status](https://playtrace-api.neorgon.workers.dev/api/v1/status)
 
-The public catalogue is available. Following and price submission are implemented but disabled in this release while the new domain awaits registration in the shared login service. Public price aggregates remain readable. See [account activation](#account-activation).
+Public feedback uses a random browser edit key so visitors can update or remove their contribution. Following remains an optional account feature, disabled while the new domain awaits registration in the shared login service. Existing private account price responses stay private. See [account activation](#account-activation).
 
 ## Features
 
 - **Source-linked discovery** -- Real previews, genre and development-stage filters, maker views, search, grid/list layouts, and shareable project links.
-- **Project histories** -- Updates join an existing game only when author and canonical project link match. Sharing an author alone never merges games.
-- **Ongoing collection** -- A Cloudflare collector resumes bounded archive windows, keeps ambiguous candidates for review, and reports actual coverage. Automatic entries are labeled source-described.
+- **Project histories** -- Older and newer posts join an existing game only when author and canonical project link match. Existing project links stay stable when an earlier source is found. Sharing an author alone never merges games.
+- **Historical collection** -- A resumable pass starts at the community's creation on December 11, 2022. An independent recent pass keeps new updates fresh. Newest updates appear first; the interface reports historical progress without claiming the archive is complete.
+- **A growing catalogue** -- Cursor pages replace the old 2,000-project public limit. The first page appears promptly; further pages expand search and filters with visible loaded counts. Cards render in groups of 60.
+- **Public feedback** -- One editable contribution per browser and game, with a note, optional display name, and optional ideal price in USD from $0 to $100. Notes and prices are explicitly public. The median includes only these public suggestions.
 - **Following** -- Signed-in users keep a private list of games to revisit for updates.
-- **Price feedback** -- One editable USD response from $0 to $100 per account and game. Medians and distributions appear after five accounts respond. These are opinions, not bids to purchase or payment commitments.
-- **Account protections** -- Server-verified Clerk sessions, account and network rate limits, private individual responses, and a delete-my-data control. Accounts and shared networks cannot prove distinct people.
+- **Visitor controls** -- Browser and network limits reduce spam. Contributions have report links and operator moderation. Clearing browser storage loses editing access; the correction link remains available for help. A browser key does not prove a unique person.
+- **Private account data** -- Existing account prices, their thresholded aggregates, follows, and account-data deletion remain separate from public feedback. Guest contributions never reveal or import old private responses.
 - **Managed previews** -- R2 can store bounded, validated images with a recorded creator permission. Initial previews remain at their original hosts. Removal hides a game immediately and cleans up its stored data and media.
 
 The initial reviewed snapshot contains 90 games and 96 source posts. The live catalogue grows separately. No votes, demand figures, or user accounts are seeded.
@@ -56,9 +58,9 @@ There is no frontend build step. From this directory:
 make serve
 ```
 
-Open `http://localhost:8900`. `js/config.js` pins the API address. To explore the bundled snapshot without a backend, set `apiBase` to an empty string in your local checkout. Account features will then be unavailable. A configured API failure never switches silently to the bundled snapshot.
+Open `http://localhost:8900`. `js/config.js` pins the production API address, whose CORS policy does not allow localhost. To explore the bundled snapshot, set `apiBase` to an empty string in your local checkout. Guest feedback and account features will then show as unavailable. Restore the pinned value before publishing. A configured API failure never switches silently to the bundled snapshot. For interactive local feedback, use the disposable Worker setup in [the runbook](worker/README.md#local-feedback-preview).
 
-The Worker uses Cloudflare D1 and R2. See [the Worker configuration](worker/wrangler.jsonc), [the database migration](worker/migrations/0001_initial.sql), and [the API modules](worker/src/index.mjs). Production credentials belong in Worker secrets, never in `js/config.js`, a commit, or browser storage. Local secrets belong in an ignored `worker/.dev.vars` file. Authenticated browser testing requires an HTTPS origin permitted by both Clerk and `ALLOWED_ORIGINS`.
+The Worker uses Cloudflare D1 and R2. See [the Worker configuration](worker/wrangler.jsonc), [the database migrations](worker/migrations), and [the API modules](worker/src/index.mjs). Operator credentials belong in Worker secrets, never in `js/config.js`, a commit, or browser storage. The visitor's random edit key is intentionally browser-local. Local server secrets belong in an ignored `worker/.dev.vars` file. Authenticated account testing requires an HTTPS origin permitted by both Clerk and `ALLOWED_ORIGINS`.
 
 ## Verification
 
@@ -68,7 +70,7 @@ node --test worker/tests/*.test.mjs
 python3 worker/tests/schema.test.py
 ```
 
-Client tests cover source validation, shared filters, price parsing, stale responses, and challenge cancellation. Backend tests use synthetic signed sessions, a SQLite-backed D1 adapter, and controlled archive/media responses. Use a Node runtime with `node:sqlite`. They cover rejection of forged identity, uniqueness, price thresholds, rate limits, resumable collection, atomic imports, removal, and media validation. They do not manufacture activity in the live database.
+Client tests cover source validation, shared filters, progressive pagination, incomplete loads, guest posting and removal, storage failure, escaping, and stale responses. Backend tests use synthetic signed sessions, a SQLite-backed D1 adapter, and controlled archive/media responses. Use a Node runtime with `node:sqlite`. They cover guest ownership, moderation, rate limits, privacy separation, collections over 2,000 projects, resumable historical/recent collection, stable project identity, atomic imports, removal, and media validation. They do not manufacture activity in the live database.
 
 ## Architecture
 
@@ -80,26 +82,27 @@ Client tests cover source validation, shared filters, price parsing, stale respo
 | --- | --- | --- |
 | Browser shell | `index.html`, `css/collection.css`, `css/report.css` | Accessible browsing and source-history dialogs |
 | Client behavior | `js/state.js`, `js/render.js`, `js/events.js` | Validated collection state, filtering, navigation, rendering |
-| Account client | `js/api.js`, `js/accounts.js`, `js/challenge.js` | Pinned API requests, authenticated follows and price responses |
+| Feedback client | `js/feedback.js`, `js/api.js` | Public notes, optional ideal prices, browser edit keys and guest controls |
+| Account client | `js/accounts.js`, `js/challenge.js` | Optional authenticated follows and legacy private data controls |
 | Collection | `worker/src/archive.mjs`, `worker/src/ingestion.mjs` | Archive normalization, conservative categorization, cursors and scheduling |
-| Trust and storage | `worker/src/auth.mjs`, `worker/src/limits.mjs`, `worker/src/store.mjs`, `worker/src/media.mjs` | Identity, quotas, D1 records and consented R2 previews |
+| Trust and storage | `worker/src/feedback.mjs`, `worker/src/auth.mjs`, `worker/src/limits.mjs`, `worker/src/store.mjs`, `worker/src/media.mjs` | Public contributions, identity, quotas, D1 records and consented R2 previews |
 | Initial data | `data/catalog.json` | Dated, reviewed source snapshot for local exploration and initial import |
 
 The interface uses pale slate, navy type, and warm amber actions, with system dark preference support. Archivo headings and Source Sans 3 body text are self-hosted with their font licenses. `css/report.css` owns the visual layer; vendored Neorgon kits provide shared header, footer, auth, persistence, and navigation behavior.
 
 ## Collection and trust boundaries
 
-Arctic Shift is a third-party archive and may be delayed or incomplete. Original Reddit posts remain the primary source. A listed author, game stage, or AI-use claim is not independently verified. Clear showcases can publish automatically; ambiguous candidates require operator review. Earlier posts that would change a stable game identity are retained for review rather than silently merged.
+Arctic Shift is a third-party archive and may be delayed or incomplete. Original Reddit posts remain the primary source. A listed author, game stage, or AI-use claim is not independently verified. Clear showcases can publish automatically; ambiguous candidates require operator review. Earlier posts can extend a matching timeline while its original source anchor and project ID remain unchanged. “Historical” means checking available archived posts, not claiming every project or deleted post can be recovered. Reddit discussion remains linked at its source; it is not copied into the visitor feedback feed.
 
-Production uses explicit `account-rate-limit` protection. An operator can enable strict Turnstile verification by configuring its server secret, site key, hostname, and protection mode together. Missing or unknown protection configuration fails closed. Individual prices and network keys are never returned by public aggregate routes.
+Guest writes require a 256-bit browser edit key and a server HMAC secret, with independent browser/network quotas. The server stores only an HMAC of the edit key. Public responses contain the contributor's chosen name, note, and optional price; they never include keys, network identifiers, or private account prices. The separate legacy account API uses server-verified sessions and its own configured protection mode.
 
-The initial API caps the published catalogue at 2,000 games and bounds each game's source history. Add pagination and a review interface before approaching those limits. Public preview storage is not an open upload endpoint.
+Catalogue pages contain up to 200 projects. There is no 2,000-project public collection cap; individual imports remain bounded to 2,000 records and each game's timeline to 1,000 posts. Excess or ambiguous timeline candidates remain pending for review. Public preview storage is not an open upload endpoint. Endpoint details and rollback constraints are in [the API contract](docs/public-feedback-api.md).
 
 ## Account activation
 
 The production login service currently returns `subdomain_not_allowed` for `playtrace.neorgon.com`. In the production Clerk instance, add that exact hostname to **Allowed Subdomains**, preserving the existing entries and keeping the allowlist enabled. Its [subdomain configuration documentation](https://clerk.com/docs/guides/dashboard/dns-domains/subdomain-allowlist) describes the setting. No Clerk administrator credential is stored in this checkout.
 
-After the sign-in form loads successfully on the live domain, set `accountsReady: true` in `js/config.js` and publish the change. Verify a real account can follow and unfollow a game, submit, edit and withdraw a price response, and delete its Playtrace data. Do not count these live flows as tested until then. The browser flag controls availability only; the Worker always verifies sessions and enforces its own limits.
+After the sign-in form loads successfully on the live domain, set `accountsReady: true` in `js/config.js` and publish the change. Verify a real account can follow and unfollow a game and delete its private Playtrace data. Guest notes and ideal prices remain independent of sign-in. Do not count real account flows as tested until then. The browser flag controls availability only; the Worker always verifies sessions for private endpoints.
 
 ## Possible next steps
 

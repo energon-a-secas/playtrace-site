@@ -4,8 +4,9 @@ import { render, renderDetail } from './render.js';
 import { $, copyText, showToast } from './utils.js';
 import { bindDialog, openDialog } from './dialogs.js';
 import { createQueryHistory } from './neorgon-navigation.js';
-import { prepareFollowing, followGame, savePrice, withdrawPrice, deleteMyData, confirmDelete, loadSignals, clearSignals } from './accounts.js';
+import { prepareFollowing, followGame, deleteMyData, confirmDelete, clearSignals } from './accounts.js';
 import { clearChallenge } from './challenge.js';
+import { bindFeedback, resetFeedback, loadFeedback, clearFeedback, renderFeedback } from './feedback.js';
 
 export const navigation = createQueryHistory(href => locationForState(href, state));
 function clearFilters() {
@@ -19,27 +20,28 @@ export function syncDetail() {
   const game = state.games.find(entry => entry.id === state.game);
   if (!state.game) { if ($('itemDialog').open) $('itemDialog').close(); return; }
   if (!game) {
+    if (state.catalogPartial || state.status === 'loading') return;
     state.game = ''; state.detail = null; clearSignals(); clearChallenge();
     if ($('itemDialog').open) $('itemDialog').close();
     navigation.replace(); showToast('This project is no longer in the collection.'); return;
   }
   if (state.detail?.id === game.id && $('itemDialog').open) {
     if (state.detail !== game) {
-      const draft = $('priceAmount').value, message = $('priceMessage').textContent;
-      renderDetail(game); $('priceAmount').value = draft; $('priceMessage').textContent = message; loadSignals(game.id);
+      renderDetail(game); resetFeedback(game.id); loadFeedback(game.id);
     }
     return;
   }
-  renderDetail(game); openDialog($('itemDialog'), $('searchInput')); loadSignals(game.id);
+  renderDetail(game); resetFeedback(game.id); openDialog($('itemDialog'), $('searchInput')); loadFeedback(game.id);
 }
 
 export function catalogueReady() { render(); syncDetail(); }
 
 export function bindEvents() {
+  bindFeedback();
   const dialog = $('itemDialog');
   bindDialog(dialog, $('searchInput')); bindDialog($('infoDialog'), $('searchInput'));
   dialog.addEventListener('close', () => {
-    clearChallenge(); clearSignals(); state.detail = null;
+    clearChallenge(); clearSignals(); clearFeedback(); state.detail = null;
     if (state.game) { state.game = ''; navigation.replace(); }
   });
   $('infoDialog').addEventListener('close', () => { $('deleteConfirm').hidden = true; });
@@ -73,7 +75,7 @@ export function bindEvents() {
       const game = state.games.find(entry => entry.id === item.dataset.item);
       if (!game) return;
       navigation.push(() => { state.game = game.id; });
-      renderDetail(game); openDialog(dialog, item); loadSignals(game.id); return;
+      renderDetail(game); resetFeedback(game.id); openDialog(dialog, item); loadFeedback(game.id); return;
     }
     if (event.target.closest('[data-open-info]')) { openDialog($('infoDialog'), event.target.closest('button')); return; }
     if (event.target.closest('#shareGame')) {
@@ -83,7 +85,7 @@ export function bindEvents() {
   });
   for (const id of ['clearFilters', 'emptyReset']) $(id).addEventListener('click', clearFilters);
   for (const id of ['refreshCollection', 'retryCollection']) $(id).addEventListener('click', () => {
-    $('searchInput').focus(); loadCatalog(catalogueReady); loadService(render).then(() => { if (state.detail) loadSignals(); });
+    $('searchInput').focus(); loadCatalog(catalogueReady); loadService(() => { render(); renderFeedback(); });
   });
   $('shareView').addEventListener('click', async () => {
     navigation.replace(); const copied = await copyText(locationForState(location.href, state).href);
@@ -94,9 +96,11 @@ export function bindEvents() {
     if (await prepareFollowing(event.currentTarget)) applyFilter('following', true);
   });
   $('followGame').addEventListener('click', event => followGame(event.currentTarget));
-  $('priceForm').addEventListener('submit', event => { event.preventDefault(); savePrice($('submitPrice')); });
-  $('withdrawPrice').addEventListener('click', withdrawPrice);
-  $('retrySignals').addEventListener('click', () => loadSignals());
+  $('showMoreGames').addEventListener('click', () => {
+    const previous = $('itemList').children.length;
+    state.visibleLimit = (state.visibleLimit || 60) + 60; render();
+    $('itemList').children[previous]?.querySelector('button')?.focus({ preventScroll: true });
+  });
   $('deleteMyData').addEventListener('click', event => deleteMyData(event.currentTarget));
   $('confirmDelete').addEventListener('click', confirmDelete);
   $('cancelDelete').addEventListener('click', () => { $('deleteConfirm').hidden = true; $('deleteMyData').focus(); });

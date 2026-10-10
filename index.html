@@ -18,15 +18,15 @@
   <link rel="manifest" href="/site.webmanifest">
   <meta name="neo-mark" content="on">
   <title>Playtrace | Games in the Making</title>
-  <meta name="description" content="Discover AI-made games, follow their progress, and share what you would pay">
+  <meta name="description" content="Explore the history of games shared on r/aigamedev. Leave public feedback and an optional ideal price, no account needed.">
   <meta property="og:title" content="Playtrace | Games in the Making">
-  <meta property="og:description" content="Discover AI-made games, follow their progress, and share what you would pay">
+  <meta property="og:description" content="Explore the history of games shared on r/aigamedev. Leave public feedback and an optional ideal price, no account needed.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://playtrace.neorgon.com/">
   <meta property="og:site_name" content="Neorgon">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Playtrace | Games in the Making">
-  <meta name="twitter:description" content="Discover AI-made games, follow their progress, and share what you would pay">
+  <meta name="twitter:description" content="Explore the history of games shared on r/aigamedev. Leave public feedback and an optional ideal price, no account needed.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://playtrace.neorgon.com/">
   <meta property="og:locale" content="en_US">
@@ -71,7 +71,7 @@
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "Playtrace",
-    "description": "Discover AI-made games, follow their progress, and share what you would pay",
+    "description": "Explore the history of games shared on r/aigamedev. Leave public feedback and an optional ideal price, no account needed.",
     "url": "https://playtrace.neorgon.com/",
     "applicationCategory": "EntertainmentApplication",
     "operatingSystem": "Any",
@@ -140,10 +140,10 @@
       <div>
         <p class="eyebrow intro-eyebrow"><span class="index-mark" aria-hidden="true"></span> THE INDEPENDENT GAME INDEX</p>
         <h2 id="collectionTitle" class="collection__title">Follow the idea.<br>Find your next game.</h2>
-        <p class="collection__lead">Discover games made with AI, meet their makers,<br class="desktop-break"> and see what a little imagination can become.</p>
+        <p class="collection__lead">Discover games shared on r/aigamedev.<br class="desktop-break"> Try an idea, leave a note, help it grow.</p>
       </div>
       <div class="edition">
-        <span class="edition__label">A collection, in progress</span>
+        <span class="edition__label">An open community archive</span>
         <p>Small teams.<br>Unexpected worlds.</p>
         <a href="#aboutCollection" class="text-link">Every project has a source <span aria-hidden="true">↗</span></a>
       </div>
@@ -181,6 +181,7 @@
         <div class="discovery__title"><span class="section-number" aria-hidden="true">01 /</span><h2 id="discoverTitle">Explore the collection</h2></div>
         <p id="resultCount" class="result-count" role="status" aria-live="polite" aria-atomic="true">Loading collection…</p>
       </div>
+      <p id="historyStatus" class="archive-status" role="status">Newest updates first. Building a history of the community’s games.</p>
       <form id="collectionFilters" class="collection__filters" role="search" aria-label="Search games">
         <div class="field collection__search">
           <label class="sr-only" for="searchInput">Search games, creators, or tags</label>
@@ -193,7 +194,7 @@
         </div>
         <div class="field collection__sort">
           <label class="sr-only" for="sortSelect">Sort games</label>
-          <select class="select" id="sortSelect"><option value="newest">Latest activity</option><option value="updates">Most updates</option><option value="name">Name, A to Z</option><option value="oldest">First discovered</option></select>
+          <select class="select" id="sortSelect"><option value="newest">Newest updates</option><option value="updates">Most updates</option><option value="name">Name, A to Z</option><option value="oldest">Oldest projects</option></select>
         </div>
         <div class="field"><label class="sr-only" for="authorSelect">Maker</label><select class="select" id="authorSelect"><option value="">All makers</option></select></div>
         <button type="button" class="btn btn--ghost" id="clearFilters" disabled>Reset filters</button>
@@ -223,6 +224,7 @@
           <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
         </div>
         <ul id="itemList" class="collection__items" data-view="grid" hidden></ul>
+        <div class="collection-more" id="collectionMore" hidden><p id="collectionShown"></p><button type="button" class="btn btn--secondary" id="showMoreGames">Show more projects</button></div>
         <div id="collectionEmpty" class="status-panel" hidden>
           <svg class="empty-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5M8 10.5h5"/></svg>
           <h3 id="emptyTitle">No games yet</h3>
@@ -230,13 +232,13 @@
           <button type="button" class="btn btn--secondary" id="emptyReset" hidden>Show all games</button>
         </div>
       </section>
-      <div class="collection__endnote"><span class="index-mark" aria-hidden="true"></span><p>A small collection of big experiments. Explore a project to see the story behind it.</p></div>
+      <div class="collection__endnote"><span class="index-mark" aria-hidden="true"></span><p>Every project has a story. Add something useful to its next chapter.</p></div>
     </section>
 
     <section class="collection-notes" id="aboutCollection" aria-labelledby="aboutTitle">
-      <div><p class="eyebrow">A NOTE ON THE INDEX</p><h2 id="aboutTitle">The work is new.<br>The sources are open.</h2></div>
+      <div><p class="eyebrow">A NOTE ON THE INDEX</p><h2 id="aboutTitle">A shared history.<br>An open conversation.</h2></div>
       <div class="collection-notes__body">
-        <p>Playtrace is a window into games built with the help of AI. Each entry links to its maker’s original post, so you can see the process, check the details, and explore on your own terms.</p>
+        <p>Playtrace brings together games from r/aigamedev, with an archive reaching back toward the group’s beginnings. Each project keeps its source posts together alongside public player feedback. Anyone can contribute a note or an optional ideal price, without an account.</p>
         <div class="provenance"><span class="status-dot status-dot--released" aria-hidden="true"></span><span id="collectionProvenance">Curated from archived posts on r/aigamedev.</span></div>
         <p class="collection-notes__fine">This is a dated collection, not a live feed. Stages reflect the creator’s post; availability may change. Previews belong to their creators and load from the original source.</p>
         <a class="text-link" href="https://www.reddit.com/r/aigamedev/" target="_blank" rel="noopener noreferrer">Visit r/aigamedev <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>
@@ -260,17 +262,41 @@
     <p id="itemDialogDescription"></p>
     <dl id="itemDialogFacts" class="project-facts"></dl>
     <ul id="itemDialogTags" class="tag-list" aria-label="Tags"></ul>
-    <div class="game-detail">
-      <section class="timeline-section" aria-labelledby="timelineTitle"><h3 id="timelineTitle">The project so far</h3><ol id="gameTimeline" class="timeline"></ol></section>
-      <aside class="game-detail__actions" aria-label="Follow and give feedback">
-        <button type="button" class="btn btn--secondary btn--block" id="followGame">Follow this game</button><p class="field__hint">Keep its progress in your following list.</p>
-        <section class="price-section" aria-labelledby="priceTitle"><p class="eyebrow">A LITTLE MARKET RESEARCH</p><h3 id="priceTitle">What would you pay?</h3><p class="field__hint">If this became a finished game, what would feel fair? This is a nonbinding opinion, not an offer to buy. Some projects are not for sale.</p>
-          <form id="priceForm"><label for="priceAmount">Your price in USD</label><div class="price-input"><span aria-hidden="true">$</span><input id="priceAmount" name="price" type="text" inputmode="decimal" autocomplete="off" maxlength="6" placeholder="0.00" aria-describedby="priceHint priceMessage" required></div><p id="priceHint" class="field__hint">$0 to $100. One editable response per account.</p><div id="priceChallenge"></div><button type="submit" class="btn btn--primary btn--block" id="submitPrice">Share your price</button><button type="button" class="text-button" id="withdrawPrice" hidden>Remove my response</button></form>
-          <p id="priceMessage" class="action-message" role="status" aria-live="polite"></p><p id="accountAvailability" class="field__hint"></p>
+    <section class="project-feedback" aria-labelledby="feedbackTitle">
+      <div class="feedback-heading"><div><p class="eyebrow">HELP THE NEXT VERSION</p><h3 id="feedbackTitle">Player feedback</h3></div><span id="feedbackCount"></span></div>
+      <div class="feedback-layout">
+        <div class="feedback-community">
+          <div id="idealPriceSummary" class="ideal-price-summary"></div>
+          <p id="feedbackLoading" class="field__hint" role="status" hidden>Loading the conversation…</p>
+          <div id="feedbackError" class="feedback-error" hidden><p id="feedbackErrorText" role="alert"></p><button type="button" class="text-button" id="feedbackRetry">Try again</button></div>
+          <ol id="feedbackList" class="feedback-list" aria-label="Public player feedback"></ol>
+          <div id="feedbackEmpty" class="feedback-empty"><p>No notes yet.</p><span>A thoughtful first impression can help a maker decide what to work on next.</span></div>
+          <button type="button" class="text-button" id="feedbackMore" hidden>Read more feedback</button>
+        </div>
+        <section class="feedback-compose" aria-labelledby="feedbackFormTitle">
+          <h4 id="feedbackFormTitle">Leave a note</h4>
+          <p class="field__hint">What did you enjoy? What could be clearer?</p>
+          <form id="feedbackForm">
+            <label for="feedbackBody">Your feedback</label>
+            <textarea class="input" id="feedbackBody" name="feedback" rows="5" maxlength="1500" aria-describedby="feedbackPublic feedbackMessage"></textarea>
+            <label for="feedbackName">Display name <span class="field-optional">(optional)</span></label>
+            <input class="input" id="feedbackName" name="displayName" type="text" maxlength="40" autocomplete="nickname" placeholder="Guest">
+            <div class="feedback-price-field">
+              <label for="feedbackPrice">Your ideal price <span class="field-optional">(optional)</span></label>
+              <div class="price-input"><span aria-hidden="true">$</span><input id="feedbackPrice" name="idealPrice" type="text" inputmode="decimal" autocomplete="off" maxlength="6" placeholder="Leave blank to skip" aria-describedby="feedbackPriceHint feedbackMessage"></div>
+              <p id="feedbackPriceHint" class="field__hint">USD · $0–$100. A suggestion, never a commitment.</p>
+            </div>
+            <p id="feedbackPublic" class="field__hint">Your note, display name, and optional price will be public.</p>
+            <button type="submit" class="btn btn--primary" id="feedbackSubmit">Share feedback</button>
+            <button type="button" class="text-button" id="feedbackRemove" hidden>Remove my feedback</button>
+          </form>
+          <p id="feedbackMessage" class="action-message" role="status" aria-live="polite"></p>
+          <p id="feedbackAvailability" class="field__hint"></p>
         </section>
-        <section class="signals-section" aria-labelledby="signalTitle"><h3 id="signalTitle">Community price signals</h3><div id="priceSignals" aria-live="polite"></div><button type="button" class="text-button" id="retrySignals" hidden>Try again</button></section>
-      </aside>
-    </div>
+      </div>
+    </section>
+    <details class="project-history" open><summary><span>Project history</span><span id="timelineCount"></span></summary><ol id="gameTimeline" class="timeline"></ol></details>
+    <div class="project-follow"><button type="button" class="btn btn--secondary" id="followGame">Follow this game</button><p id="followHint" class="field__hint">Keep its progress in your following list.</p></div>
     <div id="itemDialogSource" class="project-source"></div>
   </div>
   <div class="dialog__footer" id="itemDialogLinks"></div>
@@ -279,7 +305,7 @@
 <dialog class="dialog" id="infoDialog" aria-labelledby="infoTitle"><div class="dialog__header"><h2 id="infoTitle">A clear trail to the source</h2><button type="button" class="btn btn--ghost btn--sm" data-dialog-close autofocus>Close</button></div><div class="dialog__body stack">
   <section><h3>What this collection covers</h3><p>Playtrace collects games shared on <a href="https://www.reddit.com/r/aigamedev/" target="_blank" rel="noopener noreferrer">r/aigamedev</a>, using the <a href="https://arctic-shift.photon-reddit.com/" target="_blank" rel="noopener noreferrer">Arctic Shift archive</a>. The archive can be delayed or incomplete. Every timeline links to the original post. AI use and development stages reflect what the maker shared.</p><p id="sourceDetails"></p></section>
   <section><h3>Creators and previews</h3><p>Being listed does not imply creator verification or endorsement. Source-described entries are collected automatically and await editorial review. Images remain with their original hosts unless a creator has permitted storage. Video links open the source post.</p><a id="removalLink" class="text-button" href="https://balise.neorgon.com/">Request a correction or removal ↗</a></section>
-  <section><h3>Private follows, honest price signals</h3><p>Browsing is public. Following and price responses require an account. We publish a price distribution only after five accounts respond, never individual responses. Account and network rate limits reduce manipulation; they cannot guarantee one person per account. Temporary network hashes expire within 48 hours.</p></section>
+  <section><h3>Public feedback, no account needed</h3><p>Notes, display names, and ideal prices are public. A random edit key stays in your browser so you can update or remove your contribution. Clearing browser data removes that editing access. Use a contribution’s Report link if you need help. Browser and temporary network limits reduce spam; a contribution does not represent a verified person or a purchase commitment.</p><p>Older account-based price responses remain private and are not republished as guest feedback. Optional account follows are separate from this public conversation.</p></section>
   <section id="privacyControls"><h3>Your Playtrace data</h3><p>Your follows and price responses are private. Removing them does not delete your Neorgon account.</p><button type="button" class="btn btn--secondary" id="deleteMyData">Delete my follows and responses</button><div id="deleteConfirm" hidden><p>This removes all your follows and price responses. It cannot be undone.</p><button type="button" class="btn btn--danger" id="confirmDelete">Delete my Playtrace data</button><button type="button" class="text-button" id="cancelDelete">Keep my data</button></div><p id="privacyMessage" role="status" aria-live="polite"></p></section>
 </div></dialog>
   <!-- /template:main -->

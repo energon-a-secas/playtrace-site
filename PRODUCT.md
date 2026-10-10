@@ -6,7 +6,7 @@ product
 
 ## Users and purpose
 
-Curious players and independent makers discover games shared by their creators on r/aigamedev. They need a preview, a clear source and a way to follow a project's progress without searching a long social feed.
+Curious players and independent makers discover games shared by their creators on r/aigamedev. They need a preview, a clear source, a project's history and a public place to consolidate useful feedback without searching a long social feed.
 
 ## Scene
 
@@ -14,11 +14,11 @@ Players compare source-linked games in a calm, report-like reading surface. Pale
 
 ## Session outcome
 
-Find a game to try or follow, understand what changed, and optionally share an honest nonbinding willingness to pay. Public browsing never requires an account.
+Find a game to try, understand what changed, and share a useful note with an optional ideal price. Reading and contributing never require an account. Each browser can edit or remove its own public contribution. Collection reaches back to the community's creation in December 2022, with newest updates first and honest progress while historical collection continues.
 
 ## Voice and principles
 
-Curious, direct and grounded. Show real games before explaining the platform. Separate creator-described claims from reviewed metadata. Expose source dates and archive coverage. Derive collection insights from records; never manufacture votes, traction or urgency.
+Curious, direct and grounded. Show real games before explaining the platform. Put constructive feedback before price. Treat an ideal price as a suggestion for the maker. Separate creator-described claims from reviewed metadata. Expose source dates and archive coverage. Derive collection insights from records; never manufacture votes, traction or urgency. Clearly identify visitor contributions and their public visibility.
 
 ## Anti-references
 
