@@ -5,6 +5,16 @@ import { acquire, release } from './lease.mjs';
 
 export const ARCHIVE_URL = 'https://arctic-shift.photon-reddit.com/api/posts/search';
 export const ingestionConfigured = env => Boolean(env.DB && env.INGESTION_ENABLED === 'true');
+const MAX_RETRY_WAIT_MS = 5000;
+function retryDelay(headers, now, minimum) {
+  const retry = headers.get('Retry-After');
+  const retryMs = /^\d+$/.test(retry || '') ? Number(retry) * 1000 : Date.parse(retry) - now;
+  const reset = headers.get('X-RateLimit-Reset');
+  const resetMs = /^\d+(?:\.\d+)?$/.test(reset || '') ? Number(reset) * 1000 : 0;
+  const resetAt = headers.get('X-RateLimit-Reset-At');
+  const resetAtMs = /^\d+$/.test(resetAt || '') ? Number(resetAt) - now : 0;
+  return Math.max(minimum, resetMs, resetAtMs, Number.isNaN(retryMs) ? 0 : retryMs);
+}
 function archiveFailure(code, retryable) {
   return Object.assign(new ApiError(code, 'Archive request failed.', 503), { archiveFailure: true, retryable });
 }
@@ -26,10 +36,7 @@ async function archivePage(after, before, deps) {
       const response = await deps.fetch(url.href, { signal: AbortSignal.timeout(15000), redirect: 'manual',
         headers: { Accept: 'application/json', 'User-Agent': 'Playtrace/1.0 (+https://playtrace.neorgon.com)' } });
       if (!response.ok) {
-        const retry = response.headers.get('Retry-After');
-        const seconds = /^\d+$/.test(retry || '') ? Number(retry) : (Date.parse(retry) - deps.now()) / 1000;
-        const reset = Number(response.headers.get('X-RateLimit-Reset')) * 1000 - deps.now();
-        delay = Math.min(5000, Math.max(delay, Number.isFinite(seconds) ? seconds * 1000 : 0, reset > 0 ? reset : 0));
+        delay = retryDelay(response.headers, deps.now(), delay);
         await response.body?.cancel();
         throw archiveFailure(`ARCHIVE_HTTP_${response.status}`, response.status === 429 || response.status >= 500);
       }
@@ -38,7 +45,9 @@ async function archivePage(after, before, deps) {
       return payload.data;
     } catch (error) {
       const failure = classifyArchiveFailure(error);
-      if (attempt === 2 || !failure.retryable) throw failure;
+      // A long advertised reset ends this request. The run persists its cursor
+      // for later continuation instead of truncating the wait and retrying early.
+      if (attempt === 2 || !failure.retryable || delay > MAX_RETRY_WAIT_MS) throw failure;
       await deps.sleep(Math.max(0, delay));
     }
   }

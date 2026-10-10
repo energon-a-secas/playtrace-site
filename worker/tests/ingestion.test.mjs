@@ -82,7 +82,7 @@ test('three-page cap persists a frozen checkpoint and 300 candidates stay below 
 });
 test('lease prevents overlapping runs; retries are bounded and failure never invents freshness', async () => {
   const env = fixtureEnv(); let calls = 0, delays = 0;
-  await assert.rejects(ingest(env, { now: () => NOW, sleep: async () => { delays++; }, fetch: async () => { calls++; return new Response('', { status: 429, headers: { 'Retry-After': '999' } }); } }));
+  await assert.rejects(ingest(env, { now: () => NOW, sleep: async () => { delays++; }, fetch: async () => { calls++; return new Response('', { status: 429, headers: { 'Retry-After': '1' } }); } }));
   assert.equal(calls, 3); assert.equal(delays, 2);
   let state = await meta(env.DB, 'ingestion'); assert.equal(state.state, 'error'); assert.equal(state.coverageThrough, null); assert.equal(await meta(env.DB, 'catalog'), null);
   await acquire(env.DB, 'ingestion_lock', NOW);
@@ -180,4 +180,57 @@ test('archive manual redirects reject 3xx without fetching the target or advanci
     assert.equal(run.coverageThrough, null); assert.equal(run.lastSuccessAt, null); assert.equal(await meta(env.DB, 'catalog'), null);
     env.DB.close();
   }
+});
+test('archive retry delays honor relative reset seconds, absolute milliseconds and Retry-After', async () => {
+  const fixtures = [
+    [{ 'X-RateLimit-Reset': '2' }, 2000],
+    [{ 'X-RateLimit-Reset-At': String(NOW + 3000) }, 3000],
+    [{ 'Retry-After': '4' }, 4000],
+    [{ 'Retry-After': new Date(NOW + 4000).toUTCString() }, 4000],
+    [{ 'X-RateLimit-Reset': '2', 'X-RateLimit-Reset-At': String(NOW + 4000), 'Retry-After': '3' }, 4000],
+  ];
+  for (const [headers, expected] of fixtures) {
+    const env = fixtureEnv(), pauses = []; let calls = 0, now = NOW;
+    const result = await ingest(env, { now: () => now, sleep: async ms => { pauses.push(ms); now += ms; }, fetch: async () => {
+      calls++; return calls === 1 ? new Response('', { status: 429, headers }) : Response.json({ data: [] });
+    } });
+    assert.equal(result.status, 'ok'); assert.equal(calls, 2); assert.deepEqual(pauses, [expected]); env.DB.close();
+  }
+});
+test('archive advertised waits beyond the budget preserve a checkpoint without an early retry', async () => {
+  const fixtures = [
+    { 'X-RateLimit-Reset': '15' }, { 'X-RateLimit-Reset-At': String(NOW + 15000) },
+    { 'Retry-After': '999' }, { 'Retry-After': new Date(NOW + 15000).toUTCString() },
+    { 'X-RateLimit-Reset': '15', 'X-RateLimit-Reset-At': String(NOW - 1000) },
+    { 'X-RateLimit-Reset': '9'.repeat(500) },
+  ];
+  for (const headers of fixtures) {
+    const env = fixtureEnv(), pauses = []; let calls = 0;
+    await assert.rejects(ingest(env, { now: () => NOW, sleep: async ms => { pauses.push(ms); }, fetch: async () => {
+      calls++; return new Response('', { status: 429, headers });
+    } }), error => error.code === 'SERVICE_UNAVAILABLE');
+    assert.equal(calls, 1); assert.deepEqual(pauses, []);
+    const run = await meta(env.DB, 'ingestion');
+    assert.equal(run.errorCode, 'ARCHIVE_HTTP_429'); assert.equal(run.state, 'error');
+    assert.equal(run.resumeBefore, NOW / 1000); assert.equal(run.targetCoverageThrough, new Date(NOW).toISOString());
+    assert.equal(run.coverageThrough, null); assert.equal(run.lastSuccessAt, null); env.DB.close();
+  }
+});
+test('an archive long reset after a page saves partial progress and safely resumes the frozen window', async () => {
+  const env = fixtureEnv(), pauses = []; let calls = 0;
+  const rows = Array.from({ length: 100 }, (_, i) => rawPost((600000 + i).toString(36).padStart(5, '0'), { created_utc: NOW / 1000 - i - 10 }));
+  const result = await ingest(env, { now: () => NOW, sleep: async ms => { pauses.push(ms); }, fetch: async () => {
+    calls++; return calls === 1 ? Response.json({ data: rows }) : new Response('', { status: 429, headers: { 'X-RateLimit-Reset': '15' } });
+  } });
+  assert.equal(result.status, 'partial'); assert.equal(result.fetched, 100); assert.equal(calls, 2); assert.deepEqual(pauses, [600]);
+  const checkpoint = await meta(env.DB, 'ingestion');
+  assert.equal(checkpoint.resumeBefore, rows.at(-1).created_utc + 1); assert.equal(checkpoint.lastSuccessAt, null);
+  assert.equal(checkpoint.errorCode, 'ARCHIVE_HTTP_429'); assert.equal((await catalog(env.DB)).source.coverageThrough, null);
+  let resumed;
+  const next = await ingest(env, { now: () => NOW + 60000, sleep: async () => {}, fetch: async url => {
+    resumed = new URL(url); return Response.json({ data: [] });
+  } });
+  assert.equal(next.status, 'ok'); assert.equal(Number(resumed.searchParams.get('before')), checkpoint.resumeBefore);
+  assert.equal(Number(resumed.searchParams.get('after')), checkpoint.resumeAfter);
+  assert.equal((await meta(env.DB, 'ingestion')).coverageThrough, checkpoint.targetCoverageThrough); env.DB.close();
 });
