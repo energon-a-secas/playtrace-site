@@ -34,6 +34,8 @@ Playtrace collects games shared on r/aigamedev so players can discover a project
 
 **Live:** [playtrace.neorgon.com](https://playtrace.neorgon.com/) · **API:** [service status](https://playtrace-api.neorgon.workers.dev/api/v1/status)
 
+The public catalogue is available. Following and price submission are implemented but disabled in this release while the new domain awaits registration in the shared login service. Public price aggregates remain readable. See [account activation](#account-activation).
+
 ## Features
 
 - **Source-linked discovery** -- Real previews, genre and development-stage filters, maker views, search, grid/list layouts, and shareable project links.
@@ -66,7 +68,7 @@ node --test worker/tests/*.test.mjs
 python3 worker/tests/schema.test.py
 ```
 
-Client tests cover source validation, shared filters, price parsing, and challenge cancellation. Backend tests use synthetic signed sessions, a SQLite-backed D1 adapter, and controlled archive/media responses. Use a Node runtime with `node:sqlite`. They cover rejection of forged identity, uniqueness, price thresholds, rate limits, resumable collection, atomic imports, removal, and media validation. They do not manufacture activity in the live database.
+Client tests cover source validation, shared filters, price parsing, stale responses, and challenge cancellation. Backend tests use synthetic signed sessions, a SQLite-backed D1 adapter, and controlled archive/media responses. Use a Node runtime with `node:sqlite`. They cover rejection of forged identity, uniqueness, price thresholds, rate limits, resumable collection, atomic imports, removal, and media validation. They do not manufacture activity in the live database.
 
 ## Architecture
 
@@ -92,6 +94,12 @@ Arctic Shift is a third-party archive and may be delayed or incomplete. Original
 Production uses explicit `account-rate-limit` protection. An operator can enable strict Turnstile verification by configuring its server secret, site key, hostname, and protection mode together. Missing or unknown protection configuration fails closed. Individual prices and network keys are never returned by public aggregate routes.
 
 The initial API caps the published catalogue at 2,000 games and bounds each game's source history. Add pagination and a review interface before approaching those limits. Public preview storage is not an open upload endpoint.
+
+## Account activation
+
+The production login service currently returns `subdomain_not_allowed` for `playtrace.neorgon.com`. In the production Clerk instance, add that exact hostname to **Allowed Subdomains**, preserving the existing entries and keeping the allowlist enabled. Its [subdomain configuration documentation](https://clerk.com/docs/guides/dashboard/dns-domains/subdomain-allowlist) describes the setting. No Clerk administrator credential is stored in this checkout.
+
+After the sign-in form loads successfully on the live domain, set `accountsReady: true` in `js/config.js` and publish the change. Verify a real account can follow and unfollow a game, submit, edit and withdraw a price response, and delete its Playtrace data. Do not count these live flows as tested until then. The browser flag controls availability only; the Worker always verifies sessions and enforces its own limits.
 
 ## Possible next steps
 

@@ -45,6 +45,10 @@ export function render() {
   $('collectionEmpty').hidden = !state.loaded || Boolean(games.length);
   $('emptyTitle').textContent = state.following ? state.signedIn ? 'Your next find is waiting' : 'Your following list lives with your account' : 'No projects match this view';
   $('emptyDescription').textContent = state.following ? state.signedIn ? 'Follow a game to collect its progress here. New source posts stay together on its timeline.' : 'Sign in with the account you use to follow games, or explore the public collection.' : 'Try another genre, maker or search. The whole collection is one reset away.';
+  if (state.following && CONFIG.accountsReady !== true) {
+    $('emptyTitle').textContent = 'Following is not available yet';
+    $('emptyDescription').textContent = 'Reset this filter to explore the public collection.';
+  }
   $('emptyReset').hidden = !filtered;
   $('authorContext').hidden = !state.author;
   $('authorContext').textContent = state.author ? `Following the work of u/${state.author}. Each project keeps its own source timeline.` : '';
@@ -107,19 +111,24 @@ export function renderDetail(game) {
 
 export function renderAccount() {
   if (!$('submitPrice')) return;
+  const accountsReady = CONFIG.accountsReady === true;
   const mode = state.service?.signalProtection;
-  const signals = state.service?.capabilities?.signals && (mode === 'account-rate-limit' || (mode === 'turnstile' && CONFIG.turnstileSiteKey));
-  const own = state.prices.find(price => price.gameId === state.detail?.id);
-  $('followGame').textContent = state.follows.includes(state.detail?.id) ? 'Following this game ✓' : 'Follow this game';
-  $('followGame').disabled = state.accountBusy || !state.service?.capabilities?.following;
-  $('followGame').setAttribute('aria-pressed', String(state.follows.includes(state.detail?.id)));
+  const signals = accountsReady && state.service?.capabilities?.signals && (mode === 'account-rate-limit' || (mode === 'turnstile' && CONFIG.turnstileSiteKey));
+  const own = accountsReady && state.prices.find(price => price.gameId === state.detail?.id);
+  const following = accountsReady && state.follows.includes(state.detail?.id);
+  $('followGame').textContent = following ? 'Following this game ✓' : 'Follow this game';
+  $('followGame').disabled = !accountsReady || state.accountBusy || !state.service?.capabilities?.following;
+  $('followGame').setAttribute('aria-pressed', String(following));
+  $('followingFilter').disabled = !accountsReady || !state.service?.capabilities?.following;
+  $('followingFilter').title = accountsReady ? 'Show followed games' : 'Following is not available yet.';
   $('submitPrice').disabled = state.accountBusy || !signals;
-  $('submitPrice').textContent = state.accountBusy ? 'Please wait…' : own ? 'Update your price' : state.signedIn ? 'Share your price' : 'Sign in to share your price';
+  $('submitPrice').textContent = !accountsReady ? 'Price responses unavailable' : state.accountBusy ? 'Please wait…' : own ? 'Update your price' : state.signedIn ? 'Share your price' : 'Sign in to share your price';
   $('priceAmount').disabled = state.accountBusy || !signals;
-  $('withdrawPrice').hidden = !own; $('withdrawPrice').disabled = state.accountBusy;
-  $('accountAvailability').textContent = signals ? mode === 'account-rate-limit' ? 'Signed-in accounts, one estimate each.' : 'Signed-in accounts, with a bot challenge for submissions.' : state.serviceError || 'Price responses are temporarily unavailable. You can still explore the project.';
-  $('deleteMyData').disabled = state.accountBusy || !state.service?.capabilities?.following;
-  $('confirmDelete').disabled = state.accountBusy;
+  $('withdrawPrice').hidden = !own; $('withdrawPrice').disabled = !accountsReady || state.accountBusy;
+  $('accountAvailability').textContent = !accountsReady ? 'Following and price responses are not available yet. You can still explore games and public price signals.' : signals ? mode === 'account-rate-limit' ? 'Signed-in accounts, one estimate each.' : 'Signed-in accounts, with a bot challenge for submissions.' : state.serviceError || 'Price responses are temporarily unavailable. You can still explore the project.';
+  $('deleteMyData').disabled = !accountsReady || state.accountBusy || !state.service?.capabilities?.following;
+  $('confirmDelete').disabled = !accountsReady || state.accountBusy;
+  if (!accountsReady) { $('deleteConfirm').hidden = true; $('privacyMessage').textContent = 'Account features are not available yet.'; }
 }
 
 export function renderSignals() {

@@ -1,4 +1,5 @@
 import { NeoAuth } from './neorgon-auth.js';
+import { CONFIG } from './config.js';
 import { state } from './state.js';
 import { request, apiConfigured } from './api.js';
 import { parsePrice } from './collection.js';
@@ -10,8 +11,14 @@ let rerender = () => {};
 let accountRequest = 0;
 let signalRequest = 0;
 let deletingData = false;
+const accountsReady = CONFIG.accountsReady === true;
 export function startAccounts(render) {
   rerender = render;
+  if (!accountsReady) {
+    accountRequest++; state.signedIn = false; state.userId = null; state.follows = []; state.prices = [];
+    state.accountLoaded = false; state.accountBusy = false; $('deleteConfirm').hidden = true;
+    clearChallenge(); render(); renderAccount(); return;
+  }
   NeoAuth.onChange(auth => {
     const changed = state.userId !== auth.userId;
     state.signedIn = auth.signedIn; state.userId = auth.userId;
@@ -28,6 +35,7 @@ export function startAccounts(render) {
 }
 
 async function freshToken(expectedUser) {
+  if (!accountsReady) throw new Error('Account features are not available yet.');
   if (!NeoAuth.state.signedIn || NeoAuth.state.userId !== expectedUser) throw new Error('Your account changed. Please try again.');
   const token = await NeoAuth.state.clerk?.session?.getToken();
   if (!token || NeoAuth.state.userId !== expectedUser) throw new Error('Please sign in again to continue.');
@@ -35,7 +43,7 @@ async function freshToken(expectedUser) {
 }
 
 export async function refreshMe() {
-  if (deletingData) return;
+  if (!accountsReady || deletingData) return;
   const user = state.userId, number = ++accountRequest;
   try {
     const me = await request('/me', { token: await freshToken(user) });
@@ -48,6 +56,7 @@ export async function refreshMe() {
 }
 
 async function requireAccount(invoker, reason, feature) {
+  if (!accountsReady) { showToast('Following and price responses are not available yet.'); return false; }
   if (!state.service?.capabilities?.[feature]) { showToast(state.serviceError || 'This account feature is temporarily unavailable.'); return false; }
   if (!await NeoAuth.requireSignIn({ invoker, reason })) return false;
   return true;
@@ -98,6 +107,7 @@ export async function loadSignals(gameId = state.detail?.id) {
 }
 
 export async function savePrice(invoker) {
+  if (!accountsReady) return;
   const gameId = state.detail?.id, amountCents = parsePrice($('priceAmount').value);
   if (!gameId || state.accountBusy) return;
   $('priceAmount').setAttribute('aria-invalid', String(amountCents === null));
@@ -121,7 +131,7 @@ export async function savePrice(invoker) {
 
 export async function withdrawPrice() {
   const gameId = state.detail?.id, user = state.userId;
-  if (!gameId || !state.signedIn || state.accountBusy) return;
+  if (!accountsReady || !gameId || !state.signedIn || state.accountBusy) return;
   state.accountBusy = true; renderAccount();
   try {
     await request(`/games/${gameId}/price`, { method: 'DELETE', token: await freshToken(user) });
@@ -133,11 +143,11 @@ export async function withdrawPrice() {
 }
 
 export async function deleteMyData(invoker) {
-  if (state.accountBusy || !apiConfigured || !await NeoAuth.requireSignIn({ invoker, reason: 'Sign in to manage your Playtrace data.' }) || state.accountBusy) return;
+  if (!accountsReady || state.accountBusy || !apiConfigured || !await NeoAuth.requireSignIn({ invoker, reason: 'Sign in to manage your Playtrace data.' }) || state.accountBusy) return;
   $('deleteConfirm').hidden = false; $('confirmDelete').focus();
 }
 export async function confirmDelete() {
-  if (!state.signedIn || state.accountBusy) return;
+  if (!accountsReady || !state.signedIn || state.accountBusy) return;
   const user = state.userId;
   let deleted = false;
   state.accountBusy = true; deletingData = true; accountRequest++; clearSignals(); renderAccount();

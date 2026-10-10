@@ -98,14 +98,16 @@ function fakeNodes() {
     return nodes.get(id);
   };
 }
-async function accountModule(request) {
+async function accountModule(request, accountsReady = true) {
   const $ = fakeNodes();
   const state = { signedIn: true, userId: 'user_a', follows: ['g_abc12'], prices: [], accountLoaded: true,
     accountBusy: false, detail: { id: 'g_abc12' }, service: { capabilities: { signals: true, following: true }, signalProtection: 'account-rate-limit' } };
-  const NeoAuth = { state: { signedIn: true, userId: 'user_a', clerk: { session: { getToken: async () => 'test-token' } } }, requireSignIn: async () => true };
-  const api = await isolatedModule('accounts.js', { state, $, NeoAuth, request, apiConfigured: true, parsePrice,
+  const authCalls = { starts: 0, listeners: 0, prompts: 0, tokens: 0 };
+  const NeoAuth = { state: { signedIn: true, userId: 'user_a', clerk: { session: { getToken: async () => { authCalls.tokens++; return 'test-token'; } } } },
+    start() { authCalls.starts++; }, onChange() { authCalls.listeners++; }, requireSignIn: async () => { authCalls.prompts++; return true; } };
+  const api = await isolatedModule('accounts.js', { state, $, NeoAuth, request, CONFIG: { accountsReady }, apiConfigured: true, parsePrice,
     priceChallenge: async () => '', clearChallenge() {}, renderAccount() {}, renderSignals() {}, showToast() {} });
-  return { api, state, $ };
+  return { api, state, $, authCalls };
 }
 async function flushRequests() { for (let i = 0; i < 12; i++) await Promise.resolve(); }
 const insufficient = { gameId: 'g_abc12', state: 'insufficient', count: null, medianCents: null, buckets: null };
@@ -174,4 +176,45 @@ test('source post IDs reject numeric coercion even when the source URL matches',
   post.id = 12345; post.url = 'https://www.reddit.com/r/aigamedev/comments/12345/';
   if (game.preview.sourceUrl === oldUrl) game.preview.sourceUrl = post.url;
   assert.throws(() => validateCatalog(catalogue));
+});
+
+test('unavailable accounts never initialize Clerk, prompt, mint tokens or request private data', async () => {
+  const calls = [];
+  const { api, state, $, authCalls } = await accountModule(async (path, options = {}) => {
+    calls.push({ path, method: options.method || 'GET' }); return insufficient;
+  }, false);
+  api.startAccounts(() => {});
+  assert.equal(state.signedIn, false); assert.equal(state.userId, null);
+  // Stale or manually assigned account state cannot bypass the configured gate.
+  state.signedIn = true; state.userId = 'user_a'; state.accountLoaded = true;
+  $('priceAmount').value = '10';
+  assert.equal(await api.prepareFollowing({}), false);
+  await api.followGame({}); await api.savePrice({}); await api.withdrawPrice();
+  await api.deleteMyData({}); await api.confirmDelete(); await api.refreshMe();
+  assert.deepEqual(calls, []);
+  assert.deepEqual(authCalls, { starts: 0, listeners: 0, prompts: 0, tokens: 0 });
+  await api.loadSignals();
+  assert.deepEqual(calls, [{ path: '/games/g_abc12/signals', method: 'GET' }]);
+  assert.equal(state.detailSignals.state, 'insufficient');
+});
+
+test('ready accounts initialize the kit and retain verified private action flow', async () => {
+  const calls = [];
+  const { api, authCalls } = await accountModule(async (path, options = {}) => {
+    calls.push({ path, method: options.method || 'GET', token: options.token });
+    return path === '/me' ? { follows: [], prices: [] } : { gameId: 'g_abc12', following: false };
+  }, true);
+  api.startAccounts(() => {}); await api.followGame({});
+  assert.equal(authCalls.starts, 1); assert.equal(authCalls.listeners, 1); assert.equal(authCalls.prompts, 1);
+  assert.deepEqual(calls, [{ path: '/games/g_abc12/follow', method: 'DELETE', token: 'test-token' }, { path: '/me', method: 'GET', token: 'test-token' }]);
+});
+
+test('unavailable account controls show availability without a sign-in call to action', async () => {
+  const $ = fakeNodes(), state = { follows: [], prices: [], detail: { id: 'g_abc12' }, service: { capabilities: { signals: true, following: true }, signalProtection: 'account-rate-limit' } };
+  const renderer = await isolatedModule('render.js', { state, $, CONFIG: { accountsReady: false }, e: String });
+  renderer.renderAccount();
+  for (const id of ['followingFilter', 'followGame', 'submitPrice', 'priceAmount', 'withdrawPrice', 'deleteMyData', 'confirmDelete']) assert.equal($(id).disabled, true, id);
+  assert.doesNotMatch($('submitPrice').textContent, /sign in/i);
+  assert.match($('accountAvailability').textContent, /not available yet/);
+  assert.match($('privacyMessage').textContent, /not available yet/);
 });
