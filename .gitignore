@@ -1,0 +1,48 @@
+# ── macOS ─────────────────────────────────────────────────────────────────────
+.DS_Store
+
+# ── Playwright MCP (Claude Code browser automation: screenshots, logs) ───────
+.playwright-mcp/
+
+# ── Playwright test artifacts ─────────────────────────────────────────────────
+test-results/
+playwright-report/
+blob-report/
+
+# ── Node ──────────────────────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+
+# ── Secrets, never commit ─────────────────────────────────────────────────────
+.env
+.env.*
+# …but the credentials TEMPLATE is repo content: a fresh clone needs it
+!.env.example
+
+# ── Ephemeral skill working state (see neorgon-forge/docs/authoring.md) ───────
+# Session briefs and maps. Useful while the work happens, not repo content, and
+# on a site repo this directory is public.
+.forge/
+
+# ── Python bytecode ───────────────────────────────────────────────────────────
+# smoke check 6 creates __pycache__ at repo root while exercising the tooling.
+__pycache__/
+*.py[cod]
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+# A site that deliberately ARCHIVES a log (rewind-site keeps the server.log of
+# each snapshot) negates this in its own .gitignore. See REPO-ORGANIZATION.md.
+*.log
+
+# ── Archived skills (scripts/prune-skills.sh) ─────────────────────────────────
+skills-archived/
+
+# ── Claude Code local settings ───────────────────────────────────────────────
+# Personal, machine-local permissions and paths. Shared settings belong in
+# .claude/settings.json.
+.claude/settings.local.json
+
+# ── Cloudflare Worker ────────────────────────────────────────────────────────
+# wrangler's local state and the Worker's dev secrets.
+.wrangler/
+.dev.vars*

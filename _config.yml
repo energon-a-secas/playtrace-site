@@ -1,0 +1,26 @@
+# GitHub Pages builds this repo with Jekyll. With no config, Jekyll turns every
+# tracked Markdown file (CLAUDE.md, DESIGN.md, docs/*.md) into a live HTML page
+# on this origin, with no Content-Security-Policy and indexable by search
+# engines. Excluding Markdown keeps the site to what it ships on purpose.
+#
+# Jekyll 3, which Pages runs, replaces its default exclude list with this one,
+# and Pages only adds CNAME to it, so CNAME and the Jekyll defaults are
+# repeated here to keep the rest of the output unchanged. A .nojekyll file is
+# not used because it would also start serving dot and underscore paths.
+exclude:
+  - "*.md"
+  - "*.markdown"
+  - "*.mkdown"
+  - "*.mkdn"
+  - "*.mkd"
+  - CNAME
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - worker
+  - tests
+  - Makefile
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/

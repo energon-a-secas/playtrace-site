@@ -1,0 +1,402 @@
+/* ══════════════════════════════════════════════════════════════
+   Neorgon Auth Kit: styles
+   Canonical source: packages/neorgon-ui/auth/neorgon-auth.css
+   Vendored per site as css/neorgon-auth.css by
+   packages/neorgon-ui/sync-auth.sh. Never edit a vendored copy.
+
+   Tokens resolve from the site (--accent, --bg, --text-primary) and then
+   from the header kit, so seasonal themes and header skins reach the
+   dialog. A site that needs a different accent for sign-in only sets
+   --neo-auth-accent; nothing else here is meant to be overridden.
+   ══════════════════════════════════════════════════════════════ */
+
+.neo-auth,
+.neo-auth-dialog {
+  --auth-accent: var(--neo-auth-accent, var(--accent, var(--header-accent, #e879f9)));
+  --auth-bg: var(--neo-auth-bg, var(--bg, #0b0d14));
+  --auth-text: var(--neo-auth-text, var(--text-primary, #f4f4f5));
+  /* Derived from text and ground rather than read from --text-muted, which
+     some sites set low enough to fail contrast on a raised surface. */
+  --auth-text-dim: color-mix(in oklab, var(--auth-text) 74%, var(--auth-bg));
+  --auth-surface: color-mix(in oklab, var(--auth-bg) 91%, var(--auth-text) 9%);
+  --auth-border: color-mix(in oklab, var(--auth-text) 15%, transparent);
+  --auth-radius: 14px;
+  --auth-ease: var(--ease-out, cubic-bezier(.22, 1, .36, 1));
+}
+
+.neo-auth-sr {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ── Header slot ─────────────────────────────────────────────── */
+.neo-auth {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  min-height: var(--header-control-h, 40px);
+}
+.neo-auth[hidden] { display: none !important; }
+
+/* Same geometry and appearance as the header kit's own boxed controls, so
+   the slot reads as part of the strip rather than a guest in it. */
+.neo-auth-signin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
+  height: var(--header-control-h, 40px);
+  padding: 0 12px;
+  border: 1px solid var(--header-control-border, var(--header-border-strong, rgba(255, 255, 255, .3)));
+  border-radius: 6px;
+  background: transparent;
+  color: var(--header-text, var(--auth-text));
+  font: inherit;
+  font-size: .875rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .2s var(--auth-ease), border-color .2s var(--auth-ease);
+}
+.neo-auth-signin:hover { background: var(--header-menu-hover, rgba(255, 255, 255, .1)); }
+.neo-auth-signin svg { width: 18px; height: 18px; flex: none; }
+
+/* Below the header kit's mobile breakpoint every icon control is square and
+   unboxed. The label is clipped, not removed, so it stays the button's name. */
+@media (max-width: 700px) {
+  .neo-auth-signin {
+    width: var(--header-control-h, 36px);
+    padding: 0;
+    border-color: transparent;
+  }
+  .neo-auth-signin-label {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+.neo-auth-pending {
+  display: block;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--header-text, #fff) 18%, transparent);
+}
+.neo-auth-user {
+  display: inline-flex;
+  align-items: center;
+  min-width: 32px;
+  min-height: 32px;
+}
+
+/* ── Dialog shell (sign-in and sites share it) ───────────────── */
+body:has(.neo-auth-dialog[open]) { overflow: hidden; }
+
+.neo-auth-dialog {
+  box-sizing: border-box;
+  width: min(440px, calc(100vw - 32px));
+  max-width: none;
+  /* Centred in the space under the header, not in the whole viewport: centred on the
+     viewport, the gap above the box is a header shorter than the gap below it, and the
+     box reads as pushed up against the bar. --auth-top is the visible header's bottom
+     edge, measured by the kit each time a dialog opens (0 when the header is scrolled away). */
+  inset-block-start: var(--auth-top, 0px);
+  max-height: min(760px, calc(100dvh - var(--auth-top, 0px) - 48px));
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--auth-border);
+  border-radius: var(--auth-radius);
+  background: var(--auth-surface);
+  color: var(--auth-text);
+  font-family: var(--font, inherit);
+  box-shadow:
+    0 1px 0 color-mix(in oklab, var(--auth-text) 8%, transparent) inset,
+    0 28px 70px rgba(0, 0, 0, .5);
+  overflow: hidden;
+  color-scheme: dark;
+}
+.neo-auth-dialog[data-scheme="light"] {
+  --auth-surface: color-mix(in oklab, var(--auth-bg) 97%, var(--auth-text) 3%);
+  box-shadow: 0 28px 70px rgba(15, 23, 42, .22);
+  color-scheme: light;
+}
+.neo-auth-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+.neo-auth-dialog::backdrop {
+  background: rgba(3, 5, 14, .62);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.neo-auth-dialog[data-scheme="light"]::backdrop { background: rgba(15, 23, 42, .35); }
+
+/* The one place the site's accent is loud: a rule along the top edge. */
+.neo-auth-dialog::before {
+  content: "";
+  flex: none;
+  height: 3px;
+  background: linear-gradient(90deg, var(--auth-accent), color-mix(in oklab, var(--auth-accent) 30%, transparent));
+}
+
+.neo-auth-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 18px 14px 8px 20px;
+}
+.neo-auth-mark { width: 40px; height: 40px; }
+.neo-auth-mark img { display: block; width: 40px; height: 40px; }
+.neo-auth-mark:empty { display: none; }
+.neo-auth-head:has(.neo-auth-mark:empty) { grid-template-columns: minmax(0, 1fr) auto; }
+.neo-auth-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: -.01em;
+  color: var(--auth-text);
+}
+.neo-auth-lede {
+  margin: 3px 0 0;
+  font-size: .875rem;
+  line-height: 1.45;
+  color: var(--auth-text-dim);
+}
+.neo-auth-close {
+  align-self: start;
+  display: grid;
+  place-items: center;
+  width: 36px; height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--auth-text-dim);
+  cursor: pointer;
+}
+.neo-auth-close:hover {
+  background: color-mix(in oklab, var(--auth-text) 10%, transparent);
+  color: var(--auth-text);
+}
+.neo-auth-close svg { width: 18px; height: 18px; }
+
+.neo-auth-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 4px 20px 14px;
+}
+
+/* Reserved height: Clerk renders after its bundle arrives, and a dialog that
+   grows from 120px to 420px under the pointer is a dialog that jumps. */
+.neo-auth-status {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 14px;
+  min-height: 300px;
+  text-align: center;
+  font-size: .9rem;
+  line-height: 1.5;
+  color: var(--auth-text-dim);
+}
+.neo-auth-status p { margin: 0; max-width: 34ch; }
+.neo-auth-status[data-kind="error"] p { color: var(--auth-text); }
+.neo-auth-spinner {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2.5px solid color-mix(in oklab, var(--auth-text) 16%, transparent);
+  border-top-color: var(--auth-accent);
+}
+.neo-auth-retry {
+  height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--auth-accent);
+  color: var(--auth-accent-text, #fff);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Clerk's start step titles itself "Continue to Neorgon", which repeats the
+   dialog's own title. Later steps ("Check your email") keep their header
+   because it carries the instruction. */
+.neo-auth-dialog :is(.cl-signIn-start, .cl-signUp-start) .cl-header { display: none; }
+
+.neo-auth-foot {
+  flex: none;
+  padding: 12px 20px 16px;
+  border-top: 1px solid var(--auth-border);
+  font-size: .8125rem;
+  line-height: 1.5;
+  color: var(--auth-text-dim);
+}
+.neo-auth-foot p { margin: 0; }
+.neo-auth-foot a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.neo-auth-foot a:hover { color: var(--auth-text); }
+
+.neo-auth-signin:focus-visible,
+.neo-auth-close:focus-visible,
+.neo-auth-retry:focus-visible,
+.neo-auth-clear:focus-visible,
+.neo-auth-foot a:focus-visible {
+  outline: 2px solid var(--auth-accent);
+  outline-offset: 2px;
+}
+
+/* ── Sites dialog ────────────────────────────────────────────── */
+.neo-auth-section { margin: 12px 0 4px; }
+.neo-auth-section:first-child { margin-top: 6px; }
+.neo-auth-section-title {
+  margin: 0 0 8px;
+  font-size: .8125rem;
+  font-weight: 600;
+  color: var(--auth-text-dim);
+}
+.neo-auth-sites {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.neo-auth-site {
+  position: relative;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--auth-border);
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--auth-text) 3%, transparent);
+  transition: border-color .15s var(--auth-ease), background .15s var(--auth-ease);
+}
+.neo-auth-site:has(.neo-auth-site-link:hover) {
+  border-color: color-mix(in oklab, var(--auth-accent) 55%, transparent);
+  background: color-mix(in oklab, var(--auth-accent) 8%, transparent);
+}
+.neo-auth-site:has(.neo-auth-site-link:focus-visible) {
+  outline: 2px solid var(--auth-accent);
+  outline-offset: 2px;
+}
+.neo-auth-site-icon { display: block; width: 32px; height: 32px; }
+.neo-auth-site-name {
+  font-size: .9375rem;
+  font-weight: 600;
+  color: var(--auth-text);
+}
+.neo-auth-site-link { color: inherit; text-decoration: none; }
+.neo-auth-site-link:focus-visible { outline: none; }
+/* The name is the link; its hit area is the whole row. */
+.neo-auth-site-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.neo-auth-site-meta {
+  display: block;
+  margin-top: 2px;
+  overflow: hidden;
+  font-size: .8rem;
+  color: var(--auth-text-dim);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.neo-auth-here {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--auth-accent);
+  color: var(--auth-accent-text, #fff);
+  font-size: .72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.neo-auth-empty {
+  margin: 0;
+  padding: 14px;
+  border: 1px dashed var(--auth-border);
+  border-radius: 10px;
+  font-size: .875rem;
+  line-height: 1.5;
+  color: var(--auth-text-dim);
+}
+.neo-auth-clear {
+  height: 36px;
+  margin-top: 14px;
+  padding: 0 12px;
+  border: 1px solid var(--auth-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--auth-text-dim);
+  font: inherit;
+  font-size: .8125rem;
+  cursor: pointer;
+}
+.neo-auth-clear:hover {
+  border-color: color-mix(in oklab, var(--auth-text) 32%, transparent);
+  color: var(--auth-text);
+}
+.neo-auth-clear[data-armed] {
+  border-color: rgba(248, 113, 113, .55);
+  color: #fca5a5;
+}
+.neo-auth-dialog[data-scheme="light"] .neo-auth-clear[data-armed] {
+  border-color: rgba(220, 38, 38, .5);
+  color: #b91c1c;
+}
+
+/* ── Narrow screens: a sheet from the bottom edge ────────────── */
+@media (max-width: 560px) {
+  .neo-auth-dialog {
+    inset-block-start: 0;
+    width: 100vw;
+    max-height: 92dvh;
+    margin: auto 0 0;
+    border-bottom: 0;
+    border-radius: 18px 18px 0 0;
+  }
+  .neo-auth-foot { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+}
+
+/* ── Motion, only for people who have not asked for less ─────── */
+@media (prefers-reduced-motion: no-preference) {
+  .neo-auth-dialog[open] { animation: neo-auth-in .22s var(--auth-ease); }
+  .neo-auth-dialog[open]::backdrop { animation: neo-auth-fade .22s ease-out; }
+  .neo-auth-spinner { animation: neo-auth-spin .8s linear infinite; }
+  .neo-auth-pending { animation: neo-auth-pulse 1.2s ease-in-out infinite; }
+}
+@media (max-width: 560px) and (prefers-reduced-motion: no-preference) {
+  .neo-auth-dialog[open] { animation-name: neo-auth-up; }
+}
+@keyframes neo-auth-in { from { opacity: 0; transform: translateY(8px) scale(.985); } }
+@keyframes neo-auth-up { from { opacity: 0; transform: translateY(28px); } }
+@keyframes neo-auth-fade { from { opacity: 0; } }
+@keyframes neo-auth-spin { to { transform: rotate(360deg); } }
+@keyframes neo-auth-pulse { 50% { opacity: .45; } }
+
+@media (forced-colors: active) {
+  .neo-auth-dialog { border: 1px solid CanvasText; }
+  .neo-auth-dialog::before { background: Highlight; }
+  .neo-auth-signin,
+  .neo-auth-site { border: 1px solid ButtonText; }
+  .neo-auth-here { border: 1px solid CanvasText; }
+}

@@ -1,0 +1,14 @@
+# Playtrace
+
+> Discover games shared on r/aigamedev, follow their development, and explore nonbinding community price feedback.
+
+- [Browse Playtrace](https://playtrace.neorgon.com/): Search games by genre, stage, maker, and recent activity.
+- [Current catalogue](https://playtrace-api.neorgon.workers.dev/api/v1/catalog): Public JSON with source-linked project timelines and collection dates.
+- [Service status](https://playtrace-api.neorgon.workers.dev/api/v1/status): Available features and the latest archive collection state.
+- [Source community](https://www.reddit.com/r/aigamedev/): Original game posts and author updates.
+
+Browsing is public. Following games and submitting a price response require a Neorgon account. Responses are editable opinions in USD, not payments, purchase offers, or auctions. Public price distributions appear only after five accounts respond.
+
+The catalogue combines reviewed entries with source-described archive discoveries. Being listed does not verify a creator or a game's availability. Source dates, original posts, and review status accompany entries. Preview images remain at their source unless a creator permits managed storage.
+
+- [Neorgon](https://neorgon.com/): More tools in the suite.

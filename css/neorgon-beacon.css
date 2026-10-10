@@ -1,0 +1,122 @@
+/* ══════════════════════════════════════════════════════════════
+   Neorgon Beacon Kit: beacon.css
+   Canonical source: packages/neorgon-ui/beacon/
+   Vendored per site as css/neorgon-beacon.css. Do not edit copies.
+
+   One control and nothing else. The widget has no form, no panel and no
+   dialog: it opens Balise's own report page and the visitor writes there
+   (CONTRACTS.md D1). Anything here that styled a field would be styling
+   something that no longer exists.
+
+   Naming: every class here is `neo-beacon-*` and every custom property is
+   `--beacon-*`. Neither collides with the Cloudflare Insights analytics
+   beacon (`beacon.min.js`, `data-cf-beacon`) that the header kit loads on
+   all 68 vendored copies. See README.md, "The name collision".
+
+   Tokens: 34 of the 74 index.html files under projects/ do not link the CDN
+   base.css, so every `--beacon-*` below falls back through a fleet token to
+   a literal. No fleet token is redeclared here, and the beacon never reads
+   the host site's `--accent`: the lit state is a fixed identity colour.
+   ══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Geometry. 40px matches the footer kit's back-to-top control so the two
+     read as one family when both are on screen. */
+  --beacon-size: 40px;
+  --beacon-offset: 20px;
+  /* How far the footer pushes the control up, written by beacon.js from the
+     footer's measured height whenever any of it is on screen. 0 is the
+     resting state, and also the state with JS off, where there is no control
+     to place. See README.md, "Clearing the footer". */
+  --beacon-clear: 0px;
+  /* Above the footer kit's back-to-top (150), below the header (200) and
+     modals (400). See packages/neorgon-ui/footer/footer.css:36. */
+  --beacon-z: 160;
+
+  /* Palette. Fleet token first, literal second. */
+  --beacon-lit: #f59e0b;
+  --beacon-idle: var(--text-muted, rgba(255, 255, 255, .55));
+  --beacon-surface: var(--header-menu-bg, #10142a);
+  --beacon-border: var(--header-border, rgba(255, 255, 255, .07));
+  --beacon-focus: var(--header-focus, #f2e9f4);
+
+  --beacon-dur: var(--dur, 200ms);
+}
+
+/* ── The control ──────────────────────────────────────────────
+   An <a>, not a <button>, because it navigates: see README.md, "A link, and
+   what that buys". Styled as a circular icon control so it reads as one
+   affordance with the footer kit's back-to-top rather than as body copy.
+
+   Bottom LEFT, deliberately. The footer kit pins its back-to-top button at
+   right:20px/bottom:20px on 69 vendored copies, so a bottom-right beacon
+   would ship overlapping controls across the fleet and nothing would detect
+   it.
+
+   `max()` rather than a sum, so the two knobs cannot double up: the resting
+   offset applies while the footer is away, the measured clearance takes over
+   once it arrives, and a site that raises --beacon-offset still gets whichever
+   is larger instead of one added to the other. */
+.neo-beacon-link {
+  position: fixed;
+  left: calc(var(--beacon-offset) + env(safe-area-inset-left, 0px));
+  bottom: calc(max(var(--beacon-offset), var(--beacon-clear, 0px))
+               + env(safe-area-inset-bottom, 0px));
+  z-index: var(--beacon-z);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--beacon-size);
+  height: var(--beacon-size);
+  padding: 0;
+  border: 1px solid var(--beacon-border);
+  border-radius: 50%;
+  background: var(--beacon-surface);
+  color: var(--beacon-idle);
+  /* A host site's own `a { text-decoration: underline }` would otherwise
+     draw a rule under the icon. */
+  text-decoration: none;
+  cursor: pointer;
+  /* Dimmed at rest. It is a correction affordance, not a call to action:
+     it must be findable without competing with the page. */
+  opacity: .55;
+  transition: opacity var(--beacon-dur) ease,
+              color var(--beacon-dur) ease,
+              border-color var(--beacon-dur) ease,
+              box-shadow var(--beacon-dur) ease;
+}
+
+.neo-beacon-link svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+/* Lights on hover AND on focus. Keyboard users get the same signal that
+   pointer users get; that parity is the whole point of naming both. */
+.neo-beacon-link:hover,
+.neo-beacon-link:focus-visible {
+  opacity: 1;
+  color: var(--beacon-lit);
+  border-color: var(--beacon-lit);
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, .18), 0 6px 18px rgba(0, 0, 0, .35);
+}
+
+.neo-beacon-link:focus-visible {
+  outline: 2px solid var(--beacon-focus);
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  :root { --beacon-size: 36px; --beacon-offset: 14px; }
+  .neo-beacon-link svg { width: 18px; height: 18px; }
+}
+
+/* A fixed control has no place on paper. */
+@media print {
+  .neo-beacon-link { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neo-beacon-link { transition: none; }
+}

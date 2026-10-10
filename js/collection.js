@@ -1,0 +1,101 @@
+import { updateQuery } from './neorgon-navigation.js';
+
+export const categories = ['action', 'adventure', 'puzzle', 'strategy', 'rpg', 'simulation', 'arcade', 'other'];
+export const stages = ['concept', 'prototype', 'playable', 'released', 'unknown'];
+export const defaults = Object.freeze({ query: '', category: 'all', stage: 'all', author: '', following: false, sort: 'newest', view: 'grid', game: '' });
+export const label = value => value === 'rpg' ? 'RPG' : value === 'unknown' ? 'Unspecified' : value.charAt(0).toUpperCase() + value.slice(1);
+export const dateLabel = value => new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+export const money = cents => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: cents % 100 ? 2 : 0 }).format(cents / 100);
+
+export function safeUrl(value, optional = false) {
+  if (optional && value === null) return null;
+  if (typeof value !== 'string' || value.length > 2048) throw new Error('Invalid source URL');
+  const url = new URL(value);
+  if (url.protocol !== 'https:' || url.username || url.password) throw new Error('Invalid source URL');
+  return url.href;
+}
+function text(value, max, empty = false) {
+  if (typeof value !== 'string' || value.length > max || (!empty && !value.trim())) throw new Error('Invalid catalogue text');
+}
+function date(value, nullable = false) {
+  if (nullable && value === null) return;
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T.*Z$/.test(value) || !Number.isFinite(Date.parse(value))) throw new Error('Invalid source date');
+}
+function redditPost(url, id) {
+  const value = new URL(safeUrl(url));
+  if (value.hostname !== 'www.reddit.com' || value.port || value.search || value.hash
+    || !new RegExp(`^/r/aigamedev/comments/${id}/(?:[^/]+/)?$`, 'i').test(value.pathname)) throw new Error('Invalid Reddit source');
+  return value.href;
+}
+export function validateCatalog(value) {
+  if (value?.schemaVersion !== 1 || !Array.isArray(value.games) || value.games.length > 5000 || value.source?.subreddit !== 'aigamedev') throw new Error('Invalid catalogue');
+  const source = value.source;
+  if (safeUrl(source.subredditUrl) !== 'https://www.reddit.com/r/aigamedev/') throw new Error('Invalid source community');
+  safeUrl(source.archiveUrl, true);
+  date(source.retrievedAt); date(source.coverageThrough, true); date(source.lastSuccessfulIngestAt, true); date(value.generatedAt);
+  if (!['manual-snapshot', 'scheduled'].includes(source.mode)) throw new Error('Invalid archive mode');
+  const gameIds = new Set(), postIds = new Set();
+  const games = value.games.map(game => {
+    if (!/^g_[a-z0-9]{5,12}$/.test(game.id) || gameIds.has(game.id)) throw new Error('Duplicate or invalid game');
+    gameIds.add(game.id);
+    text(game.title, 160); text(game.summary, 600); text(game.author?.name, 80); safeUrl(game.author?.url);
+    if (!/^[A-Za-z0-9_-]{3,32}$/.test(game.author.name)
+      || game.author.url.toLowerCase() !== `https://www.reddit.com/user/${game.author.name.toLowerCase()}/`) throw new Error('Invalid source author');
+    if (!categories.includes(game.category) || !stages.includes(game.stage)) throw new Error('Invalid game category');
+    if (!Array.isArray(game.tags) || game.tags.length > 12 || !Array.isArray(game.platforms) || game.platforms.length > 8) throw new Error('Invalid game tags');
+    game.tags.forEach(tag => text(tag, 40)); game.platforms.forEach(platform => text(platform, 80));
+    safeUrl(game.projectUrl, true); date(game.firstSeenAt); date(game.updatedAt);
+    const preview = game.preview;
+    if (!preview || !['image', 'video', 'link'].includes(preview.kind) || !['external', 'r2'].includes(preview.storage)
+      || !['source-linked', 'owner-consent'].includes(preview.rights)) throw new Error('Invalid preview');
+    safeUrl(preview.url, true); safeUrl(preview.posterUrl, true); safeUrl(preview.sourceUrl); text(preview.alt, 600, true);
+    if (!Array.isArray(game.posts) || !game.posts.length) throw new Error('Missing provenance');
+    game.posts.forEach(post => {
+      if (typeof post.id !== 'string' || !/^[a-z0-9]{5,12}$/.test(post.id) || postIds.has(post.id)) throw new Error('Duplicate or invalid source post');
+      postIds.add(post.id); redditPost(post.url, post.id); text(post.title, 400); text(post.author, 80); date(post.createdAt); text(post.excerpt, 600, true);
+      if (post.author.toLowerCase() !== game.author.name.toLowerCase()) throw new Error('Mismatched source author');
+      if (!['showcase', 'update', 'release'].includes(post.kind)) throw new Error('Invalid source kind');
+    });
+    const dates = game.posts.map(post => post.createdAt).sort();
+    if (Date.parse(game.firstSeenAt) !== Date.parse(dates[0]) || Date.parse(game.updatedAt) !== Date.parse(dates.at(-1))) throw new Error('Mismatched project dates');
+    if (!game.posts.some(post => post.url === preview.sourceUrl)) throw new Error('Preview source is outside the project timeline');
+    if (game.reviewStatus != null && !['reviewed', 'source-described'].includes(game.reviewStatus)) throw new Error('Invalid review status');
+    return { ...game, reviewStatus: game.reviewStatus || 'reviewed', posts: [...game.posts].sort((a, b) => b.createdAt.localeCompare(a.createdAt)) };
+  });
+  return { ...value, games };
+}
+export function readLocation(url, preferredView = 'grid') {
+  const p = new URL(url).searchParams;
+  return { query: (p.get('q') || '').slice(0, 200), category: categories.includes(p.get('cat')) ? p.get('cat') : 'all',
+    stage: stages.includes(p.get('stage')) ? p.get('stage') : 'all', author: (p.get('author') || '').slice(0, 80),
+    following: p.get('following') === '1', sort: ['newest', 'oldest', 'name', 'updates'].includes(p.get('sort')) ? p.get('sort') : 'newest',
+    view: ['grid', 'list'].includes(p.get('view')) ? p.get('view') : preferredView,
+    game: /^g_[a-z0-9]{5,12}$/.test(p.get('game') || '') ? p.get('game') : '' };
+}
+export function locationForState(url, state) {
+  return updateQuery(url, { q: state.query.trim(), cat: state.category === 'all' ? '' : state.category,
+    stage: state.stage === 'all' ? '' : state.stage, author: state.author, following: state.following ? '1' : '',
+    sort: state.sort === 'newest' ? '' : state.sort, view: state.view, game: state.game });
+}
+export function selectGames(games, state) {
+  const query = state.query.trim().toLocaleLowerCase();
+  const result = games.filter(game => (state.category === 'all' || game.category === state.category)
+    && (state.stage === 'all' || game.stage === state.stage)
+    && (!state.author || game.author.name.toLowerCase() === state.author.toLowerCase())
+    && (!state.following || state.follows.includes(game.id))
+    && [game.title, game.summary, game.author.name, game.category, ...game.tags, ...game.platforms].join(' ').toLocaleLowerCase().includes(query));
+  if (state.sort === 'name') result.sort((a, b) => a.title.localeCompare(b.title));
+  else if (state.sort === 'updates') result.sort((a, b) => b.posts.length - a.posts.length || b.updatedAt.localeCompare(a.updatedAt));
+  else result.sort((a, b) => state.sort === 'oldest' ? a.firstSeenAt.localeCompare(b.firstSeenAt) : b.updatedAt.localeCompare(a.updatedAt));
+  return result;
+}
+export function collectionPulse(games) {
+  return { games: games.length, authors: new Set(games.map(game => game.author.name.toLowerCase())).size,
+    playable: games.filter(game => ['playable', 'released'].includes(game.stage)).length,
+    posts: games.reduce((sum, game) => sum + game.posts.length, 0) };
+}
+export function parsePrice(value) {
+  if (!/^(?:\d{1,3})(?:\.\d{1,2})?$/.test(String(value).trim())) return null;
+  const cents = Math.round(Number(value) * 100);
+  return Number.isInteger(cents) && cents >= 0 && cents <= 10000 ? cents : null;
+}

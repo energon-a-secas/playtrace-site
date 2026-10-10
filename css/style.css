@@ -1,0 +1,517 @@
+/* ── Reset & base ──────────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+/*
+ * ── Design tokens ─────────────────────────────────────────────
+ *
+ * Canonical tokens (colors, font, type scale, spacing, radii) come from the CDN:
+ *   https://cdn.neorgon.org/v1.0.0/styles/base.css   (linked in index.html)
+ * Do NOT redeclare them here: a local copy is how the fleet drifted. The block
+ * below holds only what base.css does not define, plus the per-site accent.
+ *
+ * Motion: base.css still ships --ease-snap (bounce) for legacy sites, but it is
+ * deprecated for new work (impeccable law: ease-out exponential, no bounce).
+ * Use --ease-out below.
+ */
+
+:root {
+  /* Per-site identity: set to this site's hub card accent (the accent table in .claude/HUB_REGISTRY.md) */
+  --accent: #f9b73f;
+  --accent-bright: #fcd34d;
+
+  /* Site extras base.css does not define */
+  --surface-toast: #1a1730;
+  --danger: #be123c;
+  --danger-hover: #9f1239;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --control-height: 44px;
+  --control-height-sm: 36px;
+  --on-accent: #111d32;
+  --shadow-card: 0 12px 28px rgba(15, 23, 42, 0.5);
+  --shadow-modal: 0 24px 48px rgba(2, 6, 23, 0.58);
+  --z-sticky-header: 200;
+  --z-toast: 500;
+}
+
+/* Author display values (e.g. .section/.stack flex) would otherwise defeat the
+   hidden attribute, so restore its authority once, globally. */
+[hidden] { display: none !important; }
+
+html { min-height: 100%; color-scheme: dark; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  min-height: 100%;
+  color: var(--text-primary);
+  display: flex; flex-direction: column;
+}
+
+body:has(dialog[open]) {
+  overflow: hidden;
+}
+
+main#main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+}
+
+/* ── Layout ────────────────────────────────────────────────── */
+/*
+ * GOTCHA: body { display:flex; flex-direction:column } + margin: 0 auto
+ * on a child collapses its width, so always pair with width: 100%.
+ *
+ * GOTCHA: External images (YouTube ggpht, Gravatar, etc.) may block loading
+ * when the Referer header points to localhost or an unknown origin. Fix:
+ * 1. Add <meta name="referrer" content="no-referrer"> in <head> (global)
+ * 2. Or add referrerpolicy="no-referrer" on each <img> tag
+ */
+.container {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-6);
+  flex: 1;
+}
+
+/* ── Side-rail shell (opt-in) ──────────────────────────────────
+ * A desktop window is far wider than a comfortable line of text, so a single
+ * centred column leaves two large empty gutters and still runs the prose to
+ * 100+ characters. This puts the section nav in the left gutter and narrows
+ * the reading column, without changing .container for sites that do not use it.
+ *
+ *   <div class="shell">
+ *     <nav class="shell__rail" aria-label="Section"> … </nav>
+ *     <div class="shell__main"> … </div>
+ *   </div>
+ *
+ * Below 940px it collapses to one column and the rail becomes a scrollable
+ * row, so the same markup works on a phone with no JavaScript involved. From
+ * 1240px up, the spare width goes to the right margin only, so the reading
+ * column walks onto the page's centre line instead of sitting right of it.
+ */
+.shell {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-6) 64px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+  align-content: start;
+  flex: 1;
+}
+/* A 1fr track is minmax(auto, 1fr): a wide child (a board, a table, a long
+   code line) sets min-content and stretches the column past the viewport. */
+.shell > * { min-width: 0; }
+
+.shell__rail {
+  display: flex;
+  gap: var(--space-1);
+  padding: 4px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.shell__rail::-webkit-scrollbar { display: none; }
+
+@media (min-width: 940px) {
+  .shell {
+    grid-template-columns: 208px minmax(0, 1fr);
+    gap: var(--space-8);
+    padding: var(--space-8) var(--space-8) 80px;
+  }
+  .shell__rail {
+    position: sticky;
+    top: 76px;          /* clears the app-mode header */
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    padding: var(--space-2);
+    overflow: visible;
+    align-self: start;
+  }
+}
+
+/* The rail sits in the left gutter, but with only two tracks it does not stay
+   there: the rail plus its gap add to main's left side and nothing balances
+   them on the right, so main sits half that distance right of the page's centre
+   line (120px at a 208px rail). A column that far off centre reads as a
+   misalignment rather than as a nav beside it.
+   The correction is to stop splitting the spare width between both margins and
+   spend all of it on the right. Main then walks back onto the centre line as the
+   window grows, reaching it at 1240 + 208 + 32 = 1480px, and it costs main no
+   width at any point on the way: the shell widens, main does not move relative
+   to the rail. Below 1240px the shell already fills the viewport, so there is no
+   spare width to spend and any correction would come straight out of the
+   reading column. That trade is not worth making. */
+@media (min-width: 1240px) {
+  .shell {
+    --shell-nudge: calc(208px + var(--space-8));
+    max-width: calc(1240px + var(--shell-nudge));
+    padding-right: clamp(
+      var(--space-8),
+      calc(var(--space-8) + 100vw - 1240px),
+      calc(var(--space-8) + var(--shell-nudge))
+    );
+  }
+}
+
+/* Vertical rhythm: use inside .container or nested regions */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+.stack--tight { gap: var(--space-4); }
+/* Major sections need a real break. At 32px a heading sits almost on top of
+   the block above it and the page reads as one undifferentiated column. */
+.stack--loose { gap: 56px; }
+
+/* Page section: title row + body (replaces “card everything” for grouping) */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+.section__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.section__titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+.section__title {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+}
+.section__lead {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 64ch;   /* 65-75 characters is the readable measure */
+}
+.section__lead code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.92em;
+  color: var(--text-secondary);
+}
+.stack > .card { margin-bottom: 0; }
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ── Header ────────────────────────────────────────────────────
+ * Owned by the Neorgon Header Kit (css/neorgon-header.css, canonical
+ * source: packages/neorgon-ui/header/). Do NOT style .header-bar,
+ * .header-logo*, .header-title-link, .header-subtitle, .header-right,
+ * .header-actions, or .header-home here. Sign-in UI belongs to the
+ * Auth Kit (css/neorgon-auth.css), so write no .auth-* styles either.
+ */
+.toolbar-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ── Buttons (canonical) ─────────────────────────────────────
+ * Use .btn + a variant. Alias: .nav-link = toolbar ghost.
+ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--control-height);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-primary);
+  transition:
+    background-color var(--dur),
+    color var(--dur),
+    border-color var(--dur),
+    box-shadow var(--dur),
+    transform var(--dur-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.btn--sm {
+  min-height: var(--control-height-sm);
+  padding: 0 var(--space-3);
+  font-size: var(--text-xs);
+}
+.btn--block { width: 100%; }
+.btn--icon {
+  min-width: var(--control-height);
+  padding: 0;
+}
+.btn--primary {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: transparent;
+}
+.btn--primary:hover { box-shadow: inset 0 0 0 2px var(--on-accent); }
+.btn--secondary {
+  background: var(--surface-2);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+.btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.btn--ghost {
+  background: transparent;
+  color: rgba(255,255,255,0.92);
+  border-color: rgba(255,255,255,0.18);
+}
+.btn--ghost:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--text-primary);
+}
+.btn--danger {
+  background: var(--danger);
+  color: var(--text-primary);
+  border-color: transparent;
+}
+.btn--danger:hover { background: var(--danger-hover); }
+
+/* Toolbar ghost (header nav): same as .btn.btn--ghost.btn--sm */
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-height);
+  padding: 0 var(--space-3);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: rgba(255,255,255,0.92);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  transition: background-color var(--dur), color var(--dur), border-color var(--dur);
+}
+.nav-link:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--text-primary);
+}
+
+/* ── Forms and inline disclosure ────────────────────────────── */
+.field { display: grid; gap: var(--space-2); min-width: 0; }
+.field label, .field__label { font-size: var(--text-sm); font-weight: 600; }
+.input, .select, .textarea {
+  width: 100%; min-width: 0; min-height: var(--control-height);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--bg); color: var(--text-primary);
+  font: inherit; font-size: 1rem;
+}
+.textarea { resize: vertical; }
+.input::placeholder, .textarea::placeholder { color: var(--text-muted); }
+.input[aria-invalid="true"], .textarea[aria-invalid="true"] { border-color: var(--danger); }
+.field__hint { font-size: var(--text-sm); color: var(--text-secondary); line-height: 1.5; }
+.field__error { font-size: var(--text-sm); color: #fda4af; }
+
+/* Native details keeps closed controls out of the focus order. No fixed
+   max-height, clipping or layout animation. Auth remains kit-owned. */
+.sheet {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.sheet > summary { padding: var(--space-4); cursor: pointer; font-weight: 600; }
+.sheet__inner { padding: 0 var(--space-4) var(--space-4); }
+
+/* ── Native dialog ────────────────────────────────────────────
+   Call showModal(): the platform supplies inert background, focus containment
+   and Escape. Do not toggle [open] or add a second role="dialog" wrapper. */
+dialog.dialog {
+  margin: auto; padding: 0;
+  width: min(520px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  background: var(--bg); color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-modal);
+}
+.dialog::backdrop { background: rgb(2 4 12 / 85%); }
+.dialog__header, .dialog__footer {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-4); padding: var(--space-4) var(--space-6);
+}
+.dialog__header { border-bottom: 1px solid var(--border); }
+.dialog__header h2 { font-size: var(--text-xl); overflow-wrap: anywhere; }
+.dialog__body { padding: var(--space-6); line-height: 1.6; overflow-wrap: anywhere; }
+.dialog__footer { flex-wrap: wrap; justify-content: flex-end; border-top: 1px solid var(--border); }
+
+/* ── Result states ──────────────────────────────────────────── */
+.status-panel { padding: var(--space-8) 0; max-width: 64ch; }
+.status-panel h3 { font-size: var(--text-lg); }
+.status-panel p { margin: var(--space-2) 0 var(--space-4); color: var(--text-secondary); line-height: 1.6; }
+
+/* ── Card ──────────────────────────────────────────────────── */
+/*
+ * GOTCHA: backdrop-filter creates a stacking context, so dropdowns inside
+ * a card can be clipped by a later card's stacking context. Fix by adding
+ * position: relative; z-index: 10 to the card that owns the open dropdown.
+ *
+ * Default: static surface (no hover lift, avoids generic “dashboard demo”).
+ * Use .card--interactive only when the whole surface is a real target.
+ *
+ * GOTCHA: a <button> or <a> used AS a card does not inherit body text color,
+ * buttons default to canvas text (near-black), rendering invisible on the dark
+ * bg. When a card is an interactive element, set color: var(--text-primary)
+ * and font-family: var(--font) explicitly on it.
+ */
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  margin-bottom: var(--space-6);
+  transition: border-color var(--dur), box-shadow var(--dur);
+}
+.card--interactive {
+  transition:
+    transform var(--dur) ease-out,
+    box-shadow var(--dur) ease-out,
+    border-color var(--dur);
+}
+.card--interactive:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card);
+  border-color: var(--border-strong);
+}
+
+.card--flat:hover {
+  box-shadow: none;
+}
+/* Card with an action row, in an equal-height grid: pin the toolbar to the
+   bottom so buttons align across cards whose text wraps differently. */
+.card--actions {
+  display: flex;
+  flex-direction: column;
+}
+.card--actions > .toolbar:last-child {
+  margin-top: auto;
+}
+
+/* ── Button press feedback ─────────────────────────────────── */
+button:active,
+.btn:active,
+.nav-link:active {
+  transform: scale(0.98);
+  transition-duration: var(--dur-fast);
+}
+
+/* ── Skeleton loading ──────────────────────────────────────── */
+@keyframes shimmer { 50% { opacity: 0.45; } }
+.skeleton {
+  background: var(--surface-2);
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius);
+}
+
+/* ── Toast ─────────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: var(--space-6);
+  right: var(--space-6);
+  z-index: var(--z-toast);
+  max-width: min(360px, calc(100vw - var(--space-8)));
+  background: var(--surface-toast);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-card);
+  pointer-events: none;
+  transform: translateY(8px);
+  opacity: 0;
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+.toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Footer ────────────────────────────────────────────────────
+   Owned by the Neorgon Footer Kit (css/neorgon-footer.css).
+   Don't add .neo-footer rules here. Edit packages/neorgon-ui/footer/
+   and re-run sync-footer.sh. */
+
+/* ── Focus styles ──────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 2px;
+}
+
+/* ── Skip link ─────────────────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: 0;
+  transform: translateY(-110%);
+  left: var(--space-4);
+  z-index: 1000;
+  padding: var(--space-2) var(--space-4);
+  background: var(--accent-bright);
+  color: var(--bg);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  text-decoration: none;
+  transition: transform var(--dur) var(--ease-out);
+}
+.skip-link:focus { transform: translateY(0); }
+
+/* ── Reduced motion ────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .card--interactive:hover { transform: none; }
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .container { padding: var(--space-4); }
+  .toast {
+    left: var(--space-4);
+    right: var(--space-4);
+    max-width: none;
+  }
+}

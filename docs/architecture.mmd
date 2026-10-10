@@ -1,0 +1,18 @@
+flowchart LR
+    Visitor["Player or maker"] --> Browser["Playtrace browser app<br/>GitHub Pages"]
+    Browser -->|"Browse catalogue and source histories"| API["Cloudflare Worker<br/>Public and authenticated API"]
+    Browser -->|"Sign in for follows and feedback"| Clerk["Clerk<br/>Neorgon accounts"]
+    Clerk -->|"Signed session token"| Browser
+    API -->|"Pinned public signing keys"| Clerk
+    API -->|"Games, source posts, private follows,<br/>price responses, quotas and tombstones"| D1[("Cloudflare D1")]
+    Browser -->|"Original previews and post links"| Sources["Creator media hosts<br/>and Reddit posts"]
+    Cron["Hourly schedule"] --> Collector["Resumable archive collector"]
+    Collector -->|"Bounded, paced requests"| Archive["Arctic Shift archive<br/>r/aigamedev"]
+    Collector -->|"Source-described games,<br/>review candidates and coverage"| D1
+    Operator["Operator with separate credential"] -->|"Review, import, remove;<br/>approve image permission"| API
+    API -->|"Validated creator-approved images"| R2[("Private R2 preview bucket")]
+    API -->|"Checked media response"| Browser
+    classDef primary fill:#fff4da,stroke:#946413,color:#111d32;
+    classDef storage fill:#f3f5f9,stroke:#586a86,color:#111d32;
+    class Browser,API,Collector primary;
+    class D1,R2 storage;

@@ -1,0 +1,359 @@
+/* ══════════════════════════════════════════════════════════════
+   Neorgon Header Kit — themes.css
+   Theme = token overrides + a contained decorative layer, applied
+   via <html data-theme="…">. Themes are HEADER-SCOPED on purpose:
+   page backgrounds and effects stay site-owned. To add a theme:
+   one block here + one entry in the THEMES array in header.js.
+   ══════════════════════════════════════════════════════════════ */
+
+/* default — magenta nebula. No block needed; :root defaults in
+   header.css ARE the default theme. Attribute is removed when
+   default is active. */
+
+
+/* ══ FX ENGINE ═════════════════════════════════════════════════
+   Every decorated theme paints into .header-bar::before / ::after.
+   Four rules make that safe, and they are load-bearing:
+
+   1. NEVER overflow:hidden on .header-bar. The ⋯ overflow menu and
+      the auth panel are absolutely-positioned descendants that hang
+      BELOW the bar; clipping would eat them. Instead the layer is
+      an inset:0 box and the effect is its *background* — a
+      background paints only inside its own box, so it is
+      self-bounding with no clipping required.
+   2. z-index:-1 puts the layer above the bar's own background but
+      below every in-flow child (logo, actions, home). Per CSS
+      painting order, negative-z children draw at step 2, in-flow
+      content at steps 3-6. Text stays crisp, hit targets untouched.
+   3. isolation:isolate guarantees .header-bar is the stacking
+      context that -1 resolves against (it already is one via
+      position:sticky + z-index, so this is a belt-and-braces no-op).
+   4. Animate background-position / opacity ONLY. A transform on the
+      layer would move the box itself and escape the unclipped bar.
+      Loops are seamless because every travel distance is an integer
+      multiple of its tile size.
+
+   Layers are inert to a11y: empty content, pointer-events:none, no
+   text, no emoji — nothing for a screen reader to announce.
+   ═════════════════════════════════════════════════════════════ */
+
+[data-theme] .header-bar { isolation: isolate; }
+
+[data-theme] .header-bar::before,
+[data-theme] .header-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+
+/* ── CHRISTMAS — layered snowfall, a tree in the gutter, hearth glow ── */
+[data-theme="christmas"] {
+  --header-bg-start: #7f1d1d;
+  --header-bg-mid: #14532d;
+  --header-bg-end: #052e16;
+  --header-glass: rgba(5, 46, 22, .45);
+  --header-accent: #fbbf24;
+  --header-border: rgba(251, 191, 36, .25);
+  --header-border-strong: rgba(251, 191, 36, .45);
+  --header-text: #fefce8;
+  --header-text-dim: rgba(254, 252, 232, .65);
+  --header-menu-bg: #14210f;
+  --header-menu-hover: rgba(251, 191, 36, .12);
+
+  /* One irregular 6-flake tile, reused at three scales. Scaling the
+     tile scales the flakes, so size + speed carry the parallax. */
+  --neo-flakes: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg fill='%23fff'%3E%3Ccircle cx='17' cy='11' r='1.7'/%3E%3Ccircle cx='64' cy='29' r='1.1' opacity='.6'/%3E%3Ccircle cx='98' cy='58' r='1.5' opacity='.85'/%3E%3Ccircle cx='33' cy='76' r='1' opacity='.5'/%3E%3Ccircle cx='79' cy='101' r='1.9'/%3E%3Ccircle cx='8' cy='47' r='.9' opacity='.45'/%3E%3C/g%3E%3C/svg%3E");
+  --neo-tree: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 30'%3E%3Crect x='11' y='24' width='4' height='6' fill='%23713f12'/%3E%3Cpath d='M13 3 6 14h14zM13 10 3 22h20zM13 17 1 29h24z' fill='%2316a34a'/%3E%3Ccircle cx='13' cy='2.6' r='2.2' fill='%23fbbf24'/%3E%3Ccircle cx='9' cy='19' r='1' fill='%23fca5a5'/%3E%3Ccircle cx='17' cy='25' r='1' fill='%23fde68a'/%3E%3C/svg%3E");
+}
+[data-theme="christmas"] .header-bar::before {
+  background-image: var(--neo-flakes), var(--neo-flakes), var(--neo-flakes);
+  background-size: 210px 210px, 132px 132px, 84px 84px;
+  background-position: 0 0, 0 0, 0 0;
+  animation: neo-snow 14s linear infinite;
+}
+[data-theme="christmas"] .header-bar::after {
+  background-image: var(--neo-tree),
+    radial-gradient(170px 80px at 5% 112%, rgba(251, 191, 36, .26), transparent 72%);
+  background-size: 20px 23px, 100% 100%;
+  background-position: 2px 100%, 0 0;
+  background-repeat: no-repeat;
+  animation: neo-glow 4.5s ease-in-out infinite alternate;
+}
+
+
+/* ── NEW YEAR — rising sparks under a volley of bursts ── */
+[data-theme="new-year"] {
+  --header-bg-start: #1e1b4b;
+  --header-bg-mid: #4c1d95;
+  --header-bg-end: #020617;
+  --header-glass: rgba(30, 27, 75, .45);
+  --header-accent: #fcd34d;
+  --header-border: rgba(252, 211, 77, .24);
+  --header-border-strong: rgba(252, 211, 77, .45);
+  --header-text: #f5f3ff;
+  --header-text-dim: rgba(237, 233, 254, .68);
+  --header-menu-bg: #150f2e;
+  --header-menu-hover: rgba(252, 211, 77, .12);
+
+  --neo-spark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23fcd34d'%3E%3Cpath d='M22 8l1.2 5.8L29 15l-5.8 1.2L22 22l-1.2-5.8L15 15l5.8-1.2z'/%3E%3Cpath d='M72 55l.9 4.3L77 60l-4.1.9L72 65l-.9-4.1L67 60l4.1-.7z' opacity='.8'/%3E%3Ccircle cx='48' cy='30' r='1.3' opacity='.8'/%3E%3Ccircle cx='86' cy='18' r='1' opacity='.55'/%3E%3Ccircle cx='12' cy='62' r='1.1' opacity='.7'/%3E%3Ccircle cx='58' cy='86' r='1.4'/%3E%3Ccircle cx='33' cy='72' r='.9' opacity='.5'/%3E%3Ccircle cx='92' cy='78' r='1.2' opacity='.65'/%3E%3C/g%3E%3C/svg%3E");
+  /* Burst = a radial falloff cut into rays by a conic mask. No SVG,
+     no per-ray markup. If mask-image is unsupported the rays simply
+     don't get cut and it degrades to two soft light blooms.
+     Core alpha is capped at .33 and kept gold rather than white: a
+     ray can cross the title, and a brighter bloom drops that text
+     below 4.5:1. At .33 the worst case measures 4.9:1. */
+  --neo-burst-a: radial-gradient(90px 90px at 27% 42%, rgba(253, 224, 71, .33), rgba(252, 211, 77, .24) 38%, transparent 70%);
+  --neo-burst-b: radial-gradient(64px 64px at 73% 56%, rgba(254, 240, 138, .3), rgba(251, 146, 60, .22) 38%, transparent 70%);
+}
+[data-theme="new-year"] .header-bar::before {
+  background-image: var(--neo-spark), var(--neo-spark);
+  background-size: 190px 190px, 128px 128px;
+  background-position: 0 0, 40px 0;
+  animation: neo-rise 9s linear infinite;
+}
+[data-theme="new-year"] .header-bar::after {
+  background-image: var(--neo-burst-a), var(--neo-burst-b);
+  background-repeat: no-repeat;
+  mask-image: repeating-conic-gradient(from 7deg at 27% 42%, #000 0 1.3deg, transparent 1.3deg 15deg),
+              repeating-conic-gradient(from 22deg at 73% 56%, #000 0 1.6deg, transparent 1.6deg 18deg);
+  animation: neo-burst 4.2s ease-out infinite;
+}
+
+
+/* ── HALLOWEEN — drifting fog under ghost bats ── */
+[data-theme="halloween"] {
+  --header-bg-start: #3b0764;
+  --header-bg-mid: #1c1917;
+  --header-bg-end: #0c0a09;
+  --header-glass: rgba(28, 25, 23, .5);
+  --header-accent: #f97316;
+  --header-border: rgba(249, 115, 22, .22);
+  --header-border-strong: rgba(249, 115, 22, .45);
+  --header-text: #fff7ed;
+  --header-text-dim: rgba(255, 237, 213, .66);
+  --header-menu-bg: #17110f;
+  --header-menu-hover: rgba(249, 115, 22, .12);
+
+  /* Bats staggered every ~34px vertically so any header height
+     (56px app / 68px content) always frames at least two. */
+  --neo-bat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 190 190' fill='%23e9d5ff'%3E%3Cdefs%3E%3Cpath id='b' d='M12 3c-2-3-6-3-9-1 2 1 2 3 1 5 2-2 4-1 5 1 1-2 2-2 3-2s2 0 3 2c1-2 3-3 5-1-1-2-1-4 1-5-3-2-7-2-9 1z'/%3E%3C/defs%3E%3Cuse href='%23b' transform='translate(16 6) scale(1.15)' opacity='.3'/%3E%3Cuse href='%23b' transform='translate(112 38) scale(.85)' opacity='.22'/%3E%3Cuse href='%23b' transform='translate(52 74) scale(1.35)' opacity='.26'/%3E%3Cuse href='%23b' transform='translate(140 110) scale(.95)' opacity='.2'/%3E%3Cuse href='%23b' transform='translate(8 148) scale(1.05)' opacity='.28'/%3E%3C/svg%3E");
+}
+[data-theme="halloween"] .header-bar::before {
+  background-image:
+    radial-gradient(320px 74px at 22% 118%, rgba(216, 180, 254, .17), transparent 70%),
+    radial-gradient(240px 64px at 68% 128%, rgba(249, 115, 22, .14), transparent 70%);
+  background-size: 62% 100%, 46% 100%;
+  background-position: 0 0, 100% 0;
+  background-repeat: no-repeat;
+  animation: neo-fog 18s ease-in-out infinite alternate;
+}
+[data-theme="halloween"] .header-bar::after {
+  background-image: var(--neo-bat);
+  background-size: 190px 190px;
+  background-position: 0 0;
+  animation: neo-bats 22s linear infinite;
+}
+
+
+/* ── MATRIX — code rain in three column depths, plus a CRT sweep ── */
+[data-theme="matrix"] {
+  --header-bg-start: #000000;
+  --header-bg-mid: #001a00;
+  --header-bg-end: #000000;
+  --header-glass: rgba(0, 12, 0, .45);
+  --header-accent: #00ff41;
+  --header-border: rgba(0, 255, 65, .18);
+  --header-border-strong: rgba(0, 255, 65, .4);
+  --header-text: #ccffcc;
+  --header-text-dim: rgba(0, 255, 65, .6);
+  --header-menu-bg: #020a02;
+  --header-menu-hover: rgba(0, 255, 65, .1);
+
+  /* Glyph column: opacity ramps toward a bright leading head. */
+  --neo-rain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 120'%3E%3Cg fill='%2300ff41'%3E%3Crect x='4' y='6' width='6' height='4' opacity='.12'/%3E%3Crect x='4' y='20' width='6' height='4' opacity='.2'/%3E%3Crect x='4' y='34' width='6' height='4' opacity='.3'/%3E%3Crect x='4' y='48' width='6' height='4' opacity='.42'/%3E%3Crect x='4' y='62' width='6' height='4' opacity='.56'/%3E%3Crect x='4' y='76' width='6' height='4' opacity='.74'/%3E%3Crect x='4' y='90' width='6' height='4' opacity='.9'/%3E%3C/g%3E%3Crect x='4' y='104' width='6' height='4' fill='%23dfffe5'/%3E%3C/svg%3E");
+}
+[data-theme="matrix"] .header-bar::before {
+  background-image: var(--neo-rain), var(--neo-rain), var(--neo-rain);
+  background-size: 22px 120px, 16px 160px, 13px 200px;
+  background-position: 0 0, 7px 0, 3px 0;
+  opacity: .34;
+  /* Rain is loud enough to compete with the wordmark as pure texture, even
+     though its luminance contrast measures fine. Fade it out under the
+     logo/title and let it run at full strength across the open right. */
+  mask-image: linear-gradient(to right, transparent 0, transparent 120px, #000 380px, #000 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, transparent 120px, #000 380px, #000 100%);
+  animation: neo-rain 3.6s linear infinite;
+}
+[data-theme="matrix"] .header-bar::after {
+  background-image: linear-gradient(90deg, transparent, rgba(0, 255, 65, .09) 45%, rgba(204, 255, 204, .15) 50%, rgba(0, 255, 65, .09) 55%, transparent);
+  background-size: 45% 100%;
+  background-position: -50% 0;
+  background-repeat: no-repeat;
+  animation: neo-sweep 7s linear infinite;
+}
+
+
+/* ── RAIN — a proper downpour: three sheets of slanted drops at
+   different depths, drifting mist, and a wet sheen along the sill.
+   No lightning flash on purpose: flashing content is a seizure risk
+   (WCAG 2.3.1), and a storm reads fine without it. ── */
+[data-theme="rain"] {
+  --header-bg-start: #334155;
+  --header-bg-mid: #1a2536;
+  --header-bg-end: #070c14;
+  --header-glass: rgba(12, 20, 32, .5);
+  --header-accent: #7dd3fc;
+  --header-border: rgba(125, 211, 252, .2);
+  --header-border-strong: rgba(125, 211, 252, .38);
+  --header-text: #f0f9ff;
+  --header-text-dim: rgba(224, 242, 254, .78);
+  --header-menu-bg: #101a28;
+  --header-menu-hover: rgba(125, 211, 252, .12);
+
+  /* One tile of slanted drops, reused at three scales — scaling the
+     tile scales the drops, so depth and speed read together. */
+  --neo-drops: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg stroke='%23bae6fd' stroke-width='1.3' stroke-linecap='round'%3E%3Cline x1='14' y1='2' x2='9' y2='19' opacity='.75'/%3E%3Cline x1='52' y1='14' x2='47' y2='31' opacity='.5'/%3E%3Cline x1='83' y1='4' x2='78' y2='21' opacity='.65'/%3E%3Cline x1='31' y1='46' x2='26' y2='63' opacity='.6'/%3E%3Cline x1='68' y1='55' x2='63' y2='72' opacity='.45'/%3E%3Cline x1='95' y1='62' x2='90' y2='79' opacity='.55'/%3E%3Cline x1='6' y1='74' x2='1' y2='91' opacity='.4'/%3E%3C/g%3E%3C/svg%3E");
+}
+[data-theme="rain"] .header-bar::before {
+  background-image: var(--neo-drops), var(--neo-drops), var(--neo-drops);
+  background-size: 190px 190px, 124px 124px, 82px 82px;
+  background-position: 0 0, 40px 0, 15px 0;
+  opacity: .62;
+  animation: neo-rainfall 1.5s linear infinite;
+}
+[data-theme="rain"] .header-bar::after {
+  background-image:
+    radial-gradient(120% 70% at 20% -30%, rgba(148, 163, 184, .2), transparent 70%),
+    linear-gradient(0deg, rgba(125, 211, 252, .16), transparent 22%);
+  background-size: 200% 100%, 100% 100%;
+  background-position: 0 0, 0 0;
+  background-repeat: no-repeat;
+  animation: neo-mist 13s ease-in-out infinite alternate;
+}
+
+/* ── SAKURA — petals drifting down and sideways on a soft dusk sky. ── */
+[data-theme="sakura"] {
+  --header-bg-start: #9d5c7c;
+  --header-bg-mid: #4c2a44;
+  --header-bg-end: #140a14;
+  --header-glass: rgba(40, 20, 36, .45);
+  --header-accent: #fbcfe8;
+  --header-border: rgba(251, 207, 232, .22);
+  --header-border-strong: rgba(251, 207, 232, .4);
+  --header-text: #fff1f6;
+  --header-text-dim: rgba(255, 241, 246, .8);
+  --header-menu-bg: #241220;
+  --header-menu-hover: rgba(251, 207, 232, .13);
+
+  --neo-petals: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg fill='%23fbcfe8'%3E%3Cellipse cx='18' cy='14' rx='3.2' ry='2' transform='rotate(-25 18 14)'/%3E%3Cellipse cx='71' cy='33' rx='2.6' ry='1.6' transform='rotate(15 71 33)' opacity='.75'/%3E%3Cellipse cx='103' cy='62' rx='3' ry='1.9' transform='rotate(-40 103 62)' opacity='.85'/%3E%3Cellipse cx='38' cy='81' rx='2.4' ry='1.5' transform='rotate(30 38 81)' opacity='.6'/%3E%3Cellipse cx='84' cy='105' rx='3.4' ry='2.1' transform='rotate(-10 84 105)'/%3E%3Cellipse cx='9' cy='52' rx='2.2' ry='1.4' transform='rotate(45 9 52)' opacity='.5'/%3E%3C/g%3E%3C/svg%3E");
+}
+[data-theme="sakura"] .header-bar::before {
+  background-image: var(--neo-petals), var(--neo-petals), var(--neo-petals);
+  background-size: 220px 220px, 140px 140px, 92px 92px;
+  background-position: 0 0, 0 0, 0 0;
+  opacity: .8;
+  animation: neo-petalfall 17s linear infinite;
+}
+[data-theme="sakura"] .header-bar::after {
+  background-image: radial-gradient(160px 80px at 92% 110%, rgba(251, 207, 232, .22), transparent 72%);
+  animation: neo-glow 6s ease-in-out infinite alternate;
+}
+
+
+/* ── DANGER — static hazard weave under one slow warning sheen.
+   Deliberately restrained: this reads as an alert state, not a party. ── */
+[data-theme="danger"] {
+  --header-bg-start: #450a0a;
+  --header-bg-mid: #7f1d1d;
+  --header-bg-end: #0c0a0a;
+  --header-glass: rgba(69, 10, 10, .45);
+  --header-accent: #f59e0b;
+  --header-border: rgba(245, 158, 11, .25);
+  --header-border-strong: rgba(245, 158, 11, .45);
+  --header-text: #fef2f2;
+  /* was .6 — measured 3.89:1 against --header-bg-mid, under AA for the
+     11.8px subtitle. .82 lifts it to ~5:1 with no other visual change. */
+  --header-text-dim: rgba(254, 226, 226, .82);
+  --header-menu-bg: #1a0505;
+  --header-menu-hover: rgba(245, 158, 11, .12);
+}
+[data-theme="danger"] .header-bar::before {
+  background-image: repeating-linear-gradient(45deg, rgba(245, 158, 11, .05) 0 9px, transparent 9px 26px);
+  /* no animation — the weave is structure, not motion */
+}
+[data-theme="danger"] .header-bar::after {
+  background-image:
+    linear-gradient(90deg, transparent, rgba(245, 158, 11, .1) 50%, transparent),
+    linear-gradient(0deg, rgba(245, 158, 11, .1), transparent 55%);
+  background-size: 55% 100%, 100% 100%;
+  background-position: 50% 0, 0 100%;
+  background-repeat: no-repeat;
+  animation: neo-alert 5s linear infinite;
+}
+
+
+/* ── Keyframes. Every travel distance is an integer multiple of its
+   layer's tile size, so each loop is seamless. ── */
+@keyframes neo-snow {
+  to { background-position: 210px 630px, -132px 396px, 84px 336px; }
+}
+@keyframes neo-glow {
+  from { opacity: .55; }
+  to   { opacity: 1; }
+}
+@keyframes neo-rise {
+  to { background-position: -190px -570px, 168px -384px; }
+}
+@keyframes neo-burst {
+  0%   { opacity: 0; }
+  7%   { opacity: 1; }
+  52%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes neo-fog {
+  to { background-position: 100% 0, 0 0; }
+}
+@keyframes neo-bats {
+  to { background-position: -570px 0; }
+}
+@keyframes neo-rain {
+  to { background-position: 0 360px, 7px 320px, 3px 200px; }
+}
+@keyframes neo-sweep {
+  to { background-position: 150% 0; }
+}
+@keyframes neo-alert {
+  from { background-position: -60% 0, 0 100%; }
+  to   { background-position: 160% 0, 0 100%; }
+}
+
+
+/* ── Motion + print guards. animation:none leaves each layer parked
+   at its authored background-position, which is a composed static
+   decoration in every theme — snow scattered, tree lit, bats mid-flight. ── */
+@media (prefers-reduced-motion: reduce) {
+  [data-theme] .header-bar::before,
+  [data-theme] .header-bar::after { animation: none !important; }
+}
+@media print {
+  [data-theme] .header-bar::before,
+  [data-theme] .header-bar::after { display: none !important; }
+}
+
+/* Rain falls fast and nearly vertical, with a slight wind lean.
+   Each layer travels exactly one tile height per cycle. */
+@keyframes neo-rainfall {
+  to { background-position: -19px 190px, -12px 124px, -8px 82px; }
+}
+/* Mist breathes sideways across the bar. */
+@keyframes neo-mist {
+  from { background-position: 0 0, 0 0; }
+  to   { background-position: 100% 0, 0 0; }
+}
+/* Petals fall slowly and drift sideways — one tile per cycle on both axes. */
+@keyframes neo-petalfall {
+  to { background-position: 220px 220px, -140px 140px, 92px 92px; }
+}

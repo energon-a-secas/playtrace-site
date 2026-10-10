@@ -1,0 +1,938 @@
+/* ══════════════════════════════════════════════════════════════
+   Neorgon Header Kit — header.css
+   Canonical source: packages/neorgon-ui/header/
+   Vendored per site as css/neorgon-header.css — do not edit copies.
+   Live CDN: https://cdn.neorgon.org/v1.0.0/header/header.css
+   ══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Geometry */
+  --header-h: 68px;
+  --header-h-app: 56px;
+  --header-control-h: 40px; /* every header control (buttons, ⋯, palette, home) shares this height */
+  /* Logo height. A token, not a literal, so a site can make the mark carry more
+     weight without forking the kit. Default 36px = the historical value, so
+     nothing changes for a site that never sets it. The bar is 68px with no
+     vertical padding, so ~52px is the practical ceiling before the mark starts
+     to look wedged against the edges. */
+  --header-logo-h: 36px;
+  --header-logo-h-mobile: 28px;
+
+  /* Palette — themes override these (see themes.css) */
+  --header-bg-start: #B015B0;
+  --header-bg-mid: #3D0080;
+  --header-bg-end: #040714;
+  /* Kept here for anything that references the composed gradient, but the
+     authoritative copy is re-declared on .header-bar below — see the note
+     there before changing either. */
+  --header-bg: linear-gradient(in oklch 135deg, var(--header-bg-start) 0%, var(--header-bg-mid) 50%, var(--header-bg-end) 100%);
+  --header-glass: rgba(0, 9, 18, .35);
+  --header-text: #f9f9f9;
+  --header-text-dim: rgba(255, 255, 255, .72);
+  --header-border: rgba(255, 255, 255, .07);
+  --header-border-strong: rgba(255, 255, 255, .22);
+  --header-accent: #e879f9;
+  --header-menu-bg: #10142a;
+  --header-menu-hover: rgba(255, 255, 255, .08);
+
+  /* Focus ring — near-white with a whisper of the brand hue so it never
+     reads as a stray browser default. 5.77:1 (bright end) to 17.98:1
+     (dark end) against the bar, 16.54:1 on the menu. Themes may override. */
+  --header-focus: oklch(0.97 0.02 320);
+  --header-focus-w: 2px;
+
+  /* Icon sizing. Two tokens: a filled glyph reads heavier than a stroked
+     one in the same box, so the solid home icon is set smaller to match
+     optically. */
+  --header-icon: 22px;        /* stroked glyphs (palette) */
+  --header-icon-solid: 20px;  /* filled glyphs (home) */
+
+  /* ease-out-quart: fast start, long settle, no overshoot. */
+  --header-ease: cubic-bezier(.22, 1, .36, 1);
+  --header-ease-in: cubic-bezier(.55, 0, 1, .45);
+}
+
+/* Colour judgements about the DEFAULT gradient specifically. Scoped to
+   html:not([data-theme]) because themes.css sets these per theme at the
+   same specificity as :root — a :root override here would silently
+   overwrite all five palettes. Every consumer below pairs them with a
+   var() fallback to the theme's own token. */
+html:not([data-theme]) {
+  /* --header-border-strong (.22) measures 1.91-1.95:1 on the bar, below
+     the 3:1 WCAG 1.4.11 needs for a control boundary. .42 gives 3.73-4.02:1. */
+  --header-control-border: rgba(255, 255, 255, .42);
+
+  /* --header-bg-end (#040714) is identical to the standard page
+     background, so a flat hairline measures 1.14:1 on the right half.
+     The bar's luminance swings 43x left-to-right, so the edge ramps too. */
+  --header-edge-from: rgba(255, 255, 255, .10);
+  --header-edge-to: rgba(255, 255, 255, .34);
+
+  /* .72 measures 4.14:1 at the start of the subtitle span — below AA.
+     Split from the icon colour, which only needs 3:1 as non-text. */
+  --header-text-dim: rgba(255, 255, 255, .82);
+  --header-icon-color: rgba(255, 255, 255, .78);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SKINS — site-level identity, opt-in per site
+   ────────────────────────────────────────────────────────────
+   A skin replaces the default magenta gradient for ONE site whose
+   own palette clashes with it. Set it in the site's markup:
+
+     <header class="header-bar" data-header-mode="content"
+             data-header-skin="brass">
+
+   This is NOT the theme system. Precedence, by design:
+
+     visitor choice (?theme= / cookie)  >  season (CDN)  >  skin  >  kit default
+
+   A site that should sit out every season keeps its skin with
+   `<html lang="en" data-season="off">` — see season.css. That declines
+   the fleet's decoration only; a visitor's ?theme= still wins.
+
+   Named skins below are the reusable ones. For a one-off palette no
+   other site would share, use `data-header-skin="custom"` and declare
+   the tokens in the site's own CSS — contract at the end of this block.
+
+   Two cascade facts make that ordering work, and both are easy to
+   get wrong:
+
+   1. A declaration ON .header-bar beats a value INHERITED from
+      <html>, whatever the specificity. Visitor themes declare on
+      <html>, so every skin is scoped `html:not([data-theme])` —
+      the moment a visitor picks a theme, all skins stop matching.
+   2. Season rules in season.css carry a matching
+      `[data-header-skin]` selector one step more specific than the
+      skin rules below, so an armed season still flips skinned
+      sites. Do not raise the specificity here without raising it
+      there too, or skinned sites will silently sit out the season.
+
+   Each skin re-tunes the edge ramp and control border for its own
+   surface — those defaults are calibrated to the magenta gradient
+   and are wrong on a black bar.
+   ══════════════════════════════════════════════════════════════ */
+
+/* ink — near-black neutral. The default choice for a site whose
+   palette the magenta gradient fights. */
+html:not([data-theme]) .header-bar[data-header-skin="ink"] {
+  --header-bg-start: #14161c;
+  --header-bg-mid: #0b0d12;
+  --header-bg-end: #050609;
+  --header-glass: rgba(10, 12, 16, .55);
+  --header-accent: #cbd5e1;
+  --header-text: #f4f4f5;
+  --header-text-dim: rgba(255, 255, 255, .78);
+  --header-icon-color: rgba(255, 255, 255, .74);
+  --header-border: rgba(255, 255, 255, .09);
+  --header-border-strong: rgba(255, 255, 255, .24);
+  --header-control-border: rgba(255, 255, 255, .44);
+  --header-menu-bg: #14161c;
+  --header-menu-hover: rgba(255, 255, 255, .09);
+  /* A near-black bar sits close to the page in luminance at BOTH ends,
+     so the edge has to be brighter than the gradient's ramp. */
+  --header-edge-from: rgba(255, 255, 255, .26);
+  --header-edge-to: rgba(255, 255, 255, .26);
+}
+
+/* carbon — flat true black, no gradient. The most restrained option;
+   the hairline does all the separating. */
+html:not([data-theme]) .header-bar[data-header-skin="carbon"] {
+  --header-bg-start: #08080a;
+  --header-bg-mid: #08080a;
+  --header-bg-end: #08080a;
+  --header-glass: rgba(0, 0, 0, .6);
+  --header-accent: #e5e5e5;
+  --header-text: #fafafa;
+  --header-text-dim: rgba(255, 255, 255, .76);
+  --header-icon-color: rgba(255, 255, 255, .72);
+  --header-border: rgba(255, 255, 255, .12);
+  --header-border-strong: rgba(255, 255, 255, .26);
+  --header-control-border: rgba(255, 255, 255, .46);
+  --header-menu-bg: #101012;
+  --header-menu-hover: rgba(255, 255, 255, .1);
+  --header-edge-from: rgba(255, 255, 255, .3);
+  --header-edge-to: rgba(255, 255, 255, .3);
+}
+
+/* brass — warm dark, tuned to incident-runbook's #b8935f / #d8b280
+   accents and its #040714 page background. */
+html:not([data-theme]) .header-bar[data-header-skin="brass"] {
+  --header-bg-start: #2a2114;
+  --header-bg-mid: #16120c;
+  --header-bg-end: #040714;
+  --header-glass: rgba(22, 18, 12, .5);
+  --header-accent: #d8b280;
+  --header-text: #f7f3ea;
+  --header-text-dim: rgba(247, 243, 234, .8);
+  --header-icon-color: rgba(216, 178, 128, .86);
+  --header-border: rgba(216, 178, 128, .2);
+  --header-border-strong: rgba(216, 178, 128, .38);
+  --header-control-border: rgba(216, 178, 128, .55);
+  --header-menu-bg: #17130d;
+  --header-menu-hover: rgba(216, 178, 128, .14);
+  --header-edge-from: rgba(216, 178, 128, .22);
+  --header-edge-to: rgba(216, 178, 128, .34);
+}
+
+/* slate — cool blue-grey. Neutral without going fully black. */
+html:not([data-theme]) .header-bar[data-header-skin="slate"] {
+  --header-bg-start: #33415a;
+  --header-bg-mid: #1e293b;
+  --header-bg-end: #0b1120;
+  --header-glass: rgba(15, 23, 42, .5);
+  --header-accent: #7dd3fc;
+  --header-text: #f1f5f9;
+  --header-text-dim: rgba(241, 245, 249, .8);
+  --header-icon-color: rgba(226, 232, 240, .78);
+  --header-border: rgba(148, 163, 184, .2);
+  --header-border-strong: rgba(148, 163, 184, .36);
+  --header-control-border: rgba(203, 213, 225, .5);
+  --header-menu-bg: #16202f;
+  --header-menu-hover: rgba(148, 163, 184, .16);
+  --header-edge-from: rgba(148, 163, 184, .18);
+  --header-edge-to: rgba(148, 163, 184, .34);
+}
+
+/* aurora — deep teal into cyan. For data/monitoring surfaces. */
+html:not([data-theme]) .header-bar[data-header-skin="aurora"] {
+  --header-bg-start: #0e7490;
+  --header-bg-mid: #0a3d4d;
+  --header-bg-end: #040714;
+  --header-glass: rgba(8, 51, 68, .5);
+  --header-accent: #67e8f9;
+  --header-text: #ecfeff;
+  --header-text-dim: rgba(236, 254, 255, .82);
+  --header-icon-color: rgba(165, 243, 252, .82);
+  --header-border: rgba(103, 232, 249, .2);
+  --header-border-strong: rgba(103, 232, 249, .36);
+  --header-control-border: rgba(165, 243, 252, .5);
+  --header-menu-bg: #07222c;
+  --header-menu-hover: rgba(103, 232, 249, .14);
+  --header-edge-from: rgba(103, 232, 249, .2);
+  --header-edge-to: rgba(103, 232, 249, .32);
+}
+
+/* ember — warm amber into rust. For alert/ops surfaces that want
+   warmth without reading as the danger theme. */
+html:not([data-theme]) .header-bar[data-header-skin="ember"] {
+  --header-bg-start: #9a3412;
+  --header-bg-mid: #4a1608;
+  --header-bg-end: #040714;
+  --header-glass: rgba(74, 22, 8, .5);
+  --header-accent: #fbbf24;
+  --header-text: #fff7ed;
+  --header-text-dim: rgba(255, 247, 237, .82);
+  --header-icon-color: rgba(253, 230, 138, .84);
+  --header-border: rgba(251, 191, 36, .2);
+  --header-border-strong: rgba(251, 191, 36, .36);
+  --header-control-border: rgba(253, 230, 138, .5);
+  --header-menu-bg: #23120a;
+  --header-menu-hover: rgba(251, 191, 36, .14);
+  --header-edge-from: rgba(251, 191, 36, .2);
+  --header-edge-to: rgba(251, 191, 36, .32);
+}
+
+/* jade — clinical emerald. Tuned to headpain-site's #059669 / #10b981
+   accents on its #040714 page. For calm medical/health surfaces where
+   both the magenta default and ember's warning-warmth read wrong. */
+html:not([data-theme]) .header-bar[data-header-skin="jade"] {
+  --header-bg-start: #065f46;
+  --header-bg-mid: #043b2c;
+  --header-bg-end: #040714;
+  --header-glass: rgba(4, 59, 44, .5);
+  --header-accent: #6ee7b7;
+  --header-text: #ecfdf5;
+  --header-text-dim: rgba(236, 253, 245, .82);
+  --header-icon-color: rgba(167, 243, 208, .84);
+  --header-border: rgba(110, 231, 183, .2);
+  --header-border-strong: rgba(110, 231, 183, .36);
+  --header-control-border: rgba(167, 243, 208, .5);
+  --header-menu-bg: #08251c;
+  --header-menu-hover: rgba(110, 231, 183, .14);
+  --header-edge-from: rgba(110, 231, 183, .2);
+  --header-edge-to: rgba(110, 231, 183, .32);
+}
+
+/* ── custom — a site-authored skin ────────────────────────────────
+   For a one-off palette that no named skin fits and that no other
+   site would reuse. The kit deliberately ships NO tokens for this
+   value: the site supplies them, and the kit stays out of the way.
+
+     <header class="header-bar" data-header-skin="custom">
+
+   In the site's own css/style.css, copy this selector EXACTLY — the
+   scoping and the specificity are the whole contract:
+
+     html:not([data-theme]) .header-bar[data-header-skin="custom"] {
+       --header-bg-start: …;  --header-bg-mid: …;  --header-bg-end: …;
+       --header-accent: …;    --header-text: …;    --header-text-dim: …;
+       --header-icon-color: …; --header-border: …; --header-border-strong: …;
+       --header-control-border: …; --header-menu-bg: …; --header-menu-hover: …;
+       --header-edge-from: …; --header-edge-to: …;
+     }
+
+   Why that exact selector, and nothing shorter:
+     · `html:not([data-theme])` makes the skin collapse the instant a
+       visitor picks a theme. Drop it and the site ignores ?theme=.
+     · `[data-header-skin="custom"]` puts it at (0,3,1) — above the
+       kit default, below an armed season's (0,4,2) skin variant. A
+       bare `.header-bar { --header-bg-start: … }` is only (0,1,0)
+       and the kit's own defaults would beat it.
+   Set only the three gradient stops if that is all that clashes; the
+   bar re-composes --header-bg from them (see .header-bar below).
+   Only the three stops + accent are usually enough — but re-tune the
+   edge ramp too if the bar is much darker or lighter than the default
+   magenta, which those values are calibrated against. */
+
+/* ── Bar ─────────────────────────────────────────────────────── */
+.header-bar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky-header, 200);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 12px);
+  height: var(--header-h);
+  padding: 0 var(--space-6, 24px);
+  /* Re-composed HERE, not only at :root. A custom property's var()
+     references resolve on the element where that property is declared, so a
+     --header-bg built at :root bakes in :root's start/mid/end and ignores any
+     override made further down the tree. Declaring it on .header-bar means
+     skins (and any site override on the bar) only need to set the three
+     stops. Themes still work: they set the stops on <html>, which inherits
+     down to here before this resolves. */
+  --header-bg: linear-gradient(in oklch 135deg, var(--header-bg-start) 0%, var(--header-bg-mid) 50%, var(--header-bg-end) 100%);
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--header-border);
+  color: var(--header-text);
+  --header-h-cur: var(--header-h);
+}
+
+/* Bottom edge as a ramp, not a flat hairline (see --header-edge-*).
+   Degrades to the theme's flat --header-border where unsupported or
+   where a theme defines no ramp of its own. */
+html:not([data-theme]) .header-bar {
+  border-image: linear-gradient(
+    to right,
+    var(--header-edge-from, rgba(255, 255, 255, .10)),
+    var(--header-edge-to, rgba(255, 255, 255, .34))
+  ) 1;
+}
+/* Hub is a floating glass plate, not a band welded to the page — the
+   ramp would read as a seam. */
+html:not([data-theme]) .header-bar[data-header-mode="hub"] {
+  border-image: none;
+  border-bottom-color: var(--header-border);
+}
+
+/* Mode: hub — transparent cozy glass, no gradient */
+.header-bar[data-header-mode="hub"] {
+  background: var(--header-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Mode: app — slim, auto-hides on scroll down (JS toggles .header-hidden) */
+.header-bar[data-header-mode="app"] {
+  height: var(--header-h-app);
+  --header-h-cur: var(--header-h-app);
+}
+
+/* Auto-hide. `app` mode has it by definition; every other mode opts in with
+   data-header-autohide="on" and keeps its own height and background. */
+.header-bar[data-header-mode="app"],
+.header-bar[data-header-autohide="on"] {
+  transition: transform .26s var(--header-ease, ease);
+}
+/* Leaving accelerates away; returning decelerates in. Same budget. */
+.header-bar[data-header-mode="app"].header-hidden,
+.header-bar[data-header-autohide="on"].header-hidden {
+  transform: translateY(-100%);
+  transition-duration: .2s;
+  transition-timing-function: var(--header-ease-in, ease);
+}
+/* Keyboard focus entering a hidden bar reveals it: focus must never sit
+   on an off-screen control (WCAG 2.4.7, and 2.2's 2.4.11). header.js
+   drops the class on focusin so the next scroll decision agrees with
+   what is painted; this rule covers the frame in between. */
+.header-bar.header-hidden:focus-within { transform: none; }
+
+/* ── Logo block ──────────────────────────────────────────────── */
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  min-width: 0;
+}
+.header-logo-img {
+  height: var(--header-logo-h, 36px);
+  width: auto;
+  flex-shrink: 0;
+  display: block;
+  transition: transform .28s var(--header-ease, ease);
+}
+/* The raster fallback still needs forcing white; the injected vector must not
+   be filtered, because it already inherits the header's own text colour and
+   inverting it would undo exactly the thing it was swapped in to fix. */
+img.header-logo-img { filter: brightness(0) invert(1); }
+svg.header-logo-mark { color: var(--header-text); fill: currentColor; width: auto; }
+/* A site that ships its own mark gets it as a mask over currentColor, so the
+   glyph follows the header's text colour exactly as the inline svg does. An
+   <img> could not: it paints its own pixels and ignores the cascade. */
+.header-logo-own {
+  /* Width tracks height rather than restating the token: .header-logo-img
+     already sets height, and it drops to --header-logo-h-mobile under 700px.
+     Pinning width to the desktop value gave a 36x28 box on a phone. */
+  aspect-ratio: 1;
+  width: auto;
+  /* Declared, not inherited. `background: currentColor` resolves against
+     whatever the ancestor set, and the logo is always inside an <a>: on a site
+     whose logo anchor carries no class, that ancestor is an unstyled link and
+     currentColor is the UA's #0000EE. The mark then paints link-blue, silently,
+     because nothing in the page is wrong enough to throw. Every fleet site
+     happens to wrap the logo in .header-title-link (which the kit gives
+     color: inherit), so this only surfaced when ops-console adopted the kit
+     with a bare <a>. Stating the colour here makes the mask independent of the
+     markup around it, which is the contract the rest of the kit already keeps. */
+  color: var(--header-text);
+  background: currentColor;
+  /* The image itself is set inline by header.js, derived from the manifest
+     link, because a fleet site is served at its domain root and a kit showcase
+     is not. Only the parts that do not vary live here. */
+  -webkit-mask-position: center; mask-position: center;
+  -webkit-mask-size: contain;    mask-size: contain;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
+.header-logo-img:hover,
+.header-title-link:hover .header-logo-img { transform: scale(1.06) rotate(-4deg); }
+
+/* min-height also fixes a target-size failure: at <=700px the subtitle is
+   hidden and this link collapses to 22px, under the 24px WCAG 2.5.8
+   minimum. The parent centres it, so it grows symmetrically — no shift. */
+.header-title-link {
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: var(--header-control-h);
+}
+/* Current contract: mark + name are ONE anchor to the site's own home
+   (the img rides inside .header-title-link with alt=""), so the link's
+   accessible name is the title text and the logo stops being a second,
+   differently-behaved link. Scoped with :has() so the retired two-anchor
+   markup keeps rendering unchanged wherever it still exists. */
+.header-title-link:has(> .header-logo-img, > picture) {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+.header-title-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+/* The one visible cue that the name is a control: the title warms to the
+   accent on hover. Kept subtle; the cursor and the logo tilt do the rest. */
+.header-logo h1 { transition: color .2s var(--header-ease, ease); }
+.header-title-link:hover h1 { color: var(--header-accent); }
+/* rem, not em: a shared component must not rescale because a site set its
+   own body font-size. 1.2rem == 19.2px == today's rendered size.
+
+   `margin: 0` for the same reason, and it is load-bearing: the UA gives h1
+   `.67em 0`, which at this size is 12.86px above and below. The kit never
+   reset it, so the title block came out 67px inside app mode's fixed 56px
+   bar — the title rode high and the subtitle hung out of the header into the
+   page. It looked fine on most sites only because they link the CDN
+   `styles/base.css`, whose `*` reset zeroed it for us; the sites that don't
+   (headpain, autopilot, references-api in app mode) showed the real geometry. */
+.header-logo h1 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: .015em;
+  color: var(--header-text);
+  white-space: nowrap;
+}
+/* All four sides declared, so a site that authors the subtitle as a <p>
+   rather than a <div> does not reintroduce the same UA margin. */
+.header-subtitle {
+  font-size: .8125rem;
+  line-height: 1.25;
+  color: var(--header-text-dim);
+  font-weight: 500;
+  margin: 2px 0 0;
+  letter-spacing: .005em;
+  white-space: nowrap;
+}
+
+/* Epigraph: the animating half of a bilingual subtitle. The glyph churn is
+   decoration, so it is aria-hidden and .neo-epi-sr carries the real sentence
+   for assistive tech. Both live inside .header-subtitle, which keeps the
+   existing nowrap and mobile-hide behaviour unchanged. */
+.neo-epi { font-variant-ligatures: none; }
+.neo-epi-sr {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ── Right cluster: actions + theme toggle + home ────────────── */
+.header-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 8px);
+  min-width: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 8px);
+  position: relative; /* overflow .header-menu anchors here */
+  min-width: 0;
+}
+.header-actions .btn,
+.header-actions .nav-link {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+/* Uniform control row: direct action children match the icon buttons'
+   height so Share / ⋯ / palette / home read as one correlative strip.
+   (Direct-child only — items moved into the ⋯ menu keep menu styling.) */
+.header-actions > .btn,
+.header-actions > .nav-link,
+.header-actions > button,
+.header-actions > a {
+  height: var(--header-control-h);
+  min-height: 0; /* neutralize site-level control minimums (e.g. --control-height) */
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Same guarantee one level down, for the kit's own grouping idiom.
+   header.js already knows .header-btn-group as a unit that travels into the ⋯
+   menu whole; the geometry rule above did not, so a grouped button kept its
+   own height and the row went ragged — pathfinder shipped 37px Fit/Clear
+   buttons flanked by 40px icon controls. Scoped to a group still sitting in
+   the bar: once the ⋯ menu adopts it the selector stops matching and menu
+   styling takes over, which is the same boundary the direct-child rule draws.
+   Deliberately NOT `> div > *` — battlecard's .bc-menu-wrap holds dropdown
+   items that are not bar controls and must not be stretched to 40px. */
+.header-actions > .header-btn-group > .btn,
+.header-actions > .header-btn-group > .nav-link,
+.header-actions > .header-btn-group > button,
+.header-actions > .header-btn-group > a {
+  height: var(--header-control-h);
+  min-height: 0;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Appearance fallback for action buttons.
+   The kit enforces geometry on .header-actions children but never styled
+   them, so a site that uses the canonical .btn / .nav-link classes without
+   defining them renders a raw browser button inside the header
+   (incident-runbook hit exactly this). Wrapped in :where() so the whole
+   rule has ZERO specificity — every site's own .btn/.nav-link styling
+   still wins, and this only shows through where nothing else applies. */
+:where(.header-actions) > :where(.btn, .nav-link, button, a) {
+  padding: 0 12px;
+  border: 1px solid var(--header-border-strong);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--header-text);
+  font: inherit;
+  font-size: .875rem;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background .2s var(--header-ease, ease),
+              border-color .2s var(--header-ease, ease);
+}
+:where(.header-actions) > :where(.btn, .nav-link, button, a):hover {
+  background: var(--header-menu-hover);
+  border-color: var(--header-control-border, var(--header-border-strong));
+}
+
+/* An icon-only control has no label to pad around, and the fallback above
+   assumes there is one. Its 12px side padding lands inside a border-box
+   control the site already sized square, leaving 40 - 24 - 2 = 14px of
+   content — and an SVG is a flex item that will shrink into it. neorgon-site's
+   GitHub mark rendered 14x26 and hiring-pack's 10x24 before this rule.
+
+   Specificity note, because it is not what the :where() wrapper suggests:
+   :has() is NOT zero-specificity — it takes the specificity of its most
+   specific argument, so `svg:only-child` puts this selector at (0,1,1), the
+   same weight as the `.header-actions > a` geometry rule above and ABOVE a
+   site's single-class `.header-link { width: 36px }`. That is deliberate and
+   matches the contract: the uniform control row is kit-owned, and a site that
+   truly needs different geometry sets --header-control-h rather than
+   restyling the control. hiring-pack declared 36px and now renders 40px. */
+:where(.header-actions) > :where(.btn, .nav-link, button, a):has(> svg:only-child) {
+  padding: 0;
+  width: var(--header-control-h);
+  justify-content: center;
+}
+
+/* …and the fallback's border does not belong on one either. .header-home is
+   an unboxed glyph, so a site that styles neither ends up with a boxed icon
+   sitting next to an unboxed one in the same row (hiring-pack shipped exactly
+   that pair). Geometry above is kit-owned at (0,1,1); appearance is not — the
+   extra :where() flattens this to zero specificity, so pathfinder and
+   cartograph, whose icon buttons are deliberately boxed to match the text
+   buttons beside them, keep their border on a single class. */
+:where(.header-actions > :where(.btn, .nav-link, button, a):has(> svg:only-child)),
+:where(.header-actions > :where(.btn, .nav-link, button, a):has(> svg:only-child)):hover {
+  border-color: transparent;
+}
+
+/* Belt and braces for the same failure: whatever padding a site declares, an
+   icon inside a header control is never the thing that gives way. Carries real
+   specificity on purpose — a squeezed icon is always a bug, never a choice. */
+.header-actions > .btn > svg,
+.header-actions > .nav-link > svg,
+.header-actions > button > svg,
+.header-actions > a > svg {
+  flex: none;
+}
+
+/* ── Theme toggle ────────────────────────────────────────────── */
+.header-theme { position: relative; display: flex; }
+.header-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--header-control-h);
+  height: var(--header-control-h);
+  padding: 0;
+  border: 1px solid var(--header-control-border, var(--header-border-strong));
+  border-radius: 6px;
+  background: transparent;
+  color: var(--header-icon-color, var(--header-text-dim));
+  cursor: pointer;
+  transition: color .2s, border-color .2s, background .2s;
+}
+.header-theme-toggle:hover,
+.header-theme-toggle[aria-expanded="true"] {
+  color: var(--header-text);
+  border-color: var(--header-border-strong);
+  background: var(--header-menu-hover);
+}
+.header-theme-toggle svg {
+  width: var(--header-icon, 22px);
+  height: var(--header-icon, 22px);
+  display: block;
+}
+[data-theme]:not([data-theme=""]) .header-theme-toggle { color: var(--header-accent); }
+
+/* ── Home icon ───────────────────────────────────────────────── */
+.header-home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--header-control-h);
+  height: var(--header-control-h);
+  box-sizing: border-box;
+  padding: 0;
+  border-radius: 6px;
+  /* Full strength, not --header-icon-color. The dim was meant as hierarchy and
+     did not read as one: .header-source carries no colour rule at all, so it
+     inherits the header's own #f9f9f9, and the home control sitting beside it
+     at 78% looked like a misconfiguration rather than a decision. The other
+     user of that token is the bordered theme toggle, which has a border to
+     carry its own weight; this one does not. */
+  color: var(--header-text);
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: color .18s var(--header-ease, ease),
+              background .18s var(--header-ease, ease);
+}
+/* --header-accent is the pink on the default palette and the skin's own accent
+   everywhere else, so the highlight stays on-brand without hardcoding magenta
+   into a control that ships to seven skins. */
+.header-home:hover,
+.header-home:focus-visible { color: var(--header-accent); background: var(--header-menu-hover); }
+.header-home svg {
+  width: var(--header-icon-solid, 20px);
+  height: var(--header-icon-solid, 20px);
+  display: block;
+}
+
+/* ── Hub glyph: the Energon mark at the centre of a galaxy ───────
+   .header-home is the one header link to neorgon.com, tooltip
+   "neorgon.com". The page stamps a placeholder SVG (markup contract
+   in the README) and upgradeHome() replaces it on init with the mark
+   at scale(0.72) inside a <g class="nh-orbit"> of two arcs and two
+   dots. Idle the whole thing is still; on hover or keyboard focus the
+   orbit group turns as one rigid body while the mark stays upright,
+   because a rotating letterform is unreadable.
+   Stroked glyph, so it sizes with --header-icon, not the solid token. */
+.header-home svg.nh-hub-icon {
+  /* Deliberately larger than --header-icon: the galaxy's arms occupy the outer
+     ring, so at 22px the MARK fell to 14px against 18px for the neighbouring
+     control. 26px puts it back at 18px, measured, while the arms still land
+     inside the 40px box. */
+  width: var(--header-hub-icon, 26px);
+  height: var(--header-hub-icon, 26px);
+}
+.header-home .nh-orbit {
+  transform-origin: 12px 12px; /* viewBox centre, for the legacy planet markup */
+}
+.header-home:hover .nh-orbit,
+.header-home:focus-visible .nh-orbit {
+  animation: nh-orbit-lap 1.4s linear infinite;
+}
+@keyframes nh-orbit-lap { to { transform: rotate(360deg); } }
+
+/* The galaxy turns as one rigid body on hover, so a plain rotate does it.
+   This replaced an offset-path satellite on an inclined ellipse: that needed a
+   front/back pair kept in sync and a semi-major axis capped so the dot did not
+   clip the viewBox, and none of it is needed once the arms sit outside the
+   mark instead of crossing it. */
+
+/* ── Overflow toggle (⋯) — injected by header.js ─────────────── */
+.header-overflow { position: relative; display: flex; }
+.header-overflow[hidden] { display: none; }
+.header-overflow-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--header-control-h);
+  height: var(--header-control-h);
+  box-sizing: border-box;
+  padding: 0 10px;
+  border: 1px solid var(--header-control-border, var(--header-border-strong));
+  border-radius: 6px;
+  background: transparent;
+  color: var(--header-text);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background .2s;
+}
+.header-overflow-toggle:hover,
+.header-overflow-toggle[aria-expanded="true"] { background: var(--header-menu-hover); }
+
+/* Shared press feedback — these three controls are kit-owned, so the kit
+   owns their states (sites style their own .btn). */
+.header-overflow-toggle:active,
+.header-theme-toggle:active,
+.header-home:active {
+  background: var(--header-menu-hover);
+  transform: translateY(.5px);
+}
+
+/* ── Dropdown menu (overflow + theme + Export▾ groups) ─────────
+   Rules: parent gets position:relative; one open at a time; Esc /
+   outside click closes; arrow keys navigate (all handled by header.js) */
+.header-menu {
+  position: absolute;
+  /* Anchored to the BAR's bottom edge, not the button's. A 40px control
+     centred in a 68px bar put the old panel 10.5px inside the bar. */
+  top: calc(100% + (var(--header-h-cur, 68px) - var(--header-control-h)) / 2 + 8px);
+  right: 0;
+  min-width: 180px;
+  max-height: min(60vh, 320px);
+  overflow-y: auto;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--header-menu-bg);
+  border: 1px solid var(--header-border-strong);
+  border-radius: 12px;
+  /* Contact / mid / ambient + inner top highlight, so the panel lands
+     instead of floating. */
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, .45),
+    0 8px 16px -6px rgba(0, 0, 0, .5),
+    0 24px 48px -16px rgba(0, 0, 0, .65),
+    inset 0 1px 0 rgba(255, 255, 255, .06);
+  transform-origin: top right;
+  display: none;
+  z-index: 1;
+}
+.header-menu.open {
+  display: block;
+  animation: neo-menu-in .14s var(--header-ease, ease) both;
+}
+@keyframes neo-menu-in {
+  from { opacity: 0; transform: translateY(-6px) scale(.98); }
+  to   { opacity: 1; transform: none; }
+}
+
+.header-menu .btn,
+.header-menu .nav-link,
+.header-menu button,
+.header-menu a {
+  display: flex;
+  align-items: center;
+  /* text-align does nothing to a flex item; without this the site's own
+     .btn { justify-content: center } wins and every row centres itself. */
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: var(--header-text);
+  font: inherit;
+  font-size: .875rem;
+  font-weight: 500;
+  text-align: left;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.header-menu .btn:hover,
+.header-menu .nav-link:hover,
+.header-menu button:hover,
+.header-menu a:hover {
+  background: var(--header-menu-hover);
+}
+
+/* ── Focus visibility ─────────────────────────────────────────
+   Every focusable header control gets a real ring. outline costs no
+   layout and creates no stacking context, so app-mode transform is
+   unaffected. Longhand lists (no :is()) for universal support. */
+.header-logo a:focus-visible,
+.header-title-link:focus-visible,
+.header-actions > a:focus-visible,
+.header-actions > button:focus-visible,
+.header-actions > .btn:focus-visible,
+.header-actions > .nav-link:focus-visible,
+.header-overflow-toggle:focus-visible,
+.header-theme-toggle:focus-visible,
+.header-home:focus-visible {
+  outline: var(--header-focus-w) solid var(--header-focus);
+  outline-offset: 2px;
+}
+/* Drawn inside the item so it never collides with the menu's padding or
+   scroll edge. Covers menuitemradio/checkbox, which the old rule missed. */
+.header-menu .btn:focus-visible,
+.header-menu .nav-link:focus-visible,
+.header-menu button:focus-visible,
+.header-menu a:focus-visible,
+.header-menu [role="menuitem"]:focus-visible,
+.header-menu [role="menuitemradio"]:focus-visible,
+.header-menu [role="menuitemcheckbox"]:focus-visible {
+  outline: var(--header-focus-w) solid var(--header-focus);
+  outline-offset: -2px;
+  background: var(--header-menu-hover);
+}
+.header-menu .badge,
+.header-menu [data-badge] { margin-left: auto; }
+
+/* Grouped controls (.header-btn-group divs / navs) moved into the ⋯ menu
+   render as stacked rows; group chrome (borders, padding, flex) is stripped. */
+.header-menu > div,
+.header-menu > nav {
+  display: block;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+.header-menu > div + div,
+.header-menu > nav + nav {
+  border-top: 1px solid var(--header-border);
+  margin-top: 4px;
+  padding-top: 4px;
+}
+.header-menu > div button,
+.header-menu > div a,
+.header-menu > nav button,
+.header-menu > nav a {
+  width: 100%;
+  margin: 0;
+}
+
+/* Theme menu specifics */
+.header-theme-menu .theme-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, .25);
+}
+.header-theme-menu [aria-checked="true"]::after {
+  content: "✓";
+  margin-left: auto;
+  color: var(--header-accent);
+}
+
+/* ── Mobile (≤700px): shrink, hide subtitle, JS moves non-kept
+   action buttons into the ⋯ overflow menu ────────────────────── */
+@media (max-width: 700px) {
+  :root {
+    --header-control-h: 36px;
+    --header-icon: 20px;
+    --header-icon-solid: 18px;
+  }
+  .header-bar { padding: 0 var(--space-4, 16px); gap: var(--space-2, 8px); }
+  .header-subtitle { display: none; }
+  .header-logo h1 { font-size: 1rem; }
+  .header-logo-img { height: var(--header-logo-h-mobile, 28px); }
+  .header-right { gap: 6px; }
+  /* A 180px panel pinned to the right of a 375px viewport wastes width. */
+  .header-menu {
+    min-width: min(260px, calc(100vw - 32px));
+    max-width: calc(100vw - 32px);
+  }
+}
+
+/* ── Reduced motion ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .header-bar[data-header-mode="app"],
+  .header-bar[data-header-mode="app"].header-hidden,
+  .header-bar[data-header-autohide="on"],
+  .header-bar[data-header-autohide="on"].header-hidden { transition: none; }
+  .header-logo-img { transition: none; }
+  .header-logo-img:hover,
+  .header-title-link:hover .header-logo-img { transform: none; }
+  .header-home:hover .nh-orbit,
+  .header-home:focus-visible .nh-orbit { animation: none; }
+  .header-menu.open { animation: none; }
+  .header-overflow-toggle:active,
+  .header-theme-toggle:active,
+  .header-home:active { transform: none; }
+}
+
+/* ── Forced colors (Windows High Contrast) ────────────────────
+   The bar's hierarchy is carried entirely by translucent whites, which
+   all collapse to one system colour. Give the structural edges system
+   tokens so the header doesn't become one undifferentiated block. */
+@media (forced-colors: active) {
+  .header-bar {
+    border-image: none;
+    border-bottom: 1px solid CanvasText;
+  }
+  .header-overflow-toggle,
+  .header-theme-toggle { border-color: ButtonBorder; }
+  .header-menu { border: 1px solid CanvasText; }
+  .header-logo a:focus-visible,
+  .header-title-link:focus-visible,
+  .header-actions > a:focus-visible,
+  .header-actions > button:focus-visible,
+  .header-actions > .btn:focus-visible,
+  .header-actions > .nav-link:focus-visible,
+  .header-overflow-toggle:focus-visible,
+  .header-theme-toggle:focus-visible,
+  .header-home:focus-visible,
+  .header-menu button:focus-visible,
+  .header-menu a:focus-visible { outline-color: Highlight; }
+}
