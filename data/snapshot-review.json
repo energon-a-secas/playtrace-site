@@ -10,39 +10,16 @@
   "preserveGameIds": [
     "g_1x2q29h",
     "g_1x2q1ow",
-    "g_1x2p9ub",
-    "g_1x2p68e",
     "g_1x2oye3",
-    "g_1x2o3ty",
-    "g_1x0f07t",
     "g_1x2noww",
     "g_1x2n554",
-    "g_1x2n2zq",
-    "g_1x2g7hl",
     "g_1x2kapl",
-    "g_1x2k2ut",
     "g_1x2izrh",
     "g_1x2fcsn",
     "g_1x2ed4h",
     "g_1x2c8w8"
   ],
   "selections": [
-    {
-      "postIds": [
-        "1x2pc34"
-      ],
-      "title": "Cave Drop",
-      "category": "adventure",
-      "stage": "playable",
-      "platforms": [],
-      "tags": [
-        "Exploration",
-        "Gravity",
-        "Combat"
-      ],
-      "projectUrl": "https://wilsonb9000.itch.io/cave-drop/devlog/1701062/fight-on-the-ceiling-hit-harder-camera-changes-and-more",
-      "summary": "Explore caves where walls and ceilings become walkable surfaces. The latest combat update rewards fighting upside down with a weapon bonus and a compass cue."
-    },
     {
       "postIds": [
         "1x2owaq"
@@ -83,126 +60,6 @@
     },
     {
       "postIds": [
-        "1x2mtgf"
-      ],
-      "title": "Harmony Strike",
-      "category": "rpg",
-      "stage": "prototype",
-      "platforms": [],
-      "tags": [
-        "Survivors-like",
-        "Party building",
-        "Elemental combos"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5293880/Harmony_Strike/",
-      "summary": "Control a party of heroes whose positions create elemental bonds. Rescue recruits, evolve weapons, and return to a village between runs. The creator is sharing a trailer while developing the demo."
-    },
-    {
-      "postIds": [
-        "1x2mh8d"
-      ],
-      "title": "SimCFB",
-      "category": "simulation",
-      "stage": "released",
-      "platforms": [
-        "Browser",
-        "Mobile"
-      ],
-      "tags": [
-        "College football",
-        "Recruiting",
-        "Management"
-      ],
-      "projectUrl": "https://www.simcfb.com/",
-      "summary": "Manage a college football team, recruit players, and call plays or delegate decisions to the computer. The creator announces version 1.0 with Power 4 conference teams."
-    },
-    {
-      "postIds": [
-        "1x0wucq",
-        "1x2lr62"
-      ],
-      "title": "Stompworks",
-      "category": "action",
-      "stage": "prototype",
-      "platforms": [],
-      "tags": [
-        "Mechs",
-        "Customization",
-        "Roguelike"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5383780/Stompworks/?beta=0",
-      "summary": "Assemble a cel-shaded mech from interchangeable bodies, legs, and weapons, then take it into combat. Two source posts follow the creator’s progress toward a finished game."
-    },
-    {
-      "postIds": [
-        "1x2krjl"
-      ],
-      "title": "1-Bit Terror",
-      "category": "adventure",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Horror",
-        "Maze",
-        "Community event"
-      ],
-      "projectUrl": "https://rosebud.ai/play/1-bit-terror",
-      "summary": "Enter a Halloween maze, contribute collected pumpkins, and escape. The creator’s seasonal event asks the community to work together to unlock avatars."
-    },
-    {
-      "postIds": [
-        "1x2kq4k"
-      ],
-      "title": "Fallen Nights",
-      "category": "action",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Zombies",
-        "Survival",
-        "Steam demo"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5177150/",
-      "summary": "Scavenge by day and defend yourself at night. Building defenses consumes the same scrap needed for an escape boat. A Steam demo and browser version are available; the full game is still in development."
-    },
-    {
-      "postIds": [
-        "1x2k5we"
-      ],
-      "title": "Worldseed",
-      "category": "other",
-      "stage": "prototype",
-      "platforms": [],
-      "tags": [
-        "Retro",
-        "In development"
-      ],
-      "projectUrl": null,
-      "summary": "A retro-styled project approaching launch. The creator shares an in-game teaser after several weeks of iteration, with no public play link included in the post."
-    },
-    {
-      "postIds": [
-        "1x2i3sc"
-      ],
-      "title": "Ctrl + Alt + Dungeon",
-      "category": "adventure",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Dungeon",
-        "Playable prototype"
-      ],
-      "projectUrl": "https://playground.google/game/4482542339946130879?ref=share_code",
-      "summary": "An experimental dungeon game shared through Google Playground. Its developer describes building an initial playable version quickly, then iterating on the mechanics and presentation."
-    },
-    {
-      "postIds": [
         "1x2h1k5"
       ],
       "title": "There Is Eternal War",
@@ -216,94 +73,6 @@
       ],
       "projectUrl": "https://store.steampowered.com/app/5193960/There_Is_Eternal_War/",
       "summary": "Organize troops into divisions and assign buildings to supply them. Large maps support broad strategic decisions while players can zoom in to watch battles. A free Steam playtest is open."
-    },
-    {
-      "postIds": [
-        "1x2gkmb"
-      ],
-      "title": "Evisceracers",
-      "category": "action",
-      "stage": "playable",
-      "platforms": [],
-      "tags": [
-        "2D platformer",
-        "Time trials",
-        "Level editor"
-      ],
-      "projectUrl": "https://butelomarelo.itch.io/evisceracers",
-      "summary": "A fast 2D platformer focused on chasing records and creating custom maps. The developer is inviting players to test movement, beat existing times, and share feedback."
-    },
-    {
-      "postIds": [
-        "1x2gjhu"
-      ],
-      "title": "Haltwick",
-      "category": "simulation",
-      "stage": "released",
-      "platforms": [
-        "iOS",
-        "Android"
-      ],
-      "tags": [
-        "Transport",
-        "City building",
-        "Supply chains"
-      ],
-      "projectUrl": null,
-      "summary": "Build transport networks and supply chains while towns expand and their buildings change across eras. The creator describes a release on the App Store and Google Play."
-    },
-    {
-      "postIds": [
-        "1x2gbax"
-      ],
-      "title": "Pinky & Bleu: Web Blaster",
-      "category": "arcade",
-      "stage": "released",
-      "platforms": [
-        "Android"
-      ],
-      "tags": [
-        "Spiders",
-        "Shooter",
-        "Power-ups"
-      ],
-      "projectUrl": "https://play.google.com/store/apps/details?id=com.rockmegames.pinkyandbleu",
-      "summary": "Two spiders blast approaching bugs, collect power-ups, and chase high scores. The creator links the Android release and says an iOS version is planned."
-    },
-    {
-      "postIds": [
-        "1x2g80g"
-      ],
-      "title": "Retro-Mars",
-      "category": "other",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Playable demo",
-        "Feedback wanted"
-      ],
-      "projectUrl": "https://retro-mars.vercel.app/",
-      "summary": "A playable browser project accompanied by a trailer. The creator is seeking feedback on the game and its presentation, and notes that the four language versions still need review."
-    },
-    {
-      "postIds": [
-        "1x2f8am"
-      ],
-      "title": "Saga of Dilmun",
-      "category": "rpg",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "MMORPG",
-        "Mythology",
-        "Crafting"
-      ],
-      "projectUrl": "https://www.sagaofdilmun.com",
-      "summary": "A fantasy and science-fiction MMO with combat, quests, equipment, crafting, and character progression. The developer shares a playable browser version inspired by mythology and unfamiliar worlds."
     },
     {
       "postIds": [
@@ -393,42 +162,6 @@
     },
     {
       "postIds": [
-        "1x2aq6w"
-      ],
-      "title": "KAYFABE: Indie Promoter",
-      "category": "simulation",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Wrestling",
-        "Management",
-        "Free demo"
-      ],
-      "projectUrl": "https://forty-slop.itch.io/kayfabe-demo",
-      "summary": "Run a small wrestling promotion, book shows, balance the budget, and handle backstage personalities. The browser demo covers three shows and includes English and Korean text."
-    },
-    {
-      "postIds": [
-        "1x29xhe"
-      ],
-      "title": "Neon Bounty",
-      "category": "action",
-      "stage": "playable",
-      "platforms": [
-        "Browser",
-        "Mobile"
-      ],
-      "tags": [
-        "Cyberpunk",
-        "2D runner"
-      ],
-      "projectUrl": "https://ravinkarunaratne21-collab.github.io/Neon-Bounty/",
-      "summary": "A cyberpunk-inspired 2D runner designed with mobile play in mind. The creator shares a browser build and screenshots, and invites players to try it."
-    },
-    {
-      "postIds": [
         "1x29sie"
       ],
       "title": "Skyveil Horizon",
@@ -461,24 +194,6 @@
     },
     {
       "postIds": [
-        "1x23x6h"
-      ],
-      "title": "Call of Cubie",
-      "category": "action",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "FPS",
-        "Bots",
-        "Multiplayer"
-      ],
-      "projectUrl": "https://play.patio.fyi",
-      "summary": "A browser shooter with a new airfield map and an objective inside a moving transport aircraft. Bots fill empty seats, and the creator recommends desktop play."
-    },
-    {
-      "postIds": [
         "1x23ojj"
       ],
       "title": "EXO: Hold the Line",
@@ -494,24 +209,6 @@
       ],
       "projectUrl": null,
       "summary": "Pilot a war frame against large waves of machines in a voxel arena. The creator’s early alpha footage shows different Vanguard builds, with unfinished systems and bugs still being worked on."
-    },
-    {
-      "postIds": [
-        "1x22f0c"
-      ],
-      "title": "The Last Train",
-      "category": "action",
-      "stage": "released",
-      "platforms": [
-        "Android"
-      ],
-      "tags": [
-        "Survival shooter",
-        "Trains",
-        "Upgrades"
-      ],
-      "projectUrl": "https://play.google.com/store/apps/details?id=com.lastexitdiner.lasttrain",
-      "summary": "Defend a moving train against flying enemies and build up its weapons between waves. The developer links an Android full game and a separate free Steam demo."
     },
     {
       "postIds": [
@@ -531,23 +228,6 @@
     },
     {
       "postIds": [
-        "1x20a3i"
-      ],
-      "title": "Urban_Sprawl",
-      "category": "simulation",
-      "stage": "prototype",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "City building",
-        "Procedural buildings"
-      ],
-      "projectUrl": "https://bneidlinger.github.io/urban_sprawl/",
-      "summary": "A city-building project exploring traffic and procedurally generated neighborhoods. This update focuses on fitting varied housing onto angled lots, with citizen improvements planned next."
-    },
-    {
-      "postIds": [
         "1x208pw"
       ],
       "title": "Blood Slayers",
@@ -562,40 +242,6 @@
       ],
       "projectUrl": "https://wavedash.com/games/blood-slayers",
       "summary": "A browser game shared with five acts available. The creator identifies a Rust-based implementation and links the playable build; the source provides little additional gameplay detail."
-    },
-    {
-      "postIds": [
-        "1x1z0q5",
-        "1x2e3ix"
-      ],
-      "title": "Snowbody’s Safe",
-      "category": "other",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Playtest",
-        "Feedback wanted"
-      ],
-      "projectUrl": "https://gremlinforgestudio.itch.io/snowbodys-safe-closed-playtest",
-      "summary": "A browser playtest with a follow-up post from the same creator. The developer is asking what to improve and collecting reactions to the current build."
-    },
-    {
-      "postIds": [
-        "1x1ycc3"
-      ],
-      "title": "Rise of the Fenarii",
-      "category": "strategy",
-      "stage": "prototype",
-      "platforms": [],
-      "tags": [
-        "Tower defense",
-        "RPG",
-        "Boss fights"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5240520/Rise_of_the_Fenarii/",
-      "summary": "A two-person team is developing a strategy RPG from a tower-defense starting point. Worldbuilding, story, and distinctive boss encounters are central to the project’s direction."
     },
     {
       "postIds": [
@@ -617,58 +263,6 @@
     },
     {
       "postIds": [
-        "1x1xea5"
-      ],
-      "title": "Backpack Ascendancy",
-      "category": "strategy",
-      "stage": "prototype",
-      "platforms": [],
-      "tags": [
-        "Inventory building",
-        "Roguelite",
-        "Item synergies"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5380750/Backpack_Ascendancy/",
-      "summary": "A backpack battler built around planning item layouts and pursuing powerful roguelite runs. The developer shares gameplay and a Steam page while continuing balance work ahead of release."
-    },
-    {
-      "postIds": [
-        "1x1wp8a"
-      ],
-      "title": "Tiny Forge",
-      "category": "rpg",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Dungeon runner",
-        "Loot",
-        "Auto combat"
-      ],
-      "projectUrl": "https://tinyforge.gg",
-      "summary": "Choose equipment and skills, then decide how far to push each expedition. This browser dungeon runner’s first season adds loot filtering, clearer gear comparisons, and guest play."
-    },
-    {
-      "postIds": [
-        "1x1wbhb"
-      ],
-      "title": "Futbol Warriors",
-      "category": "action",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Soccer",
-        "Medieval combat",
-        "Alpha"
-      ],
-      "projectUrl": "https://tesana.com/play/990ca7a8-7975-4238-9419-fab0788a21d4",
-      "summary": "Short soccer matches become medieval skirmishes as knights, mages, and berserkers compete. The creator shares an alpha and asks whether the mix of scoring and fighting feels fun."
-    },
-    {
-      "postIds": [
         "1x1w50s"
       ],
       "title": "Misty and the Last Breeze",
@@ -682,40 +276,6 @@
       ],
       "projectUrl": null,
       "summary": "Run, wall-run, and swing through compact stages, then summon an airboard to grind and perform tricks. The solo developer is refining movement and level design in Godot."
-    },
-    {
-      "postIds": [
-        "1x1vvpd"
-      ],
-      "title": "VECTOR: Anti-gravity Racing",
-      "category": "arcade",
-      "stage": "released",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Racing",
-        "Career mode",
-        "Multiplayer"
-      ],
-      "projectUrl": "https://wavedash.com/games/vector-anti-gravity-racing",
-      "summary": "Race anti-gravity craft across five circuits, including a lunar track. The creator announces version 1.00 with a career mode and online races for up to eight players."
-    },
-    {
-      "postIds": [
-        "1x1vh2s"
-      ],
-      "title": "StoneEra",
-      "category": "simulation",
-      "stage": "playable",
-      "platforms": [],
-      "tags": [
-        "Colony sim",
-        "Voxels",
-        "Steam demo"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5057770/StoneEra/",
-      "summary": "Design buildings as reusable plans and let villagers construct them. The latest demo update adds scaffolding, improved building tools, production targets, and shared research to this medieval colony simulation."
     },
     {
       "postIds": [
@@ -787,24 +347,6 @@
     },
     {
       "postIds": [
-        "1x1tysg"
-      ],
-      "title": "HALKO",
-      "category": "simulation",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Forest",
-        "Firewood",
-        "Free demo"
-      ],
-      "projectUrl": "https://halko.blinkki.com/",
-      "summary": "A forest-work game inspired by gathering winter firewood with family. The creator shares a playable demo and asks whether the repetitive work translates into satisfying play."
-    },
-    {
-      "postIds": [
         "1x1tnes"
       ],
       "title": "HEATSINK",
@@ -840,56 +382,6 @@
     },
     {
       "postIds": [
-        "1x1rydt"
-      ],
-      "title": "Arkansas 2125",
-      "category": "adventure",
-      "stage": "playable",
-      "platforms": [
-        "Steam Deck"
-      ],
-      "tags": [
-        "Post-apocalyptic",
-        "Beta"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/4546490/Arkansas_2125/",
-      "summary": "A post-apocalyptic game sharing its beta 0.7 update. The creator highlights larger interface elements and Polish localization, with changes intended to make handheld play easier."
-    },
-    {
-      "postIds": [
-        "1x1r0i8"
-      ],
-      "title": "A Snowboard Dream",
-      "category": "arcade",
-      "stage": "released",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Snowboarding",
-        "Relaxing",
-        "Endless"
-      ],
-      "projectUrl": "https://snowboarddream.com/",
-      "summary": "An endless snowboarding game without objectives or score pressure. The creator designed it for short breaks or relaxed play while listening to something else."
-    },
-    {
-      "postIds": [
-        "1x1qeul"
-      ],
-      "title": "Fallen Heroes",
-      "category": "rpg",
-      "stage": "prototype",
-      "platforms": [],
-      "tags": [
-        "JRPG",
-        "In development"
-      ],
-      "projectUrl": null,
-      "summary": "A first-time creator shares footage of a JRPG approaching completion. The source is a progress showcase with a video, rather than a public download announcement."
-    },
-    {
-      "postIds": [
         "1x1q8hg"
       ],
       "title": "Idle Idiots",
@@ -905,125 +397,6 @@
       ],
       "projectUrl": "https://idleidiots.pages.dev/",
       "summary": "An incremental auto-battler with irreverent humor, unusual legendary equipment, achievements, and a snapshot-based PvP arena. The creator is inviting players to try the current browser build."
-    },
-    {
-      "postIds": [
-        "1x1q7vp"
-      ],
-      "title": "The Residual",
-      "category": "adventure",
-      "stage": "released",
-      "platforms": [],
-      "tags": [
-        "Narrative",
-        "2D platformer",
-        "Free to play"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5291650/",
-      "summary": "A short narrative platformer about memory, loneliness, and relationships in a fractured world. The developer describes a 20–30 minute experience and links the free Steam release."
-    },
-    {
-      "postIds": [
-        "1x1pwra"
-      ],
-      "title": "ORRA",
-      "category": "action",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Arena",
-        "Movement",
-        "Stained glass"
-      ],
-      "projectUrl": "https://www.spawn.co/?box=@117/orra",
-      "summary": "Stained-glass knights wall-run, slide, and flip through a cathedral arena above the water. The creator shares a playable experiment built in Spawn."
-    },
-    {
-      "postIds": [
-        "1x1oq3r"
-      ],
-      "title": "Astralight: Pilgrim's Duel",
-      "category": "strategy",
-      "stage": "playable",
-      "platforms": [],
-      "tags": [
-        "TCG",
-        "Deckbuilding",
-        "Steam playtest"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/4804280/",
-      "summary": "A fantasy trading-card game with a newly opened Steam playtest. Its guided tutorial introduces the battle interface, mana, attacks, and other turn mechanics."
-    },
-    {
-      "postIds": [
-        "1x1onhq"
-      ],
-      "title": "Abyss Drift",
-      "category": "other",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Multiplayer experiment",
-        "Feedback wanted"
-      ],
-      "projectUrl": "https://playground.google/g/fnQi3C",
-      "summary": "An early multiplayer experiment shared through Google Playground. The creator is looking for feedback on the playable build and ideas for its next direction."
-    },
-    {
-      "postIds": [
-        "1x1oa26"
-      ],
-      "title": "Three Touches",
-      "category": "arcade",
-      "stage": "prototype",
-      "platforms": [
-        "Windows",
-        "macOS"
-      ],
-      "tags": [
-        "Volleyball",
-        "Careers",
-        "Slow-motion shots"
-      ],
-      "projectUrl": null,
-      "summary": "An arcade volleyball project with player, club, and referee careers. A charged spike slows the action so the player can choose a target; the creator describes ongoing testing of desktop builds."
-    },
-    {
-      "postIds": [
-        "1x1nv7q"
-      ],
-      "title": "Super Mekabots",
-      "category": "strategy",
-      "stage": "prototype",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Mechs",
-        "Cards",
-        "Battle animation"
-      ],
-      "projectUrl": null,
-      "summary": "A browser mecha card game in development. This showcase follows an attack from the card board into an animated battle and back, with a focus on making the result easy to read."
-    },
-    {
-      "postIds": [
-        "1x1na7l"
-      ],
-      "title": "AI Says",
-      "category": "puzzle",
-      "stage": "prototype",
-      "platforms": [],
-      "tags": [
-        "Prompt commands",
-        "Test chambers"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5205430/AI_Says/",
-      "summary": "Guide a person through dangerous test chambers by typing instructions to a blind in-game AI. Precise descriptions matter. The creators share a trailer ahead of their planned release."
     },
     {
       "postIds": [
@@ -1099,43 +472,6 @@
     },
     {
       "postIds": [
-        "1x1iun9"
-      ],
-      "title": "HALFTIME Manager",
-      "category": "simulation",
-      "stage": "playable",
-      "platforms": [
-        "Windows",
-        "Linux"
-      ],
-      "tags": [
-        "Football",
-        "Management",
-        "Early access"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5005920/HALFTIME_Manager/",
-      "summary": "Run a football club through training, league play, and cups. The creator’s early-access management game includes fictional teams, local hotseat play, and support for community-made worlds."
-    },
-    {
-      "postIds": [
-        "1x1fmwi"
-      ],
-      "title": "Links Manager",
-      "category": "simulation",
-      "stage": "released",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Golf",
-        "Management",
-        "Free demo"
-      ],
-      "projectUrl": "https://tomhs183.itch.io/links-manager",
-      "summary": "Manage a golf academy, recruit juniors, hire coaches, and plan tournaments across multiple seasons. The creator links a full game and a separate browser demo covering one season."
-    },
-    {
-      "postIds": [
         "1x1dflr",
         "1x1dg4h"
       ],
@@ -1153,24 +489,6 @@
       ],
       "projectUrl": "https://app.joinhandshake.com/ai-showcase/projects/3554783",
       "summary": "Work a night shift with friends, complete tasks, and hide from a creature stalking the store. The creator shares a free browser build through a project showcase page."
-    },
-    {
-      "postIds": [
-        "1x1c84y"
-      ],
-      "title": "Astronormous Survivor",
-      "category": "arcade",
-      "stage": "playable",
-      "platforms": [
-        "iOS"
-      ],
-      "tags": [
-        "Survivors-like",
-        "ASCII",
-        "TestFlight"
-      ],
-      "projectUrl": "https://testflight.apple.com/join/3ueN6CaB",
-      "summary": "Steer a small ship through waves while automatic weapons handle the firing. Spend loot between waves to grow the hull into a heavily armed vessel. An iPhone TestFlight build is open."
     },
     {
       "postIds": [
@@ -1227,38 +545,6 @@
     },
     {
       "postIds": [
-        "1x18t6v"
-      ],
-      "title": "OUTPERFORM",
-      "category": "strategy",
-      "stage": "playable",
-      "platforms": [],
-      "tags": [
-        "Stock market",
-        "Roguelike",
-        "Steam playtest"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/4578610/OUTPERFORM/",
-      "summary": "A stock-market-themed roguelike with an open Steam playtest. The developer is asking about first-run clarity, upgrade choices, and whether players want to return for another run."
-    },
-    {
-      "postIds": [
-        "1x187vz"
-      ],
-      "title": "Derelict Division, LLC",
-      "category": "adventure",
-      "stage": "prototype",
-      "platforms": [],
-      "tags": [
-        "Space salvage",
-        "Co-op",
-        "Exploration"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5387220/",
-      "summary": "Explore abandoned spacecraft with up to three friends, dismantle them, and carry out useful salvage. The solo developer shares a new Steam page while the game remains in development."
-    },
-    {
-      "postIds": [
         "1x17k0u"
       ],
       "title": "Iron Vigil",
@@ -1274,24 +560,6 @@
       ],
       "projectUrl": null,
       "summary": "A side-scrolling survivor game designed for Game Boy Advance hardware and emulators. The creator shares a demoable work in progress with generated artwork and music."
-    },
-    {
-      "postIds": [
-        "1x16djd"
-      ],
-      "title": "Bastigard: Match Merge Defend",
-      "category": "puzzle",
-      "stage": "released",
-      "platforms": [
-        "Android"
-      ],
-      "tags": [
-        "Match-3",
-        "Castle defense",
-        "Dragons"
-      ],
-      "projectUrl": "https://play.google.com/store/apps/details?id=com.zideral.bastigard",
-      "summary": "Merge resources into defensive structures and protect a castle from dragon waves. The studio announces an Android release built around short sessions and one-handed play."
     }
   ]
 }

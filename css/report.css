@@ -124,7 +124,18 @@ html:not([data-theme]) .header-bar[data-header-skin="custom"] {
 .view-switch button { width: 34px; height: 32px; border-radius: 3px; color: var(--pt-muted); }
 .view-switch button[aria-pressed="true"] { color: var(--pt-ink); background: var(--pt-soft); }
 .collection__items, .collection__skeletons { gap: 24px; }
-.collection-item { border: 1px solid var(--pt-line); border-radius: 8px; overflow: hidden; background: var(--pt-paper); transition: border-color 180ms ease-out, box-shadow 180ms ease-out; }
+.collection-item { position: relative; isolation: isolate; border: 1px solid var(--pt-line); border-radius: 8px; overflow: hidden; background: var(--pt-paper); transition: border-color 180ms ease-out, box-shadow 180ms ease-out; }
+.card-open::after { content: ''; position: absolute; inset: 0; z-index: 1; cursor: pointer; }
+.collection-item .card-open:active { transform: none; }
+.collection-item:has(.card-open:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
+.collection-item .card-open:focus-visible { outline: none; }
+.collection-item:hover .preview-label, .collection-item:focus-within .preview-label { opacity: 1; }
+.collection-item .maker-link, .genre-chip, .reddit-shortcut { position: relative; z-index: 2; }
+.genre-chip { font: inherit; color: var(--pt-muted); background: transparent; border: 1px solid var(--pt-line); border-radius: 5px; min-height: 32px; padding: 5px 8px; cursor: pointer; }
+.genre-chip:hover, .genre-chip:focus-visible { border-color: var(--pt-control-line); background: var(--surface-2); color: var(--pt-ink); }
+.reddit-shortcut { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 40px; height: 40px; border: 1px solid var(--pt-line); border-radius: 50%; color: var(--pt-muted); transition: color 160ms ease-out, background-color 160ms ease-out, border-color 160ms ease-out; }
+.reddit-shortcut svg { width: 23px; height: 23px; }
+.reddit-shortcut:hover, .reddit-shortcut:focus-visible { color: var(--pt-ink); background: var(--accent); border-color: var(--accent); }
 .collection-item:hover { border-color: var(--pt-control-line); box-shadow: 0 4px 14px oklch(0.27 0.04 262 / 0.06); }
 .collection-item__preview { border: 0; border-bottom: 1px solid var(--pt-line); border-radius: 0; flex-shrink: 0; }
 .collection-item__preview:focus-visible { outline-offset: -4px; }

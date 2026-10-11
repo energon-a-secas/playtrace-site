@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-10T22:06:21.235Z",
+  "generatedAt": "2026-10-11T00:45:07.675Z",
   "source": {
     "subreddit": "aigamedev",
     "subredditUrl": "https://www.reddit.com/r/aigamedev/",
@@ -50,7 +50,8 @@
           "author": "Fizassist1",
           "createdAt": "2026-10-10T21:04:51.000Z",
           "kind": "showcase",
-          "excerpt": "Parachute into a 3D minefield and use numbered tiles to find a safe route. Includes a campaign, endless survival, and a shared daily field."
+          "excerpt": "Parachute into a 3D minefield and use numbered tiles to find a safe route. Includes a campaign, endless survival, and a shared daily field.",
+          "flair": "Demo | Project | Workflow"
         }
       ]
     },
@@ -91,92 +92,8 @@
           "author": "thetinytrex",
           "createdAt": "2026-10-10T21:04:12.000Z",
           "kind": "showcase",
-          "excerpt": "An untitled personal project about restoring a shrine and befriending yokai. Fishing, cooking, and vocabulary review connect Japanese study to village life. The creator says it is not for sale."
-        }
-      ]
-    },
-    {
-      "id": "g_1x2p9ub",
-      "title": "Viral Creator",
-      "summary": "Grow a bedroom content setup into a studio. The creator shares a Godot animation workflow for 41 staff members and describes a free demo through career level 10.",
-      "author": {
-        "name": "TishmanPWNZ",
-        "url": "https://www.reddit.com/user/TishmanPWNZ/"
-      },
-      "category": "simulation",
-      "tags": [
-        "Idle tycoon",
-        "Godot",
-        "Free demo"
-      ],
-      "stage": "playable",
-      "platforms": [
-        "Windows"
-      ],
-      "projectUrl": null,
-      "firstSeenAt": "2026-10-10T20:30:52.000Z",
-      "updatedAt": "2026-10-10T20:30:52.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://v.redd.it/5x4t2eqk9puh1/CMAF_720.mp4?source=fallback",
-        "posterUrl": "https://external-preview.redd.it/ZGMwMHdzcWs5cHVoMaLK4T0NbVxXeEf66lVx7foYmENxJW04Z7SFBmKn70n-.png?width=640&crop=smart&format=pjpg&auto=webp&s=7a5ef00355f5c412e5179d8d420a666dc299f68b",
-        "alt": "Viral Creator: preview shared by u/TishmanPWNZ",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2p9ub/"
-      },
-      "reviewStatus": "reviewed",
-      "posts": [
-        {
-          "id": "1x2p9ub",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2p9ub/",
-          "title": "41 AI-animated characters in a solo idle tycoon :  my Veo → Godot 4 pipeline (free demo)",
-          "author": "TishmanPWNZ",
-          "createdAt": "2026-10-10T20:30:52.000Z",
-          "kind": "showcase",
-          "excerpt": "Grow a bedroom content setup into a studio. The creator shares a Godot animation workflow for 41 staff members and describes a free demo through career level 10."
-        }
-      ]
-    },
-    {
-      "id": "g_1x2p68e",
-      "title": "Sorry About Your House",
-      "summary": "A physics destruction game where a hammer, crane, or explosives can bring brick-built structures down. The solo developer is sharing progress toward a cooperative release.",
-      "author": {
-        "name": "Poptocrack",
-        "url": "https://www.reddit.com/user/Poptocrack/"
-      },
-      "category": "action",
-      "tags": [
-        "Destruction",
-        "Co-op",
-        "Physics",
-        "Godot"
-      ],
-      "stage": "prototype",
-      "platforms": [],
-      "projectUrl": "https://store.steampowered.com/app/5328510/Sorry_About_Your_House/",
-      "firstSeenAt": "2026-10-10T20:26:39.000Z",
-      "updatedAt": "2026-10-10T20:26:39.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://v.redd.it/thowtvinyouh1/CMAF_1080.mp4?source=fallback",
-        "posterUrl": "https://external-preview.redd.it/eW9sNzhnbHJ5b3VoMWw3mqfKsPv8FJ9fkeygxwWnUK_0msDs5VThGXyr0AIZ.png?width=640&crop=smart&format=pjpg&auto=webp&s=ccfe6c4b71ebdb0fbe904c43991a51b13fe8098b",
-        "alt": "Sorry About Your House: preview shared by u/Poptocrack",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2p68e/"
-      },
-      "reviewStatus": "reviewed",
-      "posts": [
-        {
-          "id": "1x2p68e",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2p68e/",
-          "title": "I've built a destruction game with Claude",
-          "author": "Poptocrack",
-          "createdAt": "2026-10-10T20:26:39.000Z",
-          "kind": "showcase",
-          "excerpt": "A physics destruction game where a hammer, crane, or explosives can bring brick-built structures down. The solo developer is sharing progress toward a cooperative release."
+          "excerpt": "An untitled personal project about restoring a shrine and befriending yokai. Fishing, cooking, and vocabulary review connect Japanese study to village life. The creator says it is not for sale.",
+          "flair": "Demo | Project | Workflow"
         }
       ]
     },
@@ -219,104 +136,8 @@
           "author": "Pointline",
           "createdAt": "2026-10-10T20:17:27.000Z",
           "kind": "showcase",
-          "excerpt": "A pixel-art multiplayer RPG with town NPCs that choose their own actions. The developer is seeking feedback while tightening the scope and polishing the existing systems."
-        }
-      ]
-    },
-    {
-      "id": "g_1x2o3ty",
-      "title": "Whispered Scrolls",
-      "summary": "Explore a solo-developed MMO alpha with code-generated models, textures, and sound. The author explains how combat simulations and custom editors help refine AI-assisted systems.",
-      "author": {
-        "name": "RillyBoss",
-        "url": "https://www.reddit.com/user/RillyBoss/"
-      },
-      "category": "rpg",
-      "tags": [
-        "MMO",
-        "Playable alpha",
-        "Procedural art"
-      ],
-      "stage": "playable",
-      "platforms": [
-        "Browser",
-        "Windows"
-      ],
-      "projectUrl": "https://whisperedscrolls.com/",
-      "firstSeenAt": "2026-10-10T19:41:30.000Z",
-      "updatedAt": "2026-10-10T19:41:30.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://v.redd.it/it1lsvuxsouh1/CMAF_1080.mp4?source=fallback",
-        "posterUrl": "https://external-preview.redd.it/NmEybzQ5dnhzb3VoMYvbbaf5AP5o8IlHtC92n44eYgyV1ptJFuIVi1_JH_SB.png?width=640&crop=smart&format=pjpg&auto=webp&s=e6bfb2b0c55b9b38bfb51f5f36b3228206458705",
-        "alt": "Whispered Scrolls: preview shared by u/RillyBoss",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2o3ty/"
-      },
-      "reviewStatus": "reviewed",
-      "posts": [
-        {
-          "id": "1x2o3ty",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2o3ty/",
-          "title": "Whispered Scrolls: I'm building a MMO with AI tools. Here's where the AI helps, where it hurts, and how I optimize my workflow to deliver value!",
-          "author": "RillyBoss",
-          "createdAt": "2026-10-10T19:41:30.000Z",
-          "kind": "showcase",
-          "excerpt": "Explore a solo-developed MMO alpha with code-generated models, textures, and sound. The author explains how combat simulations and custom editors help refine AI-assisted systems."
-        }
-      ]
-    },
-    {
-      "id": "g_1x0f07t",
-      "title": "Nightporch",
-      "summary": "Build a home, care for survivors, and prepare for Horde Night. Version 1.1 expands the survival life-sim into a county of towns with new classes, roads, and home-building options.",
-      "author": {
-        "name": "Shortykane",
-        "url": "https://www.reddit.com/user/Shortykane/"
-      },
-      "category": "simulation",
-      "tags": [
-        "Survival",
-        "Co-op",
-        "Town building"
-      ],
-      "stage": "released",
-      "platforms": [
-        "Browser",
-        "iOS"
-      ],
-      "projectUrl": "https://spicyhuman.com/hearth-and-horde/",
-      "firstSeenAt": "2026-10-08T02:09:23.000Z",
-      "updatedAt": "2026-10-10T19:36:03.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://preview.redd.it/t1fw2ulvzouh1.png?width=640&crop=smart&auto=webp&s=21b62c93efac01acc3332c010eed43b0329e69be",
-        "posterUrl": "https://preview.redd.it/t1fw2ulvzouh1.png?width=640&crop=smart&auto=webp&s=21b62c93efac01acc3332c010eed43b0329e69be",
-        "alt": "Nightporch: preview shared by u/Shortykane",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2nzby/"
-      },
-      "reviewStatus": "reviewed",
-      "posts": [
-        {
-          "id": "1x0f07t",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x0f07t/",
-          "title": "First App release to Apple thanks to Ai - Introducing Nightporch!",
-          "author": "Shortykane",
-          "createdAt": "2026-10-08T02:09:23.000Z",
-          "kind": "release",
-          "excerpt": "The creator introduces Nightporch and its first App Store release, with Classic and Homestead modes."
-        },
-        {
-          "id": "1x2nzby",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2nzby/",
-          "title": "Nightporch 1.1 is out: my AI-built survival life-sim went from one town to a twenty-town county",
-          "author": "Shortykane",
-          "createdAt": "2026-10-10T19:36:03.000Z",
-          "kind": "update",
-          "excerpt": "Build a home, care for survivors, and prepare for Horde Night. Version 1.1 expands the survival life-sim into a county of towns with new classes, roads, and home-building options."
+          "excerpt": "A pixel-art multiplayer RPG with town NPCs that choose their own actions. The developer is seeking feedback while tightening the scope and polishing the existing systems.",
+          "flair": "Demo | Project | Workflow"
         }
       ]
     },
@@ -360,7 +181,8 @@
           "author": "yukajii",
           "createdAt": "2026-10-10T19:23:39.000Z",
           "kind": "showcase",
-          "excerpt": "A dwarf-themed brick breaker with branching runs, boons, bosses, and persistent upgrades. The creator is inviting pre-launch playtests; access instructions are in the source post."
+          "excerpt": "A dwarf-themed brick breaker with branching runs, boons, bosses, and persistent upgrades. The creator is inviting pre-launch playtests; access instructions are in the source post.",
+          "flair": "Demo | Project | Workflow"
         }
       ]
     },
@@ -404,100 +226,8 @@
           "author": "Aggravating_Fun_3912",
           "createdAt": "2026-10-10T19:00:35.000Z",
           "kind": "showcase",
-          "excerpt": "A browser zombie survival game for solo play or up to four players. Quick play pairs strangers, and the developer is collecting feedback after the first public release."
-        }
-      ]
-    },
-    {
-      "id": "g_1x2n2zq",
-      "title": "Akshay's Island",
-      "summary": "An online island for friends with boats, a jeep, a submarine, gliding, and parachuting. The creator describes a rough desktop-only beta and is asking for feedback on controls.",
-      "author": {
-        "name": "Similar_Count5282",
-        "url": "https://www.reddit.com/user/Similar_Count5282/"
-      },
-      "category": "adventure",
-      "tags": [
-        "Multiplayer",
-        "Exploration",
-        "Free to play"
-      ],
-      "stage": "playable",
-      "platforms": [
-        "Desktop browser"
-      ],
-      "projectUrl": null,
-      "firstSeenAt": "2026-10-10T18:58:07.000Z",
-      "updatedAt": "2026-10-10T18:58:07.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://v.redd.it/byrefqjlsouh1/CMAF_1080.mp4?source=fallback",
-        "posterUrl": "https://external-preview.redd.it/MXJtZ3lna2xzb3VoMVbsotEFYFzHUfwHlfPArts0mbbllCMKYJjr5sAoDp74.png?width=640&crop=smart&format=pjpg&auto=webp&s=27eb5f7c0c62bcb4bb517ac5093c07058251f3df",
-        "alt": "Akshay's Island: preview shared by u/Similar_Count5282",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2n2zq/"
-      },
-      "reviewStatus": "reviewed",
-      "posts": [
-        {
-          "id": "1x2n2zq",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2n2zq/",
-          "title": "I’m a finance professional who vibe-coded a free multiplayer island game for friends (desktop browser)",
-          "author": "Similar_Count5282",
-          "createdAt": "2026-10-10T18:58:07.000Z",
-          "kind": "showcase",
-          "excerpt": "An online island for friends with boats, a jeep, a submarine, gliding, and parachuting. The creator describes a rough desktop-only beta and is asking for feedback on controls."
-        }
-      ]
-    },
-    {
-      "id": "g_1x2g7hl",
-      "title": "Neural Inside",
-      "summary": "A mystery visual novel set in near-future South Korea. Investigate places, gather evidence, and question characters. Two posts show its opening sequence and actual gameplay.",
-      "author": {
-        "name": "Welfero",
-        "url": "https://www.reddit.com/user/Welfero/"
-      },
-      "category": "adventure",
-      "tags": [
-        "Visual novel",
-        "Mystery",
-        "Investigation"
-      ],
-      "stage": "prototype",
-      "platforms": [],
-      "projectUrl": null,
-      "firstSeenAt": "2026-10-10T14:08:08.000Z",
-      "updatedAt": "2026-10-10T17:25:21.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://youtu.be/fIeIvYEtEo0",
-        "posterUrl": "https://external-preview.redd.it/BHGzQR3YfmZxdPd_LfH_v2YU7S0jwtG4saMR6Q4oap0.jpeg?auto=webp&s=c74fab8942db35036b1935619bc2264b1285e4f6",
-        "alt": "Neural Inside: preview shared by u/Welfero",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2kvdo/"
-      },
-      "reviewStatus": "reviewed",
-      "posts": [
-        {
-          "id": "1x2g7hl",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2g7hl/",
-          "title": "I'm making a mystery visual novel with generative AI. Here's the opening for Neural Inside.",
-          "author": "Welfero",
-          "createdAt": "2026-10-10T14:08:08.000Z",
-          "kind": "showcase",
-          "excerpt": "The creator shares the opening sequence and describes how the visual novel uses evidence, interviews, and deductions."
-        },
-        {
-          "id": "1x2kvdo",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2kvdo/",
-          "title": "Neural Inside :  Actual Gameplay | Looking for Feedback",
-          "author": "Welfero",
-          "createdAt": "2026-10-10T17:25:21.000Z",
-          "kind": "update",
-          "excerpt": "A follow-up post shares actual gameplay and in-game features, with a request for feedback."
+          "excerpt": "A browser zombie survival game for solo play or up to four players. Quick play pairs strangers, and the developer is collecting feedback after the first public release.",
+          "flair": "Demo | Project | Workflow"
         }
       ]
     },
@@ -540,50 +270,8 @@
           "author": "ofcats",
           "createdAt": "2026-10-10T17:01:44.000Z",
           "kind": "showcase",
-          "excerpt": "Run a tech company, hire engineers, manage morale, and keep technical debt from becoming incidents. Includes a tutorial, bot opponents, pass-and-play, and online matches."
-        }
-      ]
-    },
-    {
-      "id": "g_1x2k2ut",
-      "title": "Cardfall",
-      "summary": "A roguelike card battler built around a deck, a shop, and battles. Its creator shares a playable project made with AI coding help and their own game ideas.",
-      "author": {
-        "name": "playcardfall",
-        "url": "https://www.reddit.com/user/playcardfall/"
-      },
-      "category": "strategy",
-      "tags": [
-        "Deckbuilding",
-        "Roguelike",
-        "Card battler"
-      ],
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "projectUrl": "https://cardfall.net/",
-      "firstSeenAt": "2026-10-10T16:52:46.000Z",
-      "updatedAt": "2026-10-10T16:52:46.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://v.redd.it/wqfva1xa6ouh1/CMAF_1080.mp4?source=fallback",
-        "posterUrl": "https://external-preview.redd.it/ODB3bzNpeWE2b3VoMVbsotEFYFzHUfwHlfPArts0mbbllCMKYJjr5sAoDp74.png?width=640&crop=smart&format=pjpg&auto=webp&s=9693f4cb9c0f0dac05d58fb666558a381e3d7a2f",
-        "alt": "Cardfall: preview shared by u/playcardfall",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2k2ut/"
-      },
-      "reviewStatus": "reviewed",
-      "posts": [
-        {
-          "id": "1x2k2ut",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2k2ut/",
-          "title": "Cardfall - roguelike card battler - deck, shop, battle.",
-          "author": "playcardfall",
-          "createdAt": "2026-10-10T16:52:46.000Z",
-          "kind": "showcase",
-          "excerpt": "A roguelike card battler built around a deck, a shop, and battles. Its creator shares a playable project made with AI coding help and their own game ideas."
+          "excerpt": "Run a tech company, hire engineers, manage morale, and keep technical debt from becoming incidents. Includes a tutorial, bot opponents, pass-and-play, and online matches.",
+          "flair": "Demo | Project | Workflow"
         }
       ]
     },
@@ -627,7 +315,8 @@
           "author": "Thuggish_Games",
           "createdAt": "2026-10-10T16:07:13.000Z",
           "kind": "showcase",
-          "excerpt": "Investigate a grim 1970s council block by talking to neighbours, keeping a notebook, and connecting clues on a wall. A free browser demo supports touch and controllers."
+          "excerpt": "Investigate a grim 1970s council block by talking to neighbours, keeping a notebook, and connecting clues on a wall. A free browser demo supports touch and controllers.",
+          "flair": "Demo | Project | Workflow"
         }
       ]
     },
@@ -668,7 +357,8 @@
           "author": "Starstilanx",
           "createdAt": "2026-10-10T13:29:43.000Z",
           "kind": "showcase",
-          "excerpt": "A dragon action RPG inspired by loot-driven games. The author shares screenshots and development details, and reports that the web version currently needs a fix."
+          "excerpt": "A dragon action RPG inspired by loot-driven games. The author shares screenshots and development details, and reports that the web version currently needs a fix.",
+          "flair": "Demo | Project | Workflow"
         }
       ]
     },
@@ -709,7 +399,8 @@
           "author": "DOFFY292",
           "createdAt": "2026-10-10T12:41:45.000Z",
           "kind": "showcase",
-          "excerpt": "A blackjack roguelite with a free Steam demo. The developer is seeking feedback on the game and is replacing temporary capsule artwork with commissioned art."
+          "excerpt": "A blackjack roguelite with a free Steam demo. The developer is seeking feedback on the game and is replacing temporary capsule artwork with commissioned art.",
+          "flair": "Demo | Project | Workflow"
         }
       ]
     },
@@ -753,50 +444,10 @@
           "author": "tapturnbattler",
           "createdAt": "2026-10-10T10:47:09.000Z",
           "kind": "showcase",
-          "excerpt": "Take a party through 50 floors of tactical grid fights and return to a home island between runs. The Tidebound update adds story routes, guardian bosses, and optional first-person exploration."
+          "excerpt": "Take a party through 50 floors of tactical grid fights and return to a home island between runs. The Tidebound update adds story routes, guardian bosses, and optional first-person exploration.",
+          "flair": "Demo | Project | Workflow"
         }
       ]
-    },
-    {
-      "id": "g_1x2pc34",
-      "title": "Cave Drop",
-      "summary": "Explore caves where walls and ceilings become walkable surfaces. The latest combat update rewards fighting upside down with a weapon bonus and a compass cue.",
-      "author": {
-        "name": "dank_summers",
-        "url": "https://www.reddit.com/user/dank_summers/"
-      },
-      "category": "adventure",
-      "stage": "playable",
-      "platforms": [],
-      "tags": [
-        "Exploration",
-        "Gravity",
-        "Combat"
-      ],
-      "projectUrl": "https://wilsonb9000.itch.io/cave-drop/devlog/1701062/fight-on-the-ceiling-hit-harder-camera-changes-and-more",
-      "firstSeenAt": "2026-10-10T20:33:38.000Z",
-      "updatedAt": "2026-10-10T20:33:38.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x2pc34/",
-        "posterUrl": "https://external-preview.redd.it/YXM1dnNqNGg5cHVoMcFr8t82uLEFGK7gcDI-AkgG5GSPKsITP8e_u3OnVr1s.png?width=640&crop=smart&format=pjpg&auto=webp&s=01257e5fb479af0d7f36deec0ef4a1ddea1e592e",
-        "alt": "Cave Drop: preview shared by u/dank_summers",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2pc34/"
-      },
-      "posts": [
-        {
-          "id": "1x2pc34",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2pc34/",
-          "title": "Upgraded weapons now hit harder when you fight on the ceiling",
-          "author": "dank_summers",
-          "createdAt": "2026-10-10T20:33:38.000Z",
-          "kind": "showcase",
-          "excerpt": "Explore caves where walls and ceilings become walkable surfaces. The latest combat update rewards fighting upside down with a weapon bonus and a compass cue."
-        }
-      ],
-      "reviewStatus": "reviewed"
     },
     {
       "id": "g_1x2owaq",
@@ -837,7 +488,8 @@
           "author": "Quick-Somewhere-918",
           "createdAt": "2026-10-10T20:14:51.000Z",
           "kind": "showcase",
-          "excerpt": "A revived multiplayer bomb game with new artwork, music, and computer opponents. The creator describes a free Windows and Mac release rebuilt from their original source code."
+          "excerpt": "A revived multiplayer bomb game with new artwork, music, and computer opponents. The creator describes a free Windows and Mac release rebuilt from their original source code.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -881,310 +533,8 @@
           "author": "the_badget",
           "createdAt": "2026-10-10T20:10:26.000Z",
           "kind": "showcase",
-          "excerpt": "Compete with three other players to claim resources and defeat a boss. This arcade shoot-out is part of the creator’s Fourfold collection; a larger screen is recommended."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x2mtgf",
-      "title": "Harmony Strike",
-      "summary": "Control a party of heroes whose positions create elemental bonds. Rescue recruits, evolve weapons, and return to a village between runs. The creator is sharing a trailer while developing the demo.",
-      "author": {
-        "name": "Quirky_Ad1993",
-        "url": "https://www.reddit.com/user/Quirky_Ad1993/"
-      },
-      "category": "rpg",
-      "stage": "prototype",
-      "platforms": [],
-      "tags": [
-        "Survivors-like",
-        "Party building",
-        "Elemental combos"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5293880/Harmony_Strike/",
-      "firstSeenAt": "2026-10-10T18:46:53.000Z",
-      "updatedAt": "2026-10-10T18:46:53.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x2mtgf/",
-        "posterUrl": "https://external-preview.redd.it/ZXQydDkzdWZwb3VoMev9oBYyJDDkEqGalKduOfhRYoKyAyfOmR3XYhPG2W8r.png?width=640&crop=smart&format=pjpg&auto=webp&s=a5539d39c605644d3b1fd58380d703467ce6e68c",
-        "alt": "Harmony Strike: preview shared by u/Quirky_Ad1993",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2mtgf/"
-      },
-      "posts": [
-        {
-          "id": "1x2mtgf",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2mtgf/",
-          "title": "I am making a survivors-like where you control the whole party. What do you think of the new trailer?",
-          "author": "Quirky_Ad1993",
-          "createdAt": "2026-10-10T18:46:53.000Z",
-          "kind": "showcase",
-          "excerpt": "Control a party of heroes whose positions create elemental bonds. Rescue recruits, evolve weapons, and return to a village between runs. The creator is sharing a trailer while developing the demo."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x2mh8d",
-      "title": "SimCFB",
-      "summary": "Manage a college football team, recruit players, and call plays or delegate decisions to the computer. The creator announces version 1.0 with Power 4 conference teams.",
-      "author": {
-        "name": "SimCFB",
-        "url": "https://www.reddit.com/user/SimCFB/"
-      },
-      "category": "simulation",
-      "stage": "released",
-      "platforms": [
-        "Browser",
-        "Mobile"
-      ],
-      "tags": [
-        "College football",
-        "Recruiting",
-        "Management"
-      ],
-      "projectUrl": "https://www.simcfb.com/",
-      "firstSeenAt": "2026-10-10T18:32:33.000Z",
-      "updatedAt": "2026-10-10T18:32:33.000Z",
-      "preview": {
-        "kind": "link",
-        "url": null,
-        "posterUrl": null,
-        "alt": "SimCFB: preview shared by u/SimCFB",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2mh8d/"
-      },
-      "posts": [
-        {
-          "id": "1x2mh8d",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2mh8d/",
-          "title": "College Football Simulator SimCFB",
-          "author": "SimCFB",
-          "createdAt": "2026-10-10T18:32:33.000Z",
-          "kind": "showcase",
-          "excerpt": "Manage a college football team, recruit players, and call plays or delegate decisions to the computer. The creator announces version 1.0 with Power 4 conference teams."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x0wucq",
-      "title": "Stompworks",
-      "summary": "Assemble a cel-shaded mech from interchangeable bodies, legs, and weapons, then take it into combat. Two source posts follow the creator’s progress toward a finished game.",
-      "author": {
-        "name": "crumbaker",
-        "url": "https://www.reddit.com/user/crumbaker/"
-      },
-      "category": "action",
-      "stage": "prototype",
-      "platforms": [],
-      "tags": [
-        "Mechs",
-        "Customization",
-        "Roguelike"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5383780/Stompworks/?beta=0",
-      "firstSeenAt": "2026-10-08T17:19:36.000Z",
-      "updatedAt": "2026-10-10T18:02:13.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x2lr62/",
-        "posterUrl": "https://external-preview.redd.it/cHU1bDRqdTBqb3VoMfNGhu1XBe4CMDrMeSCS1ykKsoW5slGx2HfxVIH-jquS.png?width=640&crop=smart&format=pjpg&auto=webp&s=041b5ce7f5843cbfee3ec3536cf2765e726a0241",
-        "alt": "Stompworks: preview shared by u/crumbaker",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2lr62/"
-      },
-      "posts": [
-        {
-          "id": "1x0wucq",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x0wucq/",
-          "title": "Stompworks, A Roguelike with full Mech customization, made in Opus 5.5",
-          "author": "crumbaker",
-          "createdAt": "2026-10-08T17:19:36.000Z",
-          "kind": "showcase",
-          "excerpt": "Assemble a cel-shaded mech from interchangeable bodies, legs, and weapons, then take it into combat. Two source posts follow the creator’s progress toward a finished game."
-        },
-        {
-          "id": "1x2lr62",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2lr62/",
-          "title": "Stompworks, A small books worth of prompts in about a week.",
-          "author": "crumbaker",
-          "createdAt": "2026-10-10T18:02:13.000Z",
-          "kind": "showcase",
-          "excerpt": "Assemble a cel-shaded mech from interchangeable bodies, legs, and weapons, then take it into combat. Two source posts follow the creator’s progress toward a finished game."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x2krjl",
-      "title": "1-Bit Terror",
-      "summary": "Enter a Halloween maze, contribute collected pumpkins, and escape. The creator’s seasonal event asks the community to work together to unlock avatars.",
-      "author": {
-        "name": "SuperCamouflageShark",
-        "url": "https://www.reddit.com/user/SuperCamouflageShark/"
-      },
-      "category": "adventure",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Horror",
-        "Maze",
-        "Community event"
-      ],
-      "projectUrl": "https://rosebud.ai/play/1-bit-terror",
-      "firstSeenAt": "2026-10-10T17:20:59.000Z",
-      "updatedAt": "2026-10-10T17:20:59.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://external-preview.redd.it/fLbqIZs3qwfL_kicfaaHnyuVLd_1b0yEf_AAI54oV4I.jpeg?auto=webp&s=bd383709582a01c7f42b327fc862a430f4a81701",
-        "posterUrl": "https://external-preview.redd.it/fLbqIZs3qwfL_kicfaaHnyuVLd_1b0yEf_AAI54oV4I.jpeg?auto=webp&s=bd383709582a01c7f42b327fc862a430f4a81701",
-        "alt": "1-Bit Terror: preview shared by u/SuperCamouflageShark",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2krjl/"
-      },
-      "posts": [
-        {
-          "id": "1x2krjl",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2krjl/",
-          "title": "My game 1-Bit Terror has a community Halloween event live now! Come join in🎃",
-          "author": "SuperCamouflageShark",
-          "createdAt": "2026-10-10T17:20:59.000Z",
-          "kind": "showcase",
-          "excerpt": "Enter a Halloween maze, contribute collected pumpkins, and escape. The creator’s seasonal event asks the community to work together to unlock avatars."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x2kq4k",
-      "title": "Fallen Nights",
-      "summary": "Scavenge by day and defend yourself at night. Building defenses consumes the same scrap needed for an escape boat. A Steam demo and browser version are available; the full game is still in development.",
-      "author": {
-        "name": "WalkingDadPG",
-        "url": "https://www.reddit.com/user/WalkingDadPG/"
-      },
-      "category": "action",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Zombies",
-        "Survival",
-        "Steam demo"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5177150/",
-      "firstSeenAt": "2026-10-10T17:19:19.000Z",
-      "updatedAt": "2026-10-10T17:19:19.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x2kq4k/",
-        "posterUrl": "https://external-preview.redd.it/ZHhjZmFmMWVib3VoMXiZTFQkiAwogPkEMV0tQqdf9_gRuIZZnFTQpzF-dg95.png?width=640&crop=smart&format=pjpg&auto=webp&s=ad4bec3bdf30cb522a92e50028b52805ca3fc495",
-        "alt": "Fallen Nights: preview shared by u/WalkingDadPG",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2kq4k/"
-      },
-      "posts": [
-        {
-          "id": "1x2kq4k",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2kq4k/",
-          "title": "I released a Steam game in 2015. Eleven years later, AI helped me return to game development. My new demo is out.",
-          "author": "WalkingDadPG",
-          "createdAt": "2026-10-10T17:19:19.000Z",
-          "kind": "release",
-          "excerpt": "Scavenge by day and defend yourself at night. Building defenses consumes the same scrap needed for an escape boat. A Steam demo and browser version are available; the full game is still in development."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x2k5we",
-      "title": "Worldseed",
-      "summary": "A retro-styled project approaching launch. The creator shares an in-game teaser after several weeks of iteration, with no public play link included in the post.",
-      "author": {
-        "name": "niklasdaking",
-        "url": "https://www.reddit.com/user/niklasdaking/"
-      },
-      "category": "other",
-      "stage": "prototype",
-      "platforms": [],
-      "tags": [
-        "Retro",
-        "In development"
-      ],
-      "projectUrl": null,
-      "firstSeenAt": "2026-10-10T16:56:16.000Z",
-      "updatedAt": "2026-10-10T16:56:16.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x2k5we/",
-        "posterUrl": "https://external-preview.redd.it/bTJ5aHozbWk2b3VoMVbsotEFYFzHUfwHlfPArts0mbbllCMKYJjr5sAoDp74.png?width=640&crop=smart&format=pjpg&auto=webp&s=8893b274e52a97479a0cf47048792b60ab229226",
-        "alt": "Worldseed: preview shared by u/niklasdaking",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2k5we/"
-      },
-      "posts": [
-        {
-          "id": "1x2k5we",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2k5we/",
-          "title": "Worldseed developed using Claude Opus 5.5",
-          "author": "niklasdaking",
-          "createdAt": "2026-10-10T16:56:16.000Z",
-          "kind": "showcase",
-          "excerpt": "A retro-styled project approaching launch. The creator shares an in-game teaser after several weeks of iteration, with no public play link included in the post."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x2i3sc",
-      "title": "Ctrl + Alt + Dungeon",
-      "summary": "An experimental dungeon game shared through Google Playground. Its developer describes building an initial playable version quickly, then iterating on the mechanics and presentation.",
-      "author": {
-        "name": "o_perez3",
-        "url": "https://www.reddit.com/user/o_perez3/"
-      },
-      "category": "adventure",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Dungeon",
-        "Playable prototype"
-      ],
-      "projectUrl": "https://playground.google/game/4482542339946130879?ref=share_code",
-      "firstSeenAt": "2026-10-10T15:30:03.000Z",
-      "updatedAt": "2026-10-10T15:30:03.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://external-preview.redd.it/PQgHs3ossEvLYU9Xb9ufbKoicCqZa2jICqupxcdnQ84.png?auto=webp&s=1a05b52bcfb007c388c50d47f8eeb0447d899058",
-        "posterUrl": "https://external-preview.redd.it/PQgHs3ossEvLYU9Xb9ufbKoicCqZa2jICqupxcdnQ84.png?auto=webp&s=1a05b52bcfb007c388c50d47f8eeb0447d899058",
-        "alt": "Ctrl + Alt + Dungeon: preview shared by u/o_perez3",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2i3sc/"
-      },
-      "posts": [
-        {
-          "id": "1x2i3sc",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2i3sc/",
-          "title": "Ctrl + Alt + Dungeon — I built a playable game in about a day using Google Playground's AI prompting tools (5 years of game dev experience)",
-          "author": "o_perez3",
-          "createdAt": "2026-10-10T15:30:03.000Z",
-          "kind": "showcase",
-          "excerpt": "An experimental dungeon game shared through Google Playground. Its developer describes building an initial playable version quickly, then iterating on the mechanics and presentation."
+          "excerpt": "Compete with three other players to claim resources and defeat a boss. This arcade shoot-out is part of the creator’s Fourfold collection; a larger screen is recommended.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -1225,220 +575,8 @@
           "author": "purri-cat-studio",
           "createdAt": "2026-10-10T14:45:06.000Z",
           "kind": "showcase",
-          "excerpt": "Organize troops into divisions and assign buildings to supply them. Large maps support broad strategic decisions while players can zoom in to watch battles. A free Steam playtest is open."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x2gkmb",
-      "title": "Evisceracers",
-      "summary": "A fast 2D platformer focused on chasing records and creating custom maps. The developer is inviting players to test movement, beat existing times, and share feedback.",
-      "author": {
-        "name": "butelomarelo",
-        "url": "https://www.reddit.com/user/butelomarelo/"
-      },
-      "category": "action",
-      "stage": "playable",
-      "platforms": [],
-      "tags": [
-        "2D platformer",
-        "Time trials",
-        "Level editor"
-      ],
-      "projectUrl": "https://butelomarelo.itch.io/evisceracers",
-      "firstSeenAt": "2026-10-10T14:24:08.000Z",
-      "updatedAt": "2026-10-10T14:24:08.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://external-preview.redd.it/sevWhps-I_LgKDumuW5VM7KHg75ncVTLPw5ah67mV_Q.png?width=640&crop=smart&auto=webp&s=3556a4104e95cf428ebe6cf74906bcec005be534",
-        "posterUrl": "https://external-preview.redd.it/sevWhps-I_LgKDumuW5VM7KHg75ncVTLPw5ah67mV_Q.png?width=640&crop=smart&auto=webp&s=3556a4104e95cf428ebe6cf74906bcec005be534",
-        "alt": "Evisceracers: preview shared by u/butelomarelo",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2gkmb/"
-      },
-      "posts": [
-        {
-          "id": "1x2gkmb",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2gkmb/",
-          "title": "Fast paced 2D platformer - Need testers",
-          "author": "butelomarelo",
-          "createdAt": "2026-10-10T14:24:08.000Z",
-          "kind": "showcase",
-          "excerpt": "A fast 2D platformer focused on chasing records and creating custom maps. The developer is inviting players to test movement, beat existing times, and share feedback."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x2gjhu",
-      "title": "Haltwick",
-      "summary": "Build transport networks and supply chains while towns expand and their buildings change across eras. The creator describes a release on the App Store and Google Play.",
-      "author": {
-        "name": "AthleticDonkey",
-        "url": "https://www.reddit.com/user/AthleticDonkey/"
-      },
-      "category": "simulation",
-      "stage": "released",
-      "platforms": [
-        "iOS",
-        "Android"
-      ],
-      "tags": [
-        "Transport",
-        "City building",
-        "Supply chains"
-      ],
-      "projectUrl": null,
-      "firstSeenAt": "2026-10-10T14:22:45.000Z",
-      "updatedAt": "2026-10-10T14:22:45.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x2gjhu/",
-        "posterUrl": "https://external-preview.redd.it/Mjg2b2Vla2pkbnVoMRe6LFtdIWP5K5r8Sl520CT_rV2hlF8EjAAgt2IaRBdJ.png?width=640&crop=smart&format=pjpg&auto=webp&s=a350b5c8d97c5f5c5cd6ca753ff237d88a6c60c8",
-        "alt": "Haltwick: preview shared by u/AthleticDonkey",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2gjhu/"
-      },
-      "posts": [
-        {
-          "id": "1x2gjhu",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2gjhu/",
-          "title": "2 months of dev and 1 month of apple store submission.",
-          "author": "AthleticDonkey",
-          "createdAt": "2026-10-10T14:22:45.000Z",
-          "kind": "showcase",
-          "excerpt": "Build transport networks and supply chains while towns expand and their buildings change across eras. The creator describes a release on the App Store and Google Play."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x2gbax",
-      "title": "Pinky & Bleu: Web Blaster",
-      "summary": "Two spiders blast approaching bugs, collect power-ups, and chase high scores. The creator links the Android release and says an iOS version is planned.",
-      "author": {
-        "name": "Pinky_and_Bleu",
-        "url": "https://www.reddit.com/user/Pinky_and_Bleu/"
-      },
-      "category": "arcade",
-      "stage": "released",
-      "platforms": [
-        "Android"
-      ],
-      "tags": [
-        "Spiders",
-        "Shooter",
-        "Power-ups"
-      ],
-      "projectUrl": "https://play.google.com/store/apps/details?id=com.rockmegames.pinkyandbleu",
-      "firstSeenAt": "2026-10-10T14:12:47.000Z",
-      "updatedAt": "2026-10-10T14:12:47.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://external-preview.redd.it/bsdb5749jrgNiiolyYoOU0CivDWPJk04thAPzEVYjLM.png?auto=webp&s=6173246079da92c7d65c5471f6a001ee092611a3",
-        "posterUrl": "https://external-preview.redd.it/bsdb5749jrgNiiolyYoOU0CivDWPJk04thAPzEVYjLM.png?auto=webp&s=6173246079da92c7d65c5471f6a001ee092611a3",
-        "alt": "Pinky & Bleu: Web Blaster: preview shared by u/Pinky_and_Bleu",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2gbax/"
-      },
-      "posts": [
-        {
-          "id": "1x2gbax",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2gbax/",
-          "title": "With help from Gemini 3.1 Pro, I made a spider arcade shooter! Pinky & Bleu: Web Blaster is now on Google Play 🕷️🕸️",
-          "author": "Pinky_and_Bleu",
-          "createdAt": "2026-10-10T14:12:47.000Z",
-          "kind": "showcase",
-          "excerpt": "Two spiders blast approaching bugs, collect power-ups, and chase high scores. The creator links the Android release and says an iOS version is planned."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x2g80g",
-      "title": "Retro-Mars",
-      "summary": "A playable browser project accompanied by a trailer. The creator is seeking feedback on the game and its presentation, and notes that the four language versions still need review.",
-      "author": {
-        "name": "Ostermiss",
-        "url": "https://www.reddit.com/user/Ostermiss/"
-      },
-      "category": "other",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Playable demo",
-        "Feedback wanted"
-      ],
-      "projectUrl": "https://retro-mars.vercel.app/",
-      "firstSeenAt": "2026-10-10T14:08:48.000Z",
-      "updatedAt": "2026-10-10T14:08:48.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x2g80g/",
-        "posterUrl": "https://external-preview.redd.it/OWhhcm10N2xhbnVoMdWdNyiKahU8vkCxj1QusakAAZqL3JCTyuvQSIc6-NJK.png?width=640&crop=smart&format=pjpg&auto=webp&s=e43e7bdd2c7c515e73fdb4d08a86da7858280e53",
-        "alt": "Retro-Mars: preview shared by u/Ostermiss",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2g80g/"
-      },
-      "posts": [
-        {
-          "id": "1x2g80g",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2g80g/",
-          "title": "Retro-Mars trailer and game: I need your advice. Testers more than welcome.",
-          "author": "Ostermiss",
-          "createdAt": "2026-10-10T14:08:48.000Z",
-          "kind": "showcase",
-          "excerpt": "A playable browser project accompanied by a trailer. The creator is seeking feedback on the game and its presentation, and notes that the four language versions still need review."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x2f8am",
-      "title": "Saga of Dilmun",
-      "summary": "A fantasy and science-fiction MMO with combat, quests, equipment, crafting, and character progression. The developer shares a playable browser version inspired by mythology and unfamiliar worlds.",
-      "author": {
-        "name": "Active-Zebra-6362",
-        "url": "https://www.reddit.com/user/Active-Zebra-6362/"
-      },
-      "category": "rpg",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "MMORPG",
-        "Mythology",
-        "Crafting"
-      ],
-      "projectUrl": "https://www.sagaofdilmun.com",
-      "firstSeenAt": "2026-10-10T13:23:55.000Z",
-      "updatedAt": "2026-10-10T13:23:55.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x2f8am/",
-        "posterUrl": "https://external-preview.redd.it/dzJ6a203aGU1bnVoMQOxcJRQSpOdsFIlnA2-p-FaeCNoafGjf42EaXxd4R_M.png?width=640&crop=smart&format=pjpg&auto=webp&s=345277e3cb2a8852e436732ef94dde66026c94b6",
-        "alt": "Saga of Dilmun: preview shared by u/Active-Zebra-6362",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2f8am/"
-      },
-      "posts": [
-        {
-          "id": "1x2f8am",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2f8am/",
-          "title": "FULLY WORKING Fantasy Sci-Fi BROWSER MMORPG inspired by ancient mythology, alien worlds, and classic MMOs — YOU CAN PLAY IT NOW IN YOUR BROWSER!",
-          "author": "Active-Zebra-6362",
-          "createdAt": "2026-10-10T13:23:55.000Z",
-          "kind": "showcase",
-          "excerpt": "A fantasy and science-fiction MMO with combat, quests, equipment, crafting, and character progression. The developer shares a playable browser version inspired by mythology and unfamiliar worlds."
+          "excerpt": "Organize troops into divisions and assign buildings to supply them. Large maps support broad strategic decisions while players can zoom in to watch battles. A free Steam playtest is open.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -1479,7 +617,8 @@
           "author": "freesoulapps",
           "createdAt": "2026-10-10T12:16:31.000Z",
           "kind": "showcase",
-          "excerpt": "An isometric science-fiction action RPG in Unreal Engine. This progress post shows revised movement, hit reactions, enemy behavior, and combat feedback after an earlier round of player criticism."
+          "excerpt": "An isometric science-fiction action RPG in Unreal Engine. This progress post shows revised movement, hit reactions, enemy behavior, and combat feedback after an earlier round of player criticism.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -1520,7 +659,8 @@
           "author": "Preparation_Few",
           "createdAt": "2026-10-10T11:40:28.000Z",
           "kind": "showcase",
-          "excerpt": "Explore an abandoned shopping mall in an anomaly horror game. The two-person development team has released a free Steam demo and is seeking feedback on clarity, atmosphere, and frustrating moments."
+          "excerpt": "Explore an abandoned shopping mall in an anomaly horror game. The two-person development team has released a free Steam demo and is seeking feedback on clarity, atmosphere, and frustrating moments.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -1561,7 +701,8 @@
           "author": "Askdevin777",
           "createdAt": "2026-10-10T10:26:43.000Z",
           "kind": "showcase",
-          "excerpt": "Start with simple tools on an island and build an automated factory through successive technology tiers. The creator describes steam power, electrical networks, rockets, and multiple worlds in an actively developed free download."
+          "excerpt": "Start with simple tools on an island and build an automated factory through successive technology tiers. The creator describes steam power, electrical networks, rockets, and multiple worlds in an actively developed free download.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -1604,7 +745,8 @@
           "author": "Late-Ad428",
           "createdAt": "2026-10-10T10:19:47.000Z",
           "kind": "showcase",
-          "excerpt": "Grow crops, raise animals, decorate a home, and explore with other players. The solo developer’s browser world also includes character transformations and a server-wide boss encounter."
+          "excerpt": "Grow crops, raise animals, decorate a home, and explore with other players. The solo developer’s browser world also includes character transformations and a server-wide boss encounter.",
+          "flair": "Demo | Project | Workflow"
         },
         {
           "id": "1x2buir",
@@ -1613,7 +755,8 @@
           "author": "Late-Ad428",
           "createdAt": "2026-10-10T10:22:32.000Z",
           "kind": "showcase",
-          "excerpt": "Grow crops, raise animals, decorate a home, and explore with other players. The solo developer’s browser world also includes character transformations and a server-wide boss encounter."
+          "excerpt": "Grow crops, raise animals, decorate a home, and explore with other players. The solo developer’s browser world also includes character transformations and a server-wide boss encounter.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -1657,93 +800,8 @@
           "author": "mc-rabbit",
           "createdAt": "2026-10-10T09:31:54.000Z",
           "kind": "showcase",
-          "excerpt": "Ride from the Italian countryside toward the North Cape, managing fuel, traffic, and route choices. Unlock faster motorcycles as you progress in this free browser work in progress."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x2aq6w",
-      "title": "KAYFABE: Indie Promoter",
-      "summary": "Run a small wrestling promotion, book shows, balance the budget, and handle backstage personalities. The browser demo covers three shows and includes English and Korean text.",
-      "author": {
-        "name": "laughing_gorilla123",
-        "url": "https://www.reddit.com/user/laughing_gorilla123/"
-      },
-      "category": "simulation",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Wrestling",
-        "Management",
-        "Free demo"
-      ],
-      "projectUrl": "https://forty-slop.itch.io/kayfabe-demo",
-      "firstSeenAt": "2026-10-10T09:12:11.000Z",
-      "updatedAt": "2026-10-10T09:12:11.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://preview.redd.it/dcyo51ugwluh1.jpg?width=640&crop=smart&auto=webp&s=280d3644b1920cfb583b98ff1c9861f98e712954",
-        "posterUrl": "https://preview.redd.it/dcyo51ugwluh1.jpg?width=640&crop=smart&auto=webp&s=280d3644b1920cfb583b98ff1c9861f98e712954",
-        "alt": "KAYFABE: Indie Promoter: preview shared by u/laughing_gorilla123",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2aq6w/"
-      },
-      "posts": [
-        {
-          "id": "1x2aq6w",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2aq6w/",
-          "title": "KAYFABE now has a free demo: run a small independent wrestling promotion",
-          "author": "laughing_gorilla123",
-          "createdAt": "2026-10-10T09:12:11.000Z",
-          "kind": "showcase",
-          "excerpt": "Run a small wrestling promotion, book shows, balance the budget, and handle backstage personalities. The browser demo covers three shows and includes English and Korean text."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x29xhe",
-      "title": "Neon Bounty",
-      "summary": "A cyberpunk-inspired 2D runner designed with mobile play in mind. The creator shares a browser build and screenshots, and invites players to try it.",
-      "author": {
-        "name": "Odd_Summer_993",
-        "url": "https://www.reddit.com/user/Odd_Summer_993/"
-      },
-      "category": "action",
-      "stage": "playable",
-      "platforms": [
-        "Browser",
-        "Mobile"
-      ],
-      "tags": [
-        "Cyberpunk",
-        "2D runner"
-      ],
-      "projectUrl": "https://ravinkarunaratne21-collab.github.io/Neon-Bounty/",
-      "firstSeenAt": "2026-10-10T08:20:51.000Z",
-      "updatedAt": "2026-10-10T08:20:51.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://preview.redd.it/cxhwdr7dnluh1.png?width=640&crop=smart&auto=webp&s=568f865e4d2ffc4e02d71a9b198915fb34cdcf4c",
-        "posterUrl": "https://preview.redd.it/cxhwdr7dnluh1.png?width=640&crop=smart&auto=webp&s=568f865e4d2ffc4e02d71a9b198915fb34cdcf4c",
-        "alt": "Neon Bounty: preview shared by u/Odd_Summer_993",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x29xhe/"
-      },
-      "posts": [
-        {
-          "id": "1x29xhe",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x29xhe/",
-          "title": "I built a Cyberpunk inspired 2D runner optimized for mobile! :) Check out Neon Bounty",
-          "author": "Odd_Summer_993",
-          "createdAt": "2026-10-10T08:20:51.000Z",
-          "kind": "showcase",
-          "excerpt": "A cyberpunk-inspired 2D runner designed with mobile play in mind. The creator shares a browser build and screenshots, and invites players to try it."
+          "excerpt": "Ride from the Italian countryside toward the North Cape, managing fuel, traffic, and route choices. Unlock faster motorcycles as you progress in this free browser work in progress.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -1784,7 +842,8 @@
           "author": "Mindless_Software_99",
           "createdAt": "2026-10-10T08:11:58.000Z",
           "kind": "update",
-          "excerpt": "Previously called Project Anime Glider, this multiplayer project mixes gliding, RPG progression, and arena-game ideas. The creator is preparing an online test and sharing recent gameplay changes."
+          "excerpt": "Previously called Project Anime Glider, this multiplayer project mixes gliding, RPG progression, and arena-game ideas. The creator is preparing an online test and sharing recent gameplay changes.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -1825,50 +884,8 @@
           "author": "Fickle_Excuse_6680",
           "createdAt": "2026-10-10T04:59:30.000Z",
           "kind": "showcase",
-          "excerpt": "A real-time strategy game with battlefield spells. The developer shares a spell demonstration and links a free Steam demo for players to test."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x23x6h",
-      "title": "Call of Cubie",
-      "summary": "A browser shooter with a new airfield map and an objective inside a moving transport aircraft. Bots fill empty seats, and the creator recommends desktop play.",
-      "author": {
-        "name": "BlackberrySoft1082",
-        "url": "https://www.reddit.com/user/BlackberrySoft1082/"
-      },
-      "category": "action",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "FPS",
-        "Bots",
-        "Multiplayer"
-      ],
-      "projectUrl": "https://play.patio.fyi",
-      "firstSeenAt": "2026-10-10T02:32:35.000Z",
-      "updatedAt": "2026-10-10T02:32:35.000Z",
-      "preview": {
-        "kind": "link",
-        "url": null,
-        "posterUrl": null,
-        "alt": "Call of Cubie: preview shared by u/BlackberrySoft1082",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x23x6h/"
-      },
-      "posts": [
-        {
-          "id": "1x23x6h",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x23x6h/",
-          "title": "New airfield map in Call of Cubie — Claude and Codex wrote all the code",
-          "author": "BlackberrySoft1082",
-          "createdAt": "2026-10-10T02:32:35.000Z",
-          "kind": "showcase",
-          "excerpt": "A browser shooter with a new airfield map and an objective inside a moving transport aircraft. Bots fill empty seats, and the creator recommends desktop play."
+          "excerpt": "A real-time strategy game with battlefield spells. The developer shares a spell demonstration and links a free Steam demo for players to test.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -1911,50 +928,8 @@
           "author": "Kenjirio",
           "createdAt": "2026-10-10T02:20:01.000Z",
           "kind": "showcase",
-          "excerpt": "Pilot a war frame against large waves of machines in a voxel arena. The creator’s early alpha footage shows different Vanguard builds, with unfinished systems and bugs still being worked on."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x22f0c",
-      "title": "The Last Train",
-      "summary": "Defend a moving train against flying enemies and build up its weapons between waves. The developer links an Android full game and a separate free Steam demo.",
-      "author": {
-        "name": "MrLawliet",
-        "url": "https://www.reddit.com/user/MrLawliet/"
-      },
-      "category": "action",
-      "stage": "released",
-      "platforms": [
-        "Android"
-      ],
-      "tags": [
-        "Survival shooter",
-        "Trains",
-        "Upgrades"
-      ],
-      "projectUrl": "https://play.google.com/store/apps/details?id=com.lastexitdiner.lasttrain",
-      "firstSeenAt": "2026-10-10T01:14:15.000Z",
-      "updatedAt": "2026-10-10T01:14:15.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x22f0c/",
-        "posterUrl": "https://external-preview.redd.it/M21uZXZvOHlpanVoMVbsotEFYFzHUfwHlfPArts0mbbllCMKYJjr5sAoDp74.png?width=640&crop=smart&format=pjpg&auto=webp&s=fae7acaf934c502d0bdc8923b10551d581aef231",
-        "alt": "The Last Train: preview shared by u/MrLawliet",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x22f0c/"
-      },
-      "posts": [
-        {
-          "id": "1x22f0c",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x22f0c/",
-          "title": "Train Tower Defense",
-          "author": "MrLawliet",
-          "createdAt": "2026-10-10T01:14:15.000Z",
-          "kind": "showcase",
-          "excerpt": "Defend a moving train against flying enemies and build up its weapons between waves. The developer links an Android full game and a separate free Steam demo."
+          "excerpt": "Pilot a war frame against large waves of machines in a voxel arena. The creator’s early alpha footage shows different Vanguard builds, with unfinished systems and bugs still being worked on.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -1995,49 +970,8 @@
           "author": "Necessary_Weight",
           "createdAt": "2026-10-10T00:25:57.000Z",
           "kind": "showcase",
-          "excerpt": "A work in progress combining digging, simplified factory automation, and combat. The creator is experimenting with the parts of mining and production games they most enjoy."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x20a3i",
-      "title": "Urban_Sprawl",
-      "summary": "A city-building project exploring traffic and procedurally generated neighborhoods. This update focuses on fitting varied housing onto angled lots, with citizen improvements planned next.",
-      "author": {
-        "name": "brandorambo25",
-        "url": "https://www.reddit.com/user/brandorambo25/"
-      },
-      "category": "simulation",
-      "stage": "prototype",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "City building",
-        "Procedural buildings"
-      ],
-      "projectUrl": "https://bneidlinger.github.io/urban_sprawl/",
-      "firstSeenAt": "2026-10-09T23:30:42.000Z",
-      "updatedAt": "2026-10-09T23:30:42.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://preview.redd.it/uz6g1em10juh1.png?width=640&crop=smart&auto=webp&s=b67ab947955fa4f6e1dc28f5193872b969852d70",
-        "posterUrl": "https://preview.redd.it/uz6g1em10juh1.png?width=640&crop=smart&auto=webp&s=b67ab947955fa4f6e1dc28f5193872b969852d70",
-        "alt": "Urban_Sprawl: preview shared by u/brandorambo25",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x20a3i/"
-      },
-      "posts": [
-        {
-          "id": "1x20a3i",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x20a3i/",
-          "title": "Urban_Sprawl Update: Housing and Angles",
-          "author": "brandorambo25",
-          "createdAt": "2026-10-09T23:30:42.000Z",
-          "kind": "update",
-          "excerpt": "A city-building project exploring traffic and procedurally generated neighborhoods. This update focuses on fitting varied housing onto angled lots, with citizen improvements planned next."
+          "excerpt": "A work in progress combining digging, simplified factory automation, and combat. The creator is experimenting with the parts of mining and production games they most enjoy.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -2079,99 +1013,8 @@
           "author": "W2DGAMES",
           "createdAt": "2026-10-09T23:28:58.000Z",
           "kind": "showcase",
-          "excerpt": "A browser game shared with five acts available. The creator identifies a Rust-based implementation and links the playable build; the source provides little additional gameplay detail."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1z0q5",
-      "title": "Snowbody’s Safe",
-      "summary": "A browser playtest with a follow-up post from the same creator. The developer is asking what to improve and collecting reactions to the current build.",
-      "author": {
-        "name": "PossibilityCivil9884",
-        "url": "https://www.reddit.com/user/PossibilityCivil9884/"
-      },
-      "category": "other",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Playtest",
-        "Feedback wanted"
-      ],
-      "projectUrl": "https://gremlinforgestudio.itch.io/snowbodys-safe-closed-playtest",
-      "firstSeenAt": "2026-10-09T22:32:38.000Z",
-      "updatedAt": "2026-10-10T12:27:50.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://preview.redd.it/pjazq5ugvmuh1.png?width=640&crop=smart&auto=webp&s=6f6e73eea8e0d135dc7e0aecca2c927c0c59c011",
-        "posterUrl": "https://preview.redd.it/pjazq5ugvmuh1.png?width=640&crop=smart&auto=webp&s=6f6e73eea8e0d135dc7e0aecca2c927c0c59c011",
-        "alt": "Snowbody’s Safe: preview shared by u/PossibilityCivil9884",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2e3ix/"
-      },
-      "posts": [
-        {
-          "id": "1x1z0q5",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1z0q5/",
-          "title": "Snowbody’s Safe is playable in the browser now!",
-          "author": "PossibilityCivil9884",
-          "createdAt": "2026-10-09T22:32:38.000Z",
-          "kind": "showcase",
-          "excerpt": "A browser playtest with a follow-up post from the same creator. The developer is asking what to improve and collecting reactions to the current build."
-        },
-        {
-          "id": "1x2e3ix",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x2e3ix/",
-          "title": "My game blew up on Twitter (X) and I dont know why",
-          "author": "PossibilityCivil9884",
-          "createdAt": "2026-10-10T12:27:50.000Z",
-          "kind": "showcase",
-          "excerpt": "A browser playtest with a follow-up post from the same creator. The developer is asking what to improve and collecting reactions to the current build."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1ycc3",
-      "title": "Rise of the Fenarii",
-      "summary": "A two-person team is developing a strategy RPG from a tower-defense starting point. Worldbuilding, story, and distinctive boss encounters are central to the project’s direction.",
-      "author": {
-        "name": "Droochainz",
-        "url": "https://www.reddit.com/user/Droochainz/"
-      },
-      "category": "strategy",
-      "stage": "prototype",
-      "platforms": [],
-      "tags": [
-        "Tower defense",
-        "RPG",
-        "Boss fights"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5240520/Rise_of_the_Fenarii/",
-      "firstSeenAt": "2026-10-09T22:02:35.000Z",
-      "updatedAt": "2026-10-09T22:02:35.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x1ycc3/",
-        "posterUrl": "https://external-preview.redd.it/vPeYz0Upwy15DumeelCzJLS3yT3Xd2EUaJUwUGaxolM.jpeg?auto=webp&s=215124f1255696354332302ff40a022f96990629",
-        "alt": "Rise of the Fenarii: preview shared by u/Droochainz",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1ycc3/"
-      },
-      "posts": [
-        {
-          "id": "1x1ycc3",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1ycc3/",
-          "title": "Just a couple dudes with a lot of sleepless nights working on our Strategy RPG. Really incredible what AI can make possible for gaming!",
-          "author": "Droochainz",
-          "createdAt": "2026-10-09T22:02:35.000Z",
-          "kind": "showcase",
-          "excerpt": "A two-person team is developing a strategy RPG from a tower-defense starting point. Worldbuilding, story, and distinctive boss encounters are central to the project’s direction."
+          "excerpt": "A browser game shared with five acts available. The creator identifies a Rust-based implementation and links the playable build; the source provides little additional gameplay detail.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -2214,134 +1057,8 @@
           "author": "DueResponse2717",
           "createdAt": "2026-10-09T21:49:17.000Z",
           "kind": "showcase",
-          "excerpt": "An office worker escapes into action-film fantasies. Navigate lethal top-down encounters, stealth objectives, and hostage situations, then return home between films. The browser beta supports keyboard, mouse, and gamepad."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1xea5",
-      "title": "Backpack Ascendancy",
-      "summary": "A backpack battler built around planning item layouts and pursuing powerful roguelite runs. The developer shares gameplay and a Steam page while continuing balance work ahead of release.",
-      "author": {
-        "name": "TheWellKnownEIP",
-        "url": "https://www.reddit.com/user/TheWellKnownEIP/"
-      },
-      "category": "strategy",
-      "stage": "prototype",
-      "platforms": [],
-      "tags": [
-        "Inventory building",
-        "Roguelite",
-        "Item synergies"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5380750/Backpack_Ascendancy/",
-      "firstSeenAt": "2026-10-09T21:21:58.000Z",
-      "updatedAt": "2026-10-09T21:21:58.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x1xea5/",
-        "posterUrl": "https://external-preview.redd.it/azB3aXUzcmhhaXVoMeTTt1HCX9IMiR8b5AR7xKlkEaJ9Qup-YxhnGdljFIQs.png?width=640&crop=smart&format=pjpg&auto=webp&s=559b13ad7e87e8e11160239a5a8790ce8424a418",
-        "alt": "Backpack Ascendancy: preview shared by u/TheWellKnownEIP",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1xea5/"
-      },
-      "posts": [
-        {
-          "id": "1x1xea5",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1xea5/",
-          "title": "I finally got around to building a backpack battler that fit my taste for roguelite power fantasy",
-          "author": "TheWellKnownEIP",
-          "createdAt": "2026-10-09T21:21:58.000Z",
-          "kind": "showcase",
-          "excerpt": "A backpack battler built around planning item layouts and pursuing powerful roguelite runs. The developer shares gameplay and a Steam page while continuing balance work ahead of release."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1wp8a",
-      "title": "Tiny Forge",
-      "summary": "Choose equipment and skills, then decide how far to push each expedition. This browser dungeon runner’s first season adds loot filtering, clearer gear comparisons, and guest play.",
-      "author": {
-        "name": "Patwater0",
-        "url": "https://www.reddit.com/user/Patwater0/"
-      },
-      "category": "rpg",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Dungeon runner",
-        "Loot",
-        "Auto combat"
-      ],
-      "projectUrl": "https://tinyforge.gg",
-      "firstSeenAt": "2026-10-09T20:53:00.000Z",
-      "updatedAt": "2026-10-09T20:53:00.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://preview.redd.it/id8gfhip8iuh1.jpg?width=640&crop=smart&auto=webp&s=89dea9691f138552ff0396cca4f0ab4be914b18a",
-        "posterUrl": "https://preview.redd.it/id8gfhip8iuh1.jpg?width=640&crop=smart&auto=webp&s=89dea9691f138552ff0396cca4f0ab4be914b18a",
-        "alt": "Tiny Forge: preview shared by u/Patwater0",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1wp8a/"
-      },
-      "posts": [
-        {
-          "id": "1x1wp8a",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1wp8a/",
-          "title": "Building Tiny Forge with my 10-year-old son and Codex — Season 1 is playable",
-          "author": "Patwater0",
-          "createdAt": "2026-10-09T20:53:00.000Z",
-          "kind": "showcase",
-          "excerpt": "Choose equipment and skills, then decide how far to push each expedition. This browser dungeon runner’s first season adds loot filtering, clearer gear comparisons, and guest play."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1wbhb",
-      "title": "Futbol Warriors",
-      "summary": "Short soccer matches become medieval skirmishes as knights, mages, and berserkers compete. The creator shares an alpha and asks whether the mix of scoring and fighting feels fun.",
-      "author": {
-        "name": "sametnadav",
-        "url": "https://www.reddit.com/user/sametnadav/"
-      },
-      "category": "action",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Soccer",
-        "Medieval combat",
-        "Alpha"
-      ],
-      "projectUrl": "https://tesana.com/play/990ca7a8-7975-4238-9419-fab0788a21d4",
-      "firstSeenAt": "2026-10-09T20:37:11.000Z",
-      "updatedAt": "2026-10-09T20:37:11.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x1wbhb/",
-        "posterUrl": "https://external-preview.redd.it/Mzk4N3cxNnE1aXVoMfzN9KU0b3ZL4p_KzE18LCzW4Otl_uoGfZSIN833dJZ5.png?width=640&crop=smart&format=pjpg&auto=webp&s=f5d7853259f8a5424dea58f98291f93cf8ed8e45",
-        "alt": "Futbol Warriors: preview shared by u/sametnadav",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1wbhb/"
-      },
-      "posts": [
-        {
-          "id": "1x1wbhb",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1wbhb/",
-          "title": "Looking for feedback for Futbol Warriors ⚽️⚔️",
-          "author": "sametnadav",
-          "createdAt": "2026-10-09T20:37:11.000Z",
-          "kind": "showcase",
-          "excerpt": "Short soccer matches become medieval skirmishes as knights, mages, and berserkers compete. The creator shares an alpha and asks whether the mix of scoring and fighting feels fun."
+          "excerpt": "An office worker escapes into action-film fantasies. Navigate lethal top-down encounters, stealth objectives, and hostage situations, then return home between films. The browser beta supports keyboard, mouse, and gamepad.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -2382,91 +1099,8 @@
           "author": "ilrein91",
           "createdAt": "2026-10-09T20:29:54.000Z",
           "kind": "showcase",
-          "excerpt": "Run, wall-run, and swing through compact stages, then summon an airboard to grind and perform tricks. The solo developer is refining movement and level design in Godot."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1vvpd",
-      "title": "VECTOR: Anti-gravity Racing",
-      "summary": "Race anti-gravity craft across five circuits, including a lunar track. The creator announces version 1.00 with a career mode and online races for up to eight players.",
-      "author": {
-        "name": "MrPipUK",
-        "url": "https://www.reddit.com/user/MrPipUK/"
-      },
-      "category": "arcade",
-      "stage": "released",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Racing",
-        "Career mode",
-        "Multiplayer"
-      ],
-      "projectUrl": "https://wavedash.com/games/vector-anti-gravity-racing",
-      "firstSeenAt": "2026-10-09T20:19:43.000Z",
-      "updatedAt": "2026-10-09T20:19:43.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x1vvpd/",
-        "posterUrl": "https://external-preview.redd.it/ZDllMWVnMHMyaXVoMWU2WawOiOOHd98rS6M82njBp_AaANhINjOTjnWw3K5X.png?width=640&crop=smart&format=pjpg&auto=webp&s=223a86aac6d985d00089629d9b24cbd267977439",
-        "alt": "VECTOR: Anti-gravity Racing: preview shared by u/MrPipUK",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1vvpd/"
-      },
-      "posts": [
-        {
-          "id": "1x1vvpd",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1vvpd/",
-          "title": "Vector: Anti-gravity racing v1.00 Released! Free to play!",
-          "author": "MrPipUK",
-          "createdAt": "2026-10-09T20:19:43.000Z",
-          "kind": "release",
-          "excerpt": "Race anti-gravity craft across five circuits, including a lunar track. The creator announces version 1.00 with a career mode and online races for up to eight players."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1vh2s",
-      "title": "StoneEra",
-      "summary": "Design buildings as reusable plans and let villagers construct them. The latest demo update adds scaffolding, improved building tools, production targets, and shared research to this medieval colony simulation.",
-      "author": {
-        "name": "Arrock12",
-        "url": "https://www.reddit.com/user/Arrock12/"
-      },
-      "category": "simulation",
-      "stage": "playable",
-      "platforms": [],
-      "tags": [
-        "Colony sim",
-        "Voxels",
-        "Steam demo"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5057770/StoneEra/",
-      "firstSeenAt": "2026-10-09T20:03:35.000Z",
-      "updatedAt": "2026-10-09T20:03:35.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://external-preview.redd.it/cHJlOHhkdXZ5aHVoMeSwRxUlCIt2f9iBXZYwcRZESG21fPqZNhbe5N-WMPC0.png?width=640&crop=smart&auto=webp&s=bd83690c681203c8fd752ecabea24e3ee8eabaf7",
-        "posterUrl": "https://external-preview.redd.it/cHJlOHhkdXZ5aHVoMeSwRxUlCIt2f9iBXZYwcRZESG21fPqZNhbe5N-WMPC0.png?width=640&crop=smart&auto=webp&s=bd83690c681203c8fd752ecabea24e3ee8eabaf7",
-        "alt": "StoneEra: preview shared by u/Arrock12",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1vh2s/"
-      },
-      "posts": [
-        {
-          "id": "1x1vh2s",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1vh2s/",
-          "title": "Design a house, then let your villagers build it — StoneEra Demo 0.9.14.2",
-          "author": "Arrock12",
-          "createdAt": "2026-10-09T20:03:35.000Z",
-          "kind": "showcase",
-          "excerpt": "Design buildings as reusable plans and let villagers construct them. The latest demo update adds scaffolding, improved building tools, production targets, and shared research to this medieval colony simulation."
+          "excerpt": "Run, wall-run, and swing through compact stages, then summon an airboard to grind and perform tricks. The solo developer is refining movement and level design in Godot.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -2507,7 +1141,8 @@
           "author": "FearlessCounty3487",
           "createdAt": "2026-10-09T19:44:42.000Z",
           "kind": "showcase",
-          "excerpt": "A radio-controlled racing project with local and online multiplayer experiments. The developer describes working courses, rival-car tuning, and additional modes including arena battles and capture the flag."
+          "excerpt": "A radio-controlled racing project with local and online multiplayer experiments. The developer describes working courses, rival-car tuning, and additional modes including arena battles and capture the flag.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -2547,7 +1182,8 @@
           "author": "Sezelly",
           "createdAt": "2026-10-09T19:37:35.000Z",
           "kind": "showcase",
-          "excerpt": "An idle game returning with improvements after community feedback. The creator shares a free playable version and invites another round of player reactions."
+          "excerpt": "An idle game returning with improvements after community feedback. The creator shares a free playable version and invites another round of player reactions.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -2591,7 +1227,8 @@
           "author": "Silent-Assumption292",
           "createdAt": "2026-10-09T19:21:40.000Z",
           "kind": "showcase",
-          "excerpt": "Descend through a hazardous vertical platformer as the difficulty rises. Share a level seed to challenge friends with the same layout. The browser game is free and needs no account."
+          "excerpt": "Descend through a hazardous vertical platformer as the difficulty rises. Share a level seed to challenge friends with the same layout. The browser game is free and needs no account.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -2634,50 +1271,8 @@
           "author": "Appropriate-Eye-3685",
           "createdAt": "2026-10-09T19:14:14.000Z",
           "kind": "showcase",
-          "excerpt": "Explore a world based on the creator’s drawings, gather companions, and face bosses. This browser prototype includes boats, parkour, and bullet-hell encounters, with keyboard and gamepad support."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1tysg",
-      "title": "HALKO",
-      "summary": "A forest-work game inspired by gathering winter firewood with family. The creator shares a playable demo and asks whether the repetitive work translates into satisfying play.",
-      "author": {
-        "name": "Mallock78",
-        "url": "https://www.reddit.com/user/Mallock78/"
-      },
-      "category": "simulation",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Forest",
-        "Firewood",
-        "Free demo"
-      ],
-      "projectUrl": "https://halko.blinkki.com/",
-      "firstSeenAt": "2026-10-09T19:05:07.000Z",
-      "updatedAt": "2026-10-09T19:05:07.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x1tysg/",
-        "posterUrl": "https://external-preview.redd.it/eTE0aDV6emVwaHVoMTRsh0ylHU-hEdz5ioCDEM3NxVYtQnXxofNR17iNcNdD.png?width=640&crop=smart&format=pjpg&auto=webp&s=191b4d6fc051f163fb7c2ea38fb5386305ea19ff",
-        "alt": "HALKO: preview shared by u/Mallock78",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1tysg/"
-      },
-      "posts": [
-        {
-          "id": "1x1tysg",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1tysg/",
-          "title": "HALKO game",
-          "author": "Mallock78",
-          "createdAt": "2026-10-09T19:05:07.000Z",
-          "kind": "showcase",
-          "excerpt": "A forest-work game inspired by gathering winter firewood with family. The creator shares a playable demo and asks whether the repetitive work translates into satisfying play."
+          "excerpt": "Explore a world based on the creator’s drawings, gather companions, and face bosses. This browser prototype includes boats, parkour, and bullet-hell encounters, with keyboard and gamepad support.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -2719,7 +1314,8 @@
           "author": "hyp3rclaw",
           "createdAt": "2026-10-09T18:52:50.000Z",
           "kind": "update",
-          "excerpt": "A drone racing game with a new map, revised drones, power-ups, and performance improvements. The creator is collecting feedback on what to add next."
+          "excerpt": "A drone racing game with a new map, revised drones, power-ups, and performance improvements. The creator is collecting feedback on what to add next.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -2762,132 +1358,8 @@
           "author": "shre14uses",
           "createdAt": "2026-10-09T18:30:27.000Z",
           "kind": "showcase",
-          "excerpt": "Guide an industrial business beginning in 1991. Decisions about contracts, quality, debt, and family compound over time as historical events change the conditions around the company."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1rydt",
-      "title": "Arkansas 2125",
-      "summary": "A post-apocalyptic game sharing its beta 0.7 update. The creator highlights larger interface elements and Polish localization, with changes intended to make handheld play easier.",
-      "author": {
-        "name": "Forward_Key_4937",
-        "url": "https://www.reddit.com/user/Forward_Key_4937/"
-      },
-      "category": "adventure",
-      "stage": "playable",
-      "platforms": [
-        "Steam Deck"
-      ],
-      "tags": [
-        "Post-apocalyptic",
-        "Beta"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/4546490/Arkansas_2125/",
-      "firstSeenAt": "2026-10-09T17:47:28.000Z",
-      "updatedAt": "2026-10-09T17:47:28.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://external-preview.redd.it/NnhpanBpdzI5aHVoMa8EITnV9G-SGyqhx2gVXSaFhoKrvOy7r2ke7mjqH_45.png?width=640&crop=smart&auto=webp&s=af2b81fb6299665e003860a148fda2517be86ee5",
-        "posterUrl": "https://external-preview.redd.it/NnhpanBpdzI5aHVoMa8EITnV9G-SGyqhx2gVXSaFhoKrvOy7r2ke7mjqH_45.png?width=640&crop=smart&auto=webp&s=af2b81fb6299665e003860a148fda2517be86ee5",
-        "alt": "Arkansas 2125: preview shared by u/Forward_Key_4937",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1rydt/"
-      },
-      "posts": [
-        {
-          "id": "1x1rydt",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1rydt/",
-          "title": "Arkansas 2125 nowa aktualizacja Beta 0.7",
-          "author": "Forward_Key_4937",
-          "createdAt": "2026-10-09T17:47:28.000Z",
-          "kind": "showcase",
-          "excerpt": "A post-apocalyptic game sharing its beta 0.7 update. The creator highlights larger interface elements and Polish localization, with changes intended to make handheld play easier."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1r0i8",
-      "title": "A Snowboard Dream",
-      "summary": "An endless snowboarding game without objectives or score pressure. The creator designed it for short breaks or relaxed play while listening to something else.",
-      "author": {
-        "name": "Fit_Assignment2113",
-        "url": "https://www.reddit.com/user/Fit_Assignment2113/"
-      },
-      "category": "arcade",
-      "stage": "released",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Snowboarding",
-        "Relaxing",
-        "Endless"
-      ],
-      "projectUrl": "https://snowboarddream.com/",
-      "firstSeenAt": "2026-10-09T17:11:09.000Z",
-      "updatedAt": "2026-10-09T17:11:09.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x1r0i8/",
-        "posterUrl": "https://external-preview.redd.it/MHJjdHo0ODIxaHVoMT1pYVtl-zXFfx0Cp2RJdkxd0yNbq_Hwg1zQwPJp2bJT.png?width=640&crop=smart&format=pjpg&auto=webp&s=d49677700e5ad2652c8fa910b973d383049223f4",
-        "alt": "A Snowboard Dream: preview shared by u/Fit_Assignment2113",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1r0i8/"
-      },
-      "posts": [
-        {
-          "id": "1x1r0i8",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1r0i8/",
-          "title": "A Snowboard Dream - Relaxing, Endless, Free game with Zero objectives??",
-          "author": "Fit_Assignment2113",
-          "createdAt": "2026-10-09T17:11:09.000Z",
-          "kind": "showcase",
-          "excerpt": "An endless snowboarding game without objectives or score pressure. The creator designed it for short breaks or relaxed play while listening to something else."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1qeul",
-      "title": "Fallen Heroes",
-      "summary": "A first-time creator shares footage of a JRPG approaching completion. The source is a progress showcase with a video, rather than a public download announcement.",
-      "author": {
-        "name": "kingkongy",
-        "url": "https://www.reddit.com/user/kingkongy/"
-      },
-      "category": "rpg",
-      "stage": "prototype",
-      "platforms": [],
-      "tags": [
-        "JRPG",
-        "In development"
-      ],
-      "projectUrl": null,
-      "firstSeenAt": "2026-10-09T16:47:47.000Z",
-      "updatedAt": "2026-10-09T16:47:47.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://external-preview.redd.it/_KdtnTX29jKvm63Du2umTSIO0urZfGXgXyavbc-MfCI.jpeg?auto=webp&s=261ae925bdd7b3078437b4934e03535cd496bf90",
-        "posterUrl": "https://external-preview.redd.it/_KdtnTX29jKvm63Du2umTSIO0urZfGXgXyavbc-MfCI.jpeg?auto=webp&s=261ae925bdd7b3078437b4934e03535cd496bf90",
-        "alt": "Fallen Heroes: preview shared by u/kingkongy",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1qeul/"
-      },
-      "posts": [
-        {
-          "id": "1x1qeul",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1qeul/",
-          "title": "I'm nearly done my first game: Fallen Heroes - a JRPG",
-          "author": "kingkongy",
-          "createdAt": "2026-10-09T16:47:47.000Z",
-          "kind": "showcase",
-          "excerpt": "A first-time creator shares footage of a JRPG approaching completion. The source is a progress showcase with a video, rather than a public download announcement."
+          "excerpt": "Guide an industrial business beginning in 1991. Decisions about contracts, quality, debt, and family compound over time as historical events change the conditions around the company.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -2930,301 +1402,8 @@
           "author": "pun1sh3-r",
           "createdAt": "2026-10-09T16:40:57.000Z",
           "kind": "showcase",
-          "excerpt": "An incremental auto-battler with irreverent humor, unusual legendary equipment, achievements, and a snapshot-based PvP arena. The creator is inviting players to try the current browser build."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1q7vp",
-      "title": "The Residual",
-      "summary": "A short narrative platformer about memory, loneliness, and relationships in a fractured world. The developer describes a 20–30 minute experience and links the free Steam release.",
-      "author": {
-        "name": "SevielGD",
-        "url": "https://www.reddit.com/user/SevielGD/"
-      },
-      "category": "adventure",
-      "stage": "released",
-      "platforms": [],
-      "tags": [
-        "Narrative",
-        "2D platformer",
-        "Free to play"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5291650/",
-      "firstSeenAt": "2026-10-09T16:40:19.000Z",
-      "updatedAt": "2026-10-09T16:40:19.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://preview.redd.it/bsxmgm6dzguh1.png?width=640&crop=smart&auto=webp&s=ca10826a4507a649e11c97dbf635806c4597373f",
-        "posterUrl": "https://preview.redd.it/bsxmgm6dzguh1.png?width=640&crop=smart&auto=webp&s=ca10826a4507a649e11c97dbf635806c4597373f",
-        "alt": "The Residual: preview shared by u/SevielGD",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1q7vp/"
-      },
-      "posts": [
-        {
-          "id": "1x1q7vp",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1q7vp/",
-          "title": "The Residual - a small free 2D narrative mystery platformer - out on steam",
-          "author": "SevielGD",
-          "createdAt": "2026-10-09T16:40:19.000Z",
-          "kind": "showcase",
-          "excerpt": "A short narrative platformer about memory, loneliness, and relationships in a fractured world. The developer describes a 20–30 minute experience and links the free Steam release."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1pwra",
-      "title": "ORRA",
-      "summary": "Stained-glass knights wall-run, slide, and flip through a cathedral arena above the water. The creator shares a playable experiment built in Spawn.",
-      "author": {
-        "name": "TheHoBoLoBo",
-        "url": "https://www.reddit.com/user/TheHoBoLoBo/"
-      },
-      "category": "action",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Arena",
-        "Movement",
-        "Stained glass"
-      ],
-      "projectUrl": "https://www.spawn.co/?box=@117/orra",
-      "firstSeenAt": "2026-10-09T16:28:10.000Z",
-      "updatedAt": "2026-10-09T16:28:10.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x1pwra/",
-        "posterUrl": "https://external-preview.redd.it/M3JvMzBpOGd4Z3VoMYtGnNfG1x8Z6d8tmgZHhODe7fvXaFFxf6MF8lPz8Vl6.png?width=640&crop=smart&format=pjpg&auto=webp&s=d74a9aad9b9fbb0b3f168a640c9ef576a9d9da65",
-        "alt": "ORRA: preview shared by u/TheHoBoLoBo",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1pwra/"
-      },
-      "posts": [
-        {
-          "id": "1x1pwra",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1pwra/",
-          "title": "ORRA Fully built with AI in Spawn.",
-          "author": "TheHoBoLoBo",
-          "createdAt": "2026-10-09T16:28:10.000Z",
-          "kind": "showcase",
-          "excerpt": "Stained-glass knights wall-run, slide, and flip through a cathedral arena above the water. The creator shares a playable experiment built in Spawn."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1oq3r",
-      "title": "Astralight: Pilgrim's Duel",
-      "summary": "A fantasy trading-card game with a newly opened Steam playtest. Its guided tutorial introduces the battle interface, mana, attacks, and other turn mechanics.",
-      "author": {
-        "name": "EsconAmatin",
-        "url": "https://www.reddit.com/user/EsconAmatin/"
-      },
-      "category": "strategy",
-      "stage": "playable",
-      "platforms": [],
-      "tags": [
-        "TCG",
-        "Deckbuilding",
-        "Steam playtest"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/4804280/",
-      "firstSeenAt": "2026-10-09T15:43:16.000Z",
-      "updatedAt": "2026-10-09T15:43:16.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x1oq3r/",
-        "posterUrl": "https://external-preview.redd.it/dWplcjNmOHJvZ3VoMVbsotEFYFzHUfwHlfPArts0mbbllCMKYJjr5sAoDp74.png?width=640&crop=smart&format=pjpg&auto=webp&s=403a3b253339b03cb558fe17e657b8d80770e62f",
-        "alt": "Astralight: Pilgrim's Duel: preview shared by u/EsconAmatin",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1oq3r/"
-      },
-      "posts": [
-        {
-          "id": "1x1oq3r",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1oq3r/",
-          "title": "How I'm using AI to build art, cutscenes and a tutorial for my fantasy TCG (Steam playtest now open)",
-          "author": "EsconAmatin",
-          "createdAt": "2026-10-09T15:43:16.000Z",
-          "kind": "showcase",
-          "excerpt": "A fantasy trading-card game with a newly opened Steam playtest. Its guided tutorial introduces the battle interface, mana, attacks, and other turn mechanics."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1onhq",
-      "title": "Abyss Drift",
-      "summary": "An early multiplayer experiment shared through Google Playground. The creator is looking for feedback on the playable build and ideas for its next direction.",
-      "author": {
-        "name": "Sergiyakun",
-        "url": "https://www.reddit.com/user/Sergiyakun/"
-      },
-      "category": "other",
-      "stage": "playable",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Multiplayer experiment",
-        "Feedback wanted"
-      ],
-      "projectUrl": "https://playground.google/g/fnQi3C",
-      "firstSeenAt": "2026-10-09T15:40:18.000Z",
-      "updatedAt": "2026-10-09T15:40:18.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://external-preview.redd.it/XrggtCNtAFUbK5mg9-t4qLCKoshuHst5_6O94ZP6_T8.png?auto=webp&s=aca91ebbd18fba6a853d7f6ee5dbbf2aba63bd7a",
-        "posterUrl": "https://external-preview.redd.it/XrggtCNtAFUbK5mg9-t4qLCKoshuHst5_6O94ZP6_T8.png?auto=webp&s=aca91ebbd18fba6a853d7f6ee5dbbf2aba63bd7a",
-        "alt": "Abyss Drift: preview shared by u/Sergiyakun",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1onhq/"
-      },
-      "posts": [
-        {
-          "id": "1x1onhq",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1onhq/",
-          "title": "Abyss Drift",
-          "author": "Sergiyakun",
-          "createdAt": "2026-10-09T15:40:18.000Z",
-          "kind": "showcase",
-          "excerpt": "An early multiplayer experiment shared through Google Playground. The creator is looking for feedback on the playable build and ideas for its next direction."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1oa26",
-      "title": "Three Touches",
-      "summary": "An arcade volleyball project with player, club, and referee careers. A charged spike slows the action so the player can choose a target; the creator describes ongoing testing of desktop builds.",
-      "author": {
-        "name": "ilgazx",
-        "url": "https://www.reddit.com/user/ilgazx/"
-      },
-      "category": "arcade",
-      "stage": "prototype",
-      "platforms": [
-        "Windows",
-        "macOS"
-      ],
-      "tags": [
-        "Volleyball",
-        "Careers",
-        "Slow-motion shots"
-      ],
-      "projectUrl": null,
-      "firstSeenAt": "2026-10-09T15:25:41.000Z",
-      "updatedAt": "2026-10-09T15:25:41.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://preview.redd.it/7prq1k9cdguh1.gif?width=320&crop=smart&format=png8&s=46116b239950a345cbd9ae8645b6437a29f859f5",
-        "posterUrl": "https://preview.redd.it/7prq1k9cdguh1.gif?width=320&crop=smart&format=png8&s=46116b239950a345cbd9ae8645b6437a29f859f5",
-        "alt": "Three Touches: preview shared by u/ilgazx",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1oa26/"
-      },
-      "posts": [
-        {
-          "id": "1x1oa26",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1oa26/",
-          "title": "I built a volleyball game with AI in my spare time. The hard part wasn't the code.",
-          "author": "ilgazx",
-          "createdAt": "2026-10-09T15:25:41.000Z",
-          "kind": "showcase",
-          "excerpt": "An arcade volleyball project with player, club, and referee careers. A charged spike slows the action so the player can choose a target; the creator describes ongoing testing of desktop builds."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1nv7q",
-      "title": "Super Mekabots",
-      "summary": "A browser mecha card game in development. This showcase follows an attack from the card board into an animated battle and back, with a focus on making the result easy to read.",
-      "author": {
-        "name": "SupMekBots",
-        "url": "https://www.reddit.com/user/SupMekBots/"
-      },
-      "category": "strategy",
-      "stage": "prototype",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Mechs",
-        "Cards",
-        "Battle animation"
-      ],
-      "projectUrl": null,
-      "firstSeenAt": "2026-10-09T15:09:11.000Z",
-      "updatedAt": "2026-10-09T15:09:11.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x1nv7q/",
-        "posterUrl": "https://external-preview.redd.it/NHRudHJ6YzlqZ3VoMdXl9BthRd9zdF8iaFfSQHuBBpovABpR6fiG4VvUxthj.png?width=640&crop=smart&format=pjpg&auto=webp&s=e35628e1c4473f1daaaa9f723fd1c1c692eb574d",
-        "alt": "Super Mekabots: preview shared by u/SupMekBots",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1nv7q/"
-      },
-      "posts": [
-        {
-          "id": "1x1nv7q",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1nv7q/",
-          "title": "Super Mekabots: one card attack, one mecha battle",
-          "author": "SupMekBots",
-          "createdAt": "2026-10-09T15:09:11.000Z",
-          "kind": "showcase",
-          "excerpt": "A browser mecha card game in development. This showcase follows an attack from the card board into an animated battle and back, with a focus on making the result easy to read."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1na7l",
-      "title": "AI Says",
-      "summary": "Guide a person through dangerous test chambers by typing instructions to a blind in-game AI. Precise descriptions matter. The creators share a trailer ahead of their planned release.",
-      "author": {
-        "name": "TheZilk",
-        "url": "https://www.reddit.com/user/TheZilk/"
-      },
-      "category": "puzzle",
-      "stage": "prototype",
-      "platforms": [],
-      "tags": [
-        "Prompt commands",
-        "Test chambers"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5205430/AI_Says/",
-      "firstSeenAt": "2026-10-09T14:46:07.000Z",
-      "updatedAt": "2026-10-09T14:46:07.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x1na7l/",
-        "posterUrl": "https://external-preview.redd.it/91xrj5GgMP9i-WPxw_0sWjOG3_ayN4B8IAXBbdQwn7Y.jpeg?auto=webp&s=2c0e498286eadcc161a8d3a5603669ae1bc1a286",
-        "alt": "AI Says: preview shared by u/TheZilk",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1na7l/"
-      },
-      "posts": [
-        {
-          "id": "1x1na7l",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1na7l/",
-          "title": "We asked ourselves: What if you could ONLY play a game through ChatGPT? And then we made that game :)",
-          "author": "TheZilk",
-          "createdAt": "2026-10-09T14:46:07.000Z",
-          "kind": "showcase",
-          "excerpt": "Guide a person through dangerous test chambers by typing instructions to a blind in-game AI. Precise descriptions matter. The creators share a trailer ahead of their planned release."
+          "excerpt": "An incremental auto-battler with irreverent humor, unusual legendary equipment, achievements, and a snapshot-based PvP arena. The creator is inviting players to try the current browser build.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -3269,7 +1448,8 @@
           "author": "webholt",
           "createdAt": "2026-10-09T14:42:56.000Z",
           "kind": "showcase",
-          "excerpt": "Paint inexpensive imitations that fool deliberately limited automated art appraisers. Learn what each model can perceive, then exploit its blind spots. Browser and desktop versions are available."
+          "excerpt": "Paint inexpensive imitations that fool deliberately limited automated art appraisers. Learn what each model can perceive, then exploit its blind spots. Browser and desktop versions are available.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -3309,7 +1489,8 @@
           "author": "Final_Huckleberry408",
           "createdAt": "2026-10-09T14:28:20.000Z",
           "kind": "showcase",
-          "excerpt": "The creator tests an early level on a handheld device and shares unedited gameplay. The project is still in development, with feedback sought on the current atmosphere and feel."
+          "excerpt": "The creator tests an early level on a handheld device and shares unedited gameplay. The project is still in development, with feedback sought on the current atmosphere and feel.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -3352,7 +1533,8 @@
           "author": "DerKobe",
           "createdAt": "2026-10-09T12:53:54.000Z",
           "kind": "showcase",
-          "excerpt": "Run across rainy rooftops while other players race in parallel lanes. A pursuing drone retraces your route, and markers show where earlier runners failed. No signup is required."
+          "excerpt": "Run across rainy rooftops while other players race in parallel lanes. A pursuing drone retraces your route, and markers show where earlier runners failed. No signup is required.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -3396,94 +1578,8 @@
           "author": "ryuukiba",
           "createdAt": "2026-10-09T11:59:14.000Z",
           "kind": "showcase",
-          "excerpt": "Explore, build, and survive by day, then make dream choices that alter the waking world. The first public alpha includes combat, dungeons, and persistent changes to the landscape."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1iun9",
-      "title": "HALFTIME Manager",
-      "summary": "Run a football club through training, league play, and cups. The creator’s early-access management game includes fictional teams, local hotseat play, and support for community-made worlds.",
-      "author": {
-        "name": "king_fredo",
-        "url": "https://www.reddit.com/user/king_fredo/"
-      },
-      "category": "simulation",
-      "stage": "playable",
-      "platforms": [
-        "Windows",
-        "Linux"
-      ],
-      "tags": [
-        "Football",
-        "Management",
-        "Early access"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5005920/HALFTIME_Manager/",
-      "firstSeenAt": "2026-10-09T11:26:33.000Z",
-      "updatedAt": "2026-10-09T11:26:33.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x1iun9/",
-        "posterUrl": "https://external-preview.redd.it/M3FwOXQxbzhmZnVoMUNLHJ_FDonPJB64Nz5rDpLo4W6hAfHZ77ZUUwoQhpRJ.png?width=640&crop=smart&format=pjpg&auto=webp&s=6a8da05610c8b58f32028b182bc3e43b4a04a5fc",
-        "alt": "HALFTIME Manager: preview shared by u/king_fredo",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1iun9/"
-      },
-      "posts": [
-        {
-          "id": "1x1iun9",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1iun9/",
-          "title": "I missed the football managers I grew up with, so I spent 100 days building one with AI",
-          "author": "king_fredo",
-          "createdAt": "2026-10-09T11:26:33.000Z",
-          "kind": "showcase",
-          "excerpt": "Run a football club through training, league play, and cups. The creator’s early-access management game includes fictional teams, local hotseat play, and support for community-made worlds."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1fmwi",
-      "title": "Links Manager",
-      "summary": "Manage a golf academy, recruit juniors, hire coaches, and plan tournaments across multiple seasons. The creator links a full game and a separate browser demo covering one season.",
-      "author": {
-        "name": "Manager-Games145",
-        "url": "https://www.reddit.com/user/Manager-Games145/"
-      },
-      "category": "simulation",
-      "stage": "released",
-      "platforms": [
-        "Browser"
-      ],
-      "tags": [
-        "Golf",
-        "Management",
-        "Free demo"
-      ],
-      "projectUrl": "https://tomhs183.itch.io/links-manager",
-      "firstSeenAt": "2026-10-09T08:10:55.000Z",
-      "updatedAt": "2026-10-09T08:10:55.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x1fmwi/",
-        "posterUrl": "https://external-preview.redd.it/MG1iNjJ0YmJnZXVoMUKVbqCg7OeNfTrJAI_UA37tBYHoqPW7Q94RoUHFsllb.png?width=640&crop=smart&format=pjpg&auto=webp&s=b29f9237d0821ce80805b059f4aa11c153e54e1b",
-        "alt": "Links Manager: preview shared by u/Manager-Games145",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1fmwi/"
-      },
-      "posts": [
-        {
-          "id": "1x1fmwi",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1fmwi/",
-          "title": "I built a golf management sim with generative AI — the AI wrote the code, I did the playtesting",
-          "author": "Manager-Games145",
-          "createdAt": "2026-10-09T08:10:55.000Z",
-          "kind": "showcase",
-          "excerpt": "Manage a golf academy, recruit juniors, hire coaches, and plan tournaments across multiple seasons. The creator links a full game and a separate browser demo covering one season."
+          "excerpt": "Explore, build, and survive by day, then make dream choices that alter the waking world. The first public alpha includes combat, dungeons, and persistent changes to the landscape.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -3527,7 +1623,8 @@
           "author": "jaimeOnil2007",
           "createdAt": "2026-10-09T05:51:58.000Z",
           "kind": "showcase",
-          "excerpt": "Work a night shift with friends, complete tasks, and hide from a creature stalking the store. The creator shares a free browser build through a project showcase page."
+          "excerpt": "Work a night shift with friends, complete tasks, and hide from a creature stalking the store. The creator shares a free browser build through a project showcase page.",
+          "flair": "Demo | Project | Workflow"
         },
         {
           "id": "1x1dg4h",
@@ -3536,50 +1633,8 @@
           "author": "jaimeOnil2007",
           "createdAt": "2026-10-09T05:52:50.000Z",
           "kind": "showcase",
-          "excerpt": "Work a night shift with friends, complete tasks, and hide from a creature stalking the store. The creator shares a free browser build through a project showcase page."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x1c84y",
-      "title": "Astronormous Survivor",
-      "summary": "Steer a small ship through waves while automatic weapons handle the firing. Spend loot between waves to grow the hull into a heavily armed vessel. An iPhone TestFlight build is open.",
-      "author": {
-        "name": "danura_",
-        "url": "https://www.reddit.com/user/danura_/"
-      },
-      "category": "arcade",
-      "stage": "playable",
-      "platforms": [
-        "iOS"
-      ],
-      "tags": [
-        "Survivors-like",
-        "ASCII",
-        "TestFlight"
-      ],
-      "projectUrl": "https://testflight.apple.com/join/3ueN6CaB",
-      "firstSeenAt": "2026-10-09T04:41:17.000Z",
-      "updatedAt": "2026-10-09T04:41:17.000Z",
-      "preview": {
-        "kind": "video",
-        "url": "https://www.reddit.com/r/aigamedev/comments/1x1c84y/",
-        "posterUrl": "https://external-preview.redd.it/d3MwdXpta2NmZHVoMez9rZ8QTLyAaqbnT_2NkYrMRAbKp9JDBRVnSV5wP2rs.jpeg?width=640&crop=smart&format=pjpg&auto=webp&s=ca9e6f1472335ed1b9753a8e245374c1d1104b9b",
-        "alt": "Astronormous Survivor: preview shared by u/danura_",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1c84y/"
-      },
-      "posts": [
-        {
-          "id": "1x1c84y",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x1c84y/",
-          "title": "I made an ASCII survivor-like where your tiny triangle grows into a 24-turret Titan. Looking for playtesters (TestFlight)",
-          "author": "danura_",
-          "createdAt": "2026-10-09T04:41:17.000Z",
-          "kind": "showcase",
-          "excerpt": "Steer a small ship through waves while automatic weapons handle the firing. Spend loot between waves to grow the hull into a heavily armed vessel. An iPhone TestFlight build is open."
+          "excerpt": "Work a night shift with friends, complete tasks, and hide from a creature stalking the store. The creator shares a free browser build through a project showcase page.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -3620,7 +1675,8 @@
           "author": "SalamanderEast7639",
           "createdAt": "2026-10-09T03:53:39.000Z",
           "kind": "showcase",
-          "excerpt": "Reassemble fragments of historical recordings by listening and arranging tapes. This first-person puzzle project uses archival audio, with a Steam demo planned but not yet announced as available in the source post."
+          "excerpt": "Reassemble fragments of historical recordings by listening and arranging tapes. This first-person puzzle project uses archival audio, with a Steam demo planned but not yet announced as available in the source post.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -3664,7 +1720,8 @@
           "author": "Competitive_Pie9583",
           "createdAt": "2026-10-09T02:03:17.000Z",
           "kind": "showcase",
-          "excerpt": "An early strategy project combining city-building, large battles, and roguelite influences. The creator shares a playable alpha and recommends desktop for the best experience."
+          "excerpt": "An early strategy project combining city-building, large battles, and roguelite influences. The creator shares a playable alpha and recommends desktop for the best experience.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -3707,89 +1764,8 @@
           "author": "EdgarDruin",
           "createdAt": "2026-10-09T01:43:24.000Z",
           "kind": "showcase",
-          "excerpt": "A village lantern has gone dark and its keeper is missing. Follow two heroes into forests and ruins in the playable first chapter of a turn-based pixel-art RPG."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x18t6v",
-      "title": "OUTPERFORM",
-      "summary": "A stock-market-themed roguelike with an open Steam playtest. The developer is asking about first-run clarity, upgrade choices, and whether players want to return for another run.",
-      "author": {
-        "name": "MidnightToker42",
-        "url": "https://www.reddit.com/user/MidnightToker42/"
-      },
-      "category": "strategy",
-      "stage": "playable",
-      "platforms": [],
-      "tags": [
-        "Stock market",
-        "Roguelike",
-        "Steam playtest"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/4578610/OUTPERFORM/",
-      "firstSeenAt": "2026-10-09T01:41:27.000Z",
-      "updatedAt": "2026-10-09T01:41:27.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://external-preview.redd.it/X_6k3PppVzfie5aciSecTSwV0ps-LYTu4NZZAJXa430.jpeg?auto=webp&s=c330a3a42c2b529e85534f4789614e2423697cc6",
-        "posterUrl": "https://external-preview.redd.it/X_6k3PppVzfie5aciSecTSwV0ps-LYTu4NZZAJXa430.jpeg?auto=webp&s=c330a3a42c2b529e85534f4789614e2423697cc6",
-        "alt": "OUTPERFORM: preview shared by u/MidnightToker42",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x18t6v/"
-      },
-      "posts": [
-        {
-          "id": "1x18t6v",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x18t6v/",
-          "title": "Im making a stockmarket themed roguelike and just opened up the playtest",
-          "author": "MidnightToker42",
-          "createdAt": "2026-10-09T01:41:27.000Z",
-          "kind": "showcase",
-          "excerpt": "A stock-market-themed roguelike with an open Steam playtest. The developer is asking about first-run clarity, upgrade choices, and whether players want to return for another run."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x187vz",
-      "title": "Derelict Division, LLC",
-      "summary": "Explore abandoned spacecraft with up to three friends, dismantle them, and carry out useful salvage. The solo developer shares a new Steam page while the game remains in development.",
-      "author": {
-        "name": "Everbreak_Studios",
-        "url": "https://www.reddit.com/user/Everbreak_Studios/"
-      },
-      "category": "adventure",
-      "stage": "prototype",
-      "platforms": [],
-      "tags": [
-        "Space salvage",
-        "Co-op",
-        "Exploration"
-      ],
-      "projectUrl": "https://store.steampowered.com/app/5387220/",
-      "firstSeenAt": "2026-10-09T01:11:54.000Z",
-      "updatedAt": "2026-10-09T01:11:54.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://preview.redd.it/x6oxqn50ecuh1.jpg?width=640&crop=smart&auto=webp&s=c30434ae5c6800ad8e4adae19d432b158c1e9025",
-        "posterUrl": "https://preview.redd.it/x6oxqn50ecuh1.jpg?width=640&crop=smart&auto=webp&s=c30434ae5c6800ad8e4adae19d432b158c1e9025",
-        "alt": "Derelict Division, LLC: preview shared by u/Everbreak_Studios",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x187vz/"
-      },
-      "posts": [
-        {
-          "id": "1x187vz",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x187vz/",
-          "title": "New Space Salvage Co-op Steampage is Live!",
-          "author": "Everbreak_Studios",
-          "createdAt": "2026-10-09T01:11:54.000Z",
-          "kind": "showcase",
-          "excerpt": "Explore abandoned spacecraft with up to three friends, dismantle them, and carry out useful salvage. The solo developer shares a new Steam page while the game remains in development."
+          "excerpt": "A village lantern has gone dark and its keeper is missing. Follow two heroes into forests and ruins in the playable first chapter of a turn-based pixel-art RPG.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"
@@ -3832,50 +1808,8 @@
           "author": "K2Valor",
           "createdAt": "2026-10-09T00:38:44.000Z",
           "kind": "showcase",
-          "excerpt": "A side-scrolling survivor game designed for Game Boy Advance hardware and emulators. The creator shares a demoable work in progress with generated artwork and music."
-        }
-      ],
-      "reviewStatus": "reviewed"
-    },
-    {
-      "id": "g_1x16djd",
-      "title": "Bastigard: Match Merge Defend",
-      "summary": "Merge resources into defensive structures and protect a castle from dragon waves. The studio announces an Android release built around short sessions and one-handed play.",
-      "author": {
-        "name": "Rodrigo01",
-        "url": "https://www.reddit.com/user/Rodrigo01/"
-      },
-      "category": "puzzle",
-      "stage": "released",
-      "platforms": [
-        "Android"
-      ],
-      "tags": [
-        "Match-3",
-        "Castle defense",
-        "Dragons"
-      ],
-      "projectUrl": "https://play.google.com/store/apps/details?id=com.zideral.bastigard",
-      "firstSeenAt": "2026-10-08T23:42:30.000Z",
-      "updatedAt": "2026-10-08T23:42:30.000Z",
-      "preview": {
-        "kind": "image",
-        "url": "https://external-preview.redd.it/c_NzPuSCEWMnBA0eBgL2D8qA1Dww4kCxXwADsAWct94.png?auto=webp&s=7d86baeba8898d6c8236ffb2918223d7f630d5e3",
-        "posterUrl": "https://external-preview.redd.it/c_NzPuSCEWMnBA0eBgL2D8qA1Dww4kCxXwADsAWct94.png?auto=webp&s=7d86baeba8898d6c8236ffb2918223d7f630d5e3",
-        "alt": "Bastigard: Match Merge Defend: preview shared by u/Rodrigo01",
-        "storage": "external",
-        "rights": "source-linked",
-        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x16djd/"
-      },
-      "posts": [
-        {
-          "id": "1x16djd",
-          "url": "https://www.reddit.com/r/aigamedev/comments/1x16djd/",
-          "title": "My new IA Game - Bastigard: Match Merge Defend",
-          "author": "Rodrigo01",
-          "createdAt": "2026-10-08T23:42:30.000Z",
-          "kind": "showcase",
-          "excerpt": "Merge resources into defensive structures and protect a castle from dragon waves. The studio announces an Android release built around short sessions and one-handed play."
+          "excerpt": "A side-scrolling survivor game designed for Game Boy Advance hardware and emulators. The creator shares a demoable work in progress with generated artwork and music.",
+          "flair": "Demo | Project | Workflow"
         }
       ],
       "reviewStatus": "reviewed"

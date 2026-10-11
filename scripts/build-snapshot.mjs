@@ -2,6 +2,7 @@ import { readFile, writeFile, rename } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
 import { pathToFileURL } from 'node:url';
 import { decodeEntities } from '../worker/src/archive.mjs';
+import { PROJECT_FLAIR, projectFlair } from '../worker/src/source-policy.mjs';
 import { AUTHOR, POST_ID, canonicalProjectUrl, httpsUrl, sourceUrl, validateCatalog } from '../worker/src/validation.mjs';
 
 const clean = value => decodeEntities(value || '').replace(/\\([_&])/g, '$1');
@@ -38,7 +39,7 @@ function preview(post, title) {
     storage: 'external', rights: 'source-linked', sourceUrl: sourceUrl(post.id) };
 }
 function checkedPost(post, reviewedAt) {
-  if (!post || !POST_ID.test(post.id) || !AUTHOR.test(post.author) || post.author.toLowerCase() === 'automoderator'
+  if (!post || !projectFlair(post.link_flair_text) || !POST_ID.test(post.id) || !AUTHOR.test(post.author) || post.author.toLowerCase() === 'automoderator'
     || post.subreddit?.toLowerCase() !== 'aigamedev' || post.over_18 || post.stickied || post.removed
     || post.removed_by_category || post.removed_by || post.banned_by
     || [post.title, post.selftext].some(value => /^\[(deleted|removed)\]$/i.test(value || ''))
@@ -87,7 +88,7 @@ export function buildSnapshot(base, archive, review) {
     const sameProject = project && [...games.values()].find(game => game.id !== id
       && game.author.name.toLowerCase() === author.toLowerCase() && canonicalProjectUrl(game.projectUrl) === project);
     if (sameProject) throw new Error(`Project already exists as ${sameProject.id}; review its timeline instead.`);
-    const timeline = history.map(post => ({ id: post.id, url: sourceUrl(post.id), title: clean(post.title), author: post.author,
+    const timeline = history.map(post => ({ id: post.id, url: sourceUrl(post.id), title: clean(post.title), author: post.author, flair: PROJECT_FLAIR,
       createdAt: new Date(post.created_utc * 1000).toISOString(),
       kind: /\b(update|progress|devlog|added|patch)\b/i.test(post.title) ? 'update'
         : /\b(released|launched|available now)\b/i.test(post.title) ? 'release' : 'showcase',

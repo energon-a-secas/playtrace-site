@@ -8,6 +8,20 @@ import { acquire } from '../src/lease.mjs';
 import { NOW, fixtureEnv, fixtureCatalog, rawPost, fixtureWorker, request } from './helpers.mjs';
 
 const deps = data => ({ now: () => NOW, sleep: async () => {}, fetch: async () => Response.json({ data }) });
+test('only the exact project flair can enter the index, through recent or historical ingestion', async () => {
+  for (const flair of ['News','Discussion','Questions & Help','Tools or Resource','Workflow Not Included','Research','Commercial Self Promotion','Media','Workflow',null,undefined]) {
+    assert.equal(normalizePost(rawPost('new12', { link_flair_text: flair }), NOW), null);
+  }
+  for (const historical of [false,true]) {
+    const env = fixtureEnv();
+    const rows = [rawPost('keep1'),rawPost('news1',{link_flair_text:'News'}),rawPost('promo',{link_flair_text:'Commercial Self Promotion'})];
+    await ingest(env,deps(rows),historical);
+    assert.deepEqual((await catalog(env.DB)).games.map(game=>game.id),['g_keep1']);
+    const invalid = fixtureCatalog(); delete invalid.games[0].posts[0].flair;
+    await assert.rejects(importCatalog(env.DB,invalid),/Only source posts/);
+    env.DB.close();
+  }
+});
 test('normalizer rejects removed/adult/discussion/malformed rows and decodes preview URLs once', () => {
   const valid = normalizePost(rawPost(), NOW);
   assert.equal(valid.clear, true); assert.equal(valid.preview.url, 'https://preview.redd.it/game.png?x=1&y=2');

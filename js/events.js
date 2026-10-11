@@ -52,6 +52,11 @@ export function bindEvents() {
     $(id).addEventListener('change', event => applyFilter(key, event.target.value));
   }
   document.addEventListener('click', async event => {
+    const genre = event.target.closest('button[data-category]');
+    if (genre) {
+      applyFilter('category', genre.dataset.category);
+      $('categorySelect').focus({ preventScroll: true }); $('discover').scrollIntoView({ block: 'start' }); return;
+    }
     const stage = event.target.closest('button[data-stage], button[data-stage-target]');
     if (stage) {
       const value = stage.dataset.stage || stage.dataset.stageTarget;

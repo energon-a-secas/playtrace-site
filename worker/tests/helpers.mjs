@@ -40,7 +40,7 @@ export function fixtureGame(id = 'abc12', author = 'MakerName') {
     author: { name: author, url: `https://www.reddit.com/user/${author}/` }, category: 'puzzle', tags: ['prototype'], stage: 'prototype',
     platforms: [], projectUrl: 'https://maker.itch.io/puzzle', firstSeenAt: at, updatedAt: at,
     preview: { kind: 'image', url: 'https://preview.redd.it/test.png', posterUrl: null, alt: 'A puzzle screenshot', storage: 'external', rights: 'source-linked', sourceUrl: url },
-    posts: [{ id, url, title: 'My small puzzle game', author, createdAt: at, kind: 'showcase', excerpt: 'A source-linked puzzle prototype.' }] };
+    posts: [{ id, url, title: 'My small puzzle game', author, flair: 'Demo | Project | Workflow', createdAt: at, kind: 'showcase', excerpt: 'A source-linked puzzle prototype.' }] };
 }
 export function fixtureCatalog(games = [fixtureGame()]) {
   return { schemaVersion: 1, generatedAt: '2026-10-10T12:00:00.000Z', source: { subreddit: 'aigamedev',
@@ -74,6 +74,6 @@ export function request(path, { method = 'GET', body, auth, origin = ORIGIN, ip 
     ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}), ...(ip ? { 'CF-Connecting-IP': ip } : {}),
   }, ...(body !== undefined ? { body: JSON.stringify(body) } : {}) });
 }
-export const rawPost = (id = 'new12', overrides = {}) => ({ id, author: 'NewMaker', title: 'I made a puzzle game', subreddit: 'aigamedev',
+export const rawPost = (id = 'new12', overrides = {}) => ({ id, author: 'NewMaker', title: 'I made a puzzle game', subreddit: 'aigamedev', link_flair_text: 'Demo | Project | Workflow',
   created_utc: NOW / 1000 - 100, selftext: 'Here is my puzzle game.', url: 'https://newmaker.itch.io/my-game',
   preview: { images: [{ source: { url: 'https://preview.redd.it/game.png?x=1&amp;y=2' } }] }, ...overrides });

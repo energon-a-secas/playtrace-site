@@ -1,6 +1,7 @@
 import { unavailable, notFound, invalid } from './http.mjs';
 import { validateCatalog, canonicalProjectUrl } from './validation.mjs';
 import { enrichGames } from './steam.mjs';
+import { projectFlair } from './source-policy.mjs';
 
 export function database(env) { if (!env.DB) throw unavailable(); return env.DB; }
 export const query = (db, sql, ...args) => db.prepare(sql).bind(...args);
@@ -58,6 +59,9 @@ const eligible = `NOT EXISTS(SELECT 1 FROM removals r WHERE r.game_id=json_extra
 export async function importCatalog(db, input) {
   const validated = validateCatalog(input);
   const { games, ...head } = validated;
+  if (games.some(game => game.posts.some(post => !projectFlair(post.flair)))) {
+    throw invalid('Only source posts tagged Demo | Project | Workflow belong in the index.');
+  }
   // Canonical matching metadata is server-derived, never an author-only merge key.
   const rows = games.map(game => ({ ...game, _canonical: canonicalProjectUrl(game.projectUrl) }));
   const payload = JSON.stringify(rows);

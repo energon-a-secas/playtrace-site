@@ -35,3 +35,7 @@ Project details lead with artwork filling the banner, with Project notes and a w
 ## Project platforms
 
 The Platform filter describes the linked destination: itch.io, Steam, a code repository, another project website, or no project link. Each validated game derives its `distribution` field from its HTTPS `projectUrl`, so existing and newly collected records receive labels without reimporting the archive. This is separate from `platforms`, which describes supported devices under Runs on, and `stage`, which describes development progress. A store URL identifies a destination; it does not establish a completed release. Confirmed Steam metadata retains its own release and price labels.
+
+## Source inclusion
+
+Only Reddit posts with the exact Demo | Project | Workflow flair are eligible. Apply the same rule to historical imports and existing records. Hide excluded projects without deleting their stored contributions. Cards open project details across the whole surface; independent genre chips apply filters and the Reddit icon opens the latest source post.

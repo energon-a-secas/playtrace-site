@@ -42,7 +42,8 @@ function stringList(value, maxItems, maxLength) {
   value.forEach(item => text(item, maxLength));
 }
 export function validatePost(post, author) {
-  exactKeys(post, ['id', 'url', 'title', 'author', 'createdAt', 'kind', 'excerpt', ...(Object.hasOwn(post || {}, 'assets') ? ['assets'] : [])]);
+  exactKeys(post, ['id', 'url', 'title', 'author', 'createdAt', 'kind', 'excerpt', ...(Object.hasOwn(post || {}, 'assets') ? ['assets'] : []), ...(Object.hasOwn(post || {}, 'flair') ? ['flair'] : [])]);
+  if (post.flair !== undefined) text(post.flair, 100);
   if (post.assets !== undefined) validateAssets(post.assets);
   if (typeof post.id !== 'string' || typeof post.author !== 'string' || !POST_ID.test(post.id) || !AUTHOR.test(post.author) || post.author.toLowerCase() !== author.toLowerCase()) throw invalid();
   if (post.url !== sourceUrl(post.id)) throw invalid('Source posts must use their canonical Reddit URL.');
