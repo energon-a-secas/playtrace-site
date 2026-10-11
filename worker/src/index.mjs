@@ -6,6 +6,7 @@ import { consolidateReposts, resolveGame } from './duplicates.mjs';
 import { json, errorResponse, exactKeys, readJson, readBytes, checkOrigin, withCors, notFound, strongSecret } from './http.mjs';
 import { authenticate, authenticateOperator, accountConfigured } from './auth.mjs';
 import { database, catalog, importCatalog, meta, removal } from './store.mjs';
+import { publicCacheKey, versionedPublicKey, invalidatePublicCache, readPublicCache, writePublicCache } from './public-cache.mjs';
 import { signals, getMe, deleteMe, mutateGame } from './accounts.mjs';
 import { ingest, ingestionConfigured, COMMUNITY_CREATED_AT } from './ingestion.mjs';
 import { mediaConfigured, storePreview, serveMedia } from './media.mjs';
@@ -87,7 +88,7 @@ async function status(env) {
 export function createWorker(overrides = {}) {
   const deps = { fetch: globalThis.fetch.bind(globalThis), now: () => Date.now(), sleep: ms => new Promise(resolve => setTimeout(resolve, ms)), ...overrides };
   return {
-    async fetch(request, env) {
+    async fetch(request, env, context) {
       let origin = null;
       try {
         origin = checkOrigin(request, env);
@@ -103,6 +104,11 @@ export function createWorker(overrides = {}) {
         } }), origin);
         if (!methods.includes(request.method)) return withCors(json({ error: { code: 'INVALID_REQUEST', message: 'Method not allowed.' } }, 405, { Allow: methods.join(', ') }), origin);
         const match = pattern.exec(path);
+        const cache=deps.cache??globalThis.caches?.default;
+        const key=cache?await versionedPublicKey(env.DB,publicCacheKey(request,action)):null;
+        const cached=await readPublicCache(cache,key);
+        if(cached)return withCors(cached,origin);
+        let changedPublic=request.method!=='GET'&&['import','ingest','backfill','enrich','adminGame','editorImage','editorDetails','editorMedia','editorCategories','editorJobsRun','editorReposts'].includes(action);
         let result;
         if (action === 'status') result = json(await status(env), 200, { 'Cache-Control': request.headers.has('Authorization') ? 'no-store' : 'public, max-age=60' });
         else if (action === 'catalog') result = json(await catalog(database(env), { limit: url.searchParams.get('pageSize') || 200,
@@ -171,6 +177,7 @@ export function createWorker(overrides = {}) {
           const body = await readJson(request, action === 'import' ? 2 * 1024 * 1024 : 8192);
           if (action === 'campaign') {
             exactKeys(body,['action','options']);
+            changedPublic=body.action==='run'||(body.action==='reposts'&&body.options?.apply===true);
             if(body.action==='enqueue')result=json(await enqueueJobs(db,body.options,{subject:'operator'},deps));
             else if(body.action==='run'){exactKeys(body.options,Object.hasOwn(body.options||{},'kind')?['kind']:[]);result=json(await runJobs(db,env,deps,2,body.options.kind??'all'));}
             else if(body.action==='reposts'){exactKeys(body.options,['apply']);if(typeof body.options.apply!=='boolean')throw notFound();result=json(await consolidateReposts(db,deps,body.options.apply));}
@@ -187,6 +194,9 @@ export function createWorker(overrides = {}) {
             result = json(await removal(db, env.PREVIEWS, match[1], body.reason, new Date(deps.now()).toISOString()));
           } else result = json(await storePreview(db, env, match[1], body, request, deps));
         }
+        if(changedPublic)await invalidatePublicCache(env.DB);
+        const save=writePublicCache(cache,key,result);
+        if(context?.waitUntil)context.waitUntil(save);else await save;
         return withCors(result, origin);
       } catch (error) { return withCors(errorResponse(error), origin); }
     },
@@ -205,7 +215,7 @@ export function createWorker(overrides = {}) {
         }
         const recent = await ingest(env, deps);
         if (recent.status === 'ok') await ingest(env, deps, true);
-      })();
+      })().then(async result=>{await invalidatePublicCache(env.DB);return result;});
       if (context?.waitUntil) context.waitUntil(run);
       else await run;
     },

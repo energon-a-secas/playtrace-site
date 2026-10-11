@@ -284,11 +284,51 @@ test('unavailable account controls show availability without a sign-in call to a
   assert.match($('privacyMessage').textContent, /not available yet/);
 });
 
-async function catalogueModule(request) {
+async function catalogueModule(request, loadPublicSnapshot = async () => { throw new Error('No snapshot'); }) {
   return isolatedModule('state.js', { createStore: () => ({ load: () => ({}), save: () => true }),
-    defaults, readLocation, validateCatalog, apiConfigured: true, request });
+    defaults, readLocation, validateCatalog, apiConfigured: true, request, loadPublicSnapshot });
 }
 const pageOf = (games, nextCursor = null, total = seed.games.length) => ({ ...copy(), games, pagination: { total, nextCursor } });
+
+test('a service outage can load a recent public snapshot, then live recovery replaces it', async () => {
+  let offline=true, snapshots=0;
+  const saved={...copy(),snapshotAt:new Date().toISOString()};
+  const module=await catalogueModule(async()=>{
+    if(offline)throw Object.assign(new Error('Unavailable'),{code:'SERVICE_UNAVAILABLE'});
+    return pageOf(copy().games.slice(1),null,seed.games.length-1);
+  },async()=>{snapshots++;return saved;});
+  await module.loadCatalog(()=>{});
+  assert.equal(module.state.loaded,true);assert.equal(module.state.status,'error');assert.equal(module.state.catalogSnapshot,true);
+  assert.equal(module.state.games.length,seed.games.length);
+  offline=false;await module.loadCatalog(()=>{});
+  assert.equal(module.state.catalogSnapshot,false);assert.equal(module.state.status,'ready');
+  assert.equal(module.state.games.length,seed.games.length-1);assert.equal(snapshots,1);
+});
+
+test('snapshots cannot mask malformed data or replace a partially loaded live archive', async () => {
+  for(const partial of [false,true]){
+    let calls=0,snapshots=0;
+    const module=await catalogueModule(async()=>{
+      if(!partial)return {schemaVersion:9};
+      if(!calls++)return pageOf(copy().games.slice(0,40),'second');
+      throw Object.assign(new Error('Unavailable'),{code:'SERVICE_UNAVAILABLE'});
+    },async()=>{snapshots++;return copy();});
+    await module.loadCatalog(()=>{});
+    assert.equal(snapshots,0);assert.equal(module.state.status,'error');assert.equal(module.state.catalogSnapshot,false);
+    assert.equal(module.state.games.length,partial?40:0);
+  }
+});
+
+test('public fallback requires a dated export no older than a day and validates provenance', async () => {
+  let value={...copy(),snapshotAt:new Date(Date.now()-1000).toISOString()};
+  const loader=await isolatedModule('catalog-snapshot.js',{validateCatalog,fetch:async()=>Response.json(value)});
+  assert.equal((await loader.loadPublicSnapshot()).games.length,seed.games.length);
+  for(const snapshotAt of [undefined,'bad',new Date(Date.now()+60000).toISOString(),new Date(Date.now()-86400001).toISOString()]){
+    value={...copy(),snapshotAt};await assert.rejects(loader.loadPublicSnapshot(),/out of date/);
+  }
+  value={...copy(),snapshotAt:new Date().toISOString()};value.games[0].posts[0].author='different_maker';
+  await assert.rejects(loader.loadPublicSnapshot(),/Mismatched source author/);
+});
 
 test('catalogue first page renders before the next page resolves, then completes without duplicates', async () => {
   let finish, calls = 0; const renders = [];

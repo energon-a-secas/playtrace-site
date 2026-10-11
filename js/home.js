@@ -2,6 +2,7 @@ import { request } from './api.js';
 import { validateCatalog } from './collection.js';
 import { CONFIG } from './config.js';
 import { NeoAuth } from './neorgon-auth.js';
+import { loadPublicSnapshot } from './catalog-snapshot.js';
 
 // Preserve every previously shared project/filter URL when moving the collection.
 const current = new URL(location.href);
@@ -10,7 +11,9 @@ if (['game','q','cat','platform','stage','maker','author','following','view','so
 } else {
   NeoAuth.start();
   try {
-    const catalog = validateCatalog(await request('/catalog?pageSize=200'));
+    let catalog;
+    try { catalog = validateCatalog(await request('/catalog?pageSize=200')); }
+    catch(error) { if(error.code!=='SERVICE_UNAVAILABLE'&&!(error instanceof TypeError))throw error; catalog=await loadPublicSnapshot(); }
     const game = catalog.games.find(entry => entry.id === CONFIG.featuredGameId);
     if (game) {
       document.getElementById('homeFeatureTitle').textContent = game.title;

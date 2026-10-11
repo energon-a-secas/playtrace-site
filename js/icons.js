@@ -14,7 +14,7 @@ export function icon(name) {
 export function playLabel(game) {
   if (game.availability?.status === 'broken') return 'Open game page';
   const platform = game.distribution?.id;
-  if (platform === 'steam') return game.steam?.type === 'demo' ? 'Get the demo' : 'View on Steam';
+  if (platform === 'steam') return game.steam?.type === 'demo' && game.steam.state === 'released' ? 'Get the demo' : 'View on Steam';
   if (platform === 'itch') return ['released', 'playable'].includes(game.stage) || game.availability?.playable ? 'Play on itch.io' : 'Visit itch.io';
   if (game.distribution?.kind === 'repository') return 'Source code';
   return game.platforms.includes('Browser') && (['released', 'playable'].includes(game.stage) || game.availability?.playable) ? 'Play in browser' : 'Visit game';

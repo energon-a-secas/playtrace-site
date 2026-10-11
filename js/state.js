@@ -1,8 +1,9 @@
 import { createStore } from './neorgon-persist.js';
 import { defaults, readLocation, validateCatalog } from './collection.js';
 import { apiConfigured, request } from './api.js';
+import { loadPublicSnapshot } from './catalog-snapshot.js';
 const preferences = createStore({ key: 'playtrace-site:collection', version: 1 });
-export const state = { ...defaults, games: [], catalog: null, status: 'loading', loaded: false, error: '', visibleLimit: 60, catalogPartial: false, catalogTotal: null,
+export const state = { ...defaults, games: [], catalog: null, status: 'loading', loaded: false, error: '', visibleLimit: 60, catalogPartial: false, catalogTotal: null, catalogSnapshot: false,
   isAdmin: false, service: null, serviceError: '', signedIn: false, userId: null, follows: [], prices: [], accountLoaded: false,
   accountError: '', detail: null, detailSignals: null, detailSignalError: '', accountBusy: false };
 export function restoreLocation() {
@@ -62,9 +63,18 @@ export async function loadCatalog(render) {
     if (number !== requestNumber) return;
     state.catalog = catalog; state.games = catalog.games; state.loaded = true; state.status = 'ready';
     if (state.category !== 'all' && !catalog.categories.some(category=>category.id===state.category)) state.category='all';
-    state.catalogTotal = catalog.games.length; state.catalogPartial = false;
+    state.catalogTotal = catalog.games.length; state.catalogPartial = false; state.catalogSnapshot = false;
   } catch (error) {
     if (number !== requestNumber) return;
+    if (!state.loaded && !controller.signal.aborted && (error.code === 'SERVICE_UNAVAILABLE' || error instanceof TypeError)) {
+      try {
+        const catalog = await loadPublicSnapshot(controller.signal);
+        if (number !== requestNumber) return;
+        state.catalog = catalog; state.games = catalog.games; state.loaded = true; state.catalogSnapshot = true;
+        state.catalogTotal = catalog.games.length; state.catalogPartial = false;
+        if (state.category !== 'all' && !catalog.categories.some(category=>category.id===state.category)) state.category='all';
+      } catch { /* Keep the live-service error if a recent export is unavailable. */ }
+    }
     state.status = 'error'; state.error = error.name === 'AbortError' ? 'The collection took too long to load. Please try again.' : error.message;
   } finally { clearTimeout(timer); if (number === requestNumber) render(); }
 }

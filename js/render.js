@@ -45,7 +45,8 @@ export function render() {
   $('collectionResults').setAttribute('aria-busy', String(loading));
   $('collectionLoading').hidden = state.loaded || !loading;
   $('collectionError').hidden = state.status !== 'error';
-  $('collectionErrorText').textContent = state.status !== 'error' ? '' : state.catalogPartial
+  $('collectionErrorText').textContent = state.status !== 'error' ? '' : state.catalogSnapshot
+    ? `Browsing a saved collection from ${dateLabel(state.catalog.snapshotAt)}. Live feedback and account updates are temporarily unavailable.` : state.catalogPartial
     ? 'Older projects could not be loaded. Search and filters currently cover the loaded projects. Retry to load the full collection.'
     : state.loaded ? 'Could not refresh. The last loaded collection is still here.' : 'The collection could not be loaded. Please try again.';
   const games = selectGames(state.games, state);
@@ -103,7 +104,7 @@ function renderOverview() {
     : history?.scannedThrough ? `History checked from ${dateLabel(history.communityCreatedAt)} through ${dateLabel(history.scannedThrough)}. Historical projects are being added alongside new updates.`
       : 'Newest updates first. Collecting the community’s history from December 2022.';
   const stamp = `${source.mode === 'scheduled' && source.lastSuccessfulIngestAt ? 'Archive refreshed' : 'Archive snapshot'} ${dateLabel(source.retrievedAt)} · ${pulse.posts} source posts`;
-  $('collectionProvenance').textContent = stamp;
+  $('collectionProvenance').textContent = state.catalogSnapshot ? `Saved collection · ${dateLabel(state.catalog.snapshotAt)} · ${pulse.posts} source posts` : stamp;
   $('sourceDetails').textContent = `Retrieved ${new Date(source.retrievedAt).toLocaleString('en-US', { timeZone: 'UTC' })} UTC. ${source.coverageThrough ? `Latest included source date: ${dateLabel(source.coverageThrough)}.` : 'Archive coverage is not yet confirmed.'}`;
   const removalUrl = new URL(CONFIG.removalContact || 'https://balise.neorgon.com/report/');
   if (removalUrl.hostname === 'balise.neorgon.com') {

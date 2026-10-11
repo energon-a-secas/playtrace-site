@@ -89,3 +89,17 @@ node scripts/prepare-feedback-window.mjs --catalog /private/path/catalog.json --
 ```
 
 The input includes `windowStart`, `windowEnd`, `complete:true` and archived `rows`. The script refuses incomplete windows, applies the same source/author/date filters as normal queue reads, and writes bounded evidence only to matching pending feedback jobs. Inspect and apply its SQL separately. Cached evidence avoids repeated archive requests; Jev rate limits and the explicit publish step still apply. This staging operation creates no visitor responses, ratings or quiz metrics.
+
+The classification phase can also run outside the Worker using its same typed Jev implementation:
+
+```sh
+node scripts/classify-feedback-jobs.mjs --jobs /private/path/pending-jobs.json --catalog /private/path/catalog.json --env /private/path/credentials.env --output /private/path/review-results
+```
+
+Export `id,game_id,window_start,payload_json` for pending feedback jobs with staged `archiveBatch` evidence using D1's JSON output. This runner reads only `JEV_API_KEY` from the supplied environment file, checkpoints completed classifications and honors provider cooldowns. Its SQL only changes a still-pending job whose evidence is unchanged; running jobs and newer evidence are preserved. Inspect and apply that SQL separately. Results remain private drafts and require normal admin approval before publication.
+
+## Discovery availability
+
+Anonymous catalogue and status responses use a 60-second Worker cache. Each lookup reads one indexed revision row; successful catalogue edits, operator updates and scheduled maintenance advance that revision. Authorization, guest edit keys, cookies and all personal/contribution routes bypass the shared cache. CORS is checked before lookup and applied separately to each response.
+
+On a first-load service interruption, Home and Browse may use `data/public-catalog.json`, a dated export from the public API. It must be less than 24 hours old and pass normal provenance validation. Browse labels it as a saved collection. It never replaces a partially loaded live archive, hides invalid server data or accepts offline contributions. Keep its timestamp equal to the actual export time; do not renew an old file's date. The curator seed in `data/catalog.json` remains separate.
