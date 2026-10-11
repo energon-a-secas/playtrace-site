@@ -1,6 +1,6 @@
 import { request } from './api.js';
 import { state } from './state.js';
-import { editKey } from './feedback.js';
+import { editKey } from './guest-key.js';
 import { money, dateLabel, safeUrl, validateSteam } from './collection.js';
 import { $, escHtml as e } from './utils.js';
 

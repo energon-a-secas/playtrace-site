@@ -18,7 +18,7 @@ Find a game to try, understand what changed, and share a useful note with an opt
 
 Two optional multi-select questions invite a quick first impression, followed by an optional note. Keep the questions before existing contributions on narrow screens. Display name and ideal price expand only when wanted. Publish aggregate choices alongside the conversation without presenting visitor responses as verified players.
 
-A five-question screenshot game offers a short discovery break using 20 curated projects with available builds and verified game names. Include demos, label them honestly, and avoid Reddit headlines or title-screen images as clues. Reveal names after the round, connect results to the real projects, and save recognition and chosen-name counts. Skips and unavailable images are separate from wrong answers; repeat rounds do not represent unique people. Visitors can delete their own quiz records, and admins can view aggregated choice distributions.
+A highlighted header link opens a dedicated screenshot-game page, separate from the collection. Its five-question round offers a short discovery break using 20 curated projects with available builds and verified game names. Include demos, label them honestly, and avoid Reddit headlines or title-screen images as clues. Reveal names after the round, connect results to the real projects, and save recognition and chosen-name counts. Skips and unavailable images are separate from wrong answers; repeat rounds do not represent unique people. Visitors can delete their own quiz records, and admins can view aggregated choice distributions.
 
 ## Voice and principles
 

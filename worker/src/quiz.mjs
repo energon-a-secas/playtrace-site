@@ -38,7 +38,8 @@ function publicRound(row,pool,now) {
   return { id:row.id, expiresAt:new Date(row.expires_at).toISOString(), poolSize:pool.length,
     questions:questions.map((question,index)=>{
       const game=pool.find(game=>game.id===question.gameId);
-      return { index, image:game.image, alt:game.alt, trimTop:game.trimTop || 0, choices:question.choices.map(id=>({id,title:pool.find(game=>game.id===id).title})) };
+      return { index, image:game.image, ...(game.fallbackImage ? {fallbackImage:game.fallbackImage} : {}),
+        alt:game.alt, trimTop:game.trimTop || 0, choices:question.choices.map(id=>({id,title:pool.find(game=>game.id===id).title})) };
     }) };
 }
 export async function startQuiz(db,env,request,body,deps) {

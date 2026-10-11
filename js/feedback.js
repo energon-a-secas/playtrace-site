@@ -3,24 +3,14 @@ import { apiConfigured, request } from './api.js';
 import { parsePrice, money, dateLabel } from './collection.js';
 import { $, escHtml as e } from './utils.js';
 import { feedbackQuestions, feedbackOptions, validChoices } from './feedback-options.js';
+import { editKey as guestEditKey, keyPersists } from './guest-key.js';
 
-const storageKey = 'playtrace:feedback-edit-key:v1';
-let memoryKey = '', persistent = true, session = 0, readNumber = 0, controller;
+let session = 0, readNumber = 0, controller;
 const empty = () => ({ gameId: '', entries: [], count: 0, prices: null, nextCursor: null, mine: null,
   moderated: false, loading: false, busy: false, loaded: false, error: '', ownError: false, dirty: false, message: '' });
 let feedback = empty();
 
-export function editKey(create = false) {
-  if (memoryKey) return memoryKey;
-  try { const value = localStorage.getItem(storageKey); if (/^[a-f0-9]{64}$/.test(value || '')) memoryKey = value; }
-  catch { persistent = false; }
-  if (!memoryKey && create) {
-    memoryKey = [...crypto.getRandomValues(new Uint8Array(32))].map(n => n.toString(16).padStart(2, '0')).join('');
-    try { localStorage.setItem(storageKey, memoryKey); persistent = localStorage.getItem(storageKey) === memoryKey; }
-    catch { persistent = false; }
-  }
-  return memoryKey;
-}
+export const editKey = guestEditKey;
 function validEntry(value) {
   return value && /^[a-f0-9-]{36}$/.test(value.id) && typeof value.displayName === 'string' && value.displayName.length <= 40
     && (value.choices === undefined || validChoices(value.choices))
@@ -95,7 +85,7 @@ export function renderFeedback() {
   $('feedbackAvailability').textContent = feedback.moderated ? 'This contribution was removed. You can use the correction link if you think this was a mistake.'
     : !available ? 'Guest feedback is temporarily unavailable. You can still explore the project.'
       : feedback.ownError ? 'Your previous contribution could not be loaded. Retry before editing it.'
-        : persistent ? 'No account needed. You can edit or remove your contribution from this browser.'
+        : keyPersists() ? 'No account needed. You can edit or remove your contribution from this browser.'
           : 'Your browser cannot save an edit key. You can edit or remove your contribution during this visit.';
   const prices = feedback.prices;
   const choices = feedback.choices || [];

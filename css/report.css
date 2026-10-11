@@ -30,9 +30,18 @@ html:not([data-theme]) .header-bar[data-header-skin="custom"] {
 .header-bar .header-actions > .btn { color: var(--header-text); border-color: var(--header-control-border); font-size: 13px; }
 .header-bar .header-actions > .btn:hover { color: var(--header-text); background: var(--header-menu-hover); }
 .header-bar .header-actions > a[href^="#"] { border-color: transparent; }
-@media (max-width: 360px) {
-  #shareView { width: var(--header-control-h); padding-inline: 0; justify-content: center; }
-  #shareView > span { display: none; }
+.header-bar .header-actions > .header-quiz-link {
+  color: var(--pt-gold); background: var(--pt-amber-soft); border: 1px solid var(--pt-gold);
+  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--pt-gold) 10%, transparent);
+}
+.header-bar .header-actions > .header-quiz-link:hover,
+.header-bar .header-actions > .header-quiz-link[aria-current="page"] {
+  color: var(--pt-night); background: var(--pt-amber); border-color: var(--pt-gold);
+}
+.header-quiz-short { display: none; }
+@media (max-width: 700px) {
+  .header-quiz-label { display: none; }
+  .header-quiz-short { display: inline; }
 }
 .neo-footer a:hover { color: var(--pt-ink); }
 

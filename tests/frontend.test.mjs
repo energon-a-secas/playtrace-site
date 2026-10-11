@@ -344,7 +344,9 @@ const feedbackPage = (entries = [], gameId = 'g_abc12') => ({ gameId, entries, c
   idealPrices: { currency: 'USD', count: 0, medianCents: null }, nextCursor: null });
 async function feedbackModule(request) {
   const $ = fakeNodes(), state = { service: { capabilities: { feedback: true } } };
+  const guest = await isolatedModule('guest-key.js', {});
   const api = await isolatedModule('feedback.js', { state, $, request, apiConfigured: true, parsePrice, feedbackQuestions, feedbackOptions, validChoices,
+    guestEditKey: guest.editKey, keyPersists: guest.keyPersists,
     money: collection.money, dateLabel: collection.dateLabel, e: value => String(value).replaceAll('<', '&lt;').replaceAll('>', '&gt;') });
   return { api, $, state };
 }

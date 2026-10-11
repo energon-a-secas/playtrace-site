@@ -29,6 +29,9 @@ test('curated pool has 20 concise names with source-hosted images and five rando
   const round=await start(env,worker);assert.equal(round.questions.length,5);
   const truth=choicesFor(env,round.id);assert.equal(new Set(truth.map(q=>q.gameId)).size,5);
   for(const [i,q] of round.questions.entries()){
+    const game=quizPool.find(game=>game.id===truth[i].gameId);
+    assert.equal(q.image,game.image);assert.equal(q.fallbackImage,game.fallbackImage);
+    if(q.fallbackImage)assert.equal(new URL(q.image).pathname.split('/')[1],new URL(q.fallbackImage).pathname.split('/')[1]);
     assert.equal(q.choices.length,4);assert.equal(new Set(q.choices.map(c=>c.id)).size,4);assert.equal(q.index,i);
     assert.ok(q.choices.some(c=>c.id===truth[i].gameId));assert.equal(q.gameId,undefined);assert.equal(q.correct,undefined);
   }

@@ -12,7 +12,8 @@ export const quizPool = Object.freeze([
     "id": "g_1x2izrh",
     "title": "Generic South London Mystery",
     "projectUrl": "https://thuggish-games.itch.io/generic-south-london-mystery",
-    "image": "https://img.itch.zone/aW1hZ2UvNTExMjE0NS8zMDYwODQzNS5wbmc=/original/qTCEM8.png",
+    "image": "https://img.itch.zone/aW1hZ2UvNTExMjE0NS8zMDYwODQzNS5wbmc=/794x1000/byy9Lo.png",
+    "fallbackImage": "https://img.itch.zone/aW1hZ2UvNTExMjE0NS8zMDYwODQzNS5wbmc=/original/qTCEM8.png",
     "alt": "A pixel-art apartment block at dusk, with a character outside a door and a mission panel."
   },
   {
@@ -20,21 +21,24 @@ export const quizPool = Object.freeze([
     "title": "Humans Not Included: Meowltdown",
     "trimTop": 0.085,
     "projectUrl": "https://hwaindustries.itch.io/humans-not-included-meowltdown",
-    "image": "https://img.itch.zone/aW1hZ2UvNTEwMjM0NS8zMDcwNjc5Ni5wbmc=/original/RaUy1d.png",
+    "image": "https://img.itch.zone/aW1hZ2UvNTEwMjM0NS8zMDcwNjc5Ni5wbmc=/794x1000/nJvde0.png",
+    "fallbackImage": "https://img.itch.zone/aW1hZ2UvNTEwMjM0NS8zMDcwNjc5Ni5wbmc=/original/RaUy1d.png",
     "alt": "Cartoon cats sit above three therapy cards, with choices for a treatment and an ending."
   },
   {
     "id": "g_1x2c8w8",
     "title": "Tap Turn Battler",
     "projectUrl": "https://tapturnbattler.itch.io/ttb",
-    "image": "https://img.itch.zone/aW1hZ2UvNDc2ODM3My8zMDI0MjU5Ni5qcGc=/original/P9USyL.jpg",
+    "image": "https://img.itch.zone/aW1hZ2UvNDc2ODM3My8zMDI0MjU5Ni5qcGc=/794x1000/pUIQgG.jpg",
+    "fallbackImage": "https://img.itch.zone/aW1hZ2UvNDc2ODM3My8zMDI0MjU5Ni5qcGc=/original/P9USyL.jpg",
     "alt": "A party of adventurers fights enemies in a stone hall with a turn-based action bar."
   },
   {
     "id": "g_1x2bwu2",
     "title": "MiniMachines: Steam to Singularities",
     "projectUrl": "https://kaydedm.itch.io/minimachines-steam-to-singularities",
-    "image": "https://img.itch.zone/aW1hZ2UvNTEzMTM2NC8zMDcxODM1Mi5qcGc=/original/LrgYgB.jpg",
+    "image": "https://img.itch.zone/aW1hZ2UvNTEzMTM2NC8zMDcxODM1Mi5qcGc=/794x1000/Xqz2lo.jpg",
+    "fallbackImage": "https://img.itch.zone/aW1hZ2UvNTEzMTM2NC8zMDcxODM1Mi5qcGc=/original/LrgYgB.jpg",
     "alt": "Small conveyor belts carry resources into colorful miniature factory machines."
   },
   {
@@ -48,7 +52,8 @@ export const quizPool = Object.freeze([
     "id": "g_1x1y16r",
     "title": "NEON AFTERHOURS",
     "projectUrl": "https://rexzen.itch.io/neon-afterhours",
-    "image": "https://img.itch.zone/aW1hZ2UvNTExNjgwMi8zMDYzNjUwNi5wbmc=/original/vUH2Zd.png",
+    "image": "https://img.itch.zone/aW1hZ2UvNTExNjgwMi8zMDYzNjUwNi5wbmc=/794x1000/jTWJJj.png",
+    "fallbackImage": "https://img.itch.zone/aW1hZ2UvNTExNjgwMi8zMDYzNjUwNi5wbmc=/original/vUH2Zd.png",
     "alt": "A top-down pixel-art room has a bed, desk, sofa, kitchen and bathroom overlooking a neon city."
   },
   {
@@ -69,14 +74,16 @@ export const quizPool = Object.freeze([
     "id": "g_1x1n7fu",
     "title": "Looks Legit",
     "projectUrl": "https://webholt.itch.io/looks-legit",
-    "image": "https://img.itch.zone/aW1hZ2UvNTEyNTc2MC8zMDY4NTU1OC5wbmc=/original/3Gf%2Bwm.png",
+    "image": "https://img.itch.zone/aW1hZ2UvNTEyNTc2MC8zMDY4NTU1OC5wbmc=/794x1000/0WV3cb.png",
+    "fallbackImage": "https://img.itch.zone/aW1hZ2UvNTEyNTc2MC8zMDY4NTU1OC5wbmc=/original/3Gf%2Bwm.png",
     "alt": "A painting desk shows an original soup-can picture beside a hand-painted copy and a palette."
   },
   {
     "id": "g_1x1jgp6",
     "title": "Somnaworld",
     "projectUrl": "https://michelowm.itch.io/somnaworld",
-    "image": "https://img.itch.zone/aW1hZ2UvNTExMTAwMy8zMDYwMTY0MS5wbmc=/original/lpf5br.png",
+    "image": "https://img.itch.zone/aW1hZ2UvNTExMTAwMy8zMDYwMTY0MS5wbmc=/794x1000/px8Exs.png",
+    "fallbackImage": "https://img.itch.zone/aW1hZ2UvNTExMTAwMy8zMDYwMTY0MS5wbmc=/original/lpf5br.png",
     "alt": "A colorful isometric world of floating land tiles, buildings and paths against a starry sky."
   },
   {
@@ -97,14 +104,16 @@ export const quizPool = Object.freeze([
     "id": "g_1x0dz91",
     "title": "SaucerJam",
     "projectUrl": "https://menezmethod.itch.io/saucerjam",
-    "image": "https://img.itch.zone/aW1hZ2UvNTA3MDQ2OC8zMDM1NTM5OC5wbmc=/original/j%2F%2F0md.png",
+    "image": "https://img.itch.zone/aW1hZ2UvNTA3MDQ2OC8zMDM1NTM5OC5wbmc=/794x1000/z3hugW.png",
+    "fallbackImage": "https://img.itch.zone/aW1hZ2UvNTA3MDQ2OC8zMDM1NTM5OC5wbmc=/original/j%2F%2F0md.png",
     "alt": "Small saucer-like vehicles move around an industrial arena with a timer and score display."
   },
   {
     "id": "g_1x099xo",
     "title": "BLOBSLAYER",
     "projectUrl": "https://rafasr.itch.io/blobslayer",
-    "image": "https://img.itch.zone/aW1hZ2UvNTA5NzQzOS8zMDU4MzQwMC5wbmc=/original/ozETzN.png",
+    "image": "https://img.itch.zone/aW1hZ2UvNTA5NzQzOS8zMDU4MzQwMC5wbmc=/794x1000/xd9UW%2B.png",
+    "fallbackImage": "https://img.itch.zone/aW1hZ2UvNTA5NzQzOS8zMDU4MzQwMC5wbmc=/original/ozETzN.png",
     "alt": "A tiny fighter swings a weapon at colorful blobs in a top-down arena with experience and crystal counters."
   },
   {
@@ -118,21 +127,24 @@ export const quizPool = Object.freeze([
     "id": "g_1wzmduk",
     "title": "Minnow's Den",
     "projectUrl": "https://agentbutterbear.itch.io/minnows-den",
-    "image": "https://img.itch.zone/aW1hZ2UvNTEwOTIzNC8zMDYwMDE3Ny5wbmc=/original/SbVPcv.png",
+    "image": "https://img.itch.zone/aW1hZ2UvNTEwOTIzNC8zMDYwMDE3Ny5wbmc=/794x1000/vrWYd3.png",
+    "fallbackImage": "https://img.itch.zone/aW1hZ2UvNTEwOTIzNC8zMDYwMDE3Ny5wbmc=/original/SbVPcv.png",
     "alt": "A bright apartment living room has a gray sofa, dining table, kitchen and paintings on the walls."
   },
   {
     "id": "g_1wz2pzv",
     "title": "Fivefold Crown",
     "projectUrl": "https://aygforge.itch.io/fivefoldcrown",
-    "image": "https://img.itch.zone/aW1hZ2UvNTA0ODg2MC8zMDUyNjQ4MS5wbmc=/original/0mroie.png",
+    "image": "https://img.itch.zone/aW1hZ2UvNTA0ODg2MC8zMDUyNjQ4MS5wbmc=/794x1000/9xjG3E.png",
+    "fallbackImage": "https://img.itch.zone/aW1hZ2UvNTA0ODg2MC8zMDUyNjQ4MS5wbmc=/original/0mroie.png",
     "alt": "A kingdom-management screen offers three choices for a festival and shows the state of neighboring kingdoms."
   },
   {
     "id": "g_1wyko70",
     "title": "Provision",
     "projectUrl": "https://waypost-studios.itch.io/provision",
-    "image": "https://img.itch.zone/aW1hZ2UvNDg2NzkxMC8zMDQyNDcyNy5wbmc=/original/4bJyZ7.png",
+    "image": "https://img.itch.zone/aW1hZ2UvNDg2NzkxMC8zMDQyNDcyNy5wbmc=/794x1000/avyCaY.png",
+    "fallbackImage": "https://img.itch.zone/aW1hZ2UvNDg2NzkxMC8zMDQyNDcyNy5wbmc=/original/4bJyZ7.png",
     "alt": "Conveyor belts connect factory machinery on an open floor, with a building toolbar below."
   },
   {
