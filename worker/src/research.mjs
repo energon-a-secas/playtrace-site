@@ -39,8 +39,8 @@ export async function saveResearch(db, id, body, admin, deps) {
     SELECT ?,?,?,?,?,1,?,?,? WHERE (?=0 OR EXISTS(SELECT 1 FROM questionnaires WHERE id=? AND revision=?))
     ON CONFLICT(id) DO UPDATE SET title=excluded.title,category=excluded.category,game_id=excluded.game_id,
       questions_json=excluded.questions_json,revision=questionnaires.revision+1,active=excluded.active,updated_at=excluded.updated_at,updated_by=excluded.updated_by
-    WHERE questionnaires.revision=? RETURNING *`, id, body.title.trim(), body.category, body.gameId, JSON.stringify(body.questions), Number(body.active), new Date(deps.now()).toISOString(), admin.subject, body.revision, id, body.revision, body.revision).first();
-  if (!saved) throw new ApiError('CONFLICT', 'This questionnaire changed. Reload before saving.', 409);
+    WHERE questionnaires.revision=? AND (questionnaires.game_id IS excluded.game_id OR NOT EXISTS(SELECT 1 FROM research_responses WHERE questionnaire_id=questionnaires.id)) RETURNING *`, id, body.title.trim(), body.category, body.gameId, JSON.stringify(body.questions), Number(body.active), new Date(deps.now()).toISOString(), admin.subject, body.revision, id, body.revision, body.revision).first();
+  if (!saved) throw new ApiError('CONFLICT', 'Reload this questionnaire before saving. If it already has responses, create a new study to change its project scope.', 409);
   return { questionnaire: form(saved) };
 }
 export async function researchResponse(db, env, request, id, gameId, body, deps) {
@@ -52,7 +52,10 @@ export async function researchResponse(db, env, request, id, gameId, body, deps)
   }
   await mutationLimit(db, env, `guest:${guest}`, request, request.method === 'DELETE' ? 'privacy' : 'price', deps.now());
   if (request.method === 'DELETE') {
-    await query(db, 'DELETE FROM research_responses WHERE questionnaire_id=? AND game_id=? AND guest_key_hash=?', id, game.id, guest).run(); return { deleted: true };
+    await db.batch([
+      query(db, "DELETE FROM editorial_jobs WHERE kind='research' AND game_id=? AND EXISTS(SELECT 1 FROM research_responses WHERE questionnaire_id=? AND game_id=? AND guest_key_hash=?)",game.id,id,game.id,guest),
+      query(db, 'DELETE FROM research_responses WHERE questionnaire_id=? AND game_id=? AND guest_key_hash=?', id, game.id, guest),
+    ]); return { deleted: true };
   }
   exactKeys(body, ['gameId','revision','answers']);
   if (body.revision !== questionnaire.revision) throw new ApiError('CONFLICT', 'The questions changed. Reload this playtest to continue.', 409);
@@ -65,6 +68,9 @@ export async function researchResponse(db, env, request, id, gameId, body, deps)
     ON CONFLICT(questionnaire_id,game_id,guest_key_hash) DO UPDATE SET revision=excluded.revision,questions_json=excluded.questions_json,
     answers_json=excluded.answers_json,updated_at=excluded.updated_at RETURNING game_id`, id, guest, body.revision, JSON.stringify(questionnaire.questions), JSON.stringify(body.answers), at, at, id, game.id, body.revision).first();
   if (!saved) throw new ApiError('CONFLICT', 'The questionnaire changed. Reload before sending.', 409);
+  // Invalidate copied evidence after an edit. An in-flight job can no longer
+  // update its deleted row, so it cannot restore a superseded response.
+  await query(db,"DELETE FROM editorial_jobs WHERE kind='research' AND game_id=?",game.id).run();
   return { saved: true, updatedAt: at };
 }
 export async function researchMetrics(db, id) {

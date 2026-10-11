@@ -55,8 +55,11 @@ export async function checkProject(db, env, gameId, deps, store = false) {
   }
   const previous = await query(db, 'SELECT project_url,payload_json FROM project_enrichment WHERE game_id=?', gameId).first();
   const old = previous?.project_url === game.projectUrl ? JSON.parse(previous.payload_json) : {};
-  const value = { ...(!store ? old : {}), ...result, checkedAt, projectUrl: game.projectUrl,
-    ...(store ? {storeCheckedAt:checkedAt} : old.provider ? {storeCheckedAt:old.storeCheckedAt||old.checkedAt} : {}) };
+  const successfulStore=store&&result.status==='reachable';
+  // A blocked page check cannot erase a recently verified build or its artwork.
+  // Keep the last successful store evidence separate from general link health.
+  const value = { ...(!successfulStore ? old : {}), ...result, checkedAt, projectUrl: game.projectUrl,
+    ...(successfulStore ? {storeCheckedAt:checkedAt,storeStatus:result.status} : old.provider ? {storeCheckedAt:old.storeCheckedAt||old.checkedAt,storeStatus:old.storeStatus||old.status} : {}) };
   await query(db, `INSERT INTO project_enrichment(game_id,project_url,payload_json,checked_at) VALUES(?,?,?,?)
     ON CONFLICT(game_id) DO UPDATE SET project_url=excluded.project_url,payload_json=excluded.payload_json,checked_at=excluded.checked_at`, gameId, game.projectUrl, JSON.stringify(value), checkedAt).run();
   return value;

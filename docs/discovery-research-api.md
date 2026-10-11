@@ -29,7 +29,7 @@ All paths below use `/api/v1`. Guest ownership uses the existing random browser 
 | `PUT /research/:id/responses` | `{gameId,revision,answers}`. Single answers are option indexes, multiple answers are distinct index arrays, text is bounded to 1,500 characters. At least one answer is required. |
 | `DELETE /research/:id/responses?game=:gameId` | Removes this browser's response, including when a form no longer accepts answers. |
 
-Questionnaires contain one to five questions with stable IDs. Choice questions contain two to eight distinct options. Submissions preserve the exact question/version snapshot. Editing a form increments its revision and rejects stale submissions; aggregations keep versions separate. There is one current response per browser/form/game, not one response per visit or question. The final step saves; navigating between questions does not manufacture metrics.
+Questionnaires contain one to five questions with stable IDs. Choice questions contain two to eight distinct options. Submissions preserve the exact question/version snapshot. Editing a form increments its revision and rejects stale submissions; project scope cannot change after responses exist; aggregations keep versions separate. There is one current response per browser/form/game, not one response per visit or question. The final step saves; navigating between questions does not manufacture metrics.
 
 Ratings are public aggregates. Research answers are private to the editorial team and can be classified by Jev, as disclosed before submission. They are separate from public project feedback. Clearing browser data loses edit access; contribution/removal assistance remains available. Account favorites and historical account prices remain private and independent.
 
@@ -45,7 +45,7 @@ These routes require a Clerk session verified server-side against the fixed issu
 | `GET /admin/research/:id/metrics` | Counts by project/revision and choice distributions. No guest hashes or free-text response dump. |
 | `POST /admin/jobs` | `{kind,scope,gameId}`. Kinds: `links`, `store`, `feedback`, `references`, `research`; scopes: `recent`, `all`, `game`. Use `gameId:null` outside game scope. |
 | `GET /admin/jobs?status=ready&kind=feedback` | Twenty jobs per page with a `nextCursor`; status counts match the kind filter. |
-| `POST /admin/jobs/run` | `{}`; processes one job under a lease. |
+| `POST /admin/jobs/run` | `{}` or `{kind:"links"}`; processes one matching job under a lease. |
 | `PUT /admin/jobs/:id` | `{action:"retry"}`, `dismiss`, or `publish`. Only a ready, cited Reddit feedback draft can publish. |
 | `GET /admin/reposts` | Preview conservative matching groups. |
 | `POST /admin/reposts` | `{}`; consolidates the next group, retaining its newest source identity. |
@@ -64,7 +64,7 @@ Steam uses its public app-details endpoint and existing USD price cache. Itch co
 
 Reddit reviews inspect up to ten latest source posts, the latest 100 comments per post from adaptive archive pages, then classify up to 30 eligible recent comments. Creator replies, removed text, bots and mismatched source IDs are excluded. Drafts show window, sample/coverage limits, model, classifications and source comments. Jev performs typed theme/tone choices; a deterministic composer includes sufficiently supported statements with numbered links. Ambiguous/mixed classifications remain inspectable and do not become confident claims. No generated reviewer quotes are invented. A draft does not become public until an admin selects **Approve & publish review**.
 
-Research analysis uses up to 30 recent responses, labels the sample and remains private. Treat metrics as browser contributions, not verified people or purchases. Jev's selected probabilities are model outputs, not calibrated assurances of correctness.
+Research analysis uses up to 30 recent responses, labels the sample and remains private. Editing or deleting a response invalidates stored analysis for that project so copied evidence cannot outlive the response. Treat metrics as browser contributions, not verified people or purchases. Jev's selected probabilities are model outputs, not calibrated assurances of correctness.
 
 ## Secrets and data maintenance
 
@@ -81,3 +81,11 @@ node scripts/backfill-project-references.mjs --raw /private/path/posts.json --li
 Inspect the generated JSON/SQL, then apply the SQL with the usual D1 operator workflow. It joins current published source membership and author identity, so hidden posts, removals and consolidated projects remain authoritative. It does not import games or change names. New source ingestion extracts references automatically; a reference job resolves linked Reddit titles from the archive.
 
 Authoritative integration references: [Jev API](https://docs.typesafe.ai/api), [itch.io server-side API](https://itch.io/docs/api/serverside), [Arctic Shift API](https://github.com/ArthurHeitmann/arctic_shift/blob/master/api/README.md).
+
+For larger feedback campaigns, a complete archived comment window can be reused across jobs:
+
+```sh
+node scripts/prepare-feedback-window.mjs --catalog /private/path/catalog.json --comments /private/path/comments-window.json --output /tmp/playtrace-feedback-window
+```
+
+The input includes `windowStart`, `windowEnd`, `complete:true` and archived `rows`. The script refuses incomplete windows, applies the same source/author/date filters as normal queue reads, and writes bounded evidence only to matching pending feedback jobs. Inspect and apply its SQL separately. Cached evidence avoids repeated archive requests; Jev rate limits and the explicit publish step still apply. This staging operation creates no visitor responses, ratings or quiz metrics.

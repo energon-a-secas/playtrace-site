@@ -143,7 +143,7 @@ export function createWorker(overrides = {}) {
           else if(action==='editorResearchSave')result=json(await saveResearch(db,match[1],await readJson(request),admin,deps));
           else if(action==='editorResearchMetrics')result=json(await researchMetrics(db,match[1]));
           else if(action==='editorJobs')result=json(request.method==='GET'?await listJobs(db,url.searchParams.get('status'),url.searchParams.get('cursor'),url.searchParams.get('kind')):await enqueueJobs(db,await readJson(request),admin,deps));
-          else if(action==='editorJobsRun'){exactKeys(await readJson(request),[]);result=json(await runJobs(db,env,deps));}
+          else if(action==='editorJobsRun'){const options=await readJson(request);exactKeys(options,Object.hasOwn(options||{},'kind')?['kind']:[]);result=json(await runJobs(db,env,deps,1,options.kind??'all'));}
           else if(action==='editorJob')result=json(await updateJob(db,match[1],await readJson(request),admin,deps));
           else if(action==='editorReposts'){if(request.method==='POST')exactKeys(await readJson(request),[]);result=json(await consolidateReposts(db,deps,request.method==='POST'));}
           else if (action === 'editorMembers') result = json(await members(db, admin, request.method === 'PUT' ? await readJson(request) : undefined));
@@ -172,7 +172,7 @@ export function createWorker(overrides = {}) {
           if (action === 'campaign') {
             exactKeys(body,['action','options']);
             if(body.action==='enqueue')result=json(await enqueueJobs(db,body.options,{subject:'operator'},deps));
-            else if(body.action==='run'){exactKeys(body.options,[]);result=json(await runJobs(db,env,deps,2));}
+            else if(body.action==='run'){exactKeys(body.options,Object.hasOwn(body.options||{},'kind')?['kind']:[]);result=json(await runJobs(db,env,deps,2,body.options.kind??'all'));}
             else if(body.action==='reposts'){exactKeys(body.options,['apply']);if(typeof body.options.apply!=='boolean')throw notFound();result=json(await consolidateReposts(db,deps,body.options.apply));}
             else if(body.action==='jobs'){exactKeys(body.options,['status','cursor']);result=json(await listJobs(db,body.options.status,body.options.cursor));}
             else throw notFound();

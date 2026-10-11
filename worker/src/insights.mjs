@@ -44,28 +44,46 @@ export function composeReview(entries) {
   }).join(' ');
   return { summary, citations };
 }
-export async function feedbackReview(game, since, env, deps) {
-  const evidence = [], seen = new Set(); let fetched = 0, capped = false;
-  // A bounded sample is explicit in the draft. Individual jobs remain retryable.
-  const posts = [...game.posts].sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0,10);
-  for (const post of posts) {
-    const params = new URLSearchParams({ link_id: post.id, subreddit: 'aigamedev', after: since, before: new Date(deps.now()).toISOString(), sort: 'desc', limit: 'auto' });
-    const found = await archiveJson(`comments/search?${params}`,deps),rows=found.slice(0,100); fetched += found.length; if (found.length >= 100) capped = true;
-    for (const row of rows) {
-      if (!/^[a-z0-9]{5,12}$/.test(row.id || '') || seen.has(row.id) || !/^[\w-]{3,32}$/.test(row.author || '')
-        || row.author.toLowerCase() === game.author.name.toLowerCase() || row.author.toLowerCase() === 'automoderator'
-        || typeof row.body !== 'string' || !row.body.trim() || /^\[(deleted|removed)\]$/i.test(row.body.trim())
-        || row.removed_by_category || !Number.isFinite(row.created_utc) || row.created_utc*1000 < Date.parse(since)
-        || row.created_utc*1000 > deps.now() || String(row.link_id).replace(/^t3_/,'') !== post.id) continue;
-      seen.add(row.id);
-      evidence.push({ id: row.id, author: row.author, body: row.body.slice(0,1800), createdAt: new Date(row.created_utc*1000).toISOString(), url: `https://www.reddit.com/r/aigamedev/comments/${post.id}/_/${row.id}/` });
+export function feedbackSample(game, since, until, comments) {
+  const evidence=[],seen=new Set(),posts=[...game.posts].sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0,10);
+  let fetched=0,capped=false;
+  for(const post of posts){
+    const found=comments.filter(row=>String(row.link_id).replace(/^t3_/,'')===post.id).sort((a,b)=>b.created_utc-a.created_utc);
+    fetched+=found.length;if(found.length>=100)capped=true;
+    for(const row of found.slice(0,100)){
+      if(!/^[a-z0-9]{5,12}$/.test(row.id||'')||seen.has(row.id)||!/^[-\w]{3,32}$/.test(row.author||'')
+        ||row.author.toLowerCase()===game.author.name.toLowerCase()||row.author.toLowerCase()==='automoderator'
+        ||typeof row.body!=='string'||!row.body.trim()||/^\[(deleted|removed)\]$/i.test(row.body.trim())
+        ||row.removed_by_category||!Number.isFinite(row.created_utc)||row.created_utc*1000<Date.parse(since)||row.created_utc*1000>Date.parse(until))continue;
+      seen.add(row.id);evidence.push({id:row.id,author:row.author,body:row.body.slice(0,1800),createdAt:new Date(row.created_utc*1000).toISOString(),url:`https://www.reddit.com/r/aigamedev/comments/${post.id}/_/${row.id}/`});
     }
-    if (post !== posts.at(-1)) await deps.sleep(250);
   }
   evidence.sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
-  const sample = evidence.slice(0,30), classified = await classifyEvidence(sample,env,deps), review = composeReview(classified.entries);
-  return { ...review, evidence: classified.entries, model: classified.model, usage: classified.usage, windowStart: since, windowEnd: new Date(deps.now()).toISOString(),
-    checkedPosts: posts.length, totalPosts: game.posts.length, fetchedComments: fetched, eligibleComments: evidence.length, classifiedComments: sample.length,
-    sampled: capped || evidence.length > sample.length || game.posts.length > posts.length,
-    note: !sample.length ? 'No eligible archived player comments were found in this window.' : !review.summary ? 'The comments need manual review; no sufficiently clear themes were found.' : 'AI-assisted draft. Check each cited comment before publishing. Archive coverage may be incomplete.' };
+  return {evidence:evidence.slice(0,30),windowStart:since,windowEnd:until,checkedPosts:posts.length,totalPosts:game.posts.length,fetchedComments:fetched,eligibleComments:evidence.length,classifiedComments:Math.min(30,evidence.length),sampled:capped||evidence.length>30||game.posts.length>posts.length};
+}
+export function validFeedbackBatch(batch,game,since,now){
+  const posts=new Set(game.posts.map(post=>post.id));
+  return batch?.windowStart===since&&Number.isFinite(Date.parse(batch.windowEnd))&&Date.parse(batch.windowEnd)<=now&&Date.parse(batch.windowEnd)>=Date.parse(since)
+    &&Array.isArray(batch.evidence)&&batch.evidence.length<=30&&batch.classifiedComments===batch.evidence.length
+    &&['checkedPosts','totalPosts','fetchedComments','eligibleComments'].every(key=>Number.isInteger(batch[key])&&batch[key]>=0)
+    &&batch.checkedPosts<=10&&typeof batch.sampled==='boolean'&&batch.evidence.every(row=>{
+      const match=/^https:\/\/www\.reddit\.com\/r\/aigamedev\/comments\/([a-z0-9]{5,12})\/_\/([a-z0-9]{5,12})\/$/.exec(row.url||'');
+      return match&&posts.has(match[1])&&row.id===match[2]&&/^[-\w]{3,32}$/.test(row.author||'')&&row.author.toLowerCase()!==game.author.name.toLowerCase()
+        &&typeof row.body==='string'&&row.body.length>0&&row.body.length<=1800&&Date.parse(row.createdAt)>=Date.parse(since)&&Date.parse(row.createdAt)<=Date.parse(batch.windowEnd);
+    });
+}
+export async function feedbackReview(game,since,env,deps,batch=null){
+  let sample;
+  if(batch){if(!validFeedbackBatch(batch,game,since,deps.now()))throw new Error('Archive snapshot does not match this project and time window.');sample=batch;}
+  else{
+    const posts=[...game.posts].sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0,10),rows=[],until=new Date(deps.now()).toISOString();
+    for(const post of posts){
+      const params=new URLSearchParams({link_id:post.id,subreddit:'aigamedev',after:since,before:until,sort:'desc',limit:'auto'});
+      rows.push(...await archiveJson(`comments/search?${params}`,deps));if(post!==posts.at(-1))await deps.sleep(250);
+    }
+    sample=feedbackSample(game,since,until,rows);
+  }
+  const classified=await classifyEvidence(sample.evidence,env,deps),review=composeReview(classified.entries);
+  return {...sample,...review,evidence:classified.entries,model:classified.model,usage:classified.usage,
+    note:!sample.evidence.length?'No eligible archived player comments were found in this window.':!review.summary?'The comments need manual review; no sufficiently clear themes were found.':'AI-assisted draft. Check each cited comment before publishing. Archive coverage may be incomplete.'};
 }

@@ -89,7 +89,8 @@ export async function enrichGames(db, games) {
         : { ...game.preview, kind: 'image', url: steam?.headerUrl || storeArt, posterUrl: null, alt: `${steam?.title || availability?.title || game.title} · Store artwork` };
     const source = originals.get(game.id);
     const name = !editedTitles.has(game.id) && game.projectUrl === source.projectUrl ? nameForGame(source, {steamTitle: steam?.title}) : null;
-    const verifiedPlayable = availability?.playable === true && availability.status === 'reachable' && ['itch','steam'].includes(availability.provider) && Date.now()-Date.parse(availability.storeCheckedAt||availability.checkedAt)<7*86400000;
+    const verifiedPlayable = availability?.playable === true && (availability.storeStatus||availability.status) === 'reachable' && availability.status !== 'broken'
+      && ['itch','steam'].includes(availability.provider) && Date.now()-Date.parse(availability.storeCheckedAt||availability.checkedAt)<7*86400000;
     const stage = !editedStages.has(game.id) && !['released','playable'].includes(game.stage) && verifiedPlayable ? 'playable' : game.stage;
     return { ...game, stage, ...(availability ? {availability} : {}), ...(name ? {title: name.title} : {}), preview, ...(steam ? { steam } : {}) };
   });

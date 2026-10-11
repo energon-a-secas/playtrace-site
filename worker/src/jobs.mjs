@@ -59,8 +59,9 @@ export async function listJobs(db, status, cursor = '', kind = '') {
   ]);
   return { jobs: rows.results.slice(0,20).map(row=>({id:row.id,gameId:row.game_id,title:row.title,kind:row.kind,status:row.status,windowStart:row.window_start,createdAt:row.created_at,updatedAt:row.updated_at,attempts:row.attempts,result:JSON.parse(row.payload_json)})), counts: counts.results, nextCursor:rows.results.length>20?String(offset+20):null };
 }
-export async function runJobs(db, env, deps, limit = 1) {
+export async function runJobs(db, env, deps, limit = 1, kind = 'all') {
   if (!Number.isInteger(limit) || limit < 1 || limit > 2) throw invalid();
+  if(kind!=='all'&&!jobKinds.includes(kind))throw invalid();
   const owner = await acquire(db,'editorial_queue_lock',deps.now(),180000); if (!owner) return { processed:0,busy:true };
   let processed=0;
   try {
@@ -68,10 +69,11 @@ export async function runJobs(db, env, deps, limit = 1) {
     await query(db, "UPDATE editorial_jobs SET status='pending' WHERE status='running' AND updated_at<?",new Date(deps.now()-180000).toISOString()).run();
     const cooldown=await meta(db,'editorial_cooldown')||{};
     const rows=await query(db,`SELECT * FROM editorial_jobs WHERE status='pending'
-      AND (kind NOT IN('feedback','references') OR ?<=?) AND (kind NOT IN('feedback','research') OR ?<=?)
-      ORDER BY created_at,id LIMIT ?`,cooldown.archive||0,deps.now(),cooldown.jev||0,deps.now(),limit).all();
+      ${kind==='all'?'':'AND kind=?'}
+      AND (kind NOT IN('feedback','references') OR ?<=? OR (kind='feedback' AND json_type(payload_json,'$.archiveBatch')='object')) AND (kind NOT IN('feedback','research') OR ?<=?)
+      ORDER BY created_at,id LIMIT ?`,...(kind==='all'?[]:[kind]),cooldown.archive||0,deps.now(),cooldown.jev||0,deps.now(),limit).all();
     if(!rows.results.length){
-      const pending=await query(db,"SELECT count(*) AS count FROM editorial_jobs WHERE status='pending'").first();
+      const pending=await query(db,`SELECT count(*) AS count FROM editorial_jobs WHERE status='pending' ${kind==='all'?'':'AND kind=?'}`,...(kind==='all'?[]:[kind])).first();
       const retryAt=Math.min(...Object.values(cooldown).filter(at=>at>deps.now()));
       return {processed:0,...(pending.count&&Number.isFinite(retryAt)?{retryAt:new Date(retryAt).toISOString()}: {})};
     }
@@ -83,7 +85,7 @@ export async function runJobs(db, env, deps, limit = 1) {
         let result;
         if(job.kind==='links'||job.kind==='store') result=await checkProject(db,env,job.game_id,deps,job.kind==='store');
         else if(job.kind==='references') result=await refreshReferences(db,job.game_id,deps);
-        else if(job.kind==='feedback') { const [game]=await applyDetails(db,[await getGame(db,job.game_id)]);result=await feedbackReview(game,job.window_start,env,deps); }
+        else if(job.kind==='feedback') { const [game]=await applyDetails(db,[await getGame(db,job.game_id)]);result=await feedbackReview(game,job.window_start,env,deps,JSON.parse(job.payload_json).archiveBatch||null); }
         else {
           const answers=await query(db,'SELECT questionnaire_id,revision,questions_json,answers_json,updated_at FROM research_responses WHERE game_id=? AND updated_at>=? ORDER BY updated_at DESC LIMIT 31',job.game_id,job.window_start).all();
           const evidence=answers.results.slice(0,30).map((row,i)=>({id:String(i+1),body:JSON.parse(row.questions_json).map(q=>{const answer=JSON.parse(row.answers_json)[q.id];return `${q.title}: ${Array.isArray(answer)?answer.map(n=>q.options[n]).join(', '):typeof answer==='number'?q.options[answer]:answer||'Skipped'}`;}).join('\n'),questionnaireId:row.questionnaire_id,revision:row.revision,createdAt:row.updated_at}));
@@ -94,8 +96,8 @@ export async function runJobs(db, env, deps, limit = 1) {
         const message=/^(Jev |Archive HTTP )/.test(error.message||'')?error.message:'This job could not finish. The source may be unavailable. Retry to check again.';
         if(error.queueCooldown&&Number.isFinite(error.retryAt)){
           cooldown[error.queueCooldown]=error.retryAt;deferred=true;
-          await db.batch([putMeta(db,'editorial_cooldown',cooldown),query(db,"UPDATE editorial_jobs SET status='pending',payload_json=?,updated_at=? WHERE id=?",JSON.stringify({note:message,retryAt:new Date(error.retryAt).toISOString()}),new Date(deps.now()).toISOString(),job.id)]);
-        }else await query(db,"UPDATE editorial_jobs SET status='failed',payload_json=?,updated_at=? WHERE id=?",JSON.stringify({error:message}),new Date(deps.now()).toISOString(),job.id).run();
+          await db.batch([putMeta(db,'editorial_cooldown',cooldown),query(db,"UPDATE editorial_jobs SET status='pending',payload_json=?,updated_at=? WHERE id=?",JSON.stringify({...JSON.parse(job.payload_json),note:message,retryAt:new Date(error.retryAt).toISOString()}),new Date(deps.now()).toISOString(),job.id)]);
+        }else await query(db,"UPDATE editorial_jobs SET status='failed',payload_json=?,updated_at=? WHERE id=?",JSON.stringify({...(JSON.parse(job.payload_json).archiveBatch?{archiveBatch:JSON.parse(job.payload_json).archiveBatch}:{}),error:message}),new Date(deps.now()).toISOString(),job.id).run();
       }
       processed++;
       if(deferred)break;

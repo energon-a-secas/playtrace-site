@@ -16,4 +16,4 @@ Requested October 11, 2026. Preserve source attribution, manual overrides, publi
 
 Questionnaires will live at `research.html` with an embed mode. This keeps them independently reusable without adding another hosting dependency. URL checks distinguish unavailable, blocked and reachable; a working HTTP page alone does not establish a playable game. Store artwork is source-linked, not silently uploaded as creator-authorized artwork.
 
-Implementation checks: 146 Node tests, 11 schema checks, 37 workerd runtime checks, and 24 browser/accessibility checks using disposable storage. The live batch preserves real contributions and publishes no automated review drafts.
+Implementation checks: 148 Node tests, 11 schema checks, 37 workerd runtime checks, and 24 browser/accessibility checks using disposable storage. Eleven additional read-only browser checks passed against the live site. The live batch preserves real contributions and publishes no automated review drafts.

@@ -90,6 +90,8 @@ test('store evidence updates automatic thumbnails and playable status, with admi
   const evidence=await checkProject(env.DB,env,game.id,{...deps,now:()=>Date.now(),fetch:fetcher},true);assert.equal(evidence.playable,true);
   let [enriched]=await enrichGames(env.DB,[game]);assert.equal(enriched.stage,'playable');assert.equal(enriched.preview.url,'https://img.itch.zone/art.png');
   const rechecked=await checkProject(env.DB,env,game.id,{...deps,now:()=>Date.now()+86400000,fetch:fetcher},false);assert.equal(rechecked.storeCheckedAt,evidence.storeCheckedAt);assert.notEqual(rechecked.checkedAt,evidence.checkedAt);
+  await checkProject(env.DB,env,game.id,{...deps,now:()=>Date.now(),fetch:async url=>url.includes('dns-query')?Response.json({Answer:[{type:1,data:'8.8.8.8'}]}):new Response('',{status:403})},false);
+  [enriched]=await enrichGames(env.DB,[game]);assert.equal(enriched.stage,'playable');assert.equal(enriched.availability.status,'blocked');
   env.DB.sql.prepare('INSERT INTO project_overrides VALUES(?,?,?,?,?)').run(game.id,JSON.stringify({stage:'prototype'}),'admin',new Date(NOW).toISOString(),1);
   [enriched]=await enrichGames(env.DB,[game]);assert.equal(enriched.stage,'prototype');env.DB.close();
 });
@@ -163,4 +165,33 @@ test('archive throttling defers comment work while unrelated checks can continue
   await enqueueJobs(env.DB,{kind:'links',scope:'game',gameId:'g_abc12'},admin,deps);
   const checked=await runJobs(env.DB,env,{...deps,fetch:async url=>url.includes('dns-query')?Response.json({Answer:[{type:1,data:'8.8.8.8'}]}):new Response('Page')});
   assert.equal(checked.processed,1);assert.equal((await listJobs(env.DB,'ready','','links')).jobs.length,1);assert.equal((await listJobs(env.DB,'ready','','feedback')).jobs.length,0);env.DB.close();
+});
+
+test('a dated archive batch reuses only matching player comments and can publish a cited draft',async()=>{
+  const {feedbackSample,validFeedbackBatch,feedbackReview}=await import('../src/insights.mjs');
+  const {projectContext}=await import('../src/references.mjs');
+  const game=fixtureGame(),since=new Date(NOW-86400000).toISOString(),until=new Date(NOW).toISOString();
+  const base={id:'comm01',author:'PlayerOne',body:'The controls feel smooth.',created_utc:(NOW-3600000)/1000,link_id:'t3_abc12'};
+  const sample=feedbackSample(game,since,until,[base,{...base,id:'comm02',author:game.author.name},{...base,id:'comm03',body:'[removed]'},{...base,id:'comm04',link_id:'t3_other1'}]);
+  assert.equal(sample.evidence.length,1);assert.equal(validFeedbackBatch(sample,game,since,NOW),true);
+  assert.equal(validFeedbackBatch({...sample,windowStart:until},game,since,NOW),false);
+  assert.equal(validFeedbackBatch({...sample,evidence:[{...sample.evidence[0],url:'https://evil.example/'}]},game,since,NOW),false);
+  const env=await setup([game]);env.JEV_API_KEY='fixture';let calls=0;
+  const result=await feedbackReview(game,since,env,{...deps,fetch:async url=>{assert.equal(url,'https://api.typesafe.ai/v1/systemone');calls++;return Response.json({model:'jev-fixture',answers:{theme_0:{type:'choice',choice:'controls',probabilities:{controls:.95}},tone_0:{type:'choice',choice:'praise',probabilities:{praise:.95}}}});}},sample);
+  assert.equal(calls,1);assert.equal(result.citations[0].author,'PlayerOne');assert.match(result.summary,/\[1\]/);
+  await enqueueJobs(env.DB,{kind:'feedback',scope:'game',gameId:game.id},admin,deps);
+  const job=(await listJobs(env.DB,'pending')).jobs[0];env.DB.sql.prepare("UPDATE editorial_jobs SET status='ready',payload_json=? WHERE id=?").run(JSON.stringify(result),job.id);
+  assert.equal((await projectContext(env.DB,game.id)).review,null);
+  await updateJob(env.DB,job.id,{action:'publish'},admin,deps);assert.equal((await projectContext(env.DB,game.id)).review.citations.length,1);env.DB.close();
+});
+
+test('research edits and removals erase copied analysis, and answered forms retain their scope',async()=>{
+  const env=await setup();await ensureResearch(env.DB);
+  await researchResponse(env.DB,env,guest('PUT'),'playtest',null,{gameId:'g_abc12',revision:1,answers:{access:0}},deps);
+  await assert.rejects(saveResearch(env.DB,'playtest',{title:'Changed scope',category:'Link health',gameId:'g_abc12',questions:defaultQuestions,revision:1,active:true},admin,deps),e=>e.status===409);
+  await enqueueJobs(env.DB,{kind:'research',scope:'game',gameId:'g_abc12'},admin,deps);
+  await researchResponse(env.DB,env,guest('DELETE','b'),'playtest','g_abc12',null,deps);assert.equal((await listJobs(env.DB,'all','','research')).jobs.length,1);
+  await researchResponse(env.DB,env,guest('PUT'),'playtest',null,{gameId:'g_abc12',revision:1,answers:{access:1}},deps);assert.equal((await listJobs(env.DB,'all','','research')).jobs.length,0);
+  await enqueueJobs(env.DB,{kind:'research',scope:'game',gameId:'g_abc12'},admin,deps);
+  await researchResponse(env.DB,env,guest('DELETE'),'playtest','g_abc12',null,deps);assert.equal((await listJobs(env.DB,'all','','research')).jobs.length,0);env.DB.close();
 });
