@@ -66,6 +66,7 @@
   <link rel="stylesheet" href="css/neorgon-beacon.css">
   <script defer src="js/neorgon-beacon.js"></script>
   <link rel="stylesheet" href="css/report.css">
+  <link rel="stylesheet" href="css/quiz.css">
 </head>
 <body>
 
@@ -120,7 +121,7 @@
     <section id="adminGate" class="admin-gate" aria-labelledby="adminGateTitle"><h3 id="adminGateTitle">Sign in to manage Playtrace</h3><p>Admin access is checked against your verified account.</p><button id="adminSignIn" class="btn btn--primary" type="button" disabled>Sign in</button></section>
     <p id="adminMessage" class="admin-message" role="status" aria-live="polite">Checking admin availability…</p>
     <div id="adminWorkspace" hidden>
-      <nav class="admin-tabs" aria-label="Admin views"><button type="button" data-admin-tab="inbox" aria-current="page">Change requests</button><button type="button" data-admin-tab="images">Project images</button><button type="button" data-admin-tab="access" id="accessTab" hidden>Admin access</button></nav>
+      <nav class="admin-tabs" aria-label="Admin views"><button type="button" data-admin-tab="inbox" aria-current="page">Change requests</button><button type="button" data-admin-tab="images">Project images</button><button type="button" data-admin-tab="quiz">Game recognition</button><button type="button" data-admin-tab="access" id="accessTab" hidden>Admin access</button></nav>
       <section id="inboxPanel" aria-labelledby="inboxTitle">
         <div class="admin-section-heading"><div><h3 id="inboxTitle">The community inbox</h3><p>Private requests from project pages.</p></div><div class="admin-inline"><label class="sr-only" for="inboxStatus">Request status</label><select id="inboxStatus" class="select"><option value="open">Open requests</option><option value="resolved">Resolved</option><option value="dismissed">Dismissed</option></select><button type="button" id="refreshInbox" class="btn btn--secondary">Refresh</button></div></div>
         <div id="inboxEntries"></div><button type="button" id="moreRequests" class="btn btn--secondary" hidden>Older requests</button>
@@ -148,6 +149,7 @@
           <details class="frame-picker" id="framePicker" hidden><summary>Choose a frame from a video</summary><p>Scrub to a useful moment, or find a frame beyond a dark opening.</p><label class="sr-only" for="frameSource">Source video</label><select class="select" id="frameSource"></select><video id="frameVideo" controls playsinline preload="none" crossorigin="anonymous"></video><div class="admin-inline"><button class="btn btn--secondary" type="button" id="findFrame">Find a clear frame</button><button class="btn btn--primary" type="button" id="useFrame">Use this frame</button></div><p id="frameMessage" class="field__hint" role="status"></p><p class="field__hint">If the source host blocks frame capture, open the original post and upload an image you have permission to use.</p></details>
         </div>
       </section>
+      <section id="quizPanel" aria-labelledby="quizMetricsTitle" hidden><div class="admin-section-heading"><div><h3 id="quizMetricsTitle">Which names are connecting?</h3><p>Screenshot guesses from completed rounds. Replays count as new rounds; these are not unique-player counts or game ratings.</p></div><button id="refreshQuizMetrics" class="btn btn--secondary" type="button">Refresh</button></div><p id="quizMetricsSummary" class="quiz-admin-summary" role="status"></p><ol id="quizMetricsList" class="quiz-metrics"></ol></section>
       <section id="accessPanel" aria-labelledby="accessTitle" hidden><div class="admin-section-heading"><div><h3 id="accessTitle">Admin access</h3><p>Only the owner can grant or revoke access. Invited admins must sign in with this verified primary email.</p></div></div><form id="addAdminForm" class="admin-inline"><label for="adminEmail">Email address</label><input class="input" id="adminEmail" type="email" maxlength="254" autocomplete="off" required><button type="submit" class="btn btn--primary">Grant admin access</button></form><p class="field__hint">This grants access; no invitation email is sent.</p><div id="adminMembers"></div></section>
     </div>
   </div></main>

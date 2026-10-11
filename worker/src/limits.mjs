@@ -25,12 +25,12 @@ export async function mutationLimit(db, env, subject, request, kind, nowMs) {
   const now = Math.floor(nowMs / 1000), hour = Math.floor(now / 3600), expires = (hour + 1) * 3600;
   const account = await hmac(env.RATE_LIMIT_SECRET, `account:${subject}`);
   const buckets = [[`${kind === 'privacy' ? 'privacy' : 'account'}:${account}:${hour}`, kind === 'privacy' ? 60 : 30]];
-  if (kind === 'price') {
+  if (kind === 'price' || kind === 'quiz') {
     const ip = request.headers.get('CF-Connecting-IP');
     if (!ip || ip.length > 64 || !/^[0-9a-fA-F:.]+$/.test(ip)) throw unavailable();
     const day = new Date(nowMs).toISOString().slice(0, 10);
     const network = await hmac(env.RATE_LIMIT_SECRET, `network:${day}:${ip}`);
-    buckets.push([`price:${account}:${hour}`, 10], [`network:${network}:${hour}`, 60]);
+    buckets.push([`${kind}:${account}:${hour}`, 10], [`${kind === 'quiz' ? 'quiz-' : ''}network:${network}:${hour}`, 60]);
   }
   await query(db, 'DELETE FROM rate_limits WHERE expires_at<=?', now).run();
   for (const [key, limit] of buckets) {

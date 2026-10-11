@@ -34,7 +34,7 @@ class SchemaTests(unittest.TestCase):
         self.assertEqual(actual, {
             "games", "source_posts", "price_signals", "follows",
             "app_meta", "rate_limits", "media_assets", "removals", "feedback",
-            "admins", "change_requests", "preview_overrides", "steam_cache",
+            "admins", "change_requests", "preview_overrides", "steam_cache", "quiz_rounds", "quiz_answers",
         })
         self.assertEqual(self.db.execute("PRAGMA foreign_keys").fetchone()[0], 1)
         with self.assertRaises(sqlite3.IntegrityError):
@@ -181,6 +181,20 @@ class SchemaTests(unittest.TestCase):
         self.db.execute(insert, ("entry", "g_test01", "guest-key-hash", "Guest", "Valid note", None, NOW, NOW))
         self.db.execute("DELETE FROM games")
         self.assertEqual(self.db.execute("SELECT count(*) FROM feedback").fetchone()[0], 0)
+
+    def test_quick_feedback_migration_preserves_old_rows_and_rollback_keeps_choices(self):
+        old = sqlite3.connect(":memory:")
+        self.addCleanup(old.close)
+        for version in ("0001_initial.sql", "0002_public_feedback.sql", "0003_history_pagination.sql", "0004_editorial_tools.sql"):
+            old.executescript((WORKER / "migrations" / version).read_text())
+        old.execute("INSERT INTO games(id,author_key,updated_at,payload_json) VALUES('g_test01','maker',?,'{}')", (NOW,))
+        old.execute("INSERT INTO feedback(id,game_id,guest_key_hash,display_name,body,created_at,updated_at,status,moderation_reason) VALUES('old','g_test01','hash','Guest','A useful old note',?,?,'hidden','Reviewed')", (NOW,NOW))
+        old.executescript((WORKER / "migrations" / "0005_quick_feedback.sql").read_text())
+        self.assertEqual(old.execute("SELECT id,guest_key_hash,body,status,moderation_reason,choices_json FROM feedback").fetchone(), ("old","hash","A useful old note","hidden","Reviewed","[]"))
+        old.execute("INSERT INTO feedback(id,game_id,guest_key_hash,display_name,body,created_at,updated_at,choices_json) VALUES('quick','g_test01','other','Guest','',?,?,'[\"idea\",\"controls\"]')", (NOW,NOW))
+        old.executescript((WORKER / "rollback" / "0005_quick_feedback.sql").read_text())
+        self.assertEqual(old.execute("SELECT body FROM feedback WHERE id='quick'").fetchone()[0], "Quick feedback: idea, controls\n")
+        self.assertEqual(old.execute("PRAGMA foreign_key_check").fetchall(), [])
 
 
 if __name__ == "__main__":

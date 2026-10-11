@@ -72,7 +72,7 @@ export function bindProject() {
     const icon = event.target.closest('.project-icon');
     if (icon && !icon.contains(event.relatedTarget) && !icon.matches(':hover, :focus-visible')) delete icon.dataset.tooltipDismissed;
   });
-  $('jumpFeedback').addEventListener('click', () => { $('feedbackBody').focus(); $('feedbackTitle').scrollIntoView({ block: 'start' }); });
+  $('jumpFeedback').addEventListener('click', () => { $('feedbackChoice-idea').focus({ preventScroll: true }); $('feedbackTitle').scrollIntoView({ block: 'start' }); });
   $('requestChange').addEventListener('click', () => {
     $('changeRequestPanel').hidden = false;
     $('requestChange').setAttribute('aria-expanded', 'true');

@@ -17,6 +17,7 @@ function clearEditor() {
 function lock() {
   epoch++; admin = null; checking = false; inboxNumber++; entries = []; nextCursor = null; clearEditor();
   $('adminWorkspace').hidden = true; $('adminGate').hidden = false; $('inboxEntries').replaceChildren(); $('adminMembers').replaceChildren();
+  $('quizMetricsList').replaceChildren(); $('quizMetricsSummary').textContent='';
 }
 async function privateRequest(path, options = {}) {
   const current = epoch, expected = user;
@@ -34,11 +35,22 @@ async function privateRequest(path, options = {}) {
 }
 function tab(name) {
   if (name === 'access' && admin?.role !== 'owner') return;
-  for (const panel of ['inbox', 'images', 'access']) $(`${panel}Panel`).hidden = name !== panel;
+  for (const panel of ['inbox', 'images', 'quiz', 'access']) $(`${panel}Panel`).hidden = name !== panel;
   document.querySelectorAll('[data-admin-tab]').forEach(button => {
     if (button.dataset.adminTab === name) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');
   });
   if (name !== 'images') { frameRun++; $('frameVideo').pause(); }
+  if (name === 'quiz') loadQuizMetrics();
+}
+async function loadQuizMetrics() {
+  const current=epoch; $('refreshQuizMetrics').disabled=true; $('quizMetricsSummary').textContent='Loading recognition counts…';
+  try {
+    const result=await privateRequest('/admin/quiz-metrics');
+    if(current!==epoch)return;
+    $('quizMetricsSummary').textContent=`${result.rounds.completed} completed ${result.rounds.completed===1?'round':'rounds'} · ${result.games.length} games in the current pool. Skipped screenshots do not count as wrong guesses.`;
+    $('quizMetricsList').innerHTML=result.games.map(game=>`<li><h4>${e(game.title)}</h4><p>${game.attempts?`${game.correct} of ${game.attempts} guesses recognized it (${Math.round(game.correct/game.attempts*100)}%).`:'No guesses yet.'} ${game.skipped} skipped.</p>${game.choices.length?`<details><summary>See the names people chose</summary><ul>${game.choices.map(choice=>`<li><span>${e(choice.title)}${choice.correct?' ✓':''}</span><strong>${choice.count}</strong></li>`).join('')}</ul></details>`:''}</li>`).join('');
+  }catch(error){if(current===epoch)$('quizMetricsSummary').textContent=error.message;}
+  finally{if(current===epoch)$('refreshQuizMetrics').disabled=false;}
 }
 async function checkAccess() {
   if (checking || !NeoAuth.state.signedIn) return;
@@ -211,6 +223,7 @@ $('adminSignIn').addEventListener('click', async event => {
   if (await NeoAuth.requireSignIn({ invoker: event.currentTarget, reason: 'Sign in to manage the Playtrace collection.' })) { user = NeoAuth.state.userId; await checkAccess(); }
 });
 document.querySelectorAll('[data-admin-tab]').forEach(button => button.addEventListener('click', () => tab(button.dataset.adminTab)));
+$('refreshQuizMetrics').addEventListener('click',loadQuizMetrics);
 $('adminSearch').addEventListener('input', projectOptions);
 $('adminProject').addEventListener('change', event => { if (event.target.value) openEditor(event.target.value); else clearEditor(); });
 $('inboxStatus').addEventListener('change', () => loadInbox());

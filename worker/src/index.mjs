@@ -12,10 +12,16 @@ import { submitChange, inbox, resolveChange } from './requests.mjs';
 import { editorGame, editPreview } from './editor.mjs';
 import { gameStore, refreshSteamBatch } from './steam.mjs';
 import { hydrateMedia } from './assets.mjs';
+import { quizInfo, startQuiz, finishQuiz, deleteQuizData, quizMetrics } from './quiz.mjs';
 
 const routes = [
   [/^\/status$/, ['GET'], 'status'],
   [/^\/catalog$/, ['GET'], 'catalog'],
+  [/^\/quiz$/, ['GET'], 'quizInfo'],
+  [/^\/quiz\/rounds$/, ['POST'], 'quizStart'],
+  [/^\/quiz\/rounds\/mine$/, ['DELETE'], 'quizDelete'],
+  [/^\/quiz\/rounds\/([a-f0-9-]{36})$/, ['PUT'], 'quizFinish'],
+  [/^\/admin\/quiz-metrics$/, ['GET'], 'editorQuiz'],
   [/^\/me$/, ['GET', 'DELETE'], 'me'],
   [/^\/games\/(g_[a-z0-9]{5,12})\/signals$/, ['GET'], 'signals'],
   [/^\/games\/(g_[a-z0-9]{5,12})\/feedback$/, ['GET', 'PUT', 'DELETE'], 'feedback'],
@@ -43,7 +49,7 @@ async function status(env) {
   const ing = env.DB ? await meta(env.DB, 'ingestion') : null;
   const history = env.DB ? await meta(env.DB, 'history') : null;
   const protection = accountConfigured(env) ? signalProtection(env) : 'unconfigured';
-  return { schemaVersion: 1, capabilities: { catalog: Boolean(head), feedback: feedbackConfigured(env), changeRequests: feedbackConfigured(env), admin: adminConfigured(env), steam: Boolean(env.DB), signals: protection !== 'unconfigured',
+  return { schemaVersion: 1, capabilities: { catalog: Boolean(head), feedback: feedbackConfigured(env), quiz: feedbackConfigured(env), changeRequests: feedbackConfigured(env), admin: adminConfigured(env), steam: Boolean(env.DB), signals: protection !== 'unconfigured',
     following: accountConfigured(env), ingestion: ingestionConfigured(env), mediaStorage: mediaConfigured(env) && strongSecret(env.OPERATOR_TOKEN) },
   ingestion: { state: !ingestionConfigured(env) ? 'unconfigured' : ing?.state || 'never',
     lastAttemptAt: ing?.lastAttemptAt || null, lastSuccessAt: ing?.lastSuccessAt || null, coverageThrough: ing?.coverageThrough || null },
@@ -79,6 +85,10 @@ export function createWorker(overrides = {}) {
         else if (action === 'catalog') result = json(await catalog(database(env), { limit: url.searchParams.get('pageSize') || 200,
           cursor: url.searchParams.get('cursor') }), 200, { 'Cache-Control': request.headers.has('Authorization') ? 'no-store' : 'public, max-age=60' });
         else if (action === 'signals') result = json(await signals(database(env), match[1]));
+        else if (action === 'quizInfo') result = json(await quizInfo(database(env)));
+        else if (action === 'quizStart') result = json(await startQuiz(database(env),env,request,await readJson(request),deps),201);
+        else if (action === 'quizFinish') result = json(await finishQuiz(database(env),env,request,match[1],await readJson(request),deps));
+        else if (action === 'quizDelete') { await readBytes(request.body,0); result=json(await deleteQuizData(database(env),env,request,deps)); }
         else if (action === 'feedback') {
           const db = database(env);
           if (request.method === 'GET') result = json(await publicFeedback(db, match[1], url.searchParams.get('cursor')));
@@ -96,6 +106,7 @@ export function createWorker(overrides = {}) {
           if (action === 'editorMe') result = json({ email: admin.email, role: admin.role });
           else if (action === 'editorMembers') result = json(await members(db, admin, request.method === 'PUT' ? await readJson(request) : undefined));
           else if (action === 'editorInbox') result = json(await inbox(db, url.searchParams.get('status'), url.searchParams.get('cursor')));
+          else if (action === 'editorQuiz') result = json(await quizMetrics(db));
           else if (action === 'editorRequest') result = json(await resolveChange(db, match[1], await readJson(request), admin, deps));
           else if (action === 'editorGame') result = json(await editorGame(db, match[1]));
           else if (action === 'editorImage') result = json(await editPreview(db, env, match[1], await readJson(request, 7 * 1024 * 1024), request, admin, deps));

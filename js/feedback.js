@@ -2,6 +2,7 @@ import { state } from './state.js';
 import { apiConfigured, request } from './api.js';
 import { parsePrice, money, dateLabel } from './collection.js';
 import { $, escHtml as e } from './utils.js';
+import { feedbackQuestions, feedbackOptions, validChoices } from './feedback-options.js';
 
 const storageKey = 'playtrace:feedback-edit-key:v1';
 let memoryKey = '', persistent = true, session = 0, readNumber = 0, controller;
@@ -22,6 +23,7 @@ export function editKey(create = false) {
 }
 function validEntry(value) {
   return value && /^[a-f0-9-]{36}$/.test(value.id) && typeof value.displayName === 'string' && value.displayName.length <= 40
+    && (value.choices === undefined || validChoices(value.choices))
     && typeof value.body === 'string' && value.body.length <= 1500 && value.currency === 'USD'
     && (value.idealPriceCents === null || (Number.isInteger(value.idealPriceCents) && value.idealPriceCents >= 0 && value.idealPriceCents <= 10000))
     && typeof value.createdAt === 'string' && Number.isFinite(Date.parse(value.createdAt))
@@ -30,6 +32,9 @@ function validEntry(value) {
 function validPage(value, gameId) {
   const prices = value?.idealPrices;
   return value?.gameId === gameId && Array.isArray(value.entries) && value.entries.length <= 20 && value.entries.every(validEntry)
+    && (value.choices === undefined || (Array.isArray(value.choices) && value.choices.length === feedbackOptions.length
+      && new Set(value.choices.map(item => item.id)).size === feedbackOptions.length
+      && value.choices.every(item => feedbackOptions.some(option => option.id === item.id) && Number.isInteger(item.count) && item.count >= 0 && item.count <= value.count)))
     && Number.isInteger(value.count) && value.count >= value.entries.length
     && (value.nextCursor === null || (typeof value.nextCursor === 'string' && value.nextCursor.length <= 200))
     && prices?.currency === 'USD' && Number.isInteger(prices.count) && prices.count >= 0 && prices.count <= value.count
@@ -40,6 +45,8 @@ function fillOwn() {
   $('feedbackName').value = feedback.mine?.displayName === 'Guest' ? '' : feedback.mine?.displayName || '';
   $('feedbackBody').value = feedback.mine?.body || '';
   $('feedbackPrice').value = feedback.mine?.idealPriceCents == null ? '' : (feedback.mine.idealPriceCents / 100).toFixed(2);
+  $('feedbackExtras').open = Boolean($('feedbackName').value || $('feedbackPrice').value);
+  for (const option of feedbackOptions) $(`feedbackChoice-${option.id}`).checked = feedback.mine?.choices?.includes(option.id) || false;
 }
 export function clearFeedback() {
   session++; readNumber++; controller?.abort(); feedback = empty();
@@ -63,6 +70,10 @@ export function renderFeedback() {
   $('feedbackList').innerHTML = feedback.entries.map(item => `<li class="feedback-note" id="feedback-${e(item.id)}">
     <div class="feedback-note__heading"><strong>${e(item.displayName)}</strong><span>Visitor</span><time datetime="${e(item.createdAt)}">${e(dateLabel(item.createdAt))}</time></div>
     ${item.body ? `<p class="feedback-note__body">${e(item.body)}</p>` : ''}
+    ${(item.choices || []).length ? `<div class="feedback-note__choices">${feedbackQuestions.map(question => {
+      const labels = question.options.filter(option => item.choices.includes(option.id)).map(option => e(option.label));
+      return labels.length ? `<p><span>${question.id === 'highlights' ? 'Drawn to' : 'Would like'}</span> ${labels.join(' · ')}</p>` : '';
+    }).join('')}</div>` : ''}
     <div class="feedback-note__foot">${item.idealPriceCents !== null ? `<span class="ideal-price-tag">Ideal price <strong>${e(money(item.idealPriceCents))}</strong></span>` : ''}
     ${item.updatedAt !== item.createdAt ? '<span>Edited</span>' : ''}
     <a class="text-link" href="${e(reportLink(item.id))}" target="_blank" rel="noopener noreferrer">Report<span class="sr-only"> feedback by ${e(item.displayName)} (opens in a new tab)</span></a></div></li>`).join('');
@@ -77,6 +88,7 @@ export function renderFeedback() {
   $('feedbackSubmit').disabled = disabled;
   $('feedbackSubmit').textContent = feedback.busy ? 'Saving…' : feedback.mine ? 'Update my feedback' : 'Share feedback';
   for (const id of ['feedbackName', 'feedbackBody', 'feedbackPrice']) $(id).disabled = disabled;
+  for (const option of feedbackOptions) $(`feedbackChoice-${option.id}`).disabled = disabled;
   $('feedbackRemove').hidden = !feedback.mine;
   $('feedbackRemove').disabled = disabled;
   $('feedbackMessage').textContent = feedback.message;
@@ -86,6 +98,13 @@ export function renderFeedback() {
         : persistent ? 'No account needed. You can edit or remove your contribution from this browser.'
           : 'Your browser cannot save an edit key. You can edit or remove your contribution during this visit.';
   const prices = feedback.prices;
+  const choices = feedback.choices || [];
+  $('feedbackChoiceSummary').hidden = !choices.some(item => item.count);
+  $('feedbackChoiceSummary').innerHTML = feedbackQuestions.map(question => {
+    const options = question.options.map(option => ({ ...option, count: choices.find(item => item.id === option.id)?.count || 0 }))
+      .filter(option => option.count).sort((a,b) => b.count - a.count);
+    return options.length ? `<div class="feedback-pulse"><h4>${question.id === 'highlights' ? 'Catching people’s eye' : 'Ideas for the next version'}</h4>${options.map(option => `<p><span>${e(option.label)}</span><strong>${option.count}</strong><span class="feedback-pulse__track" aria-hidden="true"><span style="width:${Math.round(option.count / feedback.count * 100)}%"></span></span></p>`).join('')}</div>` : '';
+  }).join('');
   $('idealPriceSummary').innerHTML = prices?.count ? `<p><strong>${e(money(prices.medianCents))}</strong> median ideal price <span>from ${prices.count} public ${prices.count === 1 ? 'contribution' : 'contributions'}</span></p><p class="field__hint">A suggestion for the maker. Their pricing is always their choice.</p>`
     : '<p class="field__hint">Ideal price suggestions will appear here when someone shares one.</p>';
 }
@@ -108,7 +127,7 @@ export async function loadFeedback(gameId = feedback.gameId, more = false) {
     if (!validPage(page, gameId)) throw new Error('The feedback could not be read. Please try again.');
     const entries = more ? [...feedback.entries, ...page.entries] : page.entries;
     feedback.entries = [...new Map(entries.map(item => [item.id, item])).values()];
-    feedback.count = page.count; feedback.prices = page.idealPrices; feedback.nextCursor = page.nextCursor; feedback.loaded = true;
+    feedback.count = page.count; feedback.prices = page.idealPrices; feedback.choices = page.choices || []; feedback.nextCursor = page.nextCursor; feedback.loaded = true;
     if (ownResult.status === 'rejected') feedback.ownError = true;
     else if (ownResult.value) {
       const own = ownResult.value;
@@ -127,15 +146,16 @@ export async function saveFeedback() {
   const priceText = $('feedbackPrice').value.trim();
   const amount = priceText ? parsePrice(priceText) : null;
   const body = $('feedbackBody').value.trim();
+  const choices = feedbackOptions.filter(option => $(`feedbackChoice-${option.id}`).checked).map(option => option.id);
   $('feedbackPrice').setAttribute('aria-invalid', String(Boolean(priceText && amount === null)));
-  $('feedbackBody').setAttribute('aria-invalid', String(body.length < 8 && amount === null));
-  if (priceText && amount === null) { feedback.message = 'Enter an ideal price from $0 to $100, or leave it blank.'; renderFeedback(); $('feedbackPrice').focus(); return; }
-  if (body.length < 8 && amount === null) { feedback.message = 'Share a note of at least 8 characters, or add an ideal price.'; renderFeedback(); $('feedbackBody').focus(); return; }
+  $('feedbackBody').setAttribute('aria-invalid', String(body.length < 8 && amount === null && !choices.length));
+  if (priceText && amount === null) { feedback.message = 'Enter an ideal price from $0 to $100, or leave it blank.'; renderFeedback(); $('feedbackExtras').open = true; $('feedbackPrice').focus(); return; }
+  if (body.length < 8 && amount === null && !choices.length) { feedback.message = 'Pick a quick answer, write a note of at least 8 characters, or add an ideal price.'; renderFeedback(); $('feedbackChoice-idea').focus(); return; }
   const gameId = feedback.gameId, current = session;
   readNumber++; controller?.abort(); feedback.busy = true; feedback.message = ''; renderFeedback();
   try {
     const result = await request(`/games/${gameId}/feedback`, { method: 'PUT', feedbackKey: editKey(true),
-      body: { displayName: $('feedbackName').value.trim(), body, idealPriceCents: amount } });
+      body: { displayName: $('feedbackName').value.trim(), body, idealPriceCents: amount, choices } });
     if (current !== session) return;
     if (result.gameId !== gameId || !validEntry(result.feedback)) throw new Error('Your saved feedback could not be read. Please refresh before trying again.');
     feedback.mine = result.feedback; feedback.dirty = false; feedback.busy = false;
@@ -157,6 +177,7 @@ export async function removeFeedback() {
   finally { if (current === session) { feedback.busy = false; renderFeedback(); } }
 }
 export function bindFeedback() {
+  $('feedbackQuestions').innerHTML = feedbackQuestions.map((question, index) => `<fieldset class="feedback-question"><legend><span aria-hidden="true">0${index+1}</span> ${e(question.title)}</legend><div class="feedback-chips">${question.options.map(option => `<label class="feedback-chip"><input type="checkbox" id="feedbackChoice-${option.id}" name="choices" value="${option.id}"><span><span class="feedback-chip__check" aria-hidden="true">+</span>${e(option.label)}</span></label>`).join('')}</div></fieldset>`).join('');
   $('feedbackForm').addEventListener('submit', event => { event.preventDefault(); saveFeedback(); });
   $('feedbackForm').addEventListener('input', () => { feedback.dirty = true; });
   $('feedbackRemove').addEventListener('click', removeFeedback);

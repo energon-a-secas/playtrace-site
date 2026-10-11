@@ -124,6 +124,7 @@ export async function removal(db, bucket, id, reason, now) {
     query(db, 'DELETE FROM price_signals WHERE game_id=?', id),
     query(db, 'DELETE FROM follows WHERE game_id=?', id),
     query(db, 'DELETE FROM feedback WHERE game_id=?', id),
+    query(db, 'DELETE FROM quiz_answers WHERE game_id=? OR choice_id=?', id, id),
     query(db, 'DELETE FROM change_requests WHERE game_id=?', id),
     query(db, 'DELETE FROM preview_overrides WHERE game_id=?', id),
     query(db, 'DELETE FROM source_posts WHERE game_id=?', id),

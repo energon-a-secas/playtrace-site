@@ -9,7 +9,7 @@
        package CDN: a Convex deployment adds its https and wss URLs to connect-src, and sign-in
        adds the CSP table in packages/neorgon-ui/auth/README.md. frame-ancestors, report-uri and
        sandbox are ignored in a meta tag, so they are left out. -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-na6phygP/tfoCIp4oBeQgGJJpQsZob/udrLum+20QTI=' https://gc.zgo.at https://static.cloudflareinsights.com https://clerk.neorgon.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.neorgon.org/v1.0.0/; img-src 'self' data: https://playtrace-api.neorgon.workers.dev https://neorgon.goatcounter.com https://img.clerk.com https://preview.redd.it https://external-preview.redd.it https://i.redd.it https://b.thumbs.redditmedia.com https://a.thumbs.redditmedia.com https://shared.akamai.steamstatic.com https://shared.fastly.steamstatic.com https://cdn.akamai.steamstatic.com https://cdn.cloudflare.steamstatic.com; media-src https://v.redd.it https://preview.redd.it https://i.redd.it; font-src 'self'; connect-src 'self' https://playtrace-api.neorgon.workers.dev https://neorgon.goatcounter.com https://cloudflareinsights.com https://clerk.neorgon.com https://challenges.cloudflare.com; manifest-src 'self'; frame-src https://challenges.cloudflare.com; worker-src blob:; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-na6phygP/tfoCIp4oBeQgGJJpQsZob/udrLum+20QTI=' https://gc.zgo.at https://static.cloudflareinsights.com https://clerk.neorgon.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.neorgon.org/v1.0.0/; img-src 'self' data: https://img.itch.zone https://demos.tahazsh.com https://playtrace-api.neorgon.workers.dev https://neorgon.goatcounter.com https://img.clerk.com https://preview.redd.it https://external-preview.redd.it https://i.redd.it https://b.thumbs.redditmedia.com https://a.thumbs.redditmedia.com https://shared.akamai.steamstatic.com https://shared.fastly.steamstatic.com https://cdn.akamai.steamstatic.com https://cdn.cloudflare.steamstatic.com; media-src https://v.redd.it https://preview.redd.it https://i.redd.it; font-src 'self'; connect-src 'self' https://playtrace-api.neorgon.workers.dev https://neorgon.goatcounter.com https://cloudflareinsights.com https://clerk.neorgon.com https://challenges.cloudflare.com; manifest-src 'self'; frame-src https://challenges.cloudflare.com; worker-src blob:; object-src 'none'; base-uri 'none'; form-action 'self'">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
@@ -66,6 +66,7 @@
   <link rel="stylesheet" href="css/neorgon-beacon.css">
   <script defer src="js/neorgon-beacon.js"></script>
   <link rel="stylesheet" href="css/report.css">
+  <link rel="stylesheet" href="css/quiz.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -107,7 +108,7 @@
 <div class="header-actions">
   <a class="btn btn--ghost btn--sm" href="#discover">Discover</a>
   <a class="btn btn--ghost btn--sm" href="about.html">About the index</a>
-  <button type="button" class="btn btn--ghost btn--sm" id="shareView" data-keep-mobile>
+  <button type="button" class="btn btn--ghost btn--sm" id="shareView" aria-label="Share this view" title="Share this view" data-keep-mobile>
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-2 2M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l2-2"/></svg>
     <span>Share view</span>
   </button>
@@ -174,6 +175,13 @@
         </div>
         <div class="snapshot-foot"><span id="snapshotCount">Loading the index…</span><span>Explore a stage ↑</span></div>
       </section>
+    </section>
+
+    <section class="name-game" id="name-game" aria-labelledby="quizTitle">
+      <div class="quiz-intro"><div><p class="eyebrow">A LITTLE DISCOVERY BREAK</p><h2 id="quizTitle">Can you name that game?</h2><p id="quizPoolNote">Five screenshots, 20 playable community games. Which names ring a bell?</p></div><button class="btn btn--secondary" id="quizStart" type="button" disabled>Play five screenshots</button></div>
+      <div id="quizPanel" class="quiz-panel" hidden><button id="quizClose" class="text-button quiz-close" type="button">Close round ×</button><div id="quizBody"></div></div>
+      <p id="quizMessage" role="status" aria-live="polite"></p><button id="quizConnectRetry" class="text-button" type="button" hidden>Try connecting again</button><button id="quizFresh" class="btn btn--secondary" type="button" hidden>Start a fresh round</button>
+      <details class="quiz-privacy"><summary>No login. Your guesses help us learn which games people recognize.</summary><p>Choices are saved when you finish. Results show community totals, never a player profile. A random key in this browser lets you remove your quiz answers; clearing browser data removes that access. Unfinished rounds expire after a day.</p><button id="quizDelete" class="text-button" type="button" hidden>Remove my quiz answers</button></details>
     </section>
 
     <section class="discovery" id="discover" aria-labelledby="discoverTitle">
@@ -304,34 +312,41 @@
     <section class="project-feedback" aria-labelledby="feedbackTitle">
       <div class="feedback-heading"><div><p class="eyebrow">HELP THE NEXT VERSION</p><h3 id="feedbackTitle">Player feedback</h3></div><span id="feedbackCount"></span></div>
       <div class="feedback-layout">
-        <div class="feedback-community">
-          <div id="idealPriceSummary" class="ideal-price-summary"></div>
-          <p id="feedbackLoading" class="field__hint" role="status" hidden>Loading the conversation…</p>
-          <div id="feedbackError" class="feedback-error" hidden><p id="feedbackErrorText" role="alert"></p><button type="button" class="text-button" id="feedbackRetry">Try again</button></div>
-          <ol id="feedbackList" class="feedback-list" aria-label="Public player feedback"></ol>
-          <div id="feedbackEmpty" class="feedback-empty"><p>No notes yet.</p><span>A thoughtful first impression can help a maker decide what to work on next.</span></div>
-          <button type="button" class="text-button" id="feedbackMore" hidden>Read more feedback</button>
-        </div>
         <section class="feedback-compose" aria-labelledby="feedbackFormTitle">
-          <h4 id="feedbackFormTitle">Leave a note</h4>
-          <p class="field__hint">What did you enjoy? What could be clearer?</p>
+          <h4 id="feedbackFormTitle">A quick first impression</h4>
+          <p class="field__hint">Pick any that fit. A first look is welcome; skip anything you haven’t tried.</p>
           <form id="feedbackForm">
-            <label for="feedbackBody">Your feedback</label>
-            <textarea class="input" id="feedbackBody" name="feedback" rows="5" maxlength="1500" aria-describedby="feedbackPublic feedbackMessage"></textarea>
-            <label for="feedbackName">Display name <span class="field-optional">(optional)</span></label>
-            <input class="input" id="feedbackName" name="displayName" type="text" maxlength="40" autocomplete="nickname" placeholder="Guest">
-            <div class="feedback-price-field">
-              <label for="feedbackPrice">Your ideal price <span class="field-optional">(optional)</span></label>
-              <div class="price-input"><span aria-hidden="true">$</span><input id="feedbackPrice" name="idealPrice" type="text" inputmode="decimal" autocomplete="off" maxlength="6" placeholder="Leave blank to skip" aria-describedby="feedbackPriceHint feedbackMessage"></div>
-              <p id="feedbackPriceHint" class="field__hint">USD · $0–$100. A suggestion, never a commitment.</p>
-            </div>
-            <p id="feedbackPublic" class="field__hint">Your note, display name, and optional price will be public.</p>
+            <div id="feedbackQuestions"></div>
+            <label for="feedbackBody">Anything to add? <span class="field-optional">(optional)</span></label>
+            <textarea class="input" id="feedbackBody" name="feedback" rows="3" maxlength="1500" placeholder="A moment you loved, a place you got stuck, an idea to try…" aria-describedby="feedbackPublic feedbackMessage"></textarea>
+            <details id="feedbackExtras" class="feedback-extras">
+              <summary>Name &amp; ideal price <span class="field-optional">(optional)</span></summary>
+              <div>
+                <label for="feedbackName">Display name</label>
+                <input class="input" id="feedbackName" name="displayName" type="text" maxlength="40" autocomplete="nickname" placeholder="Guest">
+                <div class="feedback-price-field">
+                  <label for="feedbackPrice">Your ideal price</label>
+                  <div class="price-input"><span aria-hidden="true">$</span><input id="feedbackPrice" name="idealPrice" type="text" inputmode="decimal" autocomplete="off" maxlength="6" placeholder="Leave blank to skip" aria-describedby="feedbackPriceHint feedbackMessage"></div>
+                  <p id="feedbackPriceHint" class="field__hint">USD · $0–$100. A suggestion, never a commitment.</p>
+                </div>
+              </div>
+            </details>
+            <p id="feedbackPublic" class="field__hint">Your choices, note, display name, and optional price will be public.</p>
             <button type="submit" class="btn btn--primary" id="feedbackSubmit">Share feedback</button>
             <button type="button" class="text-button" id="feedbackRemove" hidden>Remove my feedback</button>
           </form>
           <p id="feedbackMessage" class="action-message" role="status" aria-live="polite"></p>
           <p id="feedbackAvailability" class="field__hint"></p>
         </section>
+        <div class="feedback-community">
+          <div id="feedbackChoiceSummary" class="feedback-choice-summary" hidden></div>
+          <div id="idealPriceSummary" class="ideal-price-summary"></div>
+          <p id="feedbackLoading" class="field__hint" role="status" hidden>Loading the conversation…</p>
+          <div id="feedbackError" class="feedback-error" hidden><p id="feedbackErrorText" role="alert"></p><button type="button" class="text-button" id="feedbackRetry">Try again</button></div>
+          <ol id="feedbackList" class="feedback-list" aria-label="Public player feedback"></ol>
+          <div id="feedbackEmpty" class="feedback-empty"><p>Yours could be the first.</p><span>A few quick choices can help the maker see what’s connecting and what to try next.</span></div>
+          <button type="button" class="text-button" id="feedbackMore" hidden>Read more feedback</button>
+        </div>
       </div>
     </section>
   </div>
@@ -340,7 +355,7 @@
 <dialog class="dialog" id="infoDialog" aria-labelledby="infoTitle"><div class="dialog__header"><h2 id="infoTitle">A clear trail to the source</h2><button type="button" class="btn btn--ghost btn--sm" data-dialog-close autofocus>Close</button></div><div class="dialog__body stack">
   <section><h3>What this collection covers</h3><p>Playtrace collects games shared on <a href="https://www.reddit.com/r/aigamedev/" target="_blank" rel="noopener noreferrer">r/aigamedev</a>, using the <a href="https://arctic-shift.photon-reddit.com/" target="_blank" rel="noopener noreferrer">Arctic Shift archive</a>. The archive can be delayed or incomplete. Every timeline links to the original post. AI use and development stages reflect what the maker shared.</p><p id="sourceDetails"></p></section>
   <section><h3>Creators and previews</h3><p>Being listed does not imply creator verification or endorsement. Source-described entries are collected automatically and await editorial review. Images remain with their original hosts unless a creator has permitted storage. Video links open the source post.</p><a id="removalLink" class="text-button" href="https://balise.neorgon.com/">Request a correction or removal ↗</a></section>
-  <section><h3>Public feedback, no account needed</h3><p>Notes, display names, and ideal prices are public. A random edit key stays in your browser so you can update or remove your contribution. Clearing browser data removes that editing access. Use a contribution’s Report link if you need help. Browser and temporary network limits reduce spam; a contribution does not represent a verified person or a purchase commitment.</p><p>Older account-based price responses remain private and are not republished as guest feedback. Optional account follows are separate from this public conversation.</p></section>
+  <section><h3>Public feedback, no account needed</h3><p>Quick choices, notes, display names, and ideal prices are public. A random edit key stays in your browser so you can update or remove your contribution. Clearing browser data removes that editing access. Use a contribution’s Report link if you need help. Browser and temporary network limits reduce spam; a contribution does not represent a verified person or a purchase commitment.</p><p>Older account-based price responses remain private and are not republished as guest feedback. Optional account follows are separate from this public conversation.</p></section>
   <section id="privacyControls"><h3>Your Playtrace data</h3><p>Your follows and price responses are private. Removing them does not delete your Neorgon account.</p><button type="button" class="btn btn--secondary" id="deleteMyData">Delete my follows and responses</button><div id="deleteConfirm" hidden><p>This removes all your follows and price responses. It cannot be undone.</p><button type="button" class="btn btn--danger" id="confirmDelete">Delete my Playtrace data</button><button type="button" class="text-button" id="cancelDelete">Keep my data</button></div><p id="privacyMessage" role="status" aria-live="polite"></p></section>
 </div></dialog>
   <!-- /template:main -->

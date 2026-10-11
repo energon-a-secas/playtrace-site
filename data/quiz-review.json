@@ -1,0 +1,166 @@
+{
+  "checkedAt": "2026-10-11T00:58:25.738Z",
+  "scope": "20 playable projects; browser games and demos may still be in development.",
+  "games": [
+    {
+      "id": "g_1x2n554",
+      "title": "DeadHertz",
+      "titleSource": "https://deadhertz.com/",
+      "imageSource": "https://www.reddit.com/r/aigamedev/comments/1x2n554/",
+      "evidence": "Live game page serves the browser game.",
+      "image": "https://external-preview.redd.it/ZDNsaG9lcjh0b3VoMZBSmpN4U7VTMBxxfXVVhOo20RzQt6Fo0jzQXn7Hv8Ly.png?width=640&crop=smart&format=pjpg&auto=webp&s=85c62c07a1ee7bc682690bacc6cdacaa93772869"
+    },
+    {
+      "id": "g_1x2izrh",
+      "title": "Generic South London Mystery",
+      "titleSource": "https://thuggish-games.itch.io/generic-south-london-mystery",
+      "imageSource": "https://thuggish-games.itch.io/generic-south-london-mystery",
+      "evidence": "Publisher page exposes a playable build or download.",
+      "image": "https://img.itch.zone/aW1hZ2UvNTExMjE0NS8zMDYwODQzNS5wbmc=/original/qTCEM8.png"
+    },
+    {
+      "id": "g_1wxqtii",
+      "title": "Humans Not Included: Meowltdown",
+      "titleSource": "https://hwaindustries.itch.io/humans-not-included-meowltdown",
+      "imageSource": "https://hwaindustries.itch.io/humans-not-included-meowltdown",
+      "evidence": "Publisher page exposes a playable build or download.",
+      "image": "https://img.itch.zone/aW1hZ2UvNTEwMjM0NS8zMDcwNjc5Ni5wbmc=/original/RaUy1d.png"
+    },
+    {
+      "id": "g_1x2c8w8",
+      "title": "Tap Turn Battler",
+      "titleSource": "https://tapturnbattler.itch.io/ttb",
+      "imageSource": "https://tapturnbattler.itch.io/ttb",
+      "evidence": "Publisher page exposes a playable build or download.",
+      "image": "https://img.itch.zone/aW1hZ2UvNDc2ODM3My8zMDI0MjU5Ni5qcGc=/original/P9USyL.jpg"
+    },
+    {
+      "id": "g_1x2bwu2",
+      "title": "MiniMachines: Steam to Singularities",
+      "titleSource": "https://kaydedm.itch.io/minimachines-steam-to-singularities",
+      "imageSource": "https://kaydedm.itch.io/minimachines-steam-to-singularities",
+      "evidence": "Publisher page exposes a playable build or download.",
+      "image": "https://img.itch.zone/aW1hZ2UvNTEzMTM2NC8zMDcxODM1Mi5qcGc=/original/LrgYgB.jpg"
+    },
+    {
+      "id": "g_1x2b1dc",
+      "title": "KEEP ON RIDING",
+      "titleSource": "https://www.keepriding.it",
+      "imageSource": "https://www.reddit.com/r/aigamedev/comments/1x2b1dc/",
+      "evidence": "Live game page serves the browser game.",
+      "image": "https://external-preview.redd.it/bjVyb3IzeHN5bHVoMW6oUFxioLhVJny7_Xm94E66VTNPTTha4Qtm9R80ByBl.png?width=640&crop=smart&format=pjpg&auto=webp&s=3627485f0de1d19ce72cd967b89268600c689ace"
+    },
+    {
+      "id": "g_1x1y16r",
+      "title": "NEON AFTERHOURS",
+      "titleSource": "https://rexzen.itch.io/neon-afterhours",
+      "imageSource": "https://rexzen.itch.io/neon-afterhours",
+      "evidence": "Publisher page exposes a playable build or download.",
+      "image": "https://img.itch.zone/aW1hZ2UvNTExNjgwMi8zMDYzNjUwNi5wbmc=/original/vUH2Zd.png"
+    },
+    {
+      "id": "g_1x065jf",
+      "title": "Shapeleon",
+      "titleSource": "https://demos.tahazsh.com/shapeleon/",
+      "imageSource": "https://demos.tahazsh.com/shapeleon/",
+      "evidence": "Live game page serves the browser game.",
+      "image": "https://demos.tahazsh.com/shapeleon/cover/share.jpg"
+    },
+    {
+      "id": "g_1x1u7g1",
+      "title": "A Place Beyond",
+      "titleSource": "https://bcaa777.itch.io/a-place-beyond",
+      "imageSource": "https://bcaa777.itch.io/a-place-beyond",
+      "evidence": "Publisher page exposes a playable build or download.",
+      "image": "https://img.itch.zone/aW1hZ2UvNTEyMzgyNS8zMDY3NDM3OC5wbmc=/original/VrgkLX.png"
+    },
+    {
+      "id": "g_1x1n7fu",
+      "title": "Looks Legit",
+      "titleSource": "https://webholt.itch.io/looks-legit",
+      "imageSource": "https://webholt.itch.io/looks-legit",
+      "evidence": "Publisher page exposes a playable build or download.",
+      "image": "https://img.itch.zone/aW1hZ2UvNTEyNTc2MC8zMDY4NTU1OC5wbmc=/original/3Gf%2Bwm.png"
+    },
+    {
+      "id": "g_1x1jgp6",
+      "title": "Somnaworld",
+      "titleSource": "https://michelowm.itch.io/somnaworld",
+      "imageSource": "https://michelowm.itch.io/somnaworld",
+      "evidence": "Publisher page exposes a playable build or download.",
+      "image": "https://img.itch.zone/aW1hZ2UvNTExMTAwMy8zMDYwMTY0MS5wbmc=/original/lpf5br.png"
+    },
+    {
+      "id": "g_1x198u6",
+      "title": "TIBERAVA",
+      "titleSource": "https://tiberava.pages.dev/",
+      "imageSource": "https://www.reddit.com/r/aigamedev/comments/1x198u6/",
+      "evidence": "Live game page serves the browser game.",
+      "image": "https://preview.redd.it/3iho2kt5ncuh1.png?width=640&crop=smart&auto=webp&s=54324794eb90f006a0bb4eccc6bb8c2778186767"
+    },
+    {
+      "id": "g_1x0rf7i",
+      "title": "Cave Drop",
+      "titleSource": "https://wilsonb9000.itch.io/cave-drop",
+      "imageSource": "https://wilsonb9000.itch.io/cave-drop",
+      "evidence": "Publisher page exposes a playable build or download.",
+      "image": "https://img.itch.zone/aW1hZ2UvNTEwODI1MC8zMDU4MTQ2MC5wbmc=/original/2beXPK.png"
+    },
+    {
+      "id": "g_1x0dz91",
+      "title": "SaucerJam",
+      "titleSource": "https://menezmethod.itch.io/saucerjam",
+      "imageSource": "https://menezmethod.itch.io/saucerjam",
+      "evidence": "Publisher page exposes a playable build or download.",
+      "image": "https://img.itch.zone/aW1hZ2UvNTA3MDQ2OC8zMDM1NTM5OC5wbmc=/original/j%2F%2F0md.png"
+    },
+    {
+      "id": "g_1x099xo",
+      "title": "BLOBSLAYER",
+      "titleSource": "https://rafasr.itch.io/blobslayer",
+      "imageSource": "https://rafasr.itch.io/blobslayer",
+      "evidence": "Publisher page exposes a playable build or download.",
+      "image": "https://img.itch.zone/aW1hZ2UvNTA5NzQzOS8zMDU4MzQwMC5wbmc=/original/ozETzN.png"
+    },
+    {
+      "id": "g_1wzypwz",
+      "title": "Data Campus",
+      "titleSource": "https://behuzer.itch.io/data-campus",
+      "imageSource": "https://behuzer.itch.io/data-campus",
+      "evidence": "Publisher page exposes a playable build or download.",
+      "image": "https://img.itch.zone/aW1hZ2UvNTEwMTc3Ny8zMDYyOTQzOS5wbmc=/original/siP3z7.png"
+    },
+    {
+      "id": "g_1wzmduk",
+      "title": "Minnow's Den",
+      "titleSource": "https://agentbutterbear.itch.io/minnows-den",
+      "imageSource": "https://agentbutterbear.itch.io/minnows-den",
+      "evidence": "Publisher page exposes a playable build or download.",
+      "image": "https://img.itch.zone/aW1hZ2UvNTEwOTIzNC8zMDYwMDE3Ny5wbmc=/original/SbVPcv.png"
+    },
+    {
+      "id": "g_1wz2pzv",
+      "title": "Fivefold Crown",
+      "titleSource": "https://aygforge.itch.io/fivefoldcrown",
+      "imageSource": "https://aygforge.itch.io/fivefoldcrown",
+      "evidence": "Publisher page exposes a playable build or download.",
+      "image": "https://img.itch.zone/aW1hZ2UvNTA0ODg2MC8zMDUyNjQ4MS5wbmc=/original/0mroie.png"
+    },
+    {
+      "id": "g_1wyko70",
+      "title": "Provision",
+      "titleSource": "https://waypost-studios.itch.io/provision",
+      "imageSource": "https://waypost-studios.itch.io/provision",
+      "evidence": "Publisher page exposes a playable build or download.",
+      "image": "https://img.itch.zone/aW1hZ2UvNDg2NzkxMC8zMDQyNDcyNy5wbmc=/original/4bJyZ7.png"
+    },
+    {
+      "id": "g_1wyid5o",
+      "title": "Abyss",
+      "titleSource": "https://gabrieldu4rte.itch.io/abyss",
+      "imageSource": "https://gabrieldu4rte.itch.io/abyss",
+      "evidence": "Publisher page exposes a playable build or download.",
+      "image": "https://img.itch.zone/aW1hZ2UvNTEwNzI3OC8zMDU3NTYwNC5wbmc=/original/fnebf5.png"
+    }
+  ]
+}

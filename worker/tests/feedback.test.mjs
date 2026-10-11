@@ -17,6 +17,30 @@ async function setup() {
   return { env, worker: fixtureWorker() };
 }
 
+test('quick choices are public, editable in place, counted once and removed from aggregates on moderation or deletion', async () => {
+  const { env,worker }=await setup();
+  const quick={displayName:'',body:'',idealPriceCents:null,choices:['visuals','idea','controls']};
+  const save=async value=>worker.fetch(guestRequest(undefined,{method:'PUT',body:value}),env);
+  for(const choices of [['invented'],['idea','idea'],'idea',[null],{},Array(11).fill('idea')]) {
+    assert.equal((await save({...quick,choices})).status,400);
+  }
+  let result=await save(quick);assert.equal(result.status,200);const first=(await result.json()).feedback;
+  assert.deepEqual(first.choices,['controls','idea','visuals']);assert.equal(first.body,'');
+  result=await save({...quick,choices:['visuals']});assert.equal((await result.json()).feedback.id,first.id);
+  let page=await (await worker.fetch(request('/games/g_abc12/feedback'),env)).json();
+  assert.equal(page.count,1);assert.equal(page.choices.find(x=>x.id==='visuals').count,1);assert.equal(page.choices.find(x=>x.id==='idea').count,0);
+  // A cached old client can edit its note without silently clearing new choices.
+  assert.equal((await save(body)).status,200);
+  const own=await (await worker.fetch(guestRequest('/games/g_abc12/feedback/mine'),env)).json();assert.deepEqual(own.feedback.choices,['visuals']);
+  await worker.fetch(request(`/admin/feedback/${first.id}/hide`,{method:'POST',auth:OPERATOR,body:{reason:'Test moderation'}}),env);
+  page=await (await worker.fetch(request('/games/g_abc12/feedback'),env)).json();
+  assert.equal(page.count,0);assert.ok(page.choices.every(x=>x.count===0));assert.equal((await save(quick)).status,403);
+  await worker.fetch(guestRequest(undefined,{method:'PUT',body:quick},keyB),env);
+  await worker.fetch(guestRequest(undefined,{method:'DELETE'},keyB),env);
+  page=await (await worker.fetch(request('/games/g_abc12/feedback'),env)).json();assert.ok(page.choices.every(x=>x.count===0));
+  env.DB.close();
+});
+
 test('guest feedback works without auth, stays public, edits in place and keeps private prices private', async () => {
   const { env, worker } = await setup();
   env.DB.sql.exec("INSERT INTO price_signals VALUES('private-member','g_abc12',9900,'USD','2026-10-10T12:00:00.000Z')");
@@ -28,7 +52,7 @@ test('guest feedback works without auth, stays public, edits in place and keeps 
   const publicPage = await (await worker.fetch(request('/games/g_abc12/feedback'), env)).json();
   assert.equal(publicPage.entries.length, 1); assert.equal(publicPage.count, 1);
   assert.deepEqual(publicPage.idealPrices, { currency: 'USD', count: 1, medianCents: 1200 });
-  assert.deepEqual(Object.keys(publicPage.entries[0]).sort(), ['body', 'createdAt', 'currency', 'displayName', 'id', 'idealPriceCents', 'updatedAt']);
+  assert.deepEqual(Object.keys(publicPage.entries[0]).sort(), ['body', 'choices', 'createdAt', 'currency', 'displayName', 'id', 'idealPriceCents', 'updatedAt']);
   assert.equal(JSON.stringify(publicPage).includes(keyA), false);
   assert.equal(JSON.stringify(publicPage).includes('private-member'), false);
   response = await worker.fetch(guestRequest(undefined, { method: 'PUT', body: { ...body, body: 'An updated suggestion.', idealPriceCents: null } }), env);

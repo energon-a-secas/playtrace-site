@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-11T00:45:07.675Z",
+  "generatedAt": "2026-10-11T00:58:25.738Z",
   "source": {
     "subreddit": "aigamedev",
     "subredditUrl": "https://www.reddit.com/r/aigamedev/",
@@ -667,7 +667,7 @@
     },
     {
       "id": "g_1x2bwu2",
-      "title": "MiniMachines: Steam to Singularity",
+      "title": "MiniMachines: Steam to Singularities",
       "summary": "Start with simple tools on an island and build an automated factory through successive technology tiers. The creator describes steam power, electrical networks, rockets, and multiple worlds in an actively developed free download.",
       "author": {
         "name": "Askdevin777",
@@ -1813,6 +1813,405 @@
         }
       ],
       "reviewStatus": "reviewed"
+    },
+    {
+      "id": "g_1wxqtii",
+      "title": "Humans Not Included: Meowltdown",
+      "summary": "Source post by u/Zandesh: I made a demo of a therapy card game where cats have human-sized problems",
+      "author": {
+        "name": "Zandesh",
+        "url": "https://www.reddit.com/user/Zandesh/"
+      },
+      "category": "other",
+      "stage": "unknown",
+      "platforms": [
+        "Windows"
+      ],
+      "tags": [],
+      "projectUrl": "https://hwaindustries.itch.io/humans-not-included-meowltdown",
+      "firstSeenAt": "2026-10-04T21:15:17.000Z",
+      "updatedAt": "2026-10-04T21:15:17.000Z",
+      "preview": {
+        "kind": "image",
+        "url": "https://external-preview.redd.it/jGDNeJ5fP_nGwAOIZ-BW4M3H5C9DHNsFD_toqbYSVwk.png?width=640&crop=smart&auto=webp&s=319225eba613bc074285f5d51534629391d60c7f",
+        "posterUrl": null,
+        "alt": "I made a demo of a therapy card game where cats have human-sized problems",
+        "storage": "external",
+        "rights": "source-linked",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wxqtii/"
+      },
+      "posts": [
+        {
+          "id": "1wxqtii",
+          "url": "https://www.reddit.com/r/aigamedev/comments/1wxqtii/",
+          "title": "I made a demo of a therapy card game where cats have human-sized problems",
+          "author": "Zandesh",
+          "createdAt": "2026-10-04T21:15:17.000Z",
+          "kind": "showcase",
+          "excerpt": "Source post by u/Zandesh: I made a demo of a therapy card game where cats have human-sized problems",
+          "flair": "Demo | Project | Workflow"
+        }
+      ],
+      "reviewStatus": "source-described"
+    },
+    {
+      "id": "g_1x065jf",
+      "title": "Shapeleon",
+      "summary": "Source post by u/tahazsh: I built this game for my family and they're enjoying it",
+      "author": {
+        "name": "tahazsh",
+        "url": "https://www.reddit.com/user/tahazsh/"
+      },
+      "category": "other",
+      "stage": "playable",
+      "platforms": [
+        "Browser"
+      ],
+      "tags": [],
+      "projectUrl": "https://demos.tahazsh.com/shapeleon/",
+      "firstSeenAt": "2026-10-07T19:44:27.000Z",
+      "updatedAt": "2026-10-07T19:44:27.000Z",
+      "preview": {
+        "kind": "video",
+        "url": "https://www.reddit.com/r/aigamedev/comments/1x065jf/",
+        "posterUrl": null,
+        "alt": "I built this game for my family and they're enjoying it",
+        "storage": "external",
+        "rights": "source-linked",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x065jf/"
+      },
+      "posts": [
+        {
+          "id": "1x065jf",
+          "url": "https://www.reddit.com/r/aigamedev/comments/1x065jf/",
+          "title": "I built this game for my family and they're enjoying it",
+          "author": "tahazsh",
+          "createdAt": "2026-10-07T19:44:27.000Z",
+          "kind": "showcase",
+          "excerpt": "Source post by u/tahazsh: I built this game for my family and they're enjoying it",
+          "flair": "Demo | Project | Workflow"
+        }
+      ],
+      "reviewStatus": "source-described"
+    },
+    {
+      "id": "g_1x0rf7i",
+      "title": "Cave Drop",
+      "summary": "Source post by u/dank_summers: Making a game where every surface is the floor made entirely with Opus 5.5",
+      "author": {
+        "name": "dank_summers",
+        "url": "https://www.reddit.com/user/dank_summers/"
+      },
+      "category": "other",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "projectUrl": "https://wilsonb9000.itch.io/cave-drop",
+      "firstSeenAt": "2026-10-08T13:49:10.000Z",
+      "updatedAt": "2026-10-08T13:49:10.000Z",
+      "preview": {
+        "kind": "video",
+        "url": "https://www.reddit.com/r/aigamedev/comments/1x0rf7i/",
+        "posterUrl": "https://external-preview.redd.it/cTJiZjd1OTYwOXVoMbs8V6DyZHNgQVOcQKs4WAzeajSzrndGgb_zcx3LRq55.png?width=640&crop=smart&format=pjpg&auto=webp&s=9534ad45d65f260cd94e3a0726b6ded468f33b4a",
+        "alt": "Making a game where every surface is the floor made entirely with Opus 5.5",
+        "storage": "external",
+        "rights": "source-linked",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x0rf7i/"
+      },
+      "posts": [
+        {
+          "id": "1x0rf7i",
+          "url": "https://www.reddit.com/r/aigamedev/comments/1x0rf7i/",
+          "title": "Making a game where every surface is the floor made entirely with Opus 5.5",
+          "author": "dank_summers",
+          "createdAt": "2026-10-08T13:49:10.000Z",
+          "kind": "showcase",
+          "excerpt": "Source post by u/dank_summers: Making a game where every surface is the floor made entirely with Opus 5.5",
+          "flair": "Demo | Project | Workflow"
+        }
+      ],
+      "reviewStatus": "source-described"
+    },
+    {
+      "id": "g_1x0dz91",
+      "title": "SaucerJam",
+      "summary": "Source post by u/Silent_Ad1589: I couldn't find a way to play ARC anymore, so I made a browser game inspired by it",
+      "author": {
+        "name": "Silent_Ad1589",
+        "url": "https://www.reddit.com/user/Silent_Ad1589/"
+      },
+      "category": "other",
+      "stage": "unknown",
+      "platforms": [
+        "Browser"
+      ],
+      "tags": [],
+      "projectUrl": "https://menezmethod.itch.io/saucerjam",
+      "firstSeenAt": "2026-10-08T01:18:33.000Z",
+      "updatedAt": "2026-10-08T01:18:33.000Z",
+      "preview": {
+        "kind": "video",
+        "url": "https://www.reddit.com/r/aigamedev/comments/1x0dz91/",
+        "posterUrl": "https://external-preview.redd.it/ZGI1bG03dXo5NXVoMYGJwlHQT8TbgyMnxqFU0alzlrjpknR-DZ37yF3FcmnG.png?width=640&crop=smart&format=pjpg&auto=webp&s=c10c95af57649a8c01bb0f71c4580721ab1a07c0",
+        "alt": "I couldn't find a way to play ARC anymore, so I made a browser game inspired by it",
+        "storage": "external",
+        "rights": "source-linked",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x0dz91/"
+      },
+      "posts": [
+        {
+          "id": "1x0dz91",
+          "url": "https://www.reddit.com/r/aigamedev/comments/1x0dz91/",
+          "title": "I couldn't find a way to play ARC anymore, so I made a browser game inspired by it",
+          "author": "Silent_Ad1589",
+          "createdAt": "2026-10-08T01:18:33.000Z",
+          "kind": "showcase",
+          "excerpt": "Source post by u/Silent_Ad1589: I couldn't find a way to play ARC anymore, so I made a browser game inspired by it",
+          "flair": "Demo | Project | Workflow"
+        }
+      ],
+      "reviewStatus": "source-described"
+    },
+    {
+      "id": "g_1x099xo",
+      "title": "BLOBSLAYER",
+      "summary": "Source post by u/Bahamuly: 2D Roguelite Game inspired by flash game Amorphous+",
+      "author": {
+        "name": "Bahamuly",
+        "url": "https://www.reddit.com/user/Bahamuly/"
+      },
+      "category": "rpg",
+      "stage": "unknown",
+      "platforms": [
+        "PC"
+      ],
+      "tags": [],
+      "projectUrl": "https://rafasr.itch.io/blobslayer",
+      "firstSeenAt": "2026-10-07T21:43:06.000Z",
+      "updatedAt": "2026-10-07T21:43:06.000Z",
+      "preview": {
+        "kind": "video",
+        "url": "https://www.reddit.com/r/aigamedev/comments/1x099xo/",
+        "posterUrl": "https://external-preview.redd.it/NDlraXVnNnQ3NHVoMW0jpYfTKvF-d02IOOK8QGNlsKEcrOpiK0efu3ca9BIN.png?width=640&crop=smart&format=pjpg&auto=webp&s=093a2edd9018a2b561a9f06804474d9037136ba9",
+        "alt": "2D Roguelite Game inspired by flash game Amorphous+",
+        "storage": "external",
+        "rights": "source-linked",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x099xo/"
+      },
+      "posts": [
+        {
+          "id": "1x099xo",
+          "url": "https://www.reddit.com/r/aigamedev/comments/1x099xo/",
+          "title": "2D Roguelite Game inspired by flash game Amorphous+",
+          "author": "Bahamuly",
+          "createdAt": "2026-10-07T21:43:06.000Z",
+          "kind": "showcase",
+          "excerpt": "Source post by u/Bahamuly: 2D Roguelite Game inspired by flash game Amorphous+",
+          "flair": "Demo | Project | Workflow"
+        }
+      ],
+      "reviewStatus": "source-described"
+    },
+    {
+      "id": "g_1wzypwz",
+      "title": "Data Campus",
+      "summary": "Source post by u/Careless-Flower6059: Data Campus - An idle game based on data centers",
+      "author": {
+        "name": "Careless-Flower6059",
+        "url": "https://www.reddit.com/user/Careless-Flower6059/"
+      },
+      "category": "other",
+      "stage": "unknown",
+      "platforms": [
+        "Browser"
+      ],
+      "tags": [],
+      "projectUrl": "https://behuzer.itch.io/data-campus",
+      "firstSeenAt": "2026-10-07T14:58:03.000Z",
+      "updatedAt": "2026-10-07T14:58:03.000Z",
+      "preview": {
+        "kind": "video",
+        "url": "https://www.reddit.com/r/aigamedev/comments/1wzypwz/",
+        "posterUrl": "https://external-preview.redd.it/dGluYzF6MHk2MnVoMSG61TUAi-KXZld1zmPoT0DaQxUiptFlY2qxO2-j4PfP.png?width=640&crop=smart&format=pjpg&auto=webp&s=5ae0cf6101f3806b1ffcc39486bb26ab54afe907",
+        "alt": "Data Campus - An idle game based on data centers",
+        "storage": "external",
+        "rights": "source-linked",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wzypwz/"
+      },
+      "posts": [
+        {
+          "id": "1wzypwz",
+          "url": "https://www.reddit.com/r/aigamedev/comments/1wzypwz/",
+          "title": "Data Campus - An idle game based on data centers",
+          "author": "Careless-Flower6059",
+          "createdAt": "2026-10-07T14:58:03.000Z",
+          "kind": "showcase",
+          "excerpt": "Source post by u/Careless-Flower6059: Data Campus - An idle game based on data centers",
+          "flair": "Demo | Project | Workflow"
+        }
+      ],
+      "reviewStatus": "source-described"
+    },
+    {
+      "id": "g_1wzmduk",
+      "title": "Minnow's Den",
+      "summary": "Source post by u/Rot_Beurre: Minnow's Den - Short Anomaly Detection Game",
+      "author": {
+        "name": "Rot_Beurre",
+        "url": "https://www.reddit.com/user/Rot_Beurre/"
+      },
+      "category": "other",
+      "stage": "unknown",
+      "platforms": [
+        "Browser"
+      ],
+      "tags": [],
+      "projectUrl": "https://agentbutterbear.itch.io/minnows-den",
+      "firstSeenAt": "2026-10-07T03:32:04.000Z",
+      "updatedAt": "2026-10-07T03:32:04.000Z",
+      "preview": {
+        "kind": "video",
+        "url": "https://www.reddit.com/r/aigamedev/comments/1wzmduk/",
+        "posterUrl": "https://external-preview.redd.it/dWg0NWRkamVzeXRoMVbsotEFYFzHUfwHlfPArts0mbbllCMKYJjr5sAoDp74.png?width=640&crop=smart&format=pjpg&auto=webp&s=cc713ece2471fa9cf9b662ce9b5abb9e6d995aac",
+        "alt": "Minnow's Den - Short Anomaly Detection Game",
+        "storage": "external",
+        "rights": "source-linked",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wzmduk/"
+      },
+      "posts": [
+        {
+          "id": "1wzmduk",
+          "url": "https://www.reddit.com/r/aigamedev/comments/1wzmduk/",
+          "title": "Minnow's Den - Short Anomaly Detection Game",
+          "author": "Rot_Beurre",
+          "createdAt": "2026-10-07T03:32:04.000Z",
+          "kind": "showcase",
+          "excerpt": "Source post by u/Rot_Beurre: Minnow's Den - Short Anomaly Detection Game",
+          "flair": "Demo | Project | Workflow"
+        }
+      ],
+      "reviewStatus": "source-described"
+    },
+    {
+      "id": "g_1wz2pzv",
+      "title": "Fivefold Crown",
+      "summary": "Source post by u/RadiantExternal8752: My kingdom-management roguelite game",
+      "author": {
+        "name": "RadiantExternal8752",
+        "url": "https://www.reddit.com/user/RadiantExternal8752/"
+      },
+      "category": "rpg",
+      "stage": "unknown",
+      "platforms": [
+        "Browser"
+      ],
+      "tags": [],
+      "projectUrl": "https://aygforge.itch.io/fivefoldcrown",
+      "firstSeenAt": "2026-10-06T13:33:07.000Z",
+      "updatedAt": "2026-10-06T13:33:07.000Z",
+      "preview": {
+        "kind": "video",
+        "url": "https://www.reddit.com/r/aigamedev/comments/1wz2pzv/",
+        "posterUrl": "https://external-preview.redd.it/emNzdzdmdWZudXRoMZ30yMkzS3Z1MYQ66PZce8JJuVi5sfDe7qzg-CCkQjHn.jpeg?width=320&crop=smart&format=pjpg&auto=webp&s=e33033e98418d57dc0522cbbcd75f88e6457534d",
+        "alt": "My kingdom-management roguelite game",
+        "storage": "external",
+        "rights": "source-linked",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wz2pzv/"
+      },
+      "posts": [
+        {
+          "id": "1wz2pzv",
+          "url": "https://www.reddit.com/r/aigamedev/comments/1wz2pzv/",
+          "title": "My kingdom-management roguelite game",
+          "author": "RadiantExternal8752",
+          "createdAt": "2026-10-06T13:33:07.000Z",
+          "kind": "showcase",
+          "excerpt": "Source post by u/RadiantExternal8752: My kingdom-management roguelite game",
+          "flair": "Demo | Project | Workflow"
+        }
+      ],
+      "reviewStatus": "source-described"
+    },
+    {
+      "id": "g_1wyko70",
+      "title": "Provision",
+      "summary": "Source post by u/InformationTop5376: Solo dev here, making a factory game with a lot of AI help. Just shipped 0.18, sharing how it's going",
+      "author": {
+        "name": "InformationTop5376",
+        "url": "https://www.reddit.com/user/InformationTop5376/"
+      },
+      "category": "other",
+      "stage": "unknown",
+      "platforms": [
+        "Browser"
+      ],
+      "tags": [],
+      "projectUrl": "https://waypost-studios.itch.io/provision",
+      "firstSeenAt": "2026-10-05T21:20:59.000Z",
+      "updatedAt": "2026-10-05T21:20:59.000Z",
+      "preview": {
+        "kind": "image",
+        "url": "https://preview.redd.it/1col1b3ptpth1.jpeg?width=640&crop=smart&auto=webp&s=0f8ca7f68d3f4b7bd023a37bdadd7d754b4311bb",
+        "posterUrl": null,
+        "alt": "Solo dev here, making a factory game with a lot of AI help. Just shipped 0.18, sharing how it's going",
+        "storage": "external",
+        "rights": "source-linked",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wyko70/"
+      },
+      "posts": [
+        {
+          "id": "1wyko70",
+          "url": "https://www.reddit.com/r/aigamedev/comments/1wyko70/",
+          "title": "Solo dev here, making a factory game with a lot of AI help. Just shipped 0.18, sharing how it's going",
+          "author": "InformationTop5376",
+          "createdAt": "2026-10-05T21:20:59.000Z",
+          "kind": "showcase",
+          "excerpt": "Source post by u/InformationTop5376: Solo dev here, making a factory game with a lot of AI help. Just shipped 0.18, sharing how it's going",
+          "flair": "Demo | Project | Workflow"
+        }
+      ],
+      "reviewStatus": "source-described"
+    },
+    {
+      "id": "g_1wyid5o",
+      "title": "Abyss",
+      "summary": "Source post by u/Top_Second4094: Abyss: A Procedural Dungeon Crawler in ASCII",
+      "author": {
+        "name": "Top_Second4094",
+        "url": "https://www.reddit.com/user/Top_Second4094/"
+      },
+      "category": "rpg",
+      "stage": "playable",
+      "platforms": [
+        "Windows",
+        "Linux"
+      ],
+      "tags": [],
+      "projectUrl": "https://gabrieldu4rte.itch.io/abyss",
+      "firstSeenAt": "2026-10-05T19:49:58.000Z",
+      "updatedAt": "2026-10-05T19:49:58.000Z",
+      "preview": {
+        "kind": "image",
+        "url": "https://preview.redd.it/a6mg2o1edpth1.png?width=640&crop=smart&auto=webp&s=3f9c7722279601aa5958fdad8961cd5ece41d2e6",
+        "posterUrl": null,
+        "alt": "Abyss: A Procedural Dungeon Crawler in ASCII",
+        "storage": "external",
+        "rights": "source-linked",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wyid5o/"
+      },
+      "posts": [
+        {
+          "id": "1wyid5o",
+          "url": "https://www.reddit.com/r/aigamedev/comments/1wyid5o/",
+          "title": "Abyss: A Procedural Dungeon Crawler in ASCII",
+          "author": "Top_Second4094",
+          "createdAt": "2026-10-05T19:49:58.000Z",
+          "kind": "showcase",
+          "excerpt": "Source post by u/Top_Second4094: Abyss: A Procedural Dungeon Crawler in ASCII",
+          "flair": "Demo | Project | Workflow"
+        }
+      ],
+      "reviewStatus": "source-described"
     }
   ]
 }

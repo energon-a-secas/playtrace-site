@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { validateCatalog, selectGames, defaults, locationForState, readLocation, parsePrice, distributionFor } from '../js/collection.js';
 import * as collection from '../js/collection.js';
+import { feedbackQuestions, feedbackOptions, validChoices } from '../js/feedback-options.js';
 
 const seed = JSON.parse(await readFile(new URL('../data/catalog.json', import.meta.url), 'utf8'));
 const copy = () => structuredClone(seed);
@@ -343,7 +344,7 @@ const feedbackPage = (entries = [], gameId = 'g_abc12') => ({ gameId, entries, c
   idealPrices: { currency: 'USD', count: 0, medianCents: null }, nextCursor: null });
 async function feedbackModule(request) {
   const $ = fakeNodes(), state = { service: { capabilities: { feedback: true } } };
-  const api = await isolatedModule('feedback.js', { state, $, request, apiConfigured: true, parsePrice,
+  const api = await isolatedModule('feedback.js', { state, $, request, apiConfigured: true, parsePrice, feedbackQuestions, feedbackOptions, validChoices,
     money: collection.money, dateLabel: collection.dateLabel, e: value => String(value).replaceAll('<', '&lt;').replaceAll('>', '&gt;') });
   return { api, $, state };
 }
