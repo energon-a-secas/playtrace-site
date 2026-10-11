@@ -30,7 +30,7 @@ function classifyArchiveFailure(error) {
 }
 async function archivePage(after, before, deps, ascending = false) {
   const url = new URL(ARCHIVE_URL);
-  url.search = new URLSearchParams({ subreddit: 'aigamedev', sort: ascending ? 'asc' : 'desc', limit: '100', after: String(after), before: String(before) });
+  url.search = new URLSearchParams({ subreddit: 'aigamedev', sort: ascending ? 'asc' : 'desc', limit: ascending ? 'auto' : '100', after: String(after), before: String(before) });
   for (let attempt = 0; attempt < 3; attempt++) {
     let delay = 1000 * 2 ** attempt;
     try {
@@ -51,7 +51,7 @@ async function archivePage(after, before, deps, ascending = false) {
         throw archiveFailure(`ARCHIVE_HTTP_${response.status}`, timedOut || response.status === 429 || response.status >= 500, response.status === 429 ? delay : 0);
       }
       const payload = JSON.parse(new TextDecoder().decode(await readBytes(response.body, 8 * 1024 * 1024)));
-      if (!payload || !Array.isArray(payload.data) || payload.data.length > 100) throw archiveFailure('ARCHIVE_MALFORMED_ENVELOPE', false);
+      if (!payload || !Array.isArray(payload.data) || payload.data.length > (ascending ? 1000 : 100)) throw archiveFailure('ARCHIVE_MALFORMED_ENVELOPE', false);
       return payload.data;
     } catch (error) {
       const failure = classifyArchiveFailure(error);
@@ -142,7 +142,10 @@ export async function ingest(env, deps, historical = false) {
     await db.batch([putMeta(db, checkpointKey, run), query(db, 'DELETE FROM rate_limits WHERE expires_at<=?', Math.floor(start / 1000))]);
     let complete = false, pageFailure = false;
     const seen = new Set(), candidates = [];
-    for (let page = 0; page < 3; page++) {
+    // The archive chooses 100–1000 rows for "auto". One historical page avoids
+    // spending several rate-limited requests on a batch and caps candidate work.
+    const pageLimit = historical ? 1 : 3;
+    for (let page = 0; page < pageLimit; page++) {
       let rows;
       try { rows = await archivePage(after, before, deps, historical); }
       catch (error) {
@@ -167,7 +170,7 @@ export async function ingest(env, deps, historical = false) {
       if (next >= before || next <= after) { run.errorCode = 'CURSOR_STALLED'; break; }
       if (historical) after = next;
       else before = next;
-      if (page < 2) await deps.sleep(600);
+      if (page < pageLimit - 1) await deps.sleep(600);
     }
     run.state = complete ? 'ok' : pageFailure && !run.fetched ? 'error' : 'partial';
     if (complete) {

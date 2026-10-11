@@ -32,7 +32,7 @@ Guest saves have independent per-key and network hourly limits (10 and 60), plus
 
 ## Historical checkpoint
 
-`POST /admin/backfill` accepts `{}` and uses the existing independent operator bearer token. It scans ascending from the archive-confirmed group creation timestamp, `2022-12-11T12:00:48.000Z`, up to a frozen start-of-pass target. Each invocation requests at most three 100-row pages, overlaps the timestamp boundary, and stores state under `app_meta.history`. Completed historical passes become a no-op. The separate `app_meta.ingestion` checkpoint retains recent descending scans with a 48-hour overlap.
+`POST /admin/backfill` accepts `{}` and uses the existing independent operator bearer token. It scans ascending from the archive-confirmed group creation timestamp, `2022-12-11T12:00:48.000Z`, up to a frozen start-of-pass target. Each historical invocation requests one adaptive page (`limit=auto`, at most 1,000 rows), overlaps the timestamp boundary, and stores state under `app_meta.history`. Recent collection retains its three 100-row page cap. Completed historical passes become a no-op. The separate `app_meta.ingestion` checkpoint retains recent descending scans with a 48-hour overlap.
 
 The historical state contains `state`, `startedAt`, `communityCreatedAt`, `scannedThrough`, `resumeAfter`, `resumeBefore`, `targetCoverageThrough`, `lastAttemptAt`, `lastSuccessAt`, `coverageThrough`, per-run counts, and a safe internal error code. Failed archive requests keep their retry window. Persistence failures cannot advance committed coverage. Long rate-limit waits stop the invocation rather than shortening the advertised wait. A stalled full page remains incomplete for operator investigation.
 

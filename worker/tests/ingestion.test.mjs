@@ -287,17 +287,18 @@ test('historical collection starts at group creation, scans forward, resumes and
   let calls = 0;
   const first = await ingest(env, { ...deps([]), fetch: async url => {
     urls.push(new URL(url)); const page = calls++;
-    return Response.json({ data: Array.from({ length: 100 }, (_, i) => rawPost((700000 + page * 100 + i).toString(36).padStart(5, '0'), {
+    return Response.json({ data: Array.from({ length: 1000 }, (_, i) => rawPost((700000 + page * 1000 + i).toString(36).padStart(5, '0'), {
       created_utc: creation + page * 1000 + i * 2,
       url: `https://maker.itch.io/history-${page}-${i}`,
     })) });
   } }, true);
-  assert.equal(first.status, 'partial'); assert.equal(first.updatedGames, 300);
+  assert.equal(first.status, 'partial'); assert.equal(first.updatedGames, 1000); assert.equal(calls,1);
+  assert.equal(urls[0].searchParams.get('limit'), 'auto');
   assert.equal(urls[0].searchParams.get('sort'), 'asc');
   assert.equal(Number(urls[0].searchParams.get('after')), creation - 1);
   const history = await meta(env.DB, 'history');
-  assert.equal(history.scannedThrough, new Date((creation + 2198) * 1000).toISOString());
-  assert.equal(history.resumeAfter, creation + 2197); assert.equal(history.resumeBefore, NOW / 1000);
+  assert.equal(history.scannedThrough, new Date((creation + 1998) * 1000).toISOString());
+  assert.equal(history.resumeAfter, creation + 1997); assert.equal(history.resumeBefore, NOW / 1000);
   assert.deepEqual(await meta(env.DB, 'ingestion'), recent);
   assert.equal((await catalog(env.DB)).source.coverageThrough, recent.coverageThrough);
   let resume;
