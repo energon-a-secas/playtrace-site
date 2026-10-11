@@ -39,6 +39,7 @@ Public feedback uses a random browser edit key so visitors can update or remove 
 ## Features
 
 - **Source-linked discovery** -- Real previews, genre and development-stage filters, maker views, search, grid/list layouts, and shareable project links.
+- **Project platforms** -- Filter by itch.io, Steam, mobile stores, game portals, code repositories, other websites, or projects without a link. Cards and details identify the destination automatically from the project URL. Hosting, supported devices, and development stage remain separate facts.
 - **Project histories** -- Older and newer posts join an existing game only when author and canonical project link match. Existing project links stay stable when an earlier source is found. Sharing an author alone never merges games.
 - **Historical collection** -- A resumable pass starts at the community's creation on December 11, 2022. An independent recent pass keeps new updates fresh. Newest updates appear first; the interface reports historical progress without claiming the archive is complete.
 - **A growing catalogue** -- Cursor pages replace the old 2,000-project public limit. The first page appears promptly; further pages expand search and filters with visible loaded counts. Cards render in groups of 60.

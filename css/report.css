@@ -172,6 +172,7 @@ html:not([data-theme]) .header-bar[data-header-skin="custom"] {
 dialog.dialog { background: var(--pt-paper); color: var(--pt-text); border: 1px solid var(--pt-line); border-radius: 12px; box-shadow: 0 24px 80px oklch(0.15 0.03 262 / 0.25); }
 .dialog::backdrop { background: oklch(0.2 0.04 262 / 0.72); }
 .game-dialog .dialog__header { background: var(--pt-paper); }
+.game-dialog { scroll-padding-top: 88px; }
 .dialog .dialog__header { padding: 12px 24px; }
 .dialog .dialog__header h2 { font-size: 20px; margin: 0; }
 .dialog .dialog__header .btn--ghost { color: var(--pt-muted); border-color: transparent; }
@@ -180,7 +181,7 @@ dialog.dialog { background: var(--pt-paper); color: var(--pt-text); border: 1px 
 .game-dialog .dialog__body > h2 { font-size: 32px; font-weight: 700; line-height: 1.15; }
 .dialog .dialog__footer { padding: 16px 30px; }
 .dialog .field__hint { color: var(--pt-muted); }
-.project-facts { gap: 20px 38px; padding: 18px 0; border-block: 1px solid var(--pt-line); margin-block: 20px; }
+.project-facts { gap: 20px 38px; padding: 18px 0 0; border-top: 1px solid var(--pt-line); margin-block: 20px 0; }
 .project-facts dd { color: var(--pt-ink); font-weight: 600; }
 .tag-list li { background: var(--pt-soft); border-color: transparent; font-size: 12px; padding: 3px 8px; border-radius: 4px; }
 .game-detail { gap: 35px; grid-template-columns: minmax(0, 1.2fr) minmax(250px, 1fr); margin-top: 26px; align-items: start; }
@@ -375,6 +376,7 @@ dialog.dialog { background: var(--pt-paper); color: var(--pt-text); border: 1px 
 .project-history > summary { cursor: pointer; color: var(--text-primary); font-size: 1rem; font-weight: 600; line-height: 1.6; }
 .project-history > summary span:last-child { color: var(--text-muted); font-size: .8125rem; font-weight: 400; margin-left: 12px; }
 .project-history .timeline { margin-top: 24px; }
+.project-history .timeline li:last-child { padding-bottom: 0; }
 .project-follow { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 @media (max-width: 700px) {
   .feedback-layout { grid-template-columns: 1fr; gap: 24px; }
@@ -386,7 +388,7 @@ dialog.dialog { background: var(--pt-paper); color: var(--pt-text); border: 1px 
 @media print { .feedback-compose, .feedback-note__foot a, #feedbackMore, .collection-more { display: none; } }
 
 /* Clear control boundaries and room for the native menu indicator. */
-.collection__filters { grid-template-columns: minmax(190px, 1fr) 150px 180px 170px auto; align-items: end; }
+.collection__filters { grid-template-columns: minmax(175px, 1fr) 125px 175px 155px 155px auto; align-items: end; }
 .collection__filters .field { position: relative; display: grid; gap: 6px; }
 .collection__filters label { font-size: 12px; font-weight: 600; color: var(--pt-muted); }
 .collection__filters .search-icon { top: auto; bottom: 13px; transform: none; }
@@ -422,8 +424,15 @@ dialog.dialog { background: var(--pt-paper); color: var(--pt-text); border: 1px 
 #itemDialogStore:not(:empty) { margin-top: 16px; }
 #itemDialogDescription { max-width: 70ch; margin: 20px 0 24px; }
 #itemDialogMedia { overflow: hidden; border-bottom: 1px solid var(--pt-line); }
-#itemDialogMedia .game-image { width: 100%; height: 280px; aspect-ratio: auto; background: var(--pt-night); }
-#itemDialogMedia img { object-fit: contain; }
+#itemDialogMedia .game-image { width: 100%; height: 320px; aspect-ratio: auto; background: var(--pt-night); }
+#itemDialogMedia .game-image img { object-fit: cover; object-position: center top; }
+.game-dialog .project-banner-controls { height: 76px; margin-bottom: -76px; padding: 14px 24px; border: 0; background: linear-gradient(180deg, oklch(0.16 0.025 262 / 0.7), oklch(0.16 0.025 262 / 0)); }
+.project-banner-controls .eyebrow { padding: 5px 9px; border: 1px solid oklch(0.98 0.005 260 / 0.35); border-radius: 4px; background: oklch(0.16 0.025 262 / 0.72); color: var(--pt-night-text); text-shadow: 0 1px 3px oklch(0.1 0.015 260 / 0.8); }
+.project-close { display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; padding: 0; border: 1px solid oklch(0.98 0.005 260 / 0.9); border-radius: 50%; background: oklch(0.16 0.025 262 / 0.72); color: var(--pt-night-text); cursor: pointer; box-shadow: 0 1px 5px oklch(0.1 0.015 260 / 0.3); transition: background-color 150ms; }
+.project-close svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; }
+.project-close:hover { background: oklch(0.16 0.025 262 / 0.95); }
+.game-dialog .project-close:focus-visible { outline: 3px solid var(--pt-night-text); outline-offset: 4px; }
+.platform-badge, .project-labels .tag-list .platform-badge { display: inline-flex; align-items: center; padding: 3px 8px; border: 1px solid var(--pt-line); border-radius: 5px; background: var(--pt-paper); color: var(--pt-text); font-size: 11px; font-weight: 600; }
 .change-request { padding: 22px; margin-bottom: 24px; border: 1px solid var(--pt-control-line); border-radius: 10px; background: var(--pt-soft); }
 .change-request .stack { gap: 9px; margin-top: 16px; }
 .change-request label { font-size: 14px; font-weight: 600; }
@@ -440,12 +449,13 @@ dialog.dialog { background: var(--pt-paper); color: var(--pt-text); border: 1px 
 .about-page article h3 { font-size: 22px; margin-bottom: 12px; }
 .about-page article p { font-size: 17px; color: var(--pt-text); line-height: 1.75; margin-block: 12px; }
 .about-page .article-return { margin-top: 38px; padding-top: 24px; border-top: 1px solid var(--pt-line); }
-@media (max-width: 1100px) { .collection__filters { grid-template-columns: minmax(170px, 1fr) 145px 165px 150px auto; } }
-@media (max-width: 900px) { .collection__filters { grid-template-columns: repeat(3, minmax(0, 1fr)) auto; } .collection__filters .collection__search { grid-column: 1/-1; } }
+@media (max-width: 1200px) { .collection__filters { grid-template-columns: repeat(4, minmax(0, 1fr)) auto; } .collection__filters .collection__search { grid-column: 1/-1; } }
+@media (max-width: 900px) { .collection__filters { grid-template-columns: repeat(2, minmax(0, 1fr)); } .collection__filters > button { grid-column: 1/-1; justify-self: end; } }
 @media (max-width: 650px) {
   .collection__filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .collection__filters > button { align-self: end; }
   #itemDialogMedia .game-image { height: auto; aspect-ratio: 16/9; max-height: 260px; }
+  .game-dialog .project-banner-controls { padding: 12px 16px; }
   .project-toolbar { flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
   .project-utilities { width: 100%; justify-content: space-between; }
   .project-heading { grid-template-columns: minmax(0, 1fr); gap: 14px; }
@@ -466,7 +476,7 @@ dialog.dialog { background: var(--pt-paper); color: var(--pt-text); border: 1px 
 .store-price { font-size: 14px; font-weight: 650; color: var(--pt-ink); font-variant-numeric: tabular-nums; }
 .store-summary { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 6px; }
 .store-summary small { flex-basis: 100%; font-size: 12px; color: var(--pt-muted); }
-.project-media { padding: 16px 0; border-bottom: 1px solid var(--pt-line); }
+.project-media { padding: 16px 0 0; border-top: 1px solid var(--pt-line); }
 .project-media summary { cursor: pointer; font-weight: 600; }
 .project-media summary > span { font-size: 12px; color: var(--pt-muted); margin-left: 8px; }
 .media-gallery { list-style: none; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; padding: 20px 0 0; }

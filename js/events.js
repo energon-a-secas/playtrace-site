@@ -11,7 +11,7 @@ import { bindProject, prepareProject, closeProject } from './project.js';
 
 export const navigation = createQueryHistory(href => locationForState(href, state));
 function clearFilters() {
-  navigation.push(() => { state.query = ''; state.category = 'all'; state.stage = 'all'; state.author = ''; state.following = false; });
+  navigation.push(() => { state.query = ''; state.category = 'all'; state.platform = 'all'; state.stage = 'all'; state.author = ''; state.following = false; });
   render(); $('searchInput').focus();
 }
 function applyFilter(key, value) { navigation.push(() => { state[key] = value; }); render(); }
@@ -48,7 +48,7 @@ export function bindEvents() {
   $('infoDialog').addEventListener('close', () => { $('deleteConfirm').hidden = true; });
   $('collectionFilters').addEventListener('submit', event => { event.preventDefault(); navigation.replace(); });
   $('searchInput').addEventListener('input', event => { state.query = event.target.value; render(); navigation.schedule(); });
-  for (const [id, key] of [['categorySelect', 'category'], ['sortSelect', 'sort'], ['authorSelect', 'author']]) {
+  for (const [id, key] of [['categorySelect', 'category'], ['platformSelect', 'platform'], ['sortSelect', 'sort'], ['authorSelect', 'author']]) {
     $(id).addEventListener('change', event => applyFilter(key, event.target.value));
   }
   document.addEventListener('click', async event => {

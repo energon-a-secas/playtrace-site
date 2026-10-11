@@ -2,7 +2,25 @@ import { updateQuery } from './neorgon-navigation.js';
 
 export const categories = ['action', 'adventure', 'puzzle', 'strategy', 'rpg', 'simulation', 'arcade', 'other'];
 export const stages = ['concept', 'prototype', 'playable', 'released', 'unknown'];
-export const defaults = Object.freeze({ query: '', category: 'all', stage: 'all', author: '', following: false, sort: 'newest', view: 'grid', game: '' });
+// Distribution describes the linked destination, separately from devices and release stage.
+export const projectPlatforms = Object.freeze([
+  { id: 'itch', label: 'itch.io', kind: 'store' },
+  { id: 'steam', label: 'Steam', kind: 'store' },
+  { id: 'google-play', label: 'Google Play', kind: 'store' },
+  { id: 'app-store', label: 'App Store', kind: 'store' },
+  { id: 'testflight', label: 'TestFlight', kind: 'beta' },
+  { id: 'game-jolt', label: 'Game Jolt', kind: 'store' },
+  { id: 'newgrounds', label: 'Newgrounds', kind: 'portal' },
+  { id: 'crazygames', label: 'CrazyGames', kind: 'portal' },
+  { id: 'poki', label: 'Poki', kind: 'portal' },
+  { id: 'roblox', label: 'Roblox', kind: 'portal' },
+  { id: 'github', label: 'GitHub', kind: 'repository' },
+  { id: 'gitlab', label: 'GitLab', kind: 'repository' },
+  { id: 'codeberg', label: 'Codeberg', kind: 'repository' },
+  { id: 'website', label: 'Other websites', kind: 'website' },
+  { id: 'unlisted', label: 'No project link', kind: 'unlisted' },
+]);
+export const defaults = Object.freeze({ query: '', category: 'all', platform: 'all', stage: 'all', author: '', following: false, sort: 'newest', view: 'grid', game: '' });
 export const label = value => value === 'rpg' ? 'RPG' : value === 'unknown' ? 'Unspecified' : value.charAt(0).toUpperCase() + value.slice(1);
 export const dateLabel = value => new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 export const money = cents => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: cents % 100 ? 2 : 0 }).format(cents / 100);
@@ -13,6 +31,28 @@ export function safeUrl(value, optional = false) {
   const url = new URL(value);
   if (url.protocol !== 'https:' || url.username || url.password) throw new Error('Invalid source URL');
   return url.href;
+}
+export function distributionFor(projectUrl) {
+  if (!projectUrl) return null;
+  const url = new URL(safeUrl(projectUrl)), host = url.hostname;
+  let id = 'website';
+  if (!url.port) {
+    if (host === 'itch.io' || host.endsWith('.itch.io')) id = 'itch';
+    else if (host === 'store.steampowered.com' && /^\/app\/[1-9]\d*(?:\/|$)/.test(url.pathname)) id = 'steam';
+    else if (host === 'play.google.com' && url.pathname === '/store/apps/details') id = 'google-play';
+    else if (host === 'apps.apple.com') id = 'app-store';
+    else if (host === 'testflight.apple.com') id = 'testflight';
+    else if (['gamejolt.com', 'www.gamejolt.com'].includes(host)) id = 'game-jolt';
+    else if (['newgrounds.com', 'www.newgrounds.com'].includes(host)) id = 'newgrounds';
+    else if (['crazygames.com', 'www.crazygames.com'].includes(host)) id = 'crazygames';
+    else if (['poki.com', 'www.poki.com'].includes(host)) id = 'poki';
+    else if (['roblox.com', 'www.roblox.com'].includes(host)) id = 'roblox';
+    else if (['github.com', 'gitlab.com', 'codeberg.org'].includes(host) && /^\/[^/]+\/[^/]+/.test(url.pathname)) {
+      id = host === 'codeberg.org' ? 'codeberg' : host.split('.')[0];
+    }
+  }
+  const platform = projectPlatforms.find(entry => entry.id === id);
+  return { ...platform, label: id === 'website' ? 'Project website' : platform.label, url: url.href };
 }
 function text(value, max, empty = false) {
   if (typeof value !== 'string' || value.length > max || (!empty && !value.trim())) throw new Error('Invalid catalogue text');
@@ -91,13 +131,14 @@ export function validateCatalog(value) {
     if (Date.parse(game.firstSeenAt) !== Date.parse(dates[0]) || Date.parse(game.updatedAt) !== Date.parse(dates.at(-1))) throw new Error('Mismatched project dates');
     if (!game.posts.some(post => post.url === preview.sourceUrl)) throw new Error('Preview source is outside the project timeline');
     if (game.reviewStatus != null && !['reviewed', 'source-described'].includes(game.reviewStatus)) throw new Error('Invalid review status');
-    return { ...game, reviewStatus: game.reviewStatus || 'reviewed', posts: [...game.posts].sort((a, b) => b.createdAt.localeCompare(a.createdAt)) };
+    return { ...game, distribution: distributionFor(game.projectUrl), reviewStatus: game.reviewStatus || 'reviewed', posts: [...game.posts].sort((a, b) => b.createdAt.localeCompare(a.createdAt)) };
   });
   return { ...value, games };
 }
 export function readLocation(url, preferredView = 'grid') {
   const p = new URL(url).searchParams;
   return { query: (p.get('q') || '').slice(0, 200), category: categories.includes(p.get('cat')) ? p.get('cat') : 'all',
+    platform: projectPlatforms.some(entry => entry.id === p.get('platform')) ? p.get('platform') : 'all',
     stage: stages.includes(p.get('stage')) ? p.get('stage') : 'all', author: (p.get('author') || '').slice(0, 80),
     following: p.get('following') === '1', sort: ['newest', 'oldest', 'name', 'updates'].includes(p.get('sort')) ? p.get('sort') : 'newest',
     view: ['grid', 'list'].includes(p.get('view')) ? p.get('view') : preferredView,
@@ -105,16 +146,18 @@ export function readLocation(url, preferredView = 'grid') {
 }
 export function locationForState(url, state) {
   return updateQuery(url, { q: state.query.trim(), cat: state.category === 'all' ? '' : state.category,
+    platform: !state.platform || state.platform === 'all' ? '' : state.platform,
     stage: state.stage === 'all' ? '' : state.stage, author: state.author, following: state.following ? '1' : '',
     sort: state.sort === 'newest' ? '' : state.sort, view: state.view, game: state.game });
 }
 export function selectGames(games, state) {
   const query = state.query.trim().toLocaleLowerCase();
   const result = games.filter(game => (state.category === 'all' || game.category === state.category)
+    && (!state.platform || state.platform === 'all' || (game.distribution?.id || 'unlisted') === state.platform)
     && (state.stage === 'all' || game.stage === state.stage)
     && (!state.author || game.author.name.toLowerCase() === state.author.toLowerCase())
     && (!state.following || state.follows.includes(game.id))
-    && [game.title, game.summary, game.author.name, game.category, ...game.tags, ...game.platforms].join(' ').toLocaleLowerCase().includes(query));
+    && [game.title, game.summary, game.author.name, game.category, game.distribution?.label || '', ...game.tags, ...game.platforms].join(' ').toLocaleLowerCase().includes(query));
   if (state.sort === 'name') result.sort((a, b) => a.title.localeCompare(b.title));
   else if (state.sort === 'updates') result.sort((a, b) => b.posts.length - a.posts.length || b.updatedAt.localeCompare(a.updatedAt));
   else result.sort((a, b) => state.sort === 'oldest' ? a.firstSeenAt.localeCompare(b.firstSeenAt) : b.updatedAt.localeCompare(a.updatedAt));

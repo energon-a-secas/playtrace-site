@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { validateCatalog, selectGames, defaults, locationForState, readLocation, parsePrice } from '../js/collection.js';
+import { validateCatalog, selectGames, defaults, locationForState, readLocation, parsePrice, distributionFor } from '../js/collection.js';
 import * as collection from '../js/collection.js';
 
 const seed = JSON.parse(await readFile(new URL('../data/catalog.json', import.meta.url), 'utf8'));
@@ -43,8 +43,50 @@ test('maker, stage, query and private following filters compose', () => {
   assert.equal(selectGames(games, { ...state, follows: [] }).length, 0);
 });
 
+test('project destinations use real host boundaries and distinguish repositories from hosted sites', () => {
+  for (const [url, expected] of [
+    ['https://starstilanx.itch.io/wyrmfall-a-dragon-arpg', 'itch'],
+    ['https://store.steampowered.com/app/620/Portal_2/', 'steam'],
+    ['https://play.google.com/store/apps/details?id=com.example.game', 'google-play'],
+    ['https://apps.apple.com/us/app/example/id123456', 'app-store'],
+    ['https://testflight.apple.com/join/example', 'testflight'],
+    ['https://github.com/maker/game', 'github'],
+    ['https://gitlab.com/maker/game', 'gitlab'],
+    ['https://codeberg.org/maker/game', 'codeberg'],
+    ['https://maker.github.io/game/', 'website'],
+    ['https://maker.itch.io.evil.example/game', 'website'],
+    ['https://notitch.io/game', 'website'],
+    ['https://example.com/?game=https://store.steampowered.com/app/620', 'website'],
+    ['https://store.steampowered.com/news/', 'website'],
+  ]) assert.equal(distributionFor(url).id, expected, url);
+  assert.equal(distributionFor(null), null);
+  for (const url of ['javascript:alert(1)', 'https://itch.io@evil.example/game']) assert.throws(() => distributionFor(url));
+});
+
+test('destination metadata is derived from the project link without upgrading its stage or inventing devices', () => {
+  const raw = copy(), wyrmfall = raw.games.find(game => game.title === 'Wyrmfall');
+  wyrmfall.distribution = { id: 'steam', label: '<img src=x>', url: 'https://unrelated.example/' };
+  const game = validateCatalog(raw).games.find(game => game.id === wyrmfall.id);
+  assert.equal(game.distribution.id, 'itch'); assert.equal(game.distribution.url, game.projectUrl);
+  assert.equal(game.distribution.label, 'itch.io'); assert.equal(game.stage, 'prototype'); assert.deepEqual(game.platforms, []);
+  game.projectUrl = 'https://github.com/maker/game';
+  const refreshed = validateCatalog({ ...raw, games: [game] }).games[0];
+  assert.equal(refreshed.distribution.id, 'github');
+});
+
+test('platform filtering composes with search, genre, stage and following, including records without a link', () => {
+  const games = validateCatalog(copy()).games, wyrmfall = games.find(game => game.title === 'Wyrmfall');
+  const filters = { ...defaults, platform: 'itch', category: 'rpg', stage: 'prototype', query: 'wyrmfall', following: true, follows: [wyrmfall.id] };
+  assert.deepEqual(selectGames(games, filters).map(game => game.id), [wyrmfall.id]);
+  assert.deepEqual(selectGames(games, { ...filters, platform: 'steam' }), []);
+  const unlisted = selectGames(games, { ...defaults, platform: 'unlisted' });
+  assert.ok(unlisted.length); assert.ok(unlisted.every(game => game.projectUrl === null));
+  assert.ok(selectGames(games, { ...defaults, query: 'itch.io' }).some(game => game.id === wyrmfall.id));
+  assert.equal(readLocation('https://playtrace.example/?platform=not-a-platform').platform, 'all');
+});
+
 test('shared views preserve unrelated query and fragment while restoring every filter', () => {
-  const expected = { ...defaults, query: 'a tiny idea', category: 'puzzle', stage: 'prototype',
+  const expected = { ...defaults, query: 'a tiny idea', category: 'puzzle', platform: 'itch', stage: 'prototype',
     author: 'a_maker', following: true, sort: 'updates', view: 'list', game: 'g_123456' };
   const url = locationForState('https://playtrace.neorgon.com/?theme=light&utm_source=friend#keep', expected);
   assert.equal(url.searchParams.get('theme'), 'light');

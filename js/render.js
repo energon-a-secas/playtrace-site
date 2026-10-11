@@ -1,5 +1,5 @@
 import { state } from './state.js';
-import { categories, selectGames, collectionPulse, label, dateLabel, money } from './collection.js';
+import { categories, projectPlatforms, selectGames, collectionPulse, label, dateLabel, money } from './collection.js';
 import { CONFIG } from './config.js';
 import { $, escHtml as e } from './utils.js';
 import { storeLabel } from './project.js';
@@ -7,6 +7,8 @@ import { storeLabel } from './project.js';
 const arrow = '<span aria-hidden="true">↗</span>';
 const stageBadge = game => `<span class="stage-badge stage-badge--${e(game.stage)}"><span class="status-dot" aria-hidden="true"></span>${e(label(game.stage))}</span>`;
 const sourceLink = (url, text, className = 'text-link') => `<a class="${className}" href="${e(url)}" target="_blank" rel="noopener noreferrer">${e(text)} ${arrow}<span class="sr-only"> (opens in a new tab)</span></a>`;
+const platformBadge = (game, tag = 'span') => game.distribution
+  ? `<${tag} class="platform-badge">${e(game.distribution.label)}${game.distribution.kind === 'repository' ? ' repository' : game.distribution.kind === 'website' ? '' : ' page'}</${tag}>` : '';
 
 function image(game, priority = false) {
   const url = game.preview.posterUrl || (game.preview.kind === 'image' ? game.preview.url : null);
@@ -17,6 +19,7 @@ let optionsGames;
 let featureVersion = '';
 let listVersion = '';
 let filterVersion = '';
+let platformCounts = new Map(), platformSelection;
 export function render() {
   if (optionsGames !== state.games) {
     optionsGames = state.games;
@@ -24,12 +27,21 @@ export function render() {
     const authors = [...new Set(state.games.map(game => game.author.name))].sort((a, b) => a.localeCompare(b));
     if (state.author && !authors.includes(state.author)) authors.push(state.author);
     $('authorSelect').innerHTML = '<option value="">All makers</option>' + authors.map(author => `<option value="${e(author)}">u/${e(author)}</option>`).join('');
+    platformCounts = new Map();
+    for (const game of state.games) { const id = game.distribution?.id || 'unlisted'; platformCounts.set(id, (platformCounts.get(id) || 0) + 1); }
+    platformSelection = undefined;
+  }
+  if (platformSelection !== state.platform) {
+    platformSelection = state.platform;
+    $('platformSelect').innerHTML = '<option value="all">All platforms</option>' + projectPlatforms
+      .filter(platform => platformCounts.has(platform.id) || platform.id === state.platform)
+      .map(platform => `<option value="${platform.id}">${e(platform.label)} (${platformCounts.get(platform.id) || 0})</option>`).join('');
   }
   if ($('searchInput').value !== state.query) $('searchInput').value = state.query;
-  $('categorySelect').value = state.category; $('sortSelect').value = state.sort; $('authorSelect').value = state.author;
+  $('categorySelect').value = state.category; $('platformSelect').value = state.platform; $('sortSelect').value = state.sort; $('authorSelect').value = state.author;
   document.querySelectorAll('button[data-view]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.view === state.view)));
   document.querySelectorAll('[data-stage], [data-stage-target]').forEach(button => button.setAttribute('aria-pressed', String((button.dataset.stage || button.dataset.stageTarget) === state.stage)));
-  const filtered = Boolean(state.query.trim() || state.category !== 'all' || state.stage !== 'all' || state.author || state.following);
+  const filtered = Boolean(state.query.trim() || state.category !== 'all' || state.platform !== 'all' || state.stage !== 'all' || state.author || state.following);
   $('clearFilters').disabled = !filtered;
   const loading = state.status === 'loading';
   $('featuredGame').closest('.feature-grid').hidden = (!state.loaded && state.status === 'error') || (state.loaded && !state.games.length);
@@ -41,7 +53,7 @@ export function render() {
     ? 'Older projects could not be loaded. Search and filters currently cover the loaded projects. Retry to load the full collection.'
     : state.loaded ? 'Could not refresh. The last loaded collection is still here.' : 'The collection could not be loaded. Please try again.';
   const games = selectGames(state.games, state);
-  const filters = JSON.stringify([state.query, state.category, state.stage, state.author, state.following, state.sort]);
+  const filters = JSON.stringify([state.query, state.category, state.platform, state.stage, state.author, state.following, state.sort]);
   if (filters !== filterVersion) { filterVersion = filters; state.visibleLimit = 60; }
   const visible = games.slice(0, state.visibleLimit || 60);
   $('resultCount').textContent = !state.loaded ? loading ? 'Loading collection…' : 'Collection unavailable'
@@ -76,8 +88,9 @@ export function render() {
 }
 
 function card(game) {
+  const availability = game.steam ? storeLabel(game.steam) : platformBadge(game);
   return `<li><article class="collection-item"><button class="collection-item__preview" type="button" data-item="${e(game.id)}" aria-label="Explore ${e(game.title)}">${image(game)}<span class="preview-label">${game.preview.kind === 'video' ? 'View preview' : 'Explore project'} ${arrow}</span></button>
-    <div class="collection-item__body"><div class="game-meta"><span>${e(label(game.category))}</span>${stageBadge(game)}</div><h3><button type="button" data-item="${e(game.id)}">${e(game.title)}</button></h3><button class="maker-link" type="button" data-author="${e(game.author.name)}">by u/${e(game.author.name)}</button><p class="collection-item__description">${e(game.summary)}</p>${game.steam ? `<div class="card-store">${storeLabel(game.steam)}</div>` : ''}<div class="collection-item__foot"><div class="project-date"><time datetime="${e(game.updatedAt)}">${e(dateLabel(game.updatedAt))}</time><span>${game.posts.length > 1 ? `${game.posts.length - 1} ${game.posts.length === 2 ? 'update' : 'updates'}` : 'First post'}</span></div><button class="text-button" type="button" data-item="${e(game.id)}">Feedback &amp; history ${arrow}</button></div>${game.reviewStatus === 'source-described' ? '<span class="review-label">Source-described</span>' : ''}</div></article></li>`;
+    <div class="collection-item__body"><div class="game-meta"><span>${e(label(game.category))}</span>${stageBadge(game)}</div><h3><button type="button" data-item="${e(game.id)}">${e(game.title)}</button></h3><button class="maker-link" type="button" data-author="${e(game.author.name)}">by u/${e(game.author.name)}</button><p class="collection-item__description">${e(game.summary)}</p>${availability ? `<div class="card-store">${availability}</div>` : ''}<div class="collection-item__foot"><div class="project-date"><time datetime="${e(game.updatedAt)}">${e(dateLabel(game.updatedAt))}</time><span>${game.posts.length > 1 ? `${game.posts.length - 1} ${game.posts.length === 2 ? 'update' : 'updates'}` : 'First post'}</span></div><button class="text-button" type="button" data-item="${e(game.id)}">History &amp; feedback ${arrow}</button></div>${game.reviewStatus === 'source-described' ? '<span class="review-label">Source-described</span>' : ''}</div></article></li>`;
 }
 
 function renderOverview() {
@@ -120,8 +133,8 @@ export function renderDetail(game) {
   $('itemDialogCategory').textContent = `${label(game.category)} · ${label(game.stage)}${game.reviewStatus === 'source-described' ? ' · Source-described' : ''}`;
   $('itemDialogAuthor').innerHTML = `Shared by <button class="text-button" type="button" data-author="${e(game.author.name)}">u/${e(game.author.name)}</button>`;
   $('itemDialogDescription').textContent = game.summary;
-  $('itemDialogFacts').innerHTML = `<div><dt>First shared</dt><dd>${e(dateLabel(game.firstSeenAt))}</dd></div><div><dt>Latest update</dt><dd>${e(dateLabel(game.updatedAt))}</dd></div>${game.platforms.length ? `<div><dt>Platform</dt><dd>${e(game.platforms.join(', '))}</dd></div>` : ''}`;
-  $('itemDialogTags').innerHTML = game.tags.map(tag => `<li>${e(tag)}</li>`).join('');
+  $('itemDialogFacts').innerHTML = `<div><dt>First shared</dt><dd>${e(dateLabel(game.firstSeenAt))}</dd></div><div><dt>Latest update</dt><dd>${e(dateLabel(game.updatedAt))}</dd></div>${game.distribution ? `<div><dt>Project platform</dt><dd>${sourceLink(game.distribution.url, game.distribution.label)}</dd></div>` : ''}${game.platforms.length ? `<div><dt>Runs on</dt><dd>${e(game.platforms.join(', '))}</dd></div>` : ''}`;
+  $('itemDialogTags').innerHTML = platformBadge(game, 'li') + game.tags.map(tag => `<li>${e(tag)}</li>`).join('');
   $('itemDialogLinks').innerHTML = game.projectUrl ? sourceLink(game.projectUrl, 'Visit game', 'btn btn--primary') : '';
   $('projectSource').href = game.posts[0].url;
   $('projectSource').setAttribute('aria-label', `${game.preview.kind === 'video' ? 'Watch original post on Reddit' : 'Original post'} (opens in a new tab)`);

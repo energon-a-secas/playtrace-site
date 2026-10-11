@@ -192,6 +192,10 @@
           <label for="categorySelect">Genre</label>
           <select class="select" id="categorySelect" name="cat"><option value="all">All genres</option></select>
         </div>
+        <div class="field">
+          <label for="platformSelect">Platform</label>
+          <select class="select" id="platformSelect" name="platform"><option value="all">All platforms</option></select>
+        </div>
         <div class="field collection__sort">
           <label for="sortSelect">Sort by</label>
           <select class="select" id="sortSelect"><option value="newest">Newest update</option><option value="updates">Most updates</option><option value="name">Name, A to Z</option><option value="oldest">First shared</option></select>
@@ -241,9 +245,9 @@
 </main>
 
 <dialog class="dialog game-dialog" id="itemDialog" aria-labelledby="itemDialogTitle" aria-describedby="itemDialogDescription">
-  <div class="dialog__header">
+  <div class="dialog__header project-banner-controls">
     <span class="eyebrow">PROJECT NOTES</span>
-    <button type="button" class="btn btn--ghost" data-dialog-close autofocus>Close <span aria-hidden="true">×</span></button>
+    <button type="button" class="project-close" data-dialog-close autofocus aria-label="Close project details"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
   </div>
   <div id="itemDialogMedia" class="project-banner"></div>
   <div class="dialog__body">
@@ -292,6 +296,11 @@
     </section>
     <section id="projectMedia" class="project-media" aria-label="More from the maker" hidden></section>
     <dl id="itemDialogFacts" class="project-facts"></dl>
+    <details class="project-history" open>
+      <summary><span>Project history</span><span id="timelineCount"></span></summary>
+      <ol id="gameTimeline" class="timeline"></ol>
+      <div id="itemDialogSource" class="project-source"></div>
+    </details>
     <section class="project-feedback" aria-labelledby="feedbackTitle">
       <div class="feedback-heading"><div><p class="eyebrow">HELP THE NEXT VERSION</p><h3 id="feedbackTitle">Player feedback</h3></div><span id="feedbackCount"></span></div>
       <div class="feedback-layout">
@@ -325,8 +334,6 @@
         </section>
       </div>
     </section>
-    <details class="project-history" open><summary><span>Project history</span><span id="timelineCount"></span></summary><ol id="gameTimeline" class="timeline"></ol></details>
-    <div id="itemDialogSource" class="project-source"></div>
   </div>
 </dialog>
 
