@@ -117,7 +117,8 @@ function renderOverview() {
     removalUrl.pathname = '/report/'; removalUrl.hash = encodeURIComponent(JSON.stringify({ v: 1, site: 'playtrace-site', url: location.href, target: null }));
   }
   $('removalLink').href = removalUrl.href;
-  const featured = [...state.games].sort((a, b) => b.posts.length - a.posts.length).find(game => game.preview.posterUrl || game.preview.kind === 'image') || state.games[0];
+  const featured = state.games.find(game => game.id === CONFIG.featuredGameId)
+    || [...state.games].sort((a, b) => b.posts.length - a.posts.length).find(game => game.preview.posterUrl || game.preview.kind === 'image') || state.games[0];
   const nextFeature = JSON.stringify(featured || null);
   if (featureVersion === nextFeature) return;
   featureVersion = nextFeature;
