@@ -17,8 +17,8 @@ const shuffled = array => {
 // A separate HMAC domain prevents joining quiz visitors to public feedback.
 const visitor = async (request,env) => hmac(env.RATE_LIMIT_SECRET, `quiz:${await guestIdentity(request,env)}`);
 async function availableGames(db) {
-  const rows=await query(db, `SELECT id FROM games WHERE status='published' AND id IN(SELECT value FROM json_each(?))
-    AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id)`,JSON.stringify(quizPool.map(game=>game.id))).all();
+  const rows=await query(db, `SELECT original.id FROM games original LEFT JOIN game_aliases a ON a.alias_id=original.id JOIN games current ON current.id=COALESCE(a.game_id,original.id) WHERE current.status='published' AND original.id IN(SELECT value FROM json_each(?))
+    AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=current.id OR game_id=original.id)`,JSON.stringify(quizPool.map(game=>game.id))).all();
   return quizPool.filter(game=>rows.results.some(row=>row.id===game.id));
 }
 export async function quizInfo(db) {
@@ -89,7 +89,7 @@ export async function finishQuiz(db,env,request,id,body,deps) {
     await db.batch([
       query(db,`UPDATE quiz_rounds SET answers_json=?,completed_at=? WHERE id=? AND guest_key_hash=? AND completed_at IS NULL
         AND expires_at>? AND NOT EXISTS(SELECT 1 FROM json_each(?) required WHERE NOT EXISTS(
-          SELECT 1 FROM games g WHERE g.id=required.value AND g.status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id)))`,
+          SELECT 1 FROM games original LEFT JOIN game_aliases a ON a.alias_id=original.id JOIN games g ON g.id=COALESCE(a.game_id,original.id) WHERE original.id=required.value AND g.status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id OR game_id=original.id)))`,
         encoded,new Date(now).toISOString(),id,key,now,JSON.stringify(required)),
       query(db,`INSERT INTO quiz_answers(round_id,question,game_id,choice_id,skipped_reason,correct)
         SELECT r.id,json_extract(a.value,'$.index'),json_extract(a.value,'$.gameId'),json_extract(a.value,'$.choiceId'),

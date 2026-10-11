@@ -54,7 +54,7 @@ export async function catalog(db, page = null) {
   }
   catch { throw unavailable(); }
 }
-const eligible = `NOT EXISTS(SELECT 1 FROM removals r WHERE r.game_id=json_extract(j.value,'$.id')
+const eligible = `NOT EXISTS(SELECT 1 FROM game_aliases WHERE alias_id=json_extract(j.value,'$.id')) AND NOT EXISTS(SELECT 1 FROM removals r WHERE r.game_id=json_extract(j.value,'$.id')
   OR EXISTS(SELECT 1 FROM json_each(r.source_post_ids_json) removed
     JOIN json_each(j.value,'$.posts') post ON removed.value=json_extract(post.value,'$.id')))`;
 
@@ -130,7 +130,7 @@ export async function removal(db, bucket, id, reason, now) {
     query(db, 'DELETE FROM price_signals WHERE game_id=?', id),
     query(db, 'DELETE FROM follows WHERE game_id=?', id),
     query(db, 'DELETE FROM feedback WHERE game_id=?', id),
-    query(db, 'DELETE FROM quiz_answers WHERE game_id=? OR choice_id=?', id, id),
+    query(db, 'DELETE FROM quiz_answers WHERE game_id=? OR choice_id=? OR game_id IN(SELECT alias_id FROM game_aliases WHERE game_id=?) OR choice_id IN(SELECT alias_id FROM game_aliases WHERE game_id=?)', id, id, id, id),
     query(db, 'DELETE FROM change_requests WHERE game_id=?', id),
     query(db, 'DELETE FROM preview_overrides WHERE game_id=?', id),
     query(db, 'DELETE FROM project_overrides WHERE game_id=?', id),
@@ -146,7 +146,10 @@ export async function removal(db, bucket, id, reason, now) {
     // Tombstone is already committed. Keep asset keys if deletion fails so retry
     // can clean them up; all public routes deny the game during this interval.
     for (const asset of assets.results) await bucket.delete(asset.object_key);
-    await query(db, 'DELETE FROM games WHERE id=?', id).run();
+    await db.batch([
+      query(db, 'DELETE FROM games WHERE id IN(SELECT alias_id FROM game_aliases WHERE game_id=?)', id),
+      query(db, 'DELETE FROM games WHERE id=?', id),
+    ]);
     return { removed: true };
   } finally { await release(db, lockName, owner); }
 }

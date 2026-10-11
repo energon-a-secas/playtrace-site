@@ -26,7 +26,7 @@ test('admin role requires a signed session and verified primary email from the p
   const env=adminEnv(), worker=adminWorker(), jwt=await token();
   assert.equal((await worker.fetch(request('/admin/me'),env)).status,401);
   const response=await worker.fetch(request('/admin/me',{auth:jwt}),env);
-  assert.equal(response.status,200);assert.deepEqual(await response.json(),{email:OWNER,role:'owner'});
+  assert.equal(response.status,200);assert.deepEqual(await response.json(),{email:OWNER,role:'owner',integrations:{jev:false,itch:false}});
   assert.equal(env.DB.sql.prepare('SELECT subject FROM admins WHERE email=?').get(OWNER).subject,'user_a');
   assert.equal((await worker.fetch(request('/admin/me',{auth:await token({sub:'user_b'})}),env)).status,403);
   assert.equal((await worker.fetch(request('/admin/me',{auth:jwt}),{...env,CLERK_SECRET_KEY:undefined})).status,503);

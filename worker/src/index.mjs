@@ -1,3 +1,8 @@
+import { rating, rateGame } from './ratings.mjs';
+import { researchList, getResearch, saveResearch, researchResponse, researchMetrics } from './research.mjs';
+import { projectContext } from './references.mjs';
+import { listJobs, enqueueJobs, runJobs, updateJob, queueStoreMaintenance } from './jobs.mjs';
+import { consolidateReposts, resolveGame } from './duplicates.mjs';
 import { json, errorResponse, exactKeys, readJson, readBytes, checkOrigin, withCors, notFound, strongSecret } from './http.mjs';
 import { authenticate, authenticateOperator, accountConfigured } from './auth.mjs';
 import { database, catalog, importCatalog, meta, removal } from './store.mjs';
@@ -17,6 +22,20 @@ import { hydrateMedia } from './assets.mjs';
 import { quizInfo, startQuiz, finishQuiz, deleteQuizData, quizMetrics } from './quiz.mjs';
 
 const routes = [
+  [/^\/games\/(g_[a-z0-9]{5,12})\/resolve$/, ['GET'], 'resolveGame'],
+  [/^\/games\/(g_[a-z0-9]{5,12})\/context$/, ['GET'], 'context'],
+  [/^\/games\/(g_[a-z0-9]{5,12})\/rating$/, ['GET','PUT','DELETE'], 'rating'],
+  [/^\/research$/, ['GET'], 'researchList'],
+  [/^\/research\/([a-z][a-z0-9-]{2,59})$/, ['GET'], 'researchGame'],
+  [/^\/research\/([a-z][a-z0-9-]{2,59})\/responses$/, ['GET','PUT','DELETE'], 'researchResponse'],
+  [/^\/admin\/research$/, ['GET'], 'editorResearchList'],
+  [/^\/admin\/research\/([a-z][a-z0-9-]{2,59})$/, ['PUT'], 'editorResearchSave'],
+  [/^\/admin\/research\/([a-z][a-z0-9-]{2,59})\/metrics$/, ['GET'], 'editorResearchMetrics'],
+  [/^\/admin\/jobs$/, ['GET','POST'], 'editorJobs'],
+  [/^\/admin\/jobs\/run$/, ['POST'], 'editorJobsRun'],
+  [/^\/admin\/jobs\/([a-f0-9-]{36})$/, ['PUT'], 'editorJob'],
+  [/^\/admin\/reposts$/, ['GET','POST'], 'editorReposts'],
+  [/^\/admin\/campaign$/, ['POST'], 'campaign'],
   [/^\/status$/, ['GET'], 'status'],
   [/^\/catalog$/, ['GET'], 'catalog'],
   [/^\/quiz$/, ['GET'], 'quizInfo'],
@@ -53,7 +72,7 @@ async function status(env) {
   const ing = env.DB ? await meta(env.DB, 'ingestion') : null;
   const history = env.DB ? await meta(env.DB, 'history') : null;
   const protection = accountConfigured(env) ? signalProtection(env) : 'unconfigured';
-  return { schemaVersion: 1, capabilities: { catalog: Boolean(head), feedback: feedbackConfigured(env), quiz: feedbackConfigured(env), changeRequests: feedbackConfigured(env), admin: adminConfigured(env), steam: Boolean(env.DB), signals: protection !== 'unconfigured',
+  return { schemaVersion: 1, capabilities: { ratings: feedbackConfigured(env), research: feedbackConfigured(env), catalog: Boolean(head), feedback: feedbackConfigured(env), quiz: feedbackConfigured(env), changeRequests: feedbackConfigured(env), admin: adminConfigured(env), steam: Boolean(env.DB), signals: protection !== 'unconfigured',
     following: accountConfigured(env), ingestion: ingestionConfigured(env), mediaStorage: mediaConfigured(env) && strongSecret(env.OPERATOR_TOKEN) },
   ingestion: { state: !ingestionConfigured(env) ? 'unconfigured' : ing?.state || 'never',
     lastAttemptAt: ing?.lastAttemptAt || null, lastSuccessAt: ing?.lastSuccessAt || null, coverageThrough: ing?.coverageThrough || null },
@@ -88,6 +107,18 @@ export function createWorker(overrides = {}) {
         if (action === 'status') result = json(await status(env), 200, { 'Cache-Control': request.headers.has('Authorization') ? 'no-store' : 'public, max-age=60' });
         else if (action === 'catalog') result = json(await catalog(database(env), { limit: url.searchParams.get('pageSize') || 200,
           cursor: url.searchParams.get('cursor') }), 200, { 'Cache-Control': request.headers.has('Authorization') ? 'no-store' : 'public, max-age=60' });
+        else if (action === 'resolveGame') result = json(await resolveGame(database(env),match[1]));
+        else if (action === 'context') result = json(await projectContext(database(env),match[1]));
+        else if (action === 'rating') {
+          if(request.method==='GET'&&!request.headers.has('X-Feedback-Key')) result=json(await rating(database(env),match[1]));
+          else { if(request.method==='DELETE')await readBytes(request.body,0); result=json(await rateGame(database(env),env,request,match[1],request.method==='PUT'?await readJson(request):null,deps)); }
+        }
+        else if (action === 'researchList') result=json(await researchList(database(env)));
+        else if (action === 'researchGame') result=json(await getResearch(database(env),match[1],url.searchParams.get('game')));
+        else if (action === 'researchResponse') {
+          if(request.method==='DELETE')await readBytes(request.body,0);
+          result=json(await researchResponse(database(env),env,request,match[1],url.searchParams.get('game'),request.method==='PUT'?await readJson(request):null,deps));
+        }
         else if (action === 'signals') result = json(await signals(database(env), match[1]));
         else if (action === 'quizInfo') result = json(await quizInfo(database(env)));
         else if (action === 'quizStart') result = json(await startQuiz(database(env),env,request,await readJson(request),deps),201);
@@ -107,7 +138,14 @@ export function createWorker(overrides = {}) {
         else if (action === 'changeRequest') result = json(await submitChange(database(env), env, request, match[1], await readJson(request), deps), 201);
         else if (action.startsWith('editor')) {
           const admin = await authorizeAdmin(request, env, deps), db = database(env);
-          if (action === 'editorMe') result = json({ email: admin.email, role: admin.role });
+          if (action === 'editorMe') result = json({ email: admin.email, role: admin.role, integrations: { jev: Boolean(env.JEV_API_KEY), itch: Boolean(env.ITCHIO_API_TOKEN) } });
+          else if(action==='editorResearchList')result=json(await researchList(db,true));
+          else if(action==='editorResearchSave')result=json(await saveResearch(db,match[1],await readJson(request),admin,deps));
+          else if(action==='editorResearchMetrics')result=json(await researchMetrics(db,match[1]));
+          else if(action==='editorJobs')result=json(request.method==='GET'?await listJobs(db,url.searchParams.get('status'),url.searchParams.get('cursor'),url.searchParams.get('kind')):await enqueueJobs(db,await readJson(request),admin,deps));
+          else if(action==='editorJobsRun'){exactKeys(await readJson(request),[]);result=json(await runJobs(db,env,deps));}
+          else if(action==='editorJob')result=json(await updateJob(db,match[1],await readJson(request),admin,deps));
+          else if(action==='editorReposts'){if(request.method==='POST')exactKeys(await readJson(request),[]);result=json(await consolidateReposts(db,deps,request.method==='POST'));}
           else if (action === 'editorMembers') result = json(await members(db, admin, request.method === 'PUT' ? await readJson(request) : undefined));
           else if (action === 'editorCategories') result = json(await createCategory(db, await readJson(request), admin, deps));
           else if (action === 'editorInbox') result = json(await inbox(db, url.searchParams.get('status'), url.searchParams.get('cursor')));
@@ -131,7 +169,15 @@ export function createWorker(overrides = {}) {
           await authenticateOperator(request, env);
           const db = database(env);
           const body = await readJson(request, action === 'import' ? 2 * 1024 * 1024 : 8192);
-          if (action === 'import') result = json(await importCatalog(db, body));
+          if (action === 'campaign') {
+            exactKeys(body,['action','options']);
+            if(body.action==='enqueue')result=json(await enqueueJobs(db,body.options,{subject:'operator'},deps));
+            else if(body.action==='run'){exactKeys(body.options,[]);result=json(await runJobs(db,env,deps,2));}
+            else if(body.action==='reposts'){exactKeys(body.options,['apply']);if(typeof body.options.apply!=='boolean')throw notFound();result=json(await consolidateReposts(db,deps,body.options.apply));}
+            else if(body.action==='jobs'){exactKeys(body.options,['status','cursor']);result=json(await listJobs(db,body.options.status,body.options.cursor));}
+            else throw notFound();
+          }
+          else if (action === 'import') result = json(await importCatalog(db, body));
           else if (action === 'ingest') { exactKeys(body, []); result = json(await ingest(env, deps)); }
           else if (action === 'backfill') { exactKeys(body, []); result = json(await ingest(env, deps, true)); }
           else if (action === 'enrich') { exactKeys(body, []); result = json({ steam: await refreshSteamBatch(db, deps), media: await hydrateMedia(env, deps) }); }
@@ -148,6 +194,8 @@ export function createWorker(overrides = {}) {
       const run = (async () => {
         // Separate invocations keep the complete handler below the D1 budget,
         // including six cold Steam caches and a ten-post media hydration batch.
+        if (event?.cron === '20 * * * *') { const db=database(env); await queueStoreMaintenance(db,deps); await runJobs(db,env,deps); return; }
+        if (event?.cron === '50 * * * *') { await consolidateReposts(database(env),deps,true); return; }
         if (event?.cron === '5 * * * *') {
           const db = database(env);
           await refreshSteamBatch(db, deps);

@@ -66,6 +66,7 @@
   <link rel="stylesheet" href="css/neorgon-beacon.css">
   <script defer src="js/neorgon-beacon.js"></script>
   <link rel="stylesheet" href="css/report.css">
+  <link rel="stylesheet" href="css/campaign.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -80,7 +81,7 @@
   }
   </script>
 </head>
-<body>
+<body data-page="home">
 
   <a class="skip-link" href="#main">Skip to content</a>
 
@@ -105,19 +106,11 @@
     <div class="header-right">
       <!-- template:actions -->
 <div class="header-actions">
-  <a class="btn btn--sm header-quiz-link" href="quiz.html" data-keep-mobile aria-label="Play Name that game">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="4"/><path d="m10 8 6 4-6 4Z" stroke-linejoin="round"/></svg>
-    <span class="header-quiz-label">Name that game</span><span class="header-quiz-short" aria-hidden="true">Quiz</span>
-  </a>
-  <a class="btn btn--ghost btn--sm" href="#discover">Discover</a>
-  <a class="btn btn--ghost btn--sm" href="about.html">About the index</a>
-  <button type="button" class="btn btn--ghost btn--sm" id="shareView" aria-label="Share this view" title="Share this view">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-2 2M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l2-2"/></svg>
-    <span>Share view</span>
-  </button>
-  <button type="button" class="btn btn--ghost btn--sm" id="refreshCollection" aria-label="Refresh collection" title="Refresh collection">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6.1 7a7 7 0 0 1 11.7-1L20 9M4 15l2.2 3A7 7 0 0 0 17.9 17"/></svg>
-  </button>
+  <a class="btn btn--ghost btn--sm" href="browse.html">Browse</a>
+  <a class="btn btn--ghost btn--sm" href="profile.html">Favorites</a>
+  <a class="btn btn--sm header-quiz-link" href="quiz.html" aria-label="Name that game" data-keep-mobile><span class="header-quiz-label">Name that game</span><span class="header-quiz-short" aria-hidden="true">Quiz</span></a>
+  <a class="btn btn--ghost btn--sm" href="research.html">Playtest</a>
+  <a class="btn btn--ghost btn--sm" href="about.html">About</a>
 </div>
   <!-- /template:actions -->
 
@@ -137,229 +130,16 @@
     </div>
   </header>
 
-  <!-- template:main -->
-<main id="main" tabindex="-1">
-  <div class="container collection">
-    <section class="collection__intro" aria-labelledby="collectionTitle">
-      <div>
-        <p class="eyebrow intro-eyebrow"><span class="index-mark" aria-hidden="true"></span> THE INDEPENDENT GAME INDEX</p>
-        <h2 id="collectionTitle" class="collection__title">Follow the idea.<br>Find your next game.</h2>
-        <p class="collection__lead">Discover games shared on r/aigamedev.<br class="desktop-break"> Try an idea, leave a note, help it grow.</p>
-      </div>
-      <div class="edition">
-        <span class="edition__label">An open community archive</span>
-        <p>Small teams.<br>Unexpected worlds.</p>
-        <a href="about.html" class="text-link">Every project has a source <span aria-hidden="true">↗</span></a>
-      </div>
-    </section>
-
-    <section class="feature-grid" aria-label="Featured project and collection overview">
-      <article id="featuredGame" class="spotlight spotlight--loading" aria-busy="true">
-        <div class="spotlight__loading skeleton" aria-hidden="true"></div>
-        <span class="sr-only">Loading featured project…</span>
-      </article>
-      <section class="collection-snapshot" aria-labelledby="snapshotTitle">
-        <div class="snapshot-heading"><p class="eyebrow">THE BIG PICTURE</p><span class="snapshot-symbol" aria-hidden="true">↗</span></div>
-        <h3 id="snapshotTitle">From first spark<br>to something playable.</h3>
-        <p class="snapshot-description">Find a finished game or catch an idea taking shape.</p>
-        <div class="stage-chart" role="group" aria-label="Browse by development stage">
-          <button class="stage-row" type="button" data-stage-target="released" aria-pressed="false">
-            <span class="stage-row__label"><span class="status-dot status-dot--released"></span>Released</span><span class="stage-row__count" data-stage-count="released">…</span>
-            <span class="stage-row__track" aria-hidden="true"><span class="stage-row__fill" data-stage-bar="released"></span></span>
-          </button>
-          <button class="stage-row" type="button" data-stage-target="playable" aria-pressed="false">
-            <span class="stage-row__label"><span class="status-dot status-dot--playable"></span>Playable builds</span><span class="stage-row__count" data-stage-count="playable">…</span>
-            <span class="stage-row__track" aria-hidden="true"><span class="stage-row__fill" data-stage-bar="playable"></span></span>
-          </button>
-          <button class="stage-row" type="button" data-stage-target="prototype" aria-pressed="false">
-            <span class="stage-row__label"><span class="status-dot status-dot--prototype"></span>In development</span><span class="stage-row__count" data-stage-count="prototype">…</span>
-            <span class="stage-row__track" aria-hidden="true"><span class="stage-row__fill" data-stage-bar="prototype"></span></span>
-          </button>
-        </div>
-        <div class="snapshot-foot"><span id="snapshotCount">Loading the index…</span><span>Explore a stage ↑</span></div>
-      </section>
-    </section>
-
-    <section class="discovery" id="discover" aria-labelledby="discoverTitle">
-      <div class="discovery__heading">
-        <div class="discovery__title"><span class="section-number" aria-hidden="true">01 /</span><h2 id="discoverTitle">Explore the collection</h2></div>
-        <p id="resultCount" class="result-count" role="status" aria-live="polite" aria-atomic="true">Loading collection…</p>
-      </div>
-      <p id="historyStatus" class="archive-status" role="status">Newest updates first. Building a history of the community’s games.</p>
-      <form id="collectionFilters" class="collection__filters" role="search" aria-label="Search games">
-        <div class="field collection__search">
-          <label for="searchInput">Find a project</label>
-          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
-          <input type="search" class="input" id="searchInput" name="q" placeholder="Search games, creators, or tags…" maxlength="200" autocomplete="off" enterkeyhint="search">
-        </div>
-        <div class="field">
-          <label for="categorySelect">Genre</label>
-          <select class="select" id="categorySelect" name="cat"><option value="all">All genres</option></select>
-        </div>
-        <div class="field">
-          <label for="platformSelect">Platform</label>
-          <select class="select" id="platformSelect" name="platform"><option value="all">All platforms</option></select>
-        </div>
-        <div class="field collection__sort">
-          <label for="sortSelect">Sort by</label>
-          <select class="select" id="sortSelect"><option value="newest">Newest update</option><option value="updates">Most updates</option><option value="name">Name, A to Z</option><option value="oldest">First shared</option></select>
-        </div>
-        <div class="field"><label for="authorSelect">Maker</label><select class="select" id="authorSelect"><option value="">All makers</option></select></div>
-        <button type="button" class="btn btn--ghost" id="clearFilters" disabled>Reset filters</button>
-      </form>
-
-      <div class="collection__meta">
-        <div class="stage-tabs" role="group" aria-label="Filter by development stage">
-          <button type="button" data-stage="all" aria-pressed="true">All games <span data-stage-count="all">…</span></button>
-          <button type="button" data-stage="released" aria-pressed="false">Released <span data-stage-count="released">…</span></button>
-          <button type="button" data-stage="playable" aria-pressed="false">Playable <span data-stage-count="playable">…</span></button>
-          <button type="button" data-stage="prototype" aria-pressed="false">In development <span data-stage-count="prototype">…</span></button>
-        </div>
-        <button type="button" class="btn btn--ghost btn--sm" id="followingFilter" aria-pressed="false">Following <span id="followingCount" hidden></span></button>
-        <div class="view-switch" role="group" aria-label="Collection layout">
-          <button type="button" data-view="grid" aria-pressed="true" aria-label="Grid view" title="Grid view"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
-          <button type="button" data-view="list" aria-pressed="false" aria-label="List view" title="List view"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M9 5h12M9 12h12M9 19h12"/><rect x="3" y="4" width="2" height="2"/><rect x="3" y="11" width="2" height="2"/><rect x="3" y="18" width="2" height="2"/></svg></button>
-        </div>
-      </div>
-
-      <p id="authorContext" class="author-context" hidden></p>
-      <div id="collectionError" class="collection__notice" hidden>
-        <p id="collectionErrorText" role="alert"></p>
-        <button type="button" class="btn btn--secondary" id="retryCollection">Try again</button>
-      </div>
-      <section id="collectionResults" aria-label="Game collection results" aria-busy="true">
-        <div id="collectionLoading" class="collection__skeletons" aria-hidden="true">
-          <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
-        </div>
-        <ul id="itemList" class="collection__items" data-view="grid" hidden></ul>
-        <div class="collection-more" id="collectionMore" hidden><p id="collectionShown"></p><button type="button" class="btn btn--secondary" id="showMoreGames">Show more projects</button></div>
-        <div id="collectionEmpty" class="status-panel" hidden>
-          <svg class="empty-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5M8 10.5h5"/></svg>
-          <h3 id="emptyTitle">No games yet</h3>
-          <p id="emptyDescription">New discoveries will appear here.</p>
-          <button type="button" class="btn btn--secondary" id="emptyReset" hidden>Show all games</button>
-        </div>
-      </section>
-      <div class="collection__endnote"><span class="index-mark" aria-hidden="true"></span><p>Every project has a story. Add something useful to its next chapter.</p></div>
-    </section>
-
-    <div class="collection-policy"><span id="collectionProvenance">Sources: r/aigamedev and Arctic Shift</span><a class="text-link" href="about.html">About the index ↗</a><button type="button" class="text-button" data-open-info>Sources &amp; privacy</button><a class="text-link" href="admin.html">Admin</a></div>
-    <noscript><p class="status-panel">Enable JavaScript to search and browse the collection. You can also <a href="https://www.reddit.com/r/aigamedev/">visit the source community</a>.</p></noscript>
-  </div>
-</main>
-
-<dialog class="dialog game-dialog" id="itemDialog" aria-labelledby="itemDialogTitle" aria-describedby="itemDialogDescription">
-  <div class="dialog__header project-banner-controls">
-    <span class="eyebrow">PROJECT NOTES</span>
-    <button type="button" class="project-close" data-dialog-close autofocus aria-label="Close project details"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
-  </div>
-  <div id="itemDialogMedia" class="project-banner"></div>
-  <div class="dialog__body">
-    <div class="project-toolbar">
-      <div class="project-labels">
-        <p id="itemDialogCategory" class="eyebrow"></p>
-        <ul id="itemDialogTags" class="tag-list" aria-label="Tags"></ul>
-      </div>
-      <nav class="project-utilities" aria-label="Project shortcuts">
-        <a id="projectSource" class="project-icon" target="_blank" rel="noopener noreferrer" aria-label="Original post (opens in a new tab)">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7m0-7L10 14M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5"/></svg>
-          <span class="project-icon__label" aria-hidden="true">Original post</span>
-        </a>
-        <a id="projectRepository" class="project-icon" target="_blank" rel="noopener noreferrer" aria-label="Source code (opens in a new tab)" hidden>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5m8-10 5 5-5 5M14 4l-4 16"/></svg>
-          <span class="project-icon__label" aria-hidden="true">Source code</span>
-        </a>
-        <button type="button" class="project-icon" id="shareGame" aria-label="Copy project link">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 13 4-4m-6 5-1 1a4 4 0 0 0 6 6l4-4a4 4 0 0 0 0-6M16 10l1-1a4 4 0 0 0-6-6L7 7a4 4 0 0 0 0 6"/></svg>
-          <span class="project-icon__label" aria-hidden="true">Copy link</span>
-        </button>
-        <button type="button" class="project-icon" id="jumpFeedback" aria-label="Leave feedback">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11a8 8 0 0 1-8 8H7l-5 3 2-6a8 8 0 0 1-1-4v-1a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8Z"/><path d="M8 9h8M8 13h5"/></svg>
-          <span class="project-icon__label" aria-hidden="true">Leave feedback</span>
-        </button>
-        <button type="button" class="project-icon" id="requestChange" aria-label="Request a change" aria-controls="changeRequestPanel" aria-expanded="false">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M4 20l5-1L21 7a2.8 2.8 0 0 0-4-4L5 15l-1 5ZM13 20h8"/></svg>
-          <span class="project-icon__label" aria-hidden="true">Request a change</span>
-        </button>
-      </nav>
-    </div>
-    <div class="project-heading">
-      <div class="project-heading__text">
-        <h2 id="itemDialogTitle">Project details</h2>
-        <p id="itemDialogHeadline" class="project-headline" hidden></p>
-        <p id="itemDialogAuthor" class="dialog__author"></p>
-      </div>
-      <aside class="project-actions" aria-label="Visit or follow this game"><div id="itemDialogLinks"></div><div class="project-follow"><button type="button" class="btn btn--secondary" id="followGame">Follow this game</button><p id="followHint" class="field__hint">Keep its progress in your following list.</p></div></aside>
-    </div>
-    <div id="itemDialogStore"></div>
-    <p id="itemDialogDescription" class="project-description"></p>
-    <section id="changeRequestPanel" class="change-request" aria-labelledby="changeRequestTitle" hidden>
-      <div class="feedback-heading"><h3 id="changeRequestTitle">Help improve this listing</h3><button type="button" class="text-button" id="closeChangeRequest">Cancel</button></div>
-      <p>Your request goes privately to the Playtrace admins. No account needed.</p>
-      <form id="changeRequestForm" class="stack">
-        <label for="changeKind">What needs attention?</label><select id="changeKind" class="select"><option value="image">Preview image</option><option value="details">Project details or link</option><option value="media">Video or GIF</option><option value="removal">Removal request</option><option value="other">Something else</option></select>
-        <label for="changeBody">Tell us what to change</label><textarea id="changeBody" class="input" rows="3" minlength="12" maxlength="1500" required></textarea>
-        <label for="changeUrl">Suggested image or source link <span class="field-optional">(optional)</span></label><input id="changeUrl" class="input" type="url" maxlength="2048" placeholder="https://…">
-        <div><button type="submit" class="btn btn--primary" id="sendChangeRequest">Send request</button></div>
-      </form><p id="changeRequestMessage" role="status"></p>
-    </section>
-    <section id="projectMedia" class="project-media" aria-label="More from the maker" hidden></section>
-    <dl id="itemDialogFacts" class="project-facts"></dl>
-    <details class="project-history" open>
-      <summary><span>Project history</span><span id="timelineCount"></span></summary>
-      <ol id="gameTimeline" class="timeline"></ol>
-      <div id="itemDialogSource" class="project-source"></div>
-    </details>
-    <section class="project-feedback" aria-labelledby="feedbackTitle">
-      <div class="feedback-heading"><div><p class="eyebrow">HELP THE NEXT VERSION</p><h3 id="feedbackTitle">Player feedback</h3></div><span id="feedbackCount"></span></div>
-      <div class="feedback-layout">
-        <section class="feedback-compose" aria-labelledby="feedbackFormTitle">
-          <h4 id="feedbackFormTitle">A quick first impression</h4>
-          <p class="field__hint">Pick any that fit. A first look is welcome; skip anything you haven’t tried.</p>
-          <form id="feedbackForm">
-            <div id="feedbackQuestions"></div>
-            <label for="feedbackBody">Anything to add? <span class="field-optional">(optional)</span></label>
-            <textarea class="input" id="feedbackBody" name="feedback" rows="3" maxlength="1500" placeholder="A moment you loved, a place you got stuck, an idea to try…" aria-describedby="feedbackPublic feedbackMessage"></textarea>
-            <details id="feedbackExtras" class="feedback-extras">
-              <summary>Name &amp; ideal price <span class="field-optional">(optional)</span></summary>
-              <div>
-                <label for="feedbackName">Display name</label>
-                <input class="input" id="feedbackName" name="displayName" type="text" maxlength="40" autocomplete="nickname" placeholder="Guest">
-                <div class="feedback-price-field">
-                  <label for="feedbackPrice">Your ideal price</label>
-                  <div class="price-input"><span aria-hidden="true">$</span><input id="feedbackPrice" name="idealPrice" type="text" inputmode="decimal" autocomplete="off" maxlength="6" placeholder="Leave blank to skip" aria-describedby="feedbackPriceHint feedbackMessage"></div>
-                  <p id="feedbackPriceHint" class="field__hint">USD · $0–$100. A suggestion, never a commitment.</p>
-                </div>
-              </div>
-            </details>
-            <p id="feedbackPublic" class="field__hint">Your choices, note, display name, and optional price will be public.</p>
-            <button type="submit" class="btn btn--primary" id="feedbackSubmit">Share feedback</button>
-            <button type="button" class="text-button" id="feedbackRemove" hidden>Remove my feedback</button>
-          </form>
-          <p id="feedbackMessage" class="action-message" role="status" aria-live="polite"></p>
-          <p id="feedbackAvailability" class="field__hint"></p>
-        </section>
-        <div class="feedback-community">
-          <div id="feedbackChoiceSummary" class="feedback-choice-summary" hidden></div>
-          <div id="idealPriceSummary" class="ideal-price-summary"></div>
-          <p id="feedbackLoading" class="field__hint" role="status" hidden>Loading the conversation…</p>
-          <div id="feedbackError" class="feedback-error" hidden><p id="feedbackErrorText" role="alert"></p><button type="button" class="text-button" id="feedbackRetry">Try again</button></div>
-          <ol id="feedbackList" class="feedback-list" aria-label="Public player feedback"></ol>
-          <div id="feedbackEmpty" class="feedback-empty"><p>Yours could be the first.</p><span>A few quick choices can help the maker see what’s connecting and what to try next.</span></div>
-          <button type="button" class="text-button" id="feedbackMore" hidden>Read more feedback</button>
-        </div>
-      </div>
-    </section>
-  </div>
-</dialog>
-
-<dialog class="dialog" id="infoDialog" aria-labelledby="infoTitle"><div class="dialog__header"><h2 id="infoTitle">A clear trail to the source</h2><button type="button" class="btn btn--ghost btn--sm" data-dialog-close autofocus>Close</button></div><div class="dialog__body stack">
-  <section><h3>What this collection covers</h3><p>Playtrace collects games shared on <a href="https://www.reddit.com/r/aigamedev/" target="_blank" rel="noopener noreferrer">r/aigamedev</a>, using the <a href="https://arctic-shift.photon-reddit.com/" target="_blank" rel="noopener noreferrer">Arctic Shift archive</a>. The archive can be delayed or incomplete. Every timeline links to the original post. AI use and development stages reflect what the maker shared.</p><p id="sourceDetails"></p></section>
-  <section><h3>Creators and previews</h3><p>Being listed does not imply creator verification or endorsement. Source-described entries are collected automatically and await editorial review. Images remain with their original hosts unless a creator has permitted storage. Video links open the source post.</p><a id="removalLink" class="text-button" href="https://balise.neorgon.com/">Request a correction or removal ↗</a></section>
-  <section><h3>Public feedback, no account needed</h3><p>Quick choices, notes, display names, and ideal prices are public. A random edit key stays in your browser so you can update or remove your contribution. Clearing browser data removes that editing access. Use a contribution’s Report link if you need help. Browser and temporary network limits reduce spam; a contribution does not represent a verified person or a purchase commitment.</p><p>Older account-based price responses remain private and are not republished as guest feedback. Optional account follows are separate from this public conversation.</p></section>
-  <section id="privacyControls"><h3>Your Playtrace data</h3><p>Your follows and price responses are private. Removing them does not delete your Neorgon account.</p><button type="button" class="btn btn--secondary" id="deleteMyData">Delete my follows and responses</button><div id="deleteConfirm" hidden><p>This removes all your follows and price responses. It cannot be undone.</p><button type="button" class="btn btn--danger" id="confirmDelete">Delete my Playtrace data</button><button type="button" class="text-button" id="cancelDelete">Keep my data</button></div><p id="privacyMessage" role="status" aria-live="polite"></p></section>
-</div></dialog>
-  <!-- /template:main -->
+  <main id="main" tabindex="-1"><div class="container collection home-page">
+    <section class="home-hero" aria-labelledby="homeTitle"><div class="home-copy">
+      <p class="eyebrow intro-eyebrow"><span class="index-mark" aria-hidden="true"></span> THE INDEPENDENT GAME INDEX</p>
+      <h2 id="homeTitle">Follow the idea.<br>Find your next game.</h2>
+      <p class="home-lead">Games made by the r/aigamedev community, gathered in one place. Find something unexpected. Try it. Help shape what comes next.</p>
+      <div class="home-actions"><a href="browse.html" class="btn btn--primary">Browse the collection <span aria-hidden="true">↗</span></a><a href="quiz.html" class="btn btn--secondary">Name that game</a></div>
+      <nav class="home-routes" aria-label="Explore Playtrace"><a href="browse.html?stage=playable">Find a playable build ↗</a><a href="research.html">Give a quick playtest ↗</a><a href="profile.html">Your favorites ↗</a></nav>
+      <p class="home-footnote">An open community archive. Every game has a source.<br>Reading, ratings and feedback are open to everyone.</p>
+    </div><a class="home-feature" id="homeFeature" href="browse.html?game=g_1x2q29h"><div id="homeArtwork"></div><span class="home-feature-label">IN FOCUS</span><div class="home-feature-copy"><p class="eyebrow">MADE BY THE COMMUNITY</p><h3 id="homeFeatureTitle">DROPZONE</h3><p id="homeFeatureMaker">Meet the project, follow its story.</p><span class="home-feature-link">Explore project ↗</span></div></a></section>
+  </div></main>
 
   <!-- Neorgon Footer Kit contract. data-footer-mode: minimal (default) | content | app.
        Replace the copy with a real note (privacy, data provenance, disclaimer) or drop
@@ -369,6 +149,6 @@
   </footer>
 
   <div id="app-toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
-  <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/home.js"></script>
 </body>
 </html>

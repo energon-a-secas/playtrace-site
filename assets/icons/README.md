@@ -1,0 +1,1 @@
+Brand marks are from the [Simple Icons](https://github.com/simple-icons/simple-icons) project (CC0). Marks identify linked destinations; their owners retain trademark rights. Browser, edit and star symbols are local interface vectors.

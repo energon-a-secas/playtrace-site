@@ -67,22 +67,30 @@ export async function refreshSteamBatch(db, deps) {
 }
 export async function enrichGames(db, games) {
   const originals = new Map(games.map(game => [game.id, game]));
-  const editedTitles = new Set();
-  games = await applyDetails(db, games, (id, details) => { if (Object.hasOwn(details, 'title')) editedTitles.add(id); });
-  const [overrides, cache] = await db.batch([
+  const editedTitles = new Set(), editedStages = new Set();
+  games = await applyDetails(db, games, (id, details) => { if (Object.hasOwn(details, 'title')) editedTitles.add(id); if (Object.hasOwn(details,'stage')) editedStages.add(id); });
+  const [extra, overrides, cache] = await db.batch([
+    query(db, 'SELECT game_id,project_url,payload_json FROM project_enrichment WHERE game_id IN(SELECT value FROM json_each(?))', JSON.stringify(games.map(game=>game.id))),
     query(db, 'SELECT game_id,preview_json FROM preview_overrides WHERE game_id IN(SELECT value FROM json_each(?))', JSON.stringify(games.map(game => game.id))),
     query(db, 'SELECT app_id,payload_json FROM steam_cache WHERE app_id IN(SELECT value FROM json_each(?))', JSON.stringify([...new Set(games.map(game => steamAppId(game.projectUrl)).filter(Boolean))])),
   ]);
   const previews = new Map(overrides.results.map(row => [row.game_id, JSON.parse(row.preview_json)]));
   const stores = new Map(cache.results.filter(row => row.payload_json).map(row => [row.app_id, JSON.parse(row.payload_json)]));
+  const enriched = new Map(extra.results.map(row=>[row.game_id,row]));
   return games.map(game => {
+    const record = enriched.get(game.id);
+    const availability = record?.project_url === game.projectUrl ? JSON.parse(record.payload_json) : null;
+    let storeArt = null;
+    try { const u=new URL(availability?.image); if(u.protocol==='https:'&&!u.port&&!u.username&&!u.password&&['img.itch.zone',...STEAM_IMAGE_HOSTS].includes(u.hostname))storeArt=u.href; } catch {}
     const steam = stores.get(steamAppId(game.projectUrl)) || null;
     const override = previews.get(game.id);
     const preview = override && game.posts.some(post => post.url === override.sourceUrl) ? override
-      : game.preview.storage === 'r2' || !steam?.headerUrl ? game.preview
-        : { ...game.preview, kind: 'image', url: steam.headerUrl, posterUrl: null, alt: `${steam.title} · Steam store artwork` };
+      : game.preview.storage === 'r2' || !(steam?.headerUrl || storeArt) ? game.preview
+        : { ...game.preview, kind: 'image', url: steam?.headerUrl || storeArt, posterUrl: null, alt: `${steam?.title || availability?.title || game.title} · Store artwork` };
     const source = originals.get(game.id);
     const name = !editedTitles.has(game.id) && game.projectUrl === source.projectUrl ? nameForGame(source, {steamTitle: steam?.title}) : null;
-    return { ...game, ...(name ? {title: name.title} : {}), preview, ...(steam ? { steam } : {}) };
+    const verifiedPlayable = availability?.playable === true && availability.status === 'reachable' && ['itch','steam'].includes(availability.provider) && Date.now()-Date.parse(availability.storeCheckedAt||availability.checkedAt)<7*86400000;
+    const stage = !editedStages.has(game.id) && !['released','playable'].includes(game.stage) && verifiedPlayable ? 'playable' : game.stage;
+    return { ...game, stage, ...(availability ? {availability} : {}), ...(name ? {title: name.title} : {}), preview, ...(steam ? { steam } : {}) };
   });
 }

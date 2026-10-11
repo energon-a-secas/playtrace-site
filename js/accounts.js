@@ -23,14 +23,17 @@ export function startAccounts(render) {
     const changed = state.userId !== auth.userId;
     state.signedIn = auth.signedIn; state.userId = auth.userId;
     if (changed || !auth.signedIn) {
-      accountRequest++; state.follows = []; state.prices = []; state.accountLoaded = false; state.accountError = '';
+      accountRequest++; state.follows = []; state.prices = []; state.accountLoaded = false; state.accountError = ''; state.isAdmin = false;
       if ($('priceAmount')) $('priceAmount').value = '';
       $('deleteConfirm').hidden = true; $('privacyMessage').textContent = '';
       if ($('priceMessage')) $('priceMessage').textContent = '';
       clearChallenge();
     }
     render(); renderAccount();
-    if (auth.signedIn && apiConfigured) refreshMe();
+    if (auth.signedIn && apiConfigured) { refreshMe();
+      const expected = auth.userId;
+      freshToken(expected).then(token => request('/admin/me', { token })).then(() => { if (state.userId === expected) { state.isAdmin = true; rerender(); } }).catch(() => {});
+    }
   });
   NeoAuth.start();
 }
@@ -70,8 +73,7 @@ export async function prepareFollowing(invoker) {
   return true;
 }
 
-export async function followGame(invoker) {
-  const gameId = state.detail?.id;
+export async function followGame(invoker, gameId = state.detail?.id) {
   if (!gameId || state.accountBusy || !await requireAccount(invoker, 'Sign in to follow this game.', 'following')) return;
   if (state.accountBusy) return;
   const user = state.userId;
@@ -83,7 +85,7 @@ export async function followGame(invoker) {
     await request(`/games/${gameId}/follow`, { method: following ? 'DELETE' : 'PUT', ...(following ? {} : { body: {} }), token: await freshToken(user) });
     if (state.userId !== user) return;
     await refreshMe();
-    showToast(following ? 'Removed from your following list.' : 'Following this game. Find its updates in Following.');
+    showToast(following ? 'Removed from your favorites.' : 'Saved to your favorites.');
   } catch (error) { showToast(error.message); }
   finally { state.accountBusy = false; renderAccount(); }
 }

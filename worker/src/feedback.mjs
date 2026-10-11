@@ -61,7 +61,7 @@ export async function writeFeedback(db, env, request, gameId, body, deps) {
   if (request.method === 'DELETE') {
     await mutationLimit(db, env, `guest:${key}`, request, 'privacy', deps.now());
     // Keep a moderated record as a block against immediately reposting it.
-    await query(db, "DELETE FROM feedback WHERE game_id=? AND guest_key_hash=? AND status='published'", gameId, key).run();
+    await query(db, "DELETE FROM feedback WHERE (game_id=? OR game_id IN(SELECT alias_id FROM game_aliases WHERE game_id=?)) AND guest_key_hash=? AND status='published'", gameId, gameId, key).run();
     return { deleted: true };
   }
   const hasChoices = Object.hasOwn(body || {}, 'choices');

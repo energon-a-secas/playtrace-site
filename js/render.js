@@ -2,14 +2,14 @@ import { state } from './state.js';
 import { categoryChoices, categoryLabel, sourceHeadline, sourceOnlySummary, projectPlatforms, selectGames, collectionPulse, label, dateLabel, money } from './collection.js';
 import { CONFIG } from './config.js';
 import { $, escHtml as e } from './utils.js';
+import { icon, playLink } from './icons.js';
+import { syncMakers } from './maker-combobox.js';
 import { storeLabel } from './project.js';
 
 const arrow = '<span aria-hidden="true">↗</span>';
 const genre = id => categoryLabel(id, state.catalog);
 const stageBadge = game => `<span class="stage-badge stage-badge--${e(game.stage)}"><span class="status-dot" aria-hidden="true"></span>${e(label(game.stage))}</span>`;
 const sourceLink = (url, text, className = 'text-link') => `<a class="${className}" href="${e(url)}" target="_blank" rel="noopener noreferrer">${e(text)} ${arrow}<span class="sr-only"> (opens in a new tab)</span></a>`;
-const platformBadge = (game, tag = 'span') => game.distribution
-  ? `<${tag} class="platform-badge">${e(game.distribution.label)}${game.distribution.kind === 'repository' ? ' repository' : game.distribution.kind === 'website' ? '' : ' page'}</${tag}>` : '';
 
 function image(game, priority = false) {
   const url = game.preview.posterUrl || (game.preview.kind === 'image' ? game.preview.url : null);
@@ -25,9 +25,6 @@ export function render() {
   if (optionsGames !== state.games) {
     optionsGames = state.games;
     $('categorySelect').innerHTML = '<option value="all">All genres</option>' + categoryChoices(state.catalog).filter(category => state.games.some(game => game.category === category.id) || category.id===state.category).map(category => `<option value="${e(category.id)}">${e(category.label)}</option>`).join('');
-    const authors = [...new Set(state.games.map(game => game.author.name))].sort((a, b) => a.localeCompare(b));
-    if (state.author && !authors.includes(state.author)) authors.push(state.author);
-    $('authorSelect').innerHTML = '<option value="">All makers</option>' + authors.map(author => `<option value="${e(author)}">u/${e(author)}</option>`).join('');
     platformCounts = new Map();
     for (const game of state.games) { const id = game.distribution?.id || 'unlisted'; platformCounts.set(id, (platformCounts.get(id) || 0) + 1); }
     platformSelection = undefined;
@@ -39,15 +36,13 @@ export function render() {
       .map(platform => `<option value="${platform.id}">${e(platform.label)} (${platformCounts.get(platform.id) || 0})</option>`).join('');
   }
   if ($('searchInput').value !== state.query) $('searchInput').value = state.query;
-  $('categorySelect').value = state.category; $('platformSelect').value = state.platform; $('sortSelect').value = state.sort; $('authorSelect').value = state.author;
+  $('categorySelect').value = state.category; $('platformSelect').value = state.platform; $('sortSelect').value = state.sort; syncMakers(state.games, state.author);
   document.querySelectorAll('button[data-view]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.view === state.view)));
   document.querySelectorAll('[data-stage], [data-stage-target]').forEach(button => button.setAttribute('aria-pressed', String((button.dataset.stage || button.dataset.stageTarget) === state.stage)));
   const filtered = Boolean(state.query.trim() || state.category !== 'all' || state.platform !== 'all' || state.stage !== 'all' || state.author || state.following);
   $('clearFilters').disabled = !filtered;
   const loading = state.status === 'loading';
-  $('featuredGame').closest('.feature-grid').hidden = (!state.loaded && state.status === 'error') || (state.loaded && !state.games.length);
-  $('featuredGame').setAttribute('aria-busy', String(!state.loaded && loading));
-  $('collectionResults').setAttribute('aria-busy', String(loading)); $('refreshCollection').disabled = loading;
+  $('collectionResults').setAttribute('aria-busy', String(loading));
   $('collectionLoading').hidden = state.loaded || !loading;
   $('collectionError').hidden = state.status !== 'error';
   $('collectionErrorText').textContent = state.status !== 'error' ? '' : state.catalogPartial
@@ -63,7 +58,7 @@ export function render() {
   const list = $('itemList'); list.hidden = !state.loaded || !games.length; list.dataset.view = state.view;
   // Background pages must not replace unchanged cards and steal keyboard focus.
   // Full records still invalidate same-ID edits, even at the same timestamp.
-  const nextList = JSON.stringify(visible);
+  const nextList = JSON.stringify([visible, state.isAdmin, state.follows]);
   if (nextList !== listVersion) { listVersion = nextList; list.innerHTML = visible.map(card).join(''); }
   $('collectionMore').hidden = visible.length >= games.length;
   $('collectionShown').textContent = `Showing ${visible.length} of ${games.length} matching projects`;
@@ -85,24 +80,20 @@ export function render() {
   $('followingFilter').setAttribute('aria-pressed', String(state.following));
   $('followingCount').hidden = !state.signedIn || !state.follows.length; $('followingCount').textContent = String(state.follows.length);
   if (state.loaded) renderOverview();
+  if ($('profileSignIn')) { $('profileSignIn').hidden = state.signedIn; $('profileStatus').textContent = state.accountError || (state.signedIn ? `${state.follows.length} favorites saved` : ''); }
   renderAccount();
 }
 
 function card(game) {
   const headline = sourceHeadline(game);
-  const availability = game.steam ? storeLabel(game.steam) : platformBadge(game);
+  const availability = `${playLink(game)}${game.steam ? storeLabel(game.steam) : ''}${game.availability?.status === 'broken' ? '<span class="link-health-note">Link needs attention</span>' : ''}`;
   const latest = [...game.posts].sort((a,b) => b.createdAt.localeCompare(a.createdAt) || b.id.localeCompare(a.id))[0];
-  return `<li><article class="collection-item"><div class="collection-item__preview">${image(game)}<span class="preview-label">Explore project ${arrow}</span></div>
-    <div class="collection-item__body"><div class="game-meta"><button class="genre-chip" type="button" data-category="${e(game.category)}" aria-label="Filter by ${e(genre(game.category))}">${e(genre(game.category))}</button>${stageBadge(game)}</div><h3><button class="card-open" type="button" data-item="${e(game.id)}" aria-label="Explore ${e(game.title)}">${e(game.title)}</button></h3>${headline ? `<p class="project-headline collection-item__headline">${e(headline)}</p>` : ''}<button class="maker-link" type="button" data-author="${e(game.author.name)}">by u/${e(game.author.name)}</button>${sourceOnlySummary(game) ? '' : `<p class="collection-item__description">${e(game.summary)}</p>`}${availability ? `<div class="card-store">${availability}</div>` : ''}<div class="collection-item__foot"><div class="project-date"><time datetime="${e(game.updatedAt)}">${e(dateLabel(game.updatedAt))}</time><span>${game.posts.length > 1 ? `${game.posts.length - 1} ${game.posts.length === 2 ? 'update' : 'updates'}` : 'First post'}</span></div><a class="reddit-shortcut" href="${e(latest.url)}" target="_blank" rel="noopener noreferrer" aria-label="Latest Reddit post for ${e(game.title)} (opens in a new tab)" title="Latest Reddit post"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 8 1.3-5 4.4 1M5.2 9.6a2.5 2.5 0 1 0-2.1 4.4m15.7-4.4a2.5 2.5 0 1 1 2.1 4.4"/><ellipse cx="12" cy="14" rx="9" ry="6"/><circle cx="8.5" cy="13" r="1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="13" r="1" fill="currentColor" stroke="none"/><path d="M8.5 16c1.8 1.4 5.2 1.4 7 0"/><circle cx="19" cy="4.3" r="1.8"/></svg></a></div>${game.reviewStatus === 'source-described' ? '<span class="review-label">Source-described</span>' : ''}</div></article></li>`;
+  return `<li><article class="collection-item"><div class="collection-item__preview">${image(game)}<span class="preview-label">Explore project ${arrow}</span><button type="button" class="card-favorite favorite-star" data-favorite="${e(game.id)}" aria-label="${state.follows.includes(game.id) ? 'Remove from' : 'Save to'} favorites: ${e(game.title)}" aria-pressed="${state.follows.includes(game.id)}" title="Save to favorites">${icon('star')}</button>${state.isAdmin ? `<button type="button" class="card-edit" data-edit-thumbnail="${e(game.id)}" aria-label="Edit thumbnail for ${e(game.title)}" title="Edit thumbnail">${icon('edit')}</button>` : ''}</div>
+    <div class="collection-item__body"><div class="game-meta"><button class="genre-chip" type="button" data-category="${e(game.category)}" aria-label="Filter by ${e(genre(game.category))}">${e(genre(game.category))}</button>${stageBadge(game)}</div><h3><button class="card-open" type="button" data-item="${e(game.id)}" aria-label="Explore ${e(game.title)}">${e(game.title)}</button></h3>${headline ? `<p class="project-headline collection-item__headline">${e(headline)}</p>` : ''}<button class="maker-link" type="button" data-author="${e(game.author.name)}">by u/${e(game.author.name)}</button>${sourceOnlySummary(game) ? '' : `<p class="collection-item__description">${e(game.summary)}</p>`}${availability ? `<div class="card-store">${availability}</div>` : ''}<div class="collection-item__foot"><div class="project-date"><time datetime="${e(game.updatedAt)}">${e(dateLabel(game.updatedAt))}</time><span>${game.posts.length > 1 ? `${game.posts.length - 1} ${game.posts.length === 2 ? 'update' : 'updates'}` : 'First post'}</span></div><div class="card-shortcuts">${playLink(game, true)}<a class="card-shortcut brand-action" data-brand="reddit" href="${e(latest.url)}" target="_blank" rel="noopener noreferrer" aria-label="Latest Reddit post for ${e(game.title)} (opens in a new tab)" title="Latest Reddit post">${icon('reddit')}</a></div></div>${game.reviewStatus === 'source-described' ? '<span class="review-label">Source-described</span>' : ''}</div></article></li>`;
 }
 
 function renderOverview() {
   const pulse = collectionPulse(state.games);
-  $('snapshotCount').textContent = `${pulse.games}${state.catalogPartial ? ' loaded' : ''} projects · ${pulse.authors} makers`;
-  const concepts = state.games.filter(game => game.stage === 'concept').length;
-  const unspecified = state.games.filter(game => game.stage === 'unknown').length;
-  const snapshotNote = $('snapshotCount').nextElementSibling;
-  snapshotNote.textContent = [concepts ? `${concepts} ${concepts === 1 ? 'concept' : 'concepts'}` : '', unspecified ? `${unspecified} unspecified stages` : ''].filter(Boolean).join(' · ') || 'Explore a stage ↑';
   for (const node of document.querySelectorAll('[data-stage-count]')) node.textContent = String(node.dataset.stageCount === 'all' ? pulse.games : state.games.filter(game => game.stage === node.dataset.stageCount).length);
   for (const node of document.querySelectorAll('[data-stage-bar]')) node.style.width = `${pulse.games ? 100 * state.games.filter(game => game.stage === node.dataset.stageBar).length / pulse.games : 0}%`;
   const source = state.catalog.source;
@@ -119,15 +110,7 @@ function renderOverview() {
     removalUrl.pathname = '/report/'; removalUrl.hash = encodeURIComponent(JSON.stringify({ v: 1, site: 'playtrace-site', url: location.href, target: null }));
   }
   $('removalLink').href = removalUrl.href;
-  const featured = state.games.find(game => game.id === CONFIG.featuredGameId)
-    || [...state.games].sort((a, b) => b.posts.length - a.posts.length).find(game => game.preview.posterUrl || game.preview.kind === 'image') || state.games[0];
-  const nextFeature = JSON.stringify(featured || null);
-  if (featureVersion === nextFeature) return;
-  featureVersion = nextFeature;
-  $('featuredGame').classList.remove('spotlight--loading'); $('featuredGame').setAttribute('aria-busy', 'false');
-  if (!featured) { $('featuredGame').hidden = true; $('featuredGame').innerHTML = ''; return; }
-  $('featuredGame').hidden = false;
-  $('featuredGame').innerHTML = `${image(featured, true)}<div class="spotlight__shade"></div><div class="spotlight__top"><span class="spotlight__label">IN FOCUS</span>${stageBadge(featured)}</div><div class="spotlight__body"><p class="eyebrow">${e(genre(featured.category))} · ${featured.posts.length} SOURCE ${featured.posts.length === 1 ? 'POST' : 'POSTS'}</p><h3>${e(featured.title)}</h3><p>${e(featured.summary)}</p><div class="spotlight__foot"><span>by u/${e(featured.author.name)}</span><button class="btn btn--primary" type="button" data-item="${e(featured.id)}">Follow the story ${arrow}</button></div></div>`;
+
 }
 
 export function renderDetail(game) {
@@ -143,9 +126,14 @@ export function renderDetail(game) {
   $('itemDialogDescription').textContent = game.summary;
   $('itemDialogDescription').hidden = Boolean(sourceHeadline(game)) && sourceOnlySummary(game);
   $('itemDialogFacts').innerHTML = `<div><dt>First shared</dt><dd>${e(dateLabel(game.firstSeenAt))}</dd></div><div><dt>Latest update</dt><dd>${e(dateLabel(game.updatedAt))}</dd></div>${game.distribution ? `<div><dt>Project platform</dt><dd>${sourceLink(game.distribution.url, game.distribution.label)}</dd></div>` : ''}${game.platforms.length ? `<div><dt>Runs on</dt><dd>${e(game.platforms.join(', '))}</dd></div>` : ''}`;
-  $('itemDialogTags').innerHTML = platformBadge(game, 'li') + game.tags.map(tag => `<li>${e(tag)}</li>`).join('');
-  $('itemDialogLinks').innerHTML = game.projectUrl ? sourceLink(game.projectUrl, 'Visit game', 'btn btn--primary') : '';
-  $('projectSource').href = game.posts[0].url;
+  $('itemDialogTags').innerHTML = (game.distribution ? `<li class="platform-badge">${icon(game.distribution.id)}${e(game.distribution.label)}</li>` : '') + game.tags.map(tag => `<li>${e(tag)}</li>`).join('');
+  $('itemDialogLinks').innerHTML = playLink(game);
+  $('projectSource').href = [...game.posts].sort((a,b)=>b.createdAt.localeCompare(a.createdAt))[0].url;
+  $('projectSource').dataset.brand = 'reddit'; $('projectSource').classList.add('brand-action');
+  $('projectSource').innerHTML = `${icon('reddit')}<span class="project-icon__label" aria-hidden="true">Latest Reddit post</span>`;
+  $('projectResearch').href = `research.html?game=${game.id}`;
+  $('quickImagePanel').hidden = true; $('fullImageEditor').href = `admin.html?game=${game.id}#projectImageTitle`;
+  $('editThumbnail').hidden = !state.isAdmin;
   $('projectSource').setAttribute('aria-label', `${game.preview.kind === 'video' ? 'Watch original post on Reddit' : 'Original post'} (opens in a new tab)`);
   $('gameTimeline').innerHTML = game.posts.map(post => `<li><div class="timeline__date"><time datetime="${e(post.createdAt)}">${e(dateLabel(post.createdAt))}</time><span>${e(label(post.kind))}</span></div><h4>${sourceLink(post.url, post.title)}</h4><p>${e(post.excerpt)}</p></li>`).join('');
   $('itemDialogSource').textContent = `${game.preview.storage === 'r2' ? 'Preview stored with permission recorded.' : 'Preview hosted at its original source.'} Listing does not imply creator verification or an offer for sale.`;
@@ -156,11 +144,12 @@ export function renderDetail(game) {
 export function renderAccount() {
   const accountsReady = CONFIG.accountsReady === true;
   const following = accountsReady && state.follows.includes(state.detail?.id);
-  $('followGame').textContent = following ? 'Following this game ✓' : 'Follow this game';
+  $('followGame').setAttribute('aria-label', following ? 'Remove from favorites' : 'Save to favorites');
+  $('followGame').querySelector('.project-icon__label').textContent = following ? 'Saved' : 'Favorite';
+  $('editThumbnail').hidden = !state.isAdmin;
   $('followGame').disabled = !accountsReady || state.accountBusy || !state.service?.capabilities?.following;
   $('followGame').setAttribute('aria-pressed', String(following));
   $('followGame').hidden = !accountsReady;
-  $('followHint').hidden = !accountsReady;
   $('followingFilter').disabled = !accountsReady || !state.service?.capabilities?.following;
   $('followingFilter').title = accountsReady ? 'Show followed games' : 'Following is not available yet.';
   $('deleteMyData').disabled = !accountsReady || state.accountBusy || !state.service?.capabilities?.following;

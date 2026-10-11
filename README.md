@@ -34,25 +34,28 @@ Playtrace collects games shared on r/aigamedev so players can discover a project
 
 **Live:** [playtrace.neorgon.com](https://playtrace.neorgon.com/) · **API:** [service status](https://playtrace-api.neorgon.workers.dev/api/v1/status)
 
-Public feedback uses a random browser edit key so visitors can update or remove their contribution. Following is an optional account feature, enabled now that the live domain is registered with Clerk. Existing private account price responses stay private. See [account activation](#account-activation).
+Public feedback uses a random browser edit key so visitors can update or remove their contribution. Favorites are an optional account feature. Star a project to save it to your private Favorites page. Existing private account price responses stay private. See [account activation](#account-activation).
 
 ## Features
 
-- **Source-linked discovery** -- Real previews, genre and development-stage filters, maker views, search, grid/list layouts, and shareable project links.
+- **Focused navigation** -- A standalone Home introduces the collection; Browse, Favorites, the screenshot game, Playtest and About have dedicated pages. Existing shared project/filter links still work.
+- **Source-linked discovery** -- Real previews, genre and development-stage filters, a searchable Maker dropdown, search, grid/list layouts, and shareable project links.
 - **Project platforms** -- Filter by itch.io, Steam, mobile stores, game portals, code repositories, other websites, or projects without a link. Cards and details identify the destination automatically from the project URL. Hosting, supported devices, and development stage remain separate facts.
-- **Project histories** -- Older and newer posts join an existing game only when author and canonical project link match. Existing project links stay stable when an earlier source is found. Sharing an author alone never merges games.
+- **Project histories** -- Older and newer posts join an existing game only when author and canonical project link match. Existing project links stay stable when an earlier source is found. Closely matching same-author reposts within 48 hours retain the newest entry, with old links redirected. Sharing an author alone never merges games.
 - **Historical collection** -- A resumable pass starts at the community's creation on December 11, 2022. An independent recent pass keeps new updates fresh. Newest updates appear first; the interface reports historical progress without claiming the archive is complete.
 - **A growing catalogue** -- Cursor pages replace the old 2,000-project public limit. The first page appears promptly; further pages expand search and filters with visible loaded counts. Cards render in groups of 60.
 - **Public feedback** -- One editable contribution per browser and game, with a note, optional display name, and optional ideal price in USD from $0 to $100. Notes and prices are explicitly public. The median includes only these public suggestions.
-- **Following** -- Signed-in users keep a private list of games to revisit for updates.
+- **Favorites and ratings** -- A top star saves a game to a signed-in visitor’s private Favorites page. Separate one-to-five-star ratings need no login and can be updated or removed from the same browser.
+- **Reusable playtests** -- One question per step, up to five, with single choice, multiple choice and optional written feedback. Admins can create project-specific studies, view versioned metrics and embed the form elsewhere. Research responses are private, separate from public comments.
 - **Visitor controls** -- Browser and network limits reduce spam. Contributions have report links and operator moderation. Clearing browser storage loses editing access; the correction link remains available for help. A browser key does not prove a unique person.
 - **Private account data** -- Existing account prices, their thresholded aggregates, follows, and account-data deletion remain separate from public feedback. Guest contributions never reveal or import old private responses.
 - **Editorial tools** -- A private change-request inbox, verified admin roles with the requested default owner, persistent project details and image edits, and a video-frame picker. See [activation and endpoint details](docs/editorial-api.md).
-- **Store and media context** -- Confirmed Steam app badges, cached US prices, source videos/GIFs as secondary media, and an original-post fallback.
+- **Review queue** -- Persistent link checks, Steam/itch enrichment, shared source links, and Jev-assisted reviews of recent Reddit comments or questionnaire responses. Cited Reddit reviews require explicit admin publication. See [the discovery and research runbook](docs/discovery-research-api.md).
+- **Store and media context** -- Branded game/Reddit buttons, confirmed Steam app badges, cached US prices, Steam/itch artwork, source videos/GIFs, shared links beside project history, and an original-post fallback. Admins can edit thumbnails directly from cards or project notes.
 - **Name that game** -- A highlighted header button opens [a dedicated five-screenshot quiz](https://playtrace.neorgon.com/quiz.html). Source-hosted images use smaller variants when available and preload the next clue. Anonymous results contribute recognition counts and remain removable from the same browser. See [the quiz API and delivery notes](docs/name-game-api.md).
 - **Managed previews** -- R2 can store bounded, validated images with a recorded creator permission. Initial previews remain at their original hosts. Removal hides a game immediately and cleans up its stored data and media.
 
-The initial reviewed snapshot contains 90 games and 96 source posts. The live catalogue grows separately. No votes, demand figures, or user accounts are seeded.
+The bundled snapshot is dated local exploration data; the live catalogue grows separately. No votes, demand figures, or user accounts are seeded.
 
 ## Running locally
 
@@ -84,7 +87,9 @@ Client tests cover source validation, shared filters, progressive pagination, in
 
 | Area | Files | Responsibility |
 | --- | --- | --- |
-| Browser shell | `index.html`, `css/collection.css`, `css/report.css` | Accessible browsing and source-history dialogs |
+| Browser shell | `index.html`, `browse.html`, `profile.html`, `css/campaign.css` | Focused landing page, catalogue, favorites and project dialogs |
+| Research | `research.html`, `js/question-flow.js`, `worker/src/research.mjs` | Reusable guest playtests, versioned forms and private metrics |
+| Editorial queue | `js/admin-campaign.js`, `worker/src/jobs.mjs`, `worker/src/insights.mjs` | URL/store checks, source references and cited review drafts |
 | Client behavior | `js/state.js`, `js/render.js`, `js/events.js` | Validated collection state, filtering, navigation, rendering |
 | Feedback client | `js/feedback.js`, `js/api.js` | Public notes, optional ideal prices, browser edit keys and guest controls |
 | Account client | `js/accounts.js`, `js/challenge.js` | Optional authenticated follows and legacy private data controls |

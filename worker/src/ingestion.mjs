@@ -202,6 +202,12 @@ export async function ingest(env, deps, historical = false) {
       const imported = await importCatalog(db, { ...finalHead, source: { ...finalHead.source,
         coverageThrough: historical ? head.source.coverageThrough : previous?.coverageThrough || null,
         lastSuccessfulIngestAt: historical ? head.source.lastSuccessfulIngestAt : previous?.lastSuccessAt || null }, games: plan.changed });
+      const references=candidates.flatMap(candidate=>(candidate.references||[]));
+      if(references.length)await query(db,`INSERT INTO project_references(game_id,url,title,source_post_id)
+        SELECT p.game_id,json_extract(r.value,'$.url'),json_extract(r.value,'$.title'),p.id
+        FROM json_each(?) r JOIN source_posts p ON p.id=json_extract(r.value,'$.sourcePostId') JOIN games g ON g.id=p.game_id
+        WHERE p.status='published' AND g.status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id)
+        ON CONFLICT(game_id,url) DO UPDATE SET title=excluded.title,source_post_id=excluded.source_post_id`,JSON.stringify(references)).run();
       run.updatedGames = imported.importedGames;
       run.candidates = await savePending(db, plan.pending, attemptAt);
     }

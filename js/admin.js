@@ -1,3 +1,4 @@
+import { initCampaign, loadQueue, loadResearchAdmin, resetCampaign } from './admin-campaign.js';
 import { NeoAuth } from './neorgon-auth.js';
 import { request } from './api.js';
 import { validateCatalog, categoryChoices, dateLabel, safeUrl } from './collection.js';
@@ -21,7 +22,7 @@ function clearEditor() {
   for (const id of ['detailsCategory','newCategoryName','addCategory','cancelCategory']) $(id).disabled=false;
 }
 function lock() {
-  epoch++; admin = null; checking = false; inboxNumber++; entries = []; nextCursor = null; clearEditor();
+  resetCampaign(); epoch++; admin = null; checking = false; inboxNumber++; entries = []; nextCursor = null; clearEditor();
   $('adminWorkspace').hidden = true; $('adminGate').hidden = false; $('inboxEntries').replaceChildren(); $('adminMembers').replaceChildren();
   $('quizMetricsList').replaceChildren(); $('quizMetricsSummary').textContent='';
 }
@@ -41,12 +42,14 @@ async function privateRequest(path, options = {}) {
 }
 function tab(name) {
   if (name === 'access' && admin?.role !== 'owner') return;
-  for (const panel of ['inbox', 'images', 'quiz', 'access']) $(`${panel}Panel`).hidden = name !== panel;
+  for (const panel of ['inbox', 'images', 'quiz', 'queue', 'research', 'access']) $(`${panel}Panel`).hidden = name !== panel;
   document.querySelectorAll('[data-admin-tab]').forEach(button => {
     if (button.dataset.adminTab === name) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');
   });
   if (name !== 'images') { frameRun++; $('frameVideo').pause(); }
   if (name === 'quiz') loadQuizMetrics();
+  if (name === 'queue') loadQueue();
+  if (name === 'research') loadResearchAdmin();
 }
 async function loadQuizMetrics() {
   const current=epoch; $('refreshQuizMetrics').disabled=true; $('quizMetricsSummary').textContent='Loading recognition counts…';
@@ -70,6 +73,8 @@ async function checkAccess() {
     if (current !== epoch) return;
     const id = new URL(location.href).searchParams.get('game');
     if (/^g_[a-z0-9]{5,12}$/.test(id || '')) await openEditor(id);
+    else if (location.hash === '#queue') tab('queue');
+    else if (location.hash === '#research') tab('research');
   } catch (error) { if (current === epoch) notice(error.message); }
   finally { if (current === epoch) checking = false; }
 }
@@ -126,7 +131,7 @@ function imageUrl(preview) { return preview.posterUrl || (preview.kind === 'imag
 function paintEditor(withDetails = true) {
   const game = editing.game;
   $('imageEditor').hidden = false; $('editorTitle').textContent = game.title;
-  $('editorProjectLink').href = `./?game=${encodeURIComponent(game.id)}`;
+  $('editorProjectLink').href = `browse.html?game=${encodeURIComponent(game.id)}`;
   const image = imageUrl(game.preview); if (image) $('editorPreview').src = image; else $('editorPreview').removeAttribute('src');
   $('previewStatus').textContent = editing.override ? `Custom preview · updated ${dateLabel(editing.override.updatedAt)}` : 'Automatic preview';
   $('imageUrl').value = ''; $('imageAlt').value = (game.preview.alt || game.title).slice(0, 300);
@@ -135,6 +140,7 @@ function paintEditor(withDetails = true) {
   const original = imageUrl(editing.sourcePreview);
   const choices = [original ? { url: original, label: 'Source preview' } : null,
     game.steam?.headerUrl ? { url: game.steam.headerUrl, label: 'Steam artwork' } : null,
+    game.availability?.image ? { url: game.availability.image, label: 'Store artwork' } : null,
     ...game.posts.flatMap(post => (post.assets || []).filter(asset => asset.kind === 'image').map(asset => ({ url: asset.url, label: dateLabel(post.createdAt), postId: post.id })))].filter(Boolean);
   const seen = new Set(); candidates = choices.filter(choice => { if (seen.has(choice.url)) return false; seen.add(choice.url); return true; }).slice(0, 10);
   $('imageCandidates').innerHTML = candidates.map((choice, i) => `<button type="button" data-image-choice="${i}" aria-label="Use ${e(choice.label)}"><img src="${e(choice.url)}" alt="" referrerpolicy="no-referrer"><span>${e(choice.label)}</span></button>`).join('');
@@ -281,6 +287,8 @@ async function memberChange(email, enabled) {
   await privateRequest('/admin/members', { method: 'PUT', body: { email, enabled } });
   await loadMembers(); notice(enabled ? 'Admin access granted for the verified primary email.' : 'Admin access revoked.');
 }
+
+initCampaign({ request: privateRequest, games: () => games, editing: () => editing });
 
 $('adminSignIn').addEventListener('click', async event => {
   if (await NeoAuth.requireSignIn({ invoker: event.currentTarget, reason: 'Sign in to manage the Playtrace collection.' })) { user = NeoAuth.state.userId; await checkAccess(); }

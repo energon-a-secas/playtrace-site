@@ -47,3 +47,15 @@ Posts with the exact Demo | Project | Workflow flair are eligible for automatic 
 ## Names and editorial taxonomy
 
 Use the actual game name as the title and the original Reddit headline as supporting context. Prefer verified store metadata, specific project URLs and explicit names in source text; keep uncertain headlines for review. Admin names win over automation. Categories belong to a shared saved registry: administrators can add missing genres from the editing dropdown and reuse them across projects. Clicker is included. Keep playable GitHub Pages URLs separate from the source-code repository, with independent Visit game and Source code actions.
+
+## Discovery and research navigation
+
+Home is a single focused introduction with the featured game and clear routes into Browse, the quiz, Playtest and Favorites. Browse owns collection search and filters. The Maker field supports typing and keyboard selection. Favorites are account-private; a separate guest rating is one editable one-to-five-star contribution per browser/game. Branded Steam, itch.io and Reddit actions open their destinations independently of the card. Hover glints are brief and disabled for reduced motion.
+
+Playtest is a standalone, embeddable surface. Present one question at a time, with back/skip controls and a final save. Admins can create reusable or project-specific forms with one to five questions and research topics. Preserve revision-specific metrics. Research answers are private and may be analyzed by Jev, with that use disclosed before submission. Public project comments retain their existing visible consent and removal controls.
+
+## Evidence queue
+
+Editors can inspect link health, store metadata, linked source posts and cited feedback drafts. Distinguish a broken link from blocked access or a timeout. HTTP success alone never implies a playable build. Steam/itch evidence can improve automatic artwork or playable labels, while manual editorial choices win. Do not delete entries or publish AI reviews automatically after checks. Every review statement must link to real original comments and show sampling limits. Model probabilities are not guarantees.
+
+Near-identical reposts by the same author within 48 hours keep the latest entry and combine source history, with redirects and preserved contributions. Different known project links prevent consolidation. The source timeline and original attribution remain readable.

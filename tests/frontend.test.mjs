@@ -137,7 +137,7 @@ function fakeNodes() {
   return id => {
     if (!nodes.has(id)) nodes.set(id, { innerHTML: '', textContent: '', value: '', hidden: false, disabled: false,
       open: true, dataset: {}, classList: { remove() {} }, nextElementSibling: { textContent: '' },
-      setAttribute() {}, removeAttribute() {}, focus() {}, closest() { return this; } });
+      querySelector() { return {textContent:''}; }, setAttribute() {}, removeAttribute() {}, focus() {}, closest() { return this; } });
     return nodes.get(id);
   };
 }
@@ -156,28 +156,28 @@ async function flushRequests() { for (let i = 0; i < 12; i++) await Promise.reso
 const insufficient = { gameId: 'g_abc12', state: 'insufficient', count: null, medianCents: null, buckets: null };
 const ready = { gameId: 'g_abc12', state: 'ready', count: 5, medianCents: 1000, buckets: [] };
 
-test('same-timestamp catalogue refresh removes featured content and updates cards and maker options', async () => {
+test('same-timestamp catalogue refresh removes missing cards and updates searchable maker data', async () => {
   const catalogue = validateCatalog(copy()), $ = fakeNodes();
   const state = { ...defaults, games: catalogue.games, catalog: catalogue, loaded: true, status: 'ready', follows: [], prices: [], detail: null };
   const originalDocument = globalThis.document, originalLocation = globalThis.location;
   globalThis.document = { querySelectorAll: () => [], querySelector: selector => $(selector) };
   globalThis.location = { href: 'https://playtrace.example/' };
   try {
-    const renderer = await isolatedModule('render.js', { state, $, ...collection, CONFIG: { removalContact: 'https://balise.neorgon.com/report/' }, e: String });
+    let makers=[];
+    const renderer = await isolatedModule('render.js', { state, $, ...collection, CONFIG: { removalContact: 'https://balise.neorgon.com/report/' }, e: String, syncMakers:games=>makers=games.map(g=>g.author.name), icon:()=>'', playLink:()=>'' });
     renderer.render();
-    const removed = $('featuredGame').innerHTML.match(/data-item="([^"]+)"/)[1];
+    const removed = state.games[0].id;
     state.games = state.games.filter(game => game.id !== removed);
     state.catalog = { ...catalogue, games: state.games };
     renderer.render();
-    assert.equal($('featuredGame').innerHTML.includes(removed), false);
     assert.equal($('itemList').innerHTML.includes(removed), false);
     state.games = state.games.map((game, index) => index ? game : { ...game, title: 'Refreshed source title', author: { ...game.author, name: 'NewSourceMaker' } });
     state.catalog = { ...catalogue, games: state.games };
     renderer.render();
     assert.match($('itemList').innerHTML, /Refreshed source title/);
-    assert.match($('authorSelect').innerHTML, /NewSourceMaker/);
+    assert.ok(makers.includes('NewSourceMaker'));
     state.games = []; state.catalog = { ...catalogue, games: [] }; renderer.render();
-    assert.equal($('featuredGame').innerHTML, '');
+    assert.equal($('itemList').innerHTML, '');
   } finally { globalThis.document = originalDocument; globalThis.location = originalLocation; }
 });
 
@@ -189,17 +189,16 @@ test('background catalogue pages preserve visible card nodes while same-timestam
   const originalDocument = globalThis.document, originalLocation = globalThis.location;
   globalThis.document = { querySelectorAll: () => [], querySelector: selector => $(selector) };
   globalThis.location = { href: 'https://playtrace.example/' };
-  let replacements = 0, html = '', featureReplacements = 0, featureHtml = '';
-  Object.defineProperty($('featuredGame'), 'innerHTML', { get: () => featureHtml, set: value => { featureReplacements++; featureHtml = value; } });
+  let replacements = 0, html = '';
   Object.defineProperty($('itemList'), 'innerHTML', { get: () => html, set: value => { replacements++; html = value; } });
   try {
-    const renderer = await isolatedModule('render.js', { state, $, ...collection, CONFIG: {}, e: String });
+    const renderer = await isolatedModule('render.js', { state, $, ...collection, CONFIG: {}, e: String, syncMakers:()=>{}, icon:()=>'', playLink:()=>'' });
     renderer.render(); assert.equal(replacements, 1);
     state.games = all; state.catalogPartial = false; state.status = 'ready'; renderer.render();
     assert.equal(replacements, 1, 'Unchanged visible cards retain their existing DOM and focus');
-    const priorFeatures = featureReplacements;
+    const priorCards = replacements;
     state.games = structuredClone(all); renderer.render();
-    assert.equal(featureReplacements, priorFeatures, 'The same featured record keeps its DOM when background pages or copies arrive');
+    assert.equal(replacements, priorCards, 'The same cards keep their DOM when background pages or copies arrive');
     state.games = all.map((game, i) => i ? game : { ...game, title: 'Changed without a timestamp change' });
     renderer.render(); assert.equal(replacements, 2); assert.match(html, /Changed without a timestamp change/);
   } finally { globalThis.document = originalDocument; globalThis.location = originalLocation; }
@@ -282,7 +281,6 @@ test('unavailable account controls show availability without a sign-in call to a
   renderer.renderAccount();
   for (const id of ['followingFilter', 'followGame', 'deleteMyData', 'confirmDelete']) assert.equal($(id).disabled, true, id);
   assert.equal($('followGame').hidden, true);
-  assert.equal($('followHint').hidden, true);
   assert.match($('privacyMessage').textContent, /not available yet/);
 });
 

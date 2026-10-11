@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" data-season="off">
+<head>
+  <meta charset="UTF-8">
+  <!-- Strict CSP. An inline script runs only if its sha256 is listed: the one hash is the theme
+       guard further down, so editing that script means re-hashing it (smoke check 29 reports a
+       mismatch). Inline on*="" handlers never run; attach listeners from a script file. Add a
+       source only when the page loads from it, as an exact host or a pinned path, never a whole
+       package CDN: a Convex deployment adds its https and wss URLs to connect-src, and sign-in
+       adds the CSP table in packages/neorgon-ui/auth/README.md. frame-ancestors, report-uri and
+       sandbox are ignored in a meta tag, so they are left out. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-na6phygP/tfoCIp4oBeQgGJJpQsZob/udrLum+20QTI=' https://gc.zgo.at https://static.cloudflareinsights.com https://clerk.neorgon.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.neorgon.org/v1.0.0/; img-src 'self' data: https://img.itch.zone https://demos.tahazsh.com https://playtrace-api.neorgon.workers.dev https://neorgon.goatcounter.com https://img.clerk.com https://preview.redd.it https://external-preview.redd.it https://i.redd.it https://b.thumbs.redditmedia.com https://a.thumbs.redditmedia.com https://shared.akamai.steamstatic.com https://shared.fastly.steamstatic.com https://cdn.akamai.steamstatic.com https://cdn.cloudflare.steamstatic.com; media-src https://v.redd.it https://preview.redd.it https://i.redd.it; font-src 'self'; connect-src 'self' https://playtrace-api.neorgon.workers.dev https://neorgon.goatcounter.com https://cloudflareinsights.com https://clerk.neorgon.com https://challenges.cloudflare.com; manifest-src 'self'; frame-src https://challenges.cloudflare.com; worker-src blob:; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Playtrace">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="neo-mark" content="on">
+  <title>Playtest Lab | Playtrace</title>
+  <meta name="description" content="Explore the history of games shared on r/aigamedev. Leave public feedback and an optional ideal price, no account needed.">
+  <meta property="og:title" content="Playtrace | Games in the Making">
+  <meta property="og:description" content="Explore the history of games shared on r/aigamedev. Leave public feedback and an optional ideal price, no account needed.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://playtrace.neorgon.com/research.html">
+  <meta property="og:site_name" content="Neorgon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Playtrace | Games in the Making">
+  <meta name="twitter:description" content="Explore the history of games shared on r/aigamedev. Leave public feedback and an optional ideal price, no account needed.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://playtrace.neorgon.com/research.html">
+  <meta property="og:locale" content="en_US">
+  <meta name="theme-color" content="#f3f4f7">
+  <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <meta property="og:image" content="https://playtrace.neorgon.com/og-preview.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Playtrace: discover games and follow what happens next">
+  <meta name="twitter:image" content="https://playtrace.neorgon.com/og-preview.jpg">
+  <!-- Fleet design tokens: canonical, do not redeclare locally (docs/references/new-project-context.md, Design) -->
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/styles/base.css">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- template:styles -->
+<link rel="stylesheet" href="css/collection.css">
+  <!-- /template:styles -->
+  <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN). Keep after style.css, the kit owns the header. -->
+  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <link rel="stylesheet" href="css/neorgon-header.css">
+  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
+  <script defer src="js/neorgon-header.js"></script>
+  <!-- Neorgon Footer Kit (vendored). Pins the footer to the viewport floor on short
+       pages and builds the meta bar + back-to-top. See packages/neorgon-ui/footer/README.md.
+       Optional stamps: <meta name="neo-repo"|"neo-version"|"neo-updated"> -->
+  <link rel="stylesheet" href="css/neorgon-footer.css">
+  <script defer src="js/neorgon-footer.js"></script>
+  <meta name="clerk-publishable-key" content="pk_live_Y2xlcmsubmVvcmdvbi5jb20k">
+  <link rel="stylesheet" href="css/neorgon-auth.css">
+  <!-- Neorgon Beacon Kit (vendored). Bottom-left correction reporter: it
+       carries page context to balise.neorgon.com in a URL fragment and the
+       visitor writes there. No form on this page and no request from it.
+       Opt out per page with <meta name="beacon" content="off">.
+       See packages/neorgon-ui/beacon/README.md. -->
+  <meta name="beacon-site" content="playtrace-site">
+  <link rel="stylesheet" href="css/neorgon-beacon.css">
+  <script defer src="js/neorgon-beacon.js"></script>
+  <link rel="stylesheet" href="css/report.css">
+  <link rel="stylesheet" href="css/campaign.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Playtrace",
+    "description": "Explore the history of games shared on r/aigamedev. Leave public feedback and an optional ideal price, no account needed.",
+    "url": "https://playtrace.neorgon.com/",
+    "applicationCategory": "EntertainmentApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Organization", "name": "Neorgon", "url": "https://neorgon.com/" }
+  }
+  </script>
+</head>
+<body data-page="research">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Neorgon Header Kit contract (packages/neorgon-ui/header/README.md).
+       data-header-mode: hub (glass) | content (sticky gradient) | app (slim, auto-hides on scroll).
+       Pick content for learning/content sites, app for tool-dense sites. -->
+  <header class="header-bar" data-header-mode="content" data-header-skin="custom">
+    <div class="header-logo">
+      <!-- PATTERN: one link: mark + name go to THIS site's home (root or #home)
+           so clicking either resets the view. The hub icon in .header-right
+           is the only header link to neorgon.com. -->
+      <a href="./" class="header-title-link">
+        <img src="energon-classic-logo.png" class="header-logo-img" alt="">
+        <div class="header-title-wrap">
+          <h1>Playtrace</h1>
+          <div class="header-subtitle">Games in the making</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- .header-right owns margin-left:auto; home icon is always last. -->
+    <div class="header-right">
+      <!-- template:actions -->
+<div class="header-actions">
+  <a class="btn btn--ghost btn--sm" href="browse.html">Browse</a>
+  <a class="btn btn--ghost btn--sm" href="profile.html">Favorites</a>
+  <a class="btn btn--sm header-quiz-link" href="quiz.html" aria-label="Name that game" data-keep-mobile><span class="header-quiz-label">Name that game</span><span class="header-quiz-short" aria-hidden="true">Quiz</span></a>
+  <a class="btn btn--ghost btn--sm" href="research.html">Playtest</a>
+  <a class="btn btn--ghost btn--sm" href="about.html">About</a>
+</div>
+  <!-- /template:actions -->
+
+      <div class="neo-auth" data-neo-auth data-keep-mobile hidden></div>
+
+      <a class="header-home" href="https://neorgon.com/" title="neorgon.com" aria-label="Neorgon home">
+        <svg class="nh-hub-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 4.4 18.58 8.2 18.58 15.8 12 19.6 5.42 15.8 5.42 8.2Z" fill="currentColor" stroke="none"/>
+          <g class="nh-orbit">
+            <path d="M2.47 17.50 A11.0 11.0 0 0 1 14.85 1.37" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <path d="M21.53 6.50 A11.0 11.0 0 0 1 9.15 22.63" fill="none" stroke="currentColor" stroke-width="1.05" stroke-linecap="round"/>
+            <circle cx="21.71" cy="6.84" r="1.25" fill="currentColor"/>
+            <circle cx="2.29" cy="17.16" r="1.25" fill="currentColor"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1"><div class="container collection research-page">
+<div class="research-intro"><p class="eyebrow">PLAYTRACE / PLAYTEST LAB</p><h2 id="researchTitle">A small playtest.<br>A useful next step.</h2><p>One question at a time. Help a maker see what connects, or help us check that a game is still playable.</p></div>
+<form id="researchPicker" class="research-picker"><div class="field"><label for="researchCategory">Research topic</label><select id="researchCategory" class="select"><option value="">All research topics</option></select></div><div class="field"><label for="researchFormSelect">Questionnaire</label><select id="researchFormSelect" class="select" required></select></div><div class="field"><label for="researchGameSearch">Find a game or maker</label><input id="researchGameSearch" class="input" type="search" placeholder="Search the collection…"></div><div class="field"><label for="researchGame">Project</label><select id="researchGame" class="select" required><option value="">Choose a project…</option></select><p id="researchGameCount" class="field__hint" role="status">Loading projects…</p></div><button class="btn btn--primary" type="submit">Start playtest →</button></form>
+<section id="researchSession" hidden><div class="research-project"><img id="researchImage" alt="" hidden><div><p class="eyebrow">YOU’RE EXPLORING</p><h3 id="researchProject"></h3><div class="admin-inline"><a id="researchVisit" class="text-link" target="_blank" rel="noopener noreferrer">Open game ↗</a><a id="researchProjectLink" class="text-link" target="_blank" rel="noopener noreferrer">Project notes ↗</a></div></div></div><div id="questionFlow"></div><div class="research-session-actions"><button class="text-button" id="changeResearch" type="button">Choose another playtest</button><button class="text-button" id="removeResearch" type="button" hidden>Remove my answers</button></div></section>
+<p id="researchMessage" role="status"></p><p class="research-privacy">No account needed. Answers are private to Playtrace admins and may be classified by Jev to guide catalogue improvements. A random browser key lets you edit or remove your answers. Clearing browser data removes that editing access. Public summaries are reviewed before publication.</p>
+</div></main>
+
+  <!-- Neorgon Footer Kit contract. data-footer-mode: minimal (default) | content | app.
+       Replace the copy with a real note (privacy, data provenance, disclaimer) or drop
+       the text entirely, the kit appends "Part of Neorgon" and any version stamps. -->
+  <footer class="neo-footer" data-footer-mode="minimal">
+    <p class="neo-footer-note">Playtrace · Follow the idea.</p>
+  </footer>
+
+  <div id="app-toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+  <script type="module" src="js/research-page.js"></script>
+</body>
+</html>

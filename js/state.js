@@ -3,10 +3,11 @@ import { defaults, readLocation, validateCatalog } from './collection.js';
 import { apiConfigured, request } from './api.js';
 const preferences = createStore({ key: 'playtrace-site:collection', version: 1 });
 export const state = { ...defaults, games: [], catalog: null, status: 'loading', loaded: false, error: '', visibleLimit: 60, catalogPartial: false, catalogTotal: null,
-  service: null, serviceError: '', signedIn: false, userId: null, follows: [], prices: [], accountLoaded: false,
+  isAdmin: false, service: null, serviceError: '', signedIn: false, userId: null, follows: [], prices: [], accountLoaded: false,
   accountError: '', detail: null, detailSignals: null, detailSignalError: '', accountBusy: false };
 export function restoreLocation() {
   Object.assign(state, readLocation(location.href, preferences.load({})?.view === 'list' ? 'list' : 'grid'));
+  if (document.body.dataset.page === 'profile') state.following = true;
 }
 export function saveView() { return preferences.save({ view: state.view }); }
 let requestNumber = 0;

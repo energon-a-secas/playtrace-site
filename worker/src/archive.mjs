@@ -3,6 +3,7 @@ import { classifySource } from './taxonomy.mjs';
 import { extractAssets } from './assets.mjs';
 import { PROJECT_FLAIR, projectFlair } from './source-policy.mjs';
 import { inferName } from './names.mjs';
+import { extractReferences } from './references.mjs';
 import { projectLinks } from './project-links.mjs';
 
 const unavailableText = value => typeof value === 'string' && /^\[(deleted|removed)\]$/i.test(value.trim());
@@ -59,7 +60,7 @@ export function normalizePost(raw, nowMs, { reviewUnlabeled = false } = {}) {
     excerpt: `Source post by u/${raw.author}: ${title}`.slice(0, 600) };
   const assets = extractAssets(raw);
   post.assets = assets;
-  return { post, projectUrl, repositoryUrl, name, preview, clear, requiresReview: post.flair === null, authorKey: raw.author.toLowerCase(), taxonomy: classifySource(title, body) };
+  return { post, references: extractReferences(raw), projectUrl, repositoryUrl, name, preview, clear, requiresReview: post.flair === null, authorKey: raw.author.toLowerCase(), taxonomy: classifySource(title, body) };
 }
 export function sourceGame(candidate) {
   const { post, projectUrl, preview } = candidate;
