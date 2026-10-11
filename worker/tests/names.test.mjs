@@ -24,6 +24,9 @@ test('uncertain URLs, opaque IDs, tools, error pages and generic headlines never
     assert.equal(inferName({title:'I built a game',projectUrl:url,pageTitle:'Just a moment...'}),null,url);
   }
   assert.equal(inferName({title:'My first game: a browser adventure'}),null);
+  assert.equal(inferName({title:'I made a game',body:'Play https://random-host-id.vercel.app/',projectUrl:'https://random-host-id.vercel.app/'}),null,'URL text cannot corroborate its own hosting identifier');
+  assert.equal(inferName({title:'Meet Orin — the protagonist of my game'}),null);
+  assert.equal(inferName({title:'I made my boat game',body:'I love boats!',projectUrl:'https://boat.example.com/'}),null);
   assert.equal(inferName({title:'A game prototype',projectUrl:'https://example.com/guess/',pageTitle:'Unrelated Product'}),null);
   const reviewed={...fixtureGame(),reviewStatus:'reviewed'};assert.equal(nameForGame(reviewed,{steamTitle:'Another title'}),null);
 });
@@ -33,6 +36,8 @@ test('playable GitHub Pages links win over code repositories in either source or
     assert.deepEqual(projectLinks({url:repo,selftext}),{projectUrl:playable,repositoryUrl:repo});
   }
   assert.equal(projectLinks({url:repo,selftext:'My open source game'}).projectUrl,repo);
+  assert.equal(projectLinks({selftext:'Play my game: https://maker.github.io/moon/**'}).projectUrl,'https://maker.github.io/moon');
+  assert.equal(projectLinks({selftext:'Music generation: I stumbled upon https://github.com/vitling/acid-banger'}).repositoryUrl,null);
 });
 test('Steam demos provide verified names without masquerading as full releases; explicit admin names always win',async()=>{
   const data={steam_appid:4610750,type:'demo',name:'Wayward Crown Demo',is_free:true,release_date:{coming_soon:false}};
