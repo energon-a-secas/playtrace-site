@@ -30,4 +30,4 @@ Use the canonical Neorgon tokens and Header, Footer, Auth, DOM and navigation ki
 
 ## Editorial care
 
-Primary project actions belong beside the title, before media and feedback. The index explanation is a separate About article. Updates are subsequent source posts after the first showcase. Public change requests feed a private admin inbox; administrators can maintain previews without overwriting source history. Steam store prices stay visibly separate from player price suggestions. Only a verified server-side identity grants administrative access.
+Project details lead with the banner, followed by compact shortcuts beside the tags and a clear Visit game button beside the title. Icon shortcuts have hover and keyboard labels, with visible captions on touch screens. The index explanation is a separate About article. Updates are subsequent source posts after the first showcase. Public change requests feed a private admin inbox; administrators can maintain previews without overwriting source history. Steam store prices stay visibly separate from player price suggestions. Only a verified server-side identity grants administrative access.

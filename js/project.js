@@ -39,6 +39,7 @@ export function prepareProject(game) {
     projectId = game.id; generation++;
     controller?.abort(); controller = new AbortController(); pending = false;
     $('changeRequestPanel').hidden = true; $('changeRequestForm').hidden = false;
+    $('requestChange').setAttribute('aria-expanded', 'false');
     $('changeRequestForm').reset(); $('changeRequestMessage').textContent = ''; $('sendChangeRequest').disabled = false;
   }
   const current = generation;
@@ -57,16 +58,31 @@ export function closeProject() {
   $('projectMedia').querySelectorAll('video').forEach(video => { video.pause(); video.removeAttribute('src'); video.load(); });
 }
 export function bindProject() {
+  const dialog = $('itemDialog');
+  // Keep hover labels available to keyboards and dismissible without closing the dialog.
+  dialog.addEventListener('keydown', event => {
+    if (event.key !== 'Escape' || !matchMedia('(hover: hover)').matches) return;
+    const visible = [...dialog.querySelectorAll('.project-icon:not([data-tooltip-dismissed])')]
+      .filter(icon => icon.matches(':hover, :focus-visible'));
+    if (!visible.length) return;
+    visible.forEach(icon => { icon.dataset.tooltipDismissed = ''; });
+    event.preventDefault(); event.stopPropagation();
+  });
+  for (const eventName of ['pointerout', 'focusout']) dialog.addEventListener(eventName, event => {
+    const icon = event.target.closest('.project-icon');
+    if (icon && !icon.contains(event.relatedTarget) && !icon.matches(':hover, :focus-visible')) delete icon.dataset.tooltipDismissed;
+  });
   $('jumpFeedback').addEventListener('click', () => { $('feedbackBody').focus(); $('feedbackTitle').scrollIntoView({ block: 'start' }); });
   $('requestChange').addEventListener('click', () => {
     $('changeRequestPanel').hidden = false;
+    $('requestChange').setAttribute('aria-expanded', 'true');
     const ready = state.service?.capabilities?.changeRequests;
     $('changeRequestForm').hidden = !ready;
     $('changeRequestMessage').textContent = ready ? '' : 'Change requests are temporarily unavailable. Please use Sources & privacy for the correction contact.';
     if (ready) $('changeKind').focus();
     $('changeRequestPanel').scrollIntoView({ block: 'nearest' });
   });
-  $('closeChangeRequest').addEventListener('click', () => { $('changeRequestPanel').hidden = true; $('requestChange').focus(); });
+  $('closeChangeRequest').addEventListener('click', () => { $('changeRequestPanel').hidden = true; $('requestChange').setAttribute('aria-expanded', 'false'); $('requestChange').focus(); });
   $('changeRequestForm').addEventListener('submit', async event => {
     event.preventDefault();
     if (pending || !state.detail) return;

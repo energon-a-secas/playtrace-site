@@ -5,6 +5,7 @@ export function openDialog(dialog, opener = document.activeElement) {
   if (!dialog || dialog.open) return;
   openers.set(dialog, opener);
   dialog.showModal();
+  dialog.scrollTop = 0;
 }
 
 /** Bind once. Keep a visible close button for touch users. */

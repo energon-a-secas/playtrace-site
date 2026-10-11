@@ -122,7 +122,9 @@ export function renderDetail(game) {
   $('itemDialogDescription').textContent = game.summary;
   $('itemDialogFacts').innerHTML = `<div><dt>First shared</dt><dd>${e(dateLabel(game.firstSeenAt))}</dd></div><div><dt>Latest update</dt><dd>${e(dateLabel(game.updatedAt))}</dd></div>${game.platforms.length ? `<div><dt>Platform</dt><dd>${e(game.platforms.join(', '))}</dd></div>` : ''}`;
   $('itemDialogTags').innerHTML = game.tags.map(tag => `<li>${e(tag)}</li>`).join('');
-  $('itemDialogLinks').innerHTML = (game.projectUrl ? sourceLink(game.projectUrl, 'Visit game page', 'btn btn--primary') : '') + sourceLink(game.posts[0].url, game.preview.kind === 'video' ? 'Watch on Reddit' : 'Original post', 'btn btn--secondary') + '<button type="button" class="text-button" id="shareGame">Copy project link</button>';
+  $('itemDialogLinks').innerHTML = game.projectUrl ? sourceLink(game.projectUrl, 'Visit game', 'btn btn--primary') : '';
+  $('projectSource').href = game.posts[0].url;
+  $('projectSource').setAttribute('aria-label', `${game.preview.kind === 'video' ? 'Watch original post on Reddit' : 'Original post'} (opens in a new tab)`);
   $('gameTimeline').innerHTML = game.posts.map(post => `<li><div class="timeline__date"><time datetime="${e(post.createdAt)}">${e(dateLabel(post.createdAt))}</time><span>${e(label(post.kind))}</span></div><h4>${sourceLink(post.url, post.title)}</h4><p>${e(post.excerpt)}</p></li>`).join('');
   $('itemDialogSource').textContent = `${game.preview.storage === 'r2' ? 'Preview stored with permission recorded.' : 'Preview hosted at its original source.'} Listing does not imply creator verification or an offer for sale.`;
   $('timelineCount').textContent = `${game.posts.length} source ${game.posts.length === 1 ? 'post' : 'posts'}`;

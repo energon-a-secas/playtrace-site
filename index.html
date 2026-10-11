@@ -245,15 +245,41 @@
     <span class="eyebrow">PROJECT NOTES</span>
     <button type="button" class="btn btn--ghost" data-dialog-close autofocus>Close <span aria-hidden="true">×</span></button>
   </div>
+  <div id="itemDialogMedia" class="project-banner"></div>
   <div class="dialog__body">
+    <div class="project-toolbar">
+      <div class="project-labels">
+        <p id="itemDialogCategory" class="eyebrow"></p>
+        <ul id="itemDialogTags" class="tag-list" aria-label="Tags"></ul>
+      </div>
+      <nav class="project-utilities" aria-label="Project shortcuts">
+        <a id="projectSource" class="project-icon" target="_blank" rel="noopener noreferrer" aria-label="Original post (opens in a new tab)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7m0-7L10 14M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5"/></svg>
+          <span class="project-icon__label" aria-hidden="true">Original post</span>
+        </a>
+        <button type="button" class="project-icon" id="shareGame" aria-label="Copy project link">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 13 4-4m-6 5-1 1a4 4 0 0 0 6 6l4-4a4 4 0 0 0 0-6M16 10l1-1a4 4 0 0 0-6-6L7 7a4 4 0 0 0 0 6"/></svg>
+          <span class="project-icon__label" aria-hidden="true">Copy link</span>
+        </button>
+        <button type="button" class="project-icon" id="jumpFeedback" aria-label="Leave feedback">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11a8 8 0 0 1-8 8H7l-5 3 2-6a8 8 0 0 1-1-4v-1a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8Z"/><path d="M8 9h8M8 13h5"/></svg>
+          <span class="project-icon__label" aria-hidden="true">Leave feedback</span>
+        </button>
+        <button type="button" class="project-icon" id="requestChange" aria-label="Request a change" aria-controls="changeRequestPanel" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M4 20l5-1L21 7a2.8 2.8 0 0 0-4-4L5 15l-1 5ZM13 20h8"/></svg>
+          <span class="project-icon__label" aria-hidden="true">Request a change</span>
+        </button>
+      </nav>
+    </div>
     <div class="project-heading">
-      <div class="project-heading__text"><p id="itemDialogCategory" class="eyebrow"></p>
+      <div class="project-heading__text">
         <h2 id="itemDialogTitle">Project details</h2>
         <p id="itemDialogAuthor" class="dialog__author"></p>
       </div>
-      <aside class="project-actions" aria-label="Project actions"><div id="itemDialogStore"></div><div id="itemDialogLinks"></div><div class="project-follow"><button type="button" class="btn btn--secondary" id="followGame">Follow this game</button><p id="followHint" class="field__hint">Keep its progress in your following list.</p></div><button type="button" class="text-button" id="jumpFeedback">Leave feedback ↓</button><button type="button" class="text-button" id="requestChange">Request a change</button></aside>
-      <p id="itemDialogDescription" class="project-description"></p>
+      <aside class="project-actions" aria-label="Visit or follow this game"><div id="itemDialogLinks"></div><div class="project-follow"><button type="button" class="btn btn--secondary" id="followGame">Follow this game</button><p id="followHint" class="field__hint">Keep its progress in your following list.</p></div></aside>
     </div>
+    <div id="itemDialogStore"></div>
+    <p id="itemDialogDescription" class="project-description"></p>
     <section id="changeRequestPanel" class="change-request" aria-labelledby="changeRequestTitle" hidden>
       <div class="feedback-heading"><h3 id="changeRequestTitle">Help improve this listing</h3><button type="button" class="text-button" id="closeChangeRequest">Cancel</button></div>
       <p>Your request goes privately to the Playtrace admins. No account needed.</p>
@@ -264,10 +290,8 @@
         <div><button type="submit" class="btn btn--primary" id="sendChangeRequest">Send request</button></div>
       </form><p id="changeRequestMessage" role="status"></p>
     </section>
-    <div id="itemDialogMedia"></div>
     <section id="projectMedia" class="project-media" aria-label="More from the maker" hidden></section>
     <dl id="itemDialogFacts" class="project-facts"></dl>
-    <ul id="itemDialogTags" class="tag-list" aria-label="Tags"></ul>
     <section class="project-feedback" aria-labelledby="feedbackTitle">
       <div class="feedback-heading"><div><p class="eyebrow">HELP THE NEXT VERSION</p><h3 id="feedbackTitle">Player feedback</h3></div><span id="feedbackCount"></span></div>
       <div class="feedback-layout">
