@@ -10,14 +10,28 @@ export function publicCacheKey(request, action) {
   }
   return new Request(key);
 }
-export async function versionedPublicKey(db,key) {
-  if(!db||!key)return key;
-  const row=await db.prepare("SELECT value_json FROM app_meta WHERE key='public_cache_revision'").first();
-  const url=new URL(key.url);url.searchParams.set('__revision',row?.value_json||'0');return new Request(url);
+export const REVISION_KEY = 'discovery/revision.json';
+export async function versionedPublicKey(env,key) {
+  if(!key)return null;
+  let revision='0';
+  if(env.PREVIEWS) {
+    // R2 reads are strongly consistent. A warm edge cache must not depend on
+    // D1's daily read quota; a storage failure falls back to a fresh DB read.
+    try {
+      const record=await env.PREVIEWS.get(REVISION_KEY);
+      if(record)revision=(await new Response(record.body).json()).revision;
+      if(typeof revision!=='string')return null;
+    } catch { return null; }
+  } else if(env.DB) {
+    const row=await env.DB.prepare("SELECT value_json FROM app_meta WHERE key='public_cache_revision'").first();
+    revision=row?.value_json||'0';
+  }
+  const url=new URL(key.url);url.searchParams.set('__revision',revision);return new Request(url);
 }
-export async function invalidatePublicCache(db) {
-  if(!db)return;
-  await db.prepare("INSERT INTO app_meta(key,value_json) VALUES('public_cache_revision',?) ON CONFLICT(key) DO UPDATE SET value_json=excluded.value_json").bind(JSON.stringify(crypto.randomUUID())).run();
+export async function invalidatePublicCache(env) {
+  const revision=crypto.randomUUID();
+  if(env.PREVIEWS)await env.PREVIEWS.put(REVISION_KEY,JSON.stringify({revision}),{httpMetadata:{contentType:'application/json'}});
+  else if(env.DB)await env.DB.prepare("INSERT INTO app_meta(key,value_json) VALUES('public_cache_revision',?) ON CONFLICT(key) DO UPDATE SET value_json=excluded.value_json").bind(JSON.stringify(revision)).run();
 }
 export async function readPublicCache(cache,key) {
   if(!cache||!key)return null;

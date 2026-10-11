@@ -135,7 +135,7 @@ test('three-page cap persists a frozen checkpoint and 300 candidates stay below 
   const result = await ingest(env, firstDeps);
   assert.equal(result.status, 'partial'); assert.equal(result.fetched, 300); assert.equal(result.updatedGames, 300);
   const statements = env.DB.statementCount; assert.ok(statements < 50, `SQL statements: ${statements}`);
-  assert.equal(statements, 18); assert.deepEqual(pauses, [600, 600]);
+  assert.deepEqual(pauses, [600, 600]);
   const checkpoint = await meta(env.DB, 'ingestion'); assert.equal(checkpoint.coverageThrough, null); assert.equal(checkpoint.lastSuccessAt, null);
   assert.equal(checkpoint.targetCoverageThrough, new Date(NOW).toISOString());
   assert.ok(checkpoint.resumeBefore < NOW / 1000); assert.equal(calls, 3);

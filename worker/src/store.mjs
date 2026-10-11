@@ -36,7 +36,7 @@ export async function catalog(db, page = null) {
     meta(db, 'catalog'),
     query(db, `SELECT payload_json FROM games WHERE status='published'
       AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id)
-      ${position ? 'AND (updated_at<? OR (updated_at=? AND id>?))' : ''}
+      ${position ? 'AND updated_at<=? AND (updated_at<? OR id>?)' : ''}
       ORDER BY updated_at DESC,id LIMIT ?`, ...(position ? [position[0], position[0], position[1]] : []), limit + 1).all(),
     listCategories(db),
   ]);
@@ -44,10 +44,10 @@ export async function catalog(db, page = null) {
   try {
     const result = validateCatalog({ ...head, categories, games: data.results.slice(0, limit).map(row => JSON.parse(row.payload_json)) });
     if (page) {
-      const total = await query(db, `SELECT count(*) AS count FROM games WHERE status='published'
-        AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id)`).first();
+      const total = await meta(db, 'catalog_total');
+      if (!Number.isSafeInteger(total) || total < 0) throw unavailable();
       const last = result.games.at(-1);
-      result.pagination = { total: total.count, nextCursor: data.results.length > limit
+      result.pagination = { total, nextCursor: data.results.length > limit
         ? btoa(JSON.stringify([last.updatedAt, last.id])).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '') : null };
     }
     result.games = await enrichGames(db, result.games);

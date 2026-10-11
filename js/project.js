@@ -8,16 +8,20 @@ let generation = 0, controller, pending = false, projectId = '', mediaVersion = 
 const fresh = steam => Date.now() - Date.parse(steam.checkedAt) < 36 * 3600000;
 export function storeLabel(steam) {
   if (!steam) return '';
-  const stateLabel = steam.type === 'demo' ? (steam.state === 'released' ? 'Demo on Steam' : 'Upcoming Steam demo') : steam.state === 'released' ? 'Released on Steam' : steam.state === 'coming-soon' ? 'Coming to Steam' : 'On Steam';
+  const stateLabel = steam.type === 'demo' ? (steam.state === 'released' ? 'Demo on Steam' : 'Upcoming Steam demo') : steam.state === 'released' ? (steam.releaseKind==='early-access'?'Early Access on Steam':'Released on Steam') : steam.state === 'coming-soon' ? 'Coming to Steam' : 'On Steam';
   const price = fresh(steam) && steam.priceCents !== null ? steam.isFree ? (steam.type === 'demo' ? 'Free demo' : 'Free to play') : `${money(steam.priceCents)} USD` : '';
   return `<span class="store-badge">${e(stateLabel)}</span>${price ? `<span class="store-price">${e(price)}</span>` : ''}`;
 }
 function renderStore(game) {
-  $('itemDialogStore').innerHTML = game.steam ? `<div class="store-summary">${storeLabel(game.steam)}<small>${fresh(game.steam) ? 'US store' : 'Price needs a refresh'} · checked ${e(dateLabel(game.steam.checkedAt))}</small></div>` : '';
+  const steam=game.steam;
+  const facts=steam?[steam.platforms?.join(', '),steam.releaseDateLabel?`${steam.state==='coming-soon'?'Expected':'Store date'}: ${steam.releaseDateLabel}`:null].filter(Boolean).join(' · '):'';
+  $('itemDialogStore').innerHTML = steam ? `<div class="store-summary">${storeLabel(steam)}${steam.fullGame?`<a class="text-link" href="${e(steam.fullGame.url)}" target="_blank" rel="noopener noreferrer">Full game: ${e(steam.fullGame.title)} ↗</a>`:''}${facts?`<small>${e(facts)}</small>`:''}<small>${fresh(steam) ? 'US store' : 'Price needs a refresh'} · checked ${e(dateLabel(steam.checkedAt))}</small></div>` : '';
 }
 function mediaFor(game) {
   const seen = new Set();
-  return game.posts.flatMap(post => (post.assets || []).map(asset => ({ ...asset, post }))).filter(asset => {
+  const sourceAssets=game.posts.flatMap(post => (post.assets || []).map(asset => ({ ...asset, post })));
+  const storeAssets=(game.steam?.screenshots||[]).map(url=>({kind:'image',url,post:{url:game.steam.url,title:game.steam.title,createdAt:game.steam.checkedAt},sourceLabel:'Steam store'}));
+  return [...sourceAssets,...storeAssets].filter(asset => {
     if (seen.has(asset.url)) return false; seen.add(asset.url); return true;
   }).slice(0, 12);
 }
@@ -29,7 +33,7 @@ function renderMedia(game) {
   const target = $('projectMedia'); target.hidden = !assets.length && game.preview.kind !== 'video';
   target.innerHTML = assets.length ? `<details><summary>Clips &amp; screenshots <span>${assets.length}</span></summary><ul class="media-gallery">${assets.map((asset, index) => `<li>
     <div class="media-player" data-player="${index}">${asset.kind === 'image' ? `<img src="${e(asset.url)}" alt="Screenshot from ${e(asset.post.title)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">` : `<button type="button" class="media-play" data-play-asset="${index}">${asset.posterUrl ? `<img src="${e(asset.posterUrl)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ''}<span>▶ ${asset.kind === 'gif' ? 'Play GIF' : 'Play clip'}</span></button>`}</div>
-    <a href="${e(asset.post.url)}" class="text-link" target="_blank" rel="noopener noreferrer">Original post · ${e(dateLabel(asset.post.createdAt))} ↗</a>
+    <a href="${e(asset.post.url)}" class="text-link" target="_blank" rel="noopener noreferrer">${asset.sourceLabel||'Original post'} · ${e(dateLabel(asset.post.createdAt))} ↗</a>
     ${asset.kind === 'video' ? '<p class="field__hint">Source preview; audio may be unavailable.</p>' : ''}</li>`).join('')}</ul></details>`
     : `<a class="text-link" href="${e(game.preview.sourceUrl)}" target="_blank" rel="noopener noreferrer">Watch the original video on Reddit ↗</a>`;
 }
@@ -50,7 +54,7 @@ export function prepareProject(game) {
     if (current !== generation || state.detail?.id !== game.id || value.gameId !== game.id) return;
     if (value.steam) validateSteam(value.steam, game.projectUrl);
     game.steam = value.steam;
-    renderStore(game);
+    renderStore(game); renderMedia(game);
   }).catch(() => { /* A source link remains usable when store metadata is unavailable. */ });
 }
 export function closeProject() {

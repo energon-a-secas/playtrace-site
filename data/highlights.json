@@ -65,14 +65,16 @@
       "game": {
         "id": "g_1x376pc",
         "title": "Wayward Crown Demo",
-        "summary": "Source post by u/AnywhereOk6003: My indirect-control kingdom game has a free demo. Come break it.",
+        "summary": "Whenever people around my age see my game, they think it's Age of Mythology. But aside from the medieval setting (and the fact that my 3D models are nowhere near as polished), the gameplay is completely different! The game now has a free demo available, so feel free to download it and give it a try! It's an indirect-control kingdom strategy game. You don't have to command your heroes directly. Instead, you focus on building your kingdom, managing its economy, and occasionally placing bounties. The heroes will take care of the rest on their own. The game is still in development, and I'd love…",
         "author": {
           "name": "AnywhereOk6003",
           "url": "https://www.reddit.com/user/AnywhereOk6003/"
         },
         "category": "strategy",
         "stage": "playable",
-        "platforms": [],
+        "platforms": [
+          "Windows"
+        ],
         "tags": [],
         "projectUrl": "https://store.steampowered.com/app/4610750/Wayward_Crown_Demo",
         "firstSeenAt": "2026-10-11T12:38:47.000Z",
@@ -95,7 +97,7 @@
             "flair": "Demo | Project | Workflow",
             "createdAt": "2026-10-11T12:38:47.000Z",
             "kind": "showcase",
-            "excerpt": "Source post by u/AnywhereOk6003: My indirect-control kingdom game has a free demo. Come break it.",
+            "excerpt": "Whenever people around my age see my game, they think it's Age of Mythology. But aside from the medieval setting (and the fact that my 3D models are nowhere near as polished), the gameplay is completely different! The game now has a free demo available, so feel free to download it and give it a try! It's an indirect-control kingdom strategy game. You don't have to command your heroes directly. Instead, you focus on building your kingdom, managing its economy, and occasionally placing bounties. The heroes will take care of the rest on their own. The game is still in development, and I'd love…",
             "assets": [
               {
                 "kind": "image",
@@ -128,12 +130,55 @@
           "title": "Wayward Crown Demo",
           "url": "https://store.steampowered.com/app/4610750/",
           "state": "released",
+          "metadataVersion": 2,
+          "releaseKind": "demo",
+          "description": "Wayward Crown Demo — an early development build for collecting player feedback. Content is limited and bugs are expected. More adventurers, monsters, buildings, and skills are coming. Thank you for trying it and sharing your thoughts!",
+          "platforms": [
+            "Windows"
+          ],
+          "genres": [
+            "Casual",
+            "Indie",
+            "RPG",
+            "Simulation",
+            "Strategy"
+          ],
+          "features": [
+            "Single-player",
+            "Game demo",
+            "Adjustable Text Size",
+            "Custom Volume Controls",
+            "Adjustable Difficulty",
+            "#category_playable_at_your_own_pace",
+            "Playable without Timed Input",
+            "Steam Cloud",
+            "Includes level editor"
+          ],
+          "developers": [
+            "JeffreyChen"
+          ],
+          "publishers": [
+            "JeffreyChen"
+          ],
+          "releaseDateLabel": "May 15, 2026",
+          "fullGame": {
+            "appId": "4609640",
+            "title": "Wayward Crown",
+            "url": "https://store.steampowered.com/app/4609640/"
+          },
+          "screenshots": [
+            "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4610750/8e7714c2149fc74a39486389822beb8c2ad7d8f7/ss_8e7714c2149fc74a39486389822beb8c2ad7d8f7.1920x1080.jpg?t=1791633522",
+            "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4610750/bc3123c0dae0d15a76416a743f9693e540db9357/ss_bc3123c0dae0d15a76416a743f9693e540db9357.1920x1080.jpg?t=1791633522",
+            "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4610750/c7584c1af7990cfca312704d3f2291ccd760be55/ss_c7584c1af7990cfca312704d3f2291ccd760be55.1920x1080.jpg?t=1791633522",
+            "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4610750/0e7fa145f865283259dcb13eaf6b4f76cfa79cb2/ss_0e7fa145f865283259dcb13eaf6b4f76cfa79cb2.1920x1080.jpg?t=1791633522",
+            "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4610750/3aa042be6086e3594e89628482f8c1575f6c13b9/ss_3aa042be6086e3594e89628482f8c1575f6c13b9.1920x1080.jpg?t=1791633522"
+          ],
           "isFree": true,
           "priceCents": 0,
           "originalPriceCents": null,
           "currency": "USD",
           "headerUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4610750/a9a801f23713c28eba76ae43b3ab937d8a8df4bb/header.jpg?t=1791633522",
-          "checkedAt": "2026-10-11T13:18:51.722Z"
+          "checkedAt": "2026-10-11T19:47:56.911Z"
         }
       }
     },
@@ -143,7 +188,7 @@
       "game": {
         "id": "g_1x36ues",
         "title": "Underbloom",
-        "summary": "Source post by u/Certain_Ad9908: 12 year game dev, and this is my first AI game",
+        "summary": "Code & Art are 100% made with AI My role: game design, code architecture, art direction & QA Built solo for the DreamLayer AI game jam in 8 days. You can try it at: Built with: Unity 6, Claude Opus 5.5, DreamLayerAI, and Magnific. More details on how it was built are on the game page.",
         "author": {
           "name": "Certain_Ad9908",
           "url": "https://www.reddit.com/user/Certain_Ad9908/"
@@ -173,7 +218,7 @@
             "flair": "Demo | Project | Workflow",
             "createdAt": "2026-10-11T12:21:13.000Z",
             "kind": "showcase",
-            "excerpt": "Source post by u/Certain_Ad9908: 12 year game dev, and this is my first AI game",
+            "excerpt": "Code & Art are 100% made with AI My role: game design, code architecture, art direction & QA Built solo for the DreamLayer AI game jam in 8 days. You can try it at: Built with: Unity 6, Claude Opus 5.5, DreamLayerAI, and Magnific. More details on how it was built are on the game page.",
             "assets": [
               {
                 "kind": "video",
@@ -261,7 +306,7 @@
             ],
             "createdAt": "2026-10-04T20:12:52.000Z",
             "kind": "showcase",
-            "excerpt": "A dark fantasy text adventure with tactical dice combat, resource management and roguelite progression. Explore through different vessels, carry knowledge between runs and decide when to retreat. The creator shared a browser demo with about two hours of content."
+            "excerpt": "Hi everyone, a solo (non-experienced) developer looking for advice by fellows that are currently having their shot to game dev with AI. As a kid, I loved reading gamebooks, but the \"game\" component was too light: I always wanted the fights in Lone Wolf books to be more tactical and rewarding but most of the time I just went with mindblast or psi-surge (for the fellow Italians out there, it was called Raggio Ramas) and called it a day. This was the starting point when 6 months ago I came up with the idea for The Manor, for which you can play a demo of about 2h of content here \\- if the render…"
           }
         ],
         "reviewStatus": "reviewed",
@@ -335,5 +380,6 @@
         }
       }
     }
-  ]
+  ],
+  "snapshotAt": "2026-10-11T19:51:44.753Z"
 }

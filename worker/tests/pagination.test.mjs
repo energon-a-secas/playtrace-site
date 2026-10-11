@@ -29,3 +29,15 @@ test('catalogue pages cross 2000 projects, preserve tied-date order and exclude 
   }
   env.DB.close();
 });
+test('catalogue total stays transactional across status, tombstone, reimport and deletion changes',async()=>{
+  const env=fixtureEnv(),db=env.DB;await importCatalog(db,fixtureCatalog([fixtureGame('first'),fixtureGame('other')]));
+  const total=async()=> (await catalog(db,{limit:1})).pagination.total;
+  assert.equal(await total(),2);
+  db.sql.exec("UPDATE games SET status='hidden' WHERE id='g_first'");assert.equal(await total(),1);
+  db.sql.exec("UPDATE games SET status='published' WHERE id='g_first'");assert.equal(await total(),2);
+  db.sql.prepare('INSERT INTO removals VALUES(?,?,?,?,?)').run('g_first','["first"]','Removed',new Date(NOW).toISOString(),'operator');
+  assert.equal(await total(),1);
+  db.sql.exec("UPDATE games SET status='removed' WHERE id='g_first'; DELETE FROM games WHERE id='g_first'");assert.equal(await total(),1);
+  await importCatalog(db,fixtureCatalog([fixtureGame('first'),fixtureGame('other')]));assert.equal(await total(),1);
+  db.sql.exec("DELETE FROM games WHERE id='g_other'");assert.equal(await total(),0);db.close();
+});

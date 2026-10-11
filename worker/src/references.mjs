@@ -3,6 +3,8 @@ import { readBytes } from './http.mjs';
 import { decodeEntities } from './archive.mjs';
 import { publicUrl } from './public-fetch.mjs';
 import { applyDetails } from './details.mjs';
+import { refreshSourceRecords } from './source-evidence.mjs';
+import { reviewedSource } from './source-reviews.mjs';
 
 export function extractReferences(raw) {
   const body = typeof raw?.selftext === 'string' ? raw.selftext.slice(0,24000) : '';
@@ -59,12 +61,16 @@ export async function refreshReferences(db, gameId, deps) {
     for (const ref of refs) { const post = linked.find(post=>post.id===ref.postId); if (typeof post?.title==='string' && !/^\[(removed|deleted)\]$/.test(post.title)) ref.title=post.title.slice(0,300); }
   }
   const unique = [...new Map(refs.map(ref=>[ref.url,ref])).values()].slice(0,100);
+  const sources=await refreshSourceRecords(db,raw.filter(post=>ids.includes(post.id)),deps);
   // Commit only after all source reads succeed; never empty a good list on a network failure.
   await db.batch([query(db, 'DELETE FROM project_references WHERE game_id=?', gameId),
     query(db, `INSERT INTO project_references(game_id,url,title,source_post_id)
       SELECT ?,json_extract(value,'$.url'),json_extract(value,'$.title'),json_extract(value,'$.sourcePostId') FROM json_each(?)`, gameId, JSON.stringify(unique))]);
-  const sourceChecks=ids.map(id=>{const post=raw.find(row=>row.id===id);return {id,url:`https://www.reddit.com/r/aigamedev/comments/${id}/`,state:!post?'missing-from-archive':/^\[(deleted|removed)\]$/i.test(post.selftext||'')||/^\[(deleted|removed)\]$/i.test(post.author||'')||post.removed_by_category?'removed-in-archive':'present-in-archive'};});
-  return { references: unique, sourceChecks, checkedPosts: raw.length, totalPosts: game.posts.length, checkedAt: new Date(deps.now()).toISOString() };
+  const sourceChecks=ids.map(id=>{
+    const post=raw.find(row=>row.id===id),review=post?reviewedSource(post,deps.now()).review:null;
+    return {id,url:`https://www.reddit.com/r/aigamedev/comments/${id}/`,state:review?'reviewed-current-source':!post?'missing-from-archive':/^\[(deleted|removed)\]$/i.test(post.selftext||'')||/^\[(deleted|removed)\]$/i.test(post.author||'')||post.removed_by_category?'removed-in-archive':'present-in-archive',...(review?{reviewedAt:review.checkedAt}: {})};
+  });
+  return { references: unique, sources, sourceChecks, checkedPosts: raw.length, totalPosts: game.posts.length, checkedAt: new Date(deps.now()).toISOString() };
 }
 export async function projectContext(db, gameId) {
   const [game] = await applyDetails(db, [await getGame(db, gameId)]);

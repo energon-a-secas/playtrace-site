@@ -21,6 +21,7 @@ import { editDetails } from './details.mjs';
 import { createCategory } from './categories.mjs';
 import { gameStore, refreshSteamBatch } from './steam.mjs';
 import { hydrateMedia } from './assets.mjs';
+import { refreshSourceBatch } from './source-evidence.mjs';
 import { quizInfo, startQuiz, finishQuiz, deleteQuizData, quizMetrics } from './quiz.mjs';
 
 const routes = [
@@ -93,6 +94,8 @@ export function createWorker(overrides = {}) {
   return {
     async fetch(request, env, context) {
       let origin = null;
+      const cache=deps.cache??globalThis.caches?.default;
+      let changedPublic=false;
       try {
         origin = checkOrigin(request, env);
         const url = new URL(request.url);
@@ -107,11 +110,9 @@ export function createWorker(overrides = {}) {
         } }), origin);
         if (!methods.includes(request.method)) return withCors(json({ error: { code: 'INVALID_REQUEST', message: 'Method not allowed.' } }, 405, { Allow: methods.join(', ') }), origin);
         const match = pattern.exec(path);
-        const cache=deps.cache??globalThis.caches?.default;
-        const key=cache?await versionedPublicKey(env.DB,publicCacheKey(request,action)):null;
+        const key=cache?await versionedPublicKey(env,publicCacheKey(request,action)):null;
         const cached=await readPublicCache(cache,key);
         if(cached)return withCors(cached,origin);
-        let changedPublic=request.method!=='GET'&&['editorHighlights','import','ingest','backfill','enrich','adminGame','editorImage','editorDetails','editorMedia','editorCategories','editorJobsRun','editorReposts'].includes(action);
         let result;
         if (action === 'status') result = json(await status(env), 200, { 'Cache-Control': request.headers.has('Authorization') ? 'no-store' : 'public, max-age=60' });
         else if (action === 'catalog') result = json(await catalog(database(env), { limit: url.searchParams.get('pageSize') || 200,
@@ -148,6 +149,7 @@ export function createWorker(overrides = {}) {
         else if (action === 'changeRequest') result = json(await submitChange(database(env), env, request, match[1], await readJson(request), deps), 201);
         else if (action.startsWith('editor')) {
           const admin = await authorizeAdmin(request, env, deps), db = database(env);
+          changedPublic=request.method!=='GET'&&['editorHighlights','editorImage','editorDetails','editorMedia','editorCategories','editorJobsRun','editorReposts'].includes(action);
           if (action === 'editorMe') result = json({ email: admin.email, role: admin.role, integrations: { jev: Boolean(env.JEV_API_KEY), itch: Boolean(env.ITCHIO_API_TOKEN) } });
           else if(action==='editorHighlights') result=json(request.method==='GET'?await getHighlights(db,true):await saveHighlights(db,await readJson(request),admin,deps));
           else if(action==='editorResearchList')result=json(await researchList(db,true));
@@ -178,6 +180,7 @@ export function createWorker(overrides = {}) {
           }
         } else {
           await authenticateOperator(request, env);
+          changedPublic=request.method!=='GET'&&['import','ingest','backfill','enrich','adminGame'].includes(action);
           const db = database(env);
           const body = await readJson(request, action === 'import' ? 2 * 1024 * 1024 : 8192);
           if (action === 'campaign') {
@@ -199,29 +202,37 @@ export function createWorker(overrides = {}) {
             result = json(await removal(db, env.PREVIEWS, match[1], body.reason, new Date(deps.now()).toISOString()));
           } else result = json(await storePreview(db, env, match[1], body, request, deps));
         }
-        if(changedPublic)await invalidatePublicCache(env.DB);
+        if(changedPublic&&cache)await invalidatePublicCache(env);
         const save=writePublicCache(cache,key,result);
         if(context?.waitUntil)context.waitUntil(save);else await save;
         return withCors(result, origin);
-      } catch (error) { return withCors(errorResponse(error), origin); }
+      } catch (error) {
+        // A removal can commit its tombstone before a retryable cleanup fails.
+        if(changedPublic&&cache)try{await invalidatePublicCache(env);}catch{}
+        return withCors(errorResponse(error), origin);
+      }
     },
     async scheduled(event, env, context) {
       const run = (async () => {
+        const maintenance=event?.cron==='5,45 * * * *';
+        const sourceTick=event?.cron==='45 * * * *'||(maintenance&&new Date(event.scheduledTime??deps.now()).getUTCMinutes()===45);
         // Separate invocations keep the complete handler below the D1 budget,
         // including six cold Steam caches and a ten-post media hydration batch.
-        if (event?.cron === '0 3,4 * * 6') { await rotateHighlights(database(env), deps); return; }
-        if (event?.cron === '20 * * * *') { const db=database(env); await queueStoreMaintenance(db,deps); await runJobs(db,env,deps); return; }
-        if (event?.cron === '50 * * * *') { await consolidateReposts(database(env),deps,true,env.PREVIEWS); return; }
-        if (event?.cron === '5 * * * *') {
+        if (event?.cron === '0 3,4 * * 6') return (await rotateHighlights(database(env), deps)).rotated;
+        if (event?.cron === '20 * * * *') { const db=database(env); await queueStoreMaintenance(db,deps); return (await runJobs(db,env,deps)).processed>0; }
+        if (event?.cron === '50 * * * *') return (await consolidateReposts(database(env),deps,true,env.PREVIEWS)).merged>0;
+        if (sourceTick) return ingestionConfigured(env) ? (await refreshSourceBatch(database(env),deps)).updatedGames>0 : false;
+        if (event?.cron === '5 * * * *'||maintenance) {
           const db = database(env);
-          await refreshSteamBatch(db, deps);
+          const steam=await refreshSteamBatch(db, deps);
           const recent = await meta(db, 'ingestion'), history = await meta(db, 'history');
-          if (ingestionConfigured(env) && recent?.state === 'ok' && history?.state === 'ok') await hydrateMedia(env, deps);
-          return;
+          const media=ingestionConfigured(env) && recent?.state === 'ok' && history?.state === 'ok' ? await hydrateMedia(env, deps) : null;
+          return steam.checked>0||media?.checked>0;
         }
         const recent = await ingest(env, deps);
         if (recent.status === 'ok') await ingest(env, deps, true);
-      })().then(async result=>{await invalidatePublicCache(env.DB);return result;});
+        return true; // Coverage/status watermarks changed even with no new posts.
+      })().then(async changed=>{if(changed&&(deps.cache??globalThis.caches?.default))await invalidatePublicCache(env);});
       if (context?.waitUntil) context.waitUntil(run);
       else await run;
     },

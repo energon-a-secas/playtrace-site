@@ -85,6 +85,25 @@ export function validateSteam(steam, projectUrl) {
     const url = new URL(safeUrl(steam.headerUrl));
     if (!['shared.akamai.steamstatic.com', 'shared.fastly.steamstatic.com', 'cdn.akamai.steamstatic.com', 'cdn.cloudflare.steamstatic.com'].includes(url.hostname) || url.port) throw new Error('Invalid store image');
   }
+  if(steam.metadataVersion!==undefined&&steam.metadataVersion!==2)throw new Error('Invalid store metadata version');
+  if(steam.releaseKind!==undefined&&(!['game','demo','early-access'].includes(steam.releaseKind)||(steam.type==='demo')!==(steam.releaseKind==='demo')))throw new Error('Invalid release kind');
+  if(steam.description!==undefined)text(steam.description,600,true);
+  if(steam.releaseDateLabel!=null)text(steam.releaseDateLabel,100,true);
+  for(const key of ['platforms','genres','features','developers','publishers'])if(steam[key]!==undefined){
+    if(!Array.isArray(steam[key])||steam[key].length>20)throw new Error('Invalid store labels');
+    steam[key].forEach(value=>text(value,120));
+  }
+  if(steam.fullGame!=null){
+    if(steam.type!=='demo'||!/^[1-9]\d{0,9}$/.test(steam.fullGame.appId)||steam.fullGame.appId===steam.appId||steam.fullGame.url!==`https://store.steampowered.com/app/${steam.fullGame.appId}/`)throw new Error('Invalid demo parent');
+    text(steam.fullGame.title,300);
+  }
+  if(steam.screenshots!==undefined){
+    if(!Array.isArray(steam.screenshots)||steam.screenshots.length>6)throw new Error('Invalid store screenshots');
+    for(const value of steam.screenshots){
+      const image=new URL(safeUrl(value));
+      if(image.port||!['shared.akamai.steamstatic.com','shared.fastly.steamstatic.com','cdn.akamai.steamstatic.com','cdn.cloudflare.steamstatic.com'].includes(image.hostname))throw new Error('Invalid store screenshot');
+    }
+  }
   return steam;
 }
 export function validateAssets(assets) {

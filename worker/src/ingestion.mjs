@@ -1,6 +1,7 @@
 import { ApiError, unavailable, readBytes } from './http.mjs';
 import { query, meta, putMeta, importCatalog } from './store.mjs';
 import { normalizePost, sourceGame } from './archive.mjs';
+import { refreshSourceRecords } from './source-evidence.mjs';
 import { acquire, release } from './lease.mjs';
 
 export const ARCHIVE_URL = 'https://arctic-shift.photon-reddit.com/api/posts/search';
@@ -148,7 +149,7 @@ export async function ingest(env, deps, historical = false) {
       scannedThrough: previous?.scannedThrough || null, communityCreatedAt: COMMUNITY_CREATED_AT });
     await db.batch([putMeta(db, checkpointKey, run), query(db, 'DELETE FROM rate_limits WHERE expires_at<=?', Math.floor(start / 1000))]);
     let complete = false, pageFailure = false;
-    const seen = new Set(), candidates = [];
+    const seen = new Set(), candidates = [], observations = [];
     // The archive chooses 100–1000 rows for "auto". One historical page avoids
     // spending several rate-limited requests on a batch and caps candidate work.
     const pageLimit = historical ? 1 : 3;
@@ -168,6 +169,7 @@ export async function ingest(env, deps, historical = false) {
         }
         if (typeof raw?.id !== 'string' || seen.has(raw.id)) continue;
         seen.add(raw.id); run.fetched++;
+        if(raw.created_utc>after&&raw.created_utc<=Date.parse(target)/1000)observations.push(raw);
         const candidate = normalizePost(raw, start, { reviewUnlabeled: true });
         if (candidate && raw.created_utc > after && raw.created_utc <= Date.parse(target) / 1000) candidates.push(candidate);
       }
@@ -199,9 +201,9 @@ export async function ingest(env, deps, historical = false) {
         retrievedAt: attemptAt, mode: 'scheduled',
         coverageThrough: historical ? head.source.coverageThrough : run.coverageThrough,
         lastSuccessfulIngestAt: historical ? head.source.lastSuccessfulIngestAt : run.lastSuccessAt } };
-      const imported = await importCatalog(db, { ...finalHead, source: { ...finalHead.source,
+      const imported = plan.changed.length ? await importCatalog(db, { ...finalHead, source: { ...finalHead.source,
         coverageThrough: historical ? head.source.coverageThrough : previous?.coverageThrough || null,
-        lastSuccessfulIngestAt: historical ? head.source.lastSuccessfulIngestAt : previous?.lastSuccessAt || null }, games: plan.changed });
+        lastSuccessfulIngestAt: historical ? head.source.lastSuccessfulIngestAt : previous?.lastSuccessAt || null }, games: plan.changed }) : {importedGames:0};
       const references=candidates.flatMap(candidate=>(candidate.references||[]));
       if(references.length)await query(db,`INSERT INTO project_references(game_id,url,title,source_post_id)
         SELECT p.game_id,json_extract(r.value,'$.url'),json_extract(r.value,'$.title'),p.id
@@ -210,6 +212,9 @@ export async function ingest(env, deps, historical = false) {
         ON CONFLICT(game_id,url) DO UPDATE SET title=excluded.title,source_post_id=excluded.source_post_id`,JSON.stringify(references)).run();
       run.updatedGames = imported.importedGames;
       run.candidates = await savePending(db, plan.pending, attemptAt);
+      const refreshed=await refreshSourceRecords(db,observations,deps);
+      run.refreshedSources=refreshed.checked;
+      run.updatedGames+=refreshed.updatedGames;
     }
     await db.batch([...(finalHead ? [putMeta(db, 'catalog', finalHead)] : []), putMeta(db, checkpointKey, run)]);
     if (run.state === 'error') {

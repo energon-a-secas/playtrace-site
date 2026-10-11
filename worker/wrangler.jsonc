@@ -8,11 +8,12 @@
     "ALLOWED_ORIGINS": "https://playtrace.neorgon.com",
     "CLERK_ISSUER": "https://clerk.neorgon.com",
     "INGESTION_ENABLED": "true",
+    "EDITORIAL_DAILY_LIMIT": "72",
     "SIGNAL_PROTECTION": "account-rate-limit",
     "TURNSTILE_HOSTNAME": "playtrace.neorgon.com",
     "PREVIEW_ALLOWED_HOSTS": "img.itch.zone,i.redd.it,preview.redd.it,external-preview.redd.it,cdn.cloudflare.steamstatic.com,shared.fastly.steamstatic.com,shared.akamai.steamstatic.com,cdn.akamai.steamstatic.com"
   },
-  "triggers": { "crons": ["35 * * * *", "5 * * * *", "20 * * * *", "50 * * * *", "0 3,4 * * 6"] },
+  "triggers": { "crons": ["35 * * * *", "5,45 * * * *", "20 * * * *", "50 * * * *", "0 3,4 * * 6"] },
   "d1_databases": [{ "binding": "DB", "database_name": "playtrace-db", "database_id": "1775b331-55d4-436a-a1c1-a58ab75cc15b", "migrations_dir": "migrations" }],
   "r2_buckets": [{ "binding": "PREVIEWS", "bucket_name": "playtrace-previews" }]
   // Root owns provisioning and secrets. The initial archive window is verified.

@@ -1,0 +1,84 @@
+{
+  "checkedAt": "2026-10-11T19:47:56.911Z",
+  "sourceResult": {
+    "checked": 4,
+    "changed": 4,
+    "updatedGames": 4
+  },
+  "gameCount": 1296,
+  "manualEditsChecked": 1,
+  "previewsChecked": 1296,
+  "statements": 9,
+  "games": [
+    {
+      "id": "g_1x376pc",
+      "title": "Wayward Crown Demo",
+      "sourceState": "available",
+      "bodyCharacters": 885,
+      "retainsReviewedSource": false,
+      "thumbnailUnchanged": true,
+      "manualFieldsUnchanged": true,
+      "descriptionChanged": true,
+      "historyExcerptChanged": true,
+      "steam": {
+        "type": "demo",
+        "platforms": [
+          "Windows"
+        ],
+        "parent": "Wayward Crown",
+        "screenshots": 5
+      }
+    },
+    {
+      "id": "g_1x36ues",
+      "title": "Underbloom",
+      "sourceState": "available",
+      "bodyCharacters": 364,
+      "retainsReviewedSource": false,
+      "thumbnailUnchanged": true,
+      "manualFieldsUnchanged": true,
+      "descriptionChanged": true,
+      "historyExcerptChanged": true,
+      "steam": null
+    },
+    {
+      "id": "g_1wxpc76",
+      "title": "The Manor",
+      "sourceState": "available",
+      "bodyCharacters": 3547,
+      "retainsReviewedSource": true,
+      "thumbnailUnchanged": true,
+      "manualFieldsUnchanged": true,
+      "descriptionChanged": false,
+      "historyExcerptChanged": true,
+      "steam": null
+    },
+    {
+      "id": "g_1x21qj3",
+      "title": "Physical Digivice Game",
+      "sourceState": "available",
+      "bodyCharacters": 1593,
+      "retainsReviewedSource": false,
+      "thumbnailUnchanged": true,
+      "manualFieldsUnchanged": true,
+      "descriptionChanged": true,
+      "historyExcerptChanged": true,
+      "steam": null
+    }
+  ],
+  "productionVerifiedAt": "2026-10-11T19:51:44.753Z",
+  "unchangedTables": [
+    "project_overrides",
+    "preview_overrides",
+    "media_assets",
+    "feedback",
+    "ratings",
+    "research_responses",
+    "price_signals",
+    "follows"
+  ],
+  "productionWrites": {
+    "migrationRows": 2881,
+    "pilotRows": 28
+  }
+}

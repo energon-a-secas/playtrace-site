@@ -5,6 +5,7 @@ import { PROJECT_FLAIR, projectFlair } from './source-policy.mjs';
 import { inferName } from './names.mjs';
 import { extractReferences } from './references.mjs';
 import { projectLinks } from './project-links.mjs';
+import { plainExcerpt, sourceBody } from './source-evidence.mjs';
 
 const unavailableText = value => typeof value === 'string' && /^\[(deleted|removed)\]$/i.test(value.trim());
 export function decodeEntities(value) {
@@ -25,7 +26,7 @@ function previewImage(raw) {
     .sort((a, b) => Math.abs(a.width - 640) - Math.abs(b.width - 640) || b.width - a.width);
   return suitable[0]?.url || safeUrl(image?.source?.url);
 }
-export function normalizePost(raw, nowMs, { reviewUnlabeled = false } = {}) {
+export function normalizePost(raw, nowMs, { reviewUnlabeled = false, knownSource = false } = {}) {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw) || typeof raw.id !== 'string' || !POST_ID.test(raw.id) ||
     !(projectFlair(raw.link_flair_text) || (reviewUnlabeled && raw.link_flair_text == null)) ||
     typeof raw.subreddit !== 'string' || raw.subreddit.toLowerCase() !== 'aigamedev' ||
@@ -37,12 +38,12 @@ export function normalizePost(raw, nowMs, { reviewUnlabeled = false } = {}) {
     /[\x00-\x1f\x7f]/.test(raw.title) || !Number.isFinite(raw.created_utc) || raw.created_utc < 1104537600 ||
     raw.created_utc * 1000 > nowMs + 30000) return null;
   const title = raw.title.trim();
-  const body = typeof raw.selftext === 'string' ? raw.selftext.slice(0, 12000) : '';
+  const body = sourceBody(raw);
   const combined = `${title} ${body}`;
   const gameWords = /\b(game|platformer|roguelike|roguelite|rpg|puzzle|shooter|metroidvania|deckbuilder|dungeon crawler|survival horror|visual novel)\b/i;
   const discussion = /\b(tutorial|workflow|game engine|game generator|game maker|game builder|asset generator|editor|tool|looking for|hiring|commission|course|survey|question|advice|help me|how (do|can|to)|which (ai|model|tool)|anyone (know|recommend))\b/i;
   const assetTool = /\btext[ -]+to[ -]+(assets?|buildings?|models?|3d|textures?|sprites?)\b|\b(generate|generates|generating)\b.{0,30}\b(assets?|buildings?|models?|textures?|sprites?)\b/i;
-  if (!gameWords.test(combined) || discussion.test(title) || assetTool.test(title)) return null;
+  if (!knownSource&&(!gameWords.test(combined) || discussion.test(title) || assetTool.test(title))) return null;
   const source = sourceUrl(raw.id);
   const image = previewImage(raw) ||
     (typeof raw.url === 'string' && /\.(png|jpe?g|webp)(\?|$)/i.test(raw.url) ? safeUrl(raw.url) : null);
@@ -57,7 +58,7 @@ export function normalizePost(raw, nowMs, { reviewUnlabeled = false } = {}) {
   const post = { id: raw.id, url: source, title, author: raw.author, flair: projectFlair(raw.link_flair_text) ? PROJECT_FLAIR : null,
     createdAt: new Date(raw.created_utc * 1000).toISOString(),
     kind: /\b(released|launched|available now)\b/i.test(title) ? 'release' : /\b(update|progress|devlog|added|patch)\b/i.test(title) ? 'update' : 'showcase',
-    excerpt: `Source post by u/${raw.author}: ${title}`.slice(0, 600) };
+    excerpt: plainExcerpt(body) || `Source post by u/${raw.author}: ${title}`.slice(0, 600) };
   const assets = extractAssets(raw);
   post.assets = assets;
   return { post, references: extractReferences(raw), projectUrl, repositoryUrl, name, preview, clear, requiresReview: post.flair === null, authorKey: raw.author.toLowerCase(), taxonomy: classifySource(title, body) };

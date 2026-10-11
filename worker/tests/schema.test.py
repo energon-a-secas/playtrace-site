@@ -33,7 +33,7 @@ class SchemaTests(unittest.TestCase):
         actual = {row[0] for row in self.db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
         self.assertEqual(actual, {
             "ratings", "game_aliases", "project_references", "project_enrichment", "questionnaires", "research_responses", "editorial_jobs", "feedback_reviews",
-            "games", "source_posts", "price_signals", "follows",
+            "games", "source_posts", "source_evidence", "price_signals", "follows",
             "app_meta", "rate_limits", "media_assets", "removals", "feedback",
             "admins", "change_requests", "preview_overrides", "project_overrides", "game_categories", "steam_cache", "quiz_rounds", "quiz_answers",
         })

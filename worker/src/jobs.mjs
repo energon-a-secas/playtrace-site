@@ -65,6 +65,11 @@ export async function runJobs(db, env, deps, limit = 1, kind = 'all') {
   const owner = await acquire(db,'editorial_queue_lock',deps.now(),180000); if (!owner) return { processed:0,busy:true };
   let processed=0;
   try {
+    const day=new Date(deps.now()).toISOString().slice(0,10),savedBudget=await meta(db,'editorial_daily_budget');
+    const budget=savedBudget?.day===day?savedBudget:{day,attempts:0};
+    const configured=Number(env.EDITORIAL_DAILY_LIMIT||72),dailyLimit=Number.isInteger(configured)&&configured>=1&&configured<=200?configured:72;
+    if(budget.attempts>=dailyLimit)return {processed:0,limited:true,retryAt:new Date(Date.parse(day+'T00:00:00.000Z')+86400000).toISOString()};
+    limit=Math.min(limit,dailyLimit-budget.attempts);
     // Recover an interrupted worker; the fixed job ID survives retries.
     await query(db, "UPDATE editorial_jobs SET status='pending' WHERE status='running' AND updated_at<?",new Date(deps.now()-180000).toISOString()).run();
     const cooldown=await meta(db,'editorial_cooldown')||{};
@@ -80,6 +85,10 @@ export async function runJobs(db, env, deps, limit = 1, kind = 'all') {
     let deferred=false;
     for(const job of rows.results){
       const at=new Date(deps.now()).toISOString();
+      // Reserve before fetching; failures also consume the daily budget.
+      // The global queue lease makes these reservations atomic.
+      budget.attempts++;
+      await putMeta(db,'editorial_daily_budget',budget).run();
       await query(db,"UPDATE editorial_jobs SET status='running',attempts=attempts+1,updated_at=? WHERE id=? AND status='pending'",at,job.id).run();
       try{
         let result;
