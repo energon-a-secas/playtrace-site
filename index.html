@@ -265,6 +265,10 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7m0-7L10 14M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5"/></svg>
           <span class="project-icon__label" aria-hidden="true">Original post</span>
         </a>
+        <a id="projectRepository" class="project-icon" target="_blank" rel="noopener noreferrer" aria-label="Source code (opens in a new tab)" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5m8-10 5 5-5 5M14 4l-4 16"/></svg>
+          <span class="project-icon__label" aria-hidden="true">Source code</span>
+        </a>
         <button type="button" class="project-icon" id="shareGame" aria-label="Copy project link">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 13 4-4m-6 5-1 1a4 4 0 0 0 6 6l4-4a4 4 0 0 0 0-6M16 10l1-1a4 4 0 0 0-6-6L7 7a4 4 0 0 0 0 6"/></svg>
           <span class="project-icon__label" aria-hidden="true">Copy link</span>
@@ -282,6 +286,7 @@
     <div class="project-heading">
       <div class="project-heading__text">
         <h2 id="itemDialogTitle">Project details</h2>
+        <p id="itemDialogHeadline" class="project-headline" hidden></p>
         <p id="itemDialogAuthor" class="dialog__author"></p>
       </div>
       <aside class="project-actions" aria-label="Visit or follow this game"><div id="itemDialogLinks"></div><div class="project-follow"><button type="button" class="btn btn--secondary" id="followGame">Follow this game</button><p id="followHint" class="field__hint">Keep its progress in your following list.</p></div></aside>

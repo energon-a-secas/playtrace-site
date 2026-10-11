@@ -43,3 +43,7 @@ The Platform filter describes the linked destination: itch.io, Steam, a code rep
 ## Source inclusion
 
 Posts with the exact Demo | Project | Workflow flair are eligible for automatic inclusion. Older unlabeled game showcases can be included after individual review, with their missing flair preserved and an explicit review marker. Explicitly excluded flairs never qualify for that exception. Apply the same rule to historical imports and existing records. Hide excluded projects without deleting their stored contributions. Cards open project details across the whole surface; independent genre chips apply filters and the Reddit icon opens the latest source post.
+
+## Names and editorial taxonomy
+
+Use the actual game name as the title and the original Reddit headline as supporting context. Prefer verified store metadata, specific project URLs and explicit names in source text; keep uncertain headlines for review. Admin names win over automation. Categories belong to a shared saved registry: administrators can add missing genres from the editing dropdown and reuse them across projects. Clicker is included. Keep playable GitHub Pages URLs separate from the source-code repository, with independent Visit game and Source code actions.

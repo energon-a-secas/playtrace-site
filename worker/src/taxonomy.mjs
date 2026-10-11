@@ -1,4 +1,5 @@
 const GENRES = [
+  ['clicker', /\b(clicker|incremental|idle game)\b/gi],
   ['action', /\b(action|shooter|platformer|fighting)\b/gi],
   ['adventure', /\b(adventure|metroidvania|visual novel)\b/gi],
   ['puzzle', /\bpuzzle\b/gi], ['strategy', /\b(strategy|deckbuilder|tower defense|rts)\b/gi],
@@ -20,7 +21,7 @@ export function classifySource(title, body = '') {
   const combined = `${title}\n${body}`;
   const titleGenres = GENRES.filter(([, pattern]) => affirmative(title, pattern)).map(([name]) => name);
   const genres = titleGenres.length ? titleGenres : GENRES.filter(([, pattern]) => affirmative(combined, pattern)).map(([name]) => name);
-  const category = genres.length === 1 ? genres[0] : 'other';
+  const category = genres.includes('clicker') ? 'clicker' : genres.length === 1 ? genres[0] : 'other';
   const demo = /\b(?:demo|playtest)\b[^.!?\n]{0,50}\b(?:out|available|live|released|playable)\b|\bplayable\b|\b(?:play|try) (?:it|the game|my game) now\b/gi;
   const release = /\b(released|launched|available now)\b|\bfull (?:game|version) is out\b/gi;
   const stage = affirmative(combined, demo, true) ? 'playable' : affirmative(combined, release, true, true) ? 'released' :

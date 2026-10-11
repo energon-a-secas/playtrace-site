@@ -2,6 +2,7 @@ import { unavailable, notFound, invalid } from './http.mjs';
 import { validateCatalog, canonicalProjectUrl } from './validation.mjs';
 import { enrichGames } from './steam.mjs';
 import { includedPost } from './source-policy.mjs';
+import { listCategories } from './categories.mjs';
 
 export function database(env) { if (!env.DB) throw unavailable(); return env.DB; }
 export const query = (db, sql, ...args) => db.prepare(sql).bind(...args);
@@ -30,16 +31,17 @@ export async function catalog(db, page = null) {
         || !Number.isFinite(Date.parse(position[0])) || !/^g_[a-z0-9]{5,12}$/.test(position[1])) throw new Error();
     } catch { throw invalid('Invalid catalogue page.'); }
   }
-  const [head, data] = await Promise.all([
+  const [head, data, categories] = await Promise.all([
     meta(db, 'catalog'),
     query(db, `SELECT payload_json FROM games WHERE status='published'
       AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id)
       ${position ? 'AND (updated_at<? OR (updated_at=? AND id>?))' : ''}
       ORDER BY updated_at DESC,id LIMIT ?`, ...(position ? [position[0], position[0], position[1]] : []), limit + 1).all(),
+    listCategories(db),
   ]);
   if (!head || (!page && data.results.length > 2000)) throw unavailable();
   try {
-    const result = validateCatalog({ ...head, games: data.results.slice(0, limit).map(row => JSON.parse(row.payload_json)) });
+    const result = validateCatalog({ ...head, categories, games: data.results.slice(0, limit).map(row => JSON.parse(row.payload_json)) });
     if (page) {
       const total = await query(db, `SELECT count(*) AS count FROM games WHERE status='published'
         AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id)`).first();
@@ -58,7 +60,11 @@ const eligible = `NOT EXISTS(SELECT 1 FROM removals r WHERE r.game_id=json_extra
 
 export async function importCatalog(db, input) {
   const validated = validateCatalog(input);
-  const { games, ...head } = validated;
+  const { games, categories: suppliedCategories, ...head } = validated;
+  if (suppliedCategories) {
+    const registered=await listCategories(db);
+    if (games.some(game=>!registered.some(category=>category.id===game.category))) throw invalid('Create the category before importing projects that use it.');
+  }
   if (games.some(game => game.posts.some(post => !includedPost(post)))) {
     throw invalid('Sources need the project flair or an individual review of an unlabeled game showcase.');
   }

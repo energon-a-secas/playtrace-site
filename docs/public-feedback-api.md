@@ -4,7 +4,7 @@ This extends the original v1 contract for the user's explicit choice: **read and
 
 ## Catalogue and stable identity
 
-`GET /catalog?pageSize=200&cursor=…` returns the existing schemaVersion 1 catalogue fields plus `pagination: { total, nextCursor }`. Page size is 1–200, default 200. Games sort by newest source update, then ID ascending for ties. The opaque cursor is base64url-encoded `[updatedAt, gameId]`; do not construct it in clients. A null next cursor ends pagination. Counts exclude removed games. The total public catalogue has no 2,000-game cap; individual operator imports remain bounded to 2,000 games.
+`GET /catalog?pageSize=200&cursor=…` returns the existing schemaVersion 1 catalogue fields plus `categories:[{id,label}]` and `pagination: { total, nextCursor }`. Page size is 1–200, default 200. Games sort by newest source update, then ID ascending for ties. The opaque cursor is base64url-encoded `[updatedAt, gameId]`; do not construct it in clients. A null next cursor ends pagination. Counts exclude removed games. The total public catalogue has no 2,000-game cap; individual operator imports remain bounded to 2,000 games.
 
 The client validates each page, renders the first page immediately, and fetches the remaining pages. While incomplete, search, filters, and counts explicitly describe the loaded subset. Rendering expands in groups of 60. Changed revisions, duplicate IDs, invalid totals, and repeated cursors fail visibly; already validated initial pages remain available with a retry. Refreshing a previously complete collection replaces it atomically, including removals. A shared project absent from an incomplete load is not declared removed.
 

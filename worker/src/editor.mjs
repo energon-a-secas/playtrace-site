@@ -5,13 +5,14 @@ import { safePreviewUrl, imageType } from './media.mjs';
 import { enrichGames } from './steam.mjs';
 import { acquire, release } from './lease.mjs';
 import { detailsOf } from './details.mjs';
+import { listCategories } from './categories.mjs';
 
 export async function editorGame(db, id) {
   const source = await getGame(db, id);
   const [game] = await enrichGames(db, [source]);
   const override = await query(db, 'SELECT approved_by,updated_at FROM preview_overrides WHERE game_id=?', id).first();
   const details = await query(db, 'SELECT details_json,updated_at,revision FROM project_overrides WHERE game_id=?', id).first();
-  return { game, sourcePreview: source.preview, override: override ? { updatedAt: override.updated_at } : null,
+  return { game, categories: await listCategories(db), sourcePreview: source.preview, override: override ? { updatedAt: override.updated_at } : null,
     sourceDetails: detailsOf(source), detailsRevision: details?.revision || 0,
     detailsOverride: details && Object.keys(JSON.parse(details.details_json)).length ? { updatedAt: details.updated_at } : null };
 }

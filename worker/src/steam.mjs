@@ -1,30 +1,25 @@
+import { steamAppId, nameForGame } from './names.mjs';
+export { steamAppId } from './names.mjs';
 import { readBytes } from './http.mjs';
 import { query, getGame } from './store.mjs';
 import { acquire, release } from './lease.mjs';
 import { applyDetails } from './details.mjs';
 
 export const STEAM_IMAGE_HOSTS = ['shared.akamai.steamstatic.com', 'shared.fastly.steamstatic.com', 'cdn.akamai.steamstatic.com', 'cdn.cloudflare.steamstatic.com'];
-export function steamAppId(value) {
-  try {
-    const url = new URL(value);
-    if (url.protocol !== 'https:' || url.hostname !== 'store.steampowered.com' || url.port || url.username || url.password) return null;
-    return /^\/app\/([1-9]\d{0,9})(?:\/|$)/.exec(url.pathname)?.[1] || null;
-  } catch { return null; }
-}
 function steamImage(value) {
   try { const u = new URL(value); return u.protocol === 'https:' && !u.port && !u.username && !u.password && STEAM_IMAGE_HOSTS.includes(u.hostname) ? u.href : null; }
   catch { return null; }
 }
 export function normalizeSteam(payload, appId, now) {
   const entry = payload?.[appId], data = entry?.data;
-  if (entry?.success !== true || !data || String(data.steam_appid) !== appId || data.type !== 'game'
+  if (entry?.success !== true || !data || String(data.steam_appid) !== appId || !['game','demo'].includes(data.type)
     || typeof data.name !== 'string' || !data.name.trim() || data.name.length > 300 || typeof data.is_free !== 'boolean') return null;
   const state = data.release_date?.coming_soon === false ? 'released' : data.release_date?.coming_soon === true ? 'coming-soon' : 'listed';
   const p = data.price_overview;
   const validPrice = state === 'released' && p?.currency === 'USD' && Number.isInteger(p.final) && p.final >= 0 && p.final <= 1000000;
   const free = state === 'released' && data.is_free === true;
   const cents = free ? 0 : validPrice ? p.final : null;
-  return { appId, title: data.name, url: `https://store.steampowered.com/app/${appId}/`, state,
+  return { appId, type: data.type, title: data.name, url: `https://store.steampowered.com/app/${appId}/`, state,
     isFree: free, priceCents: cents, originalPriceCents: validPrice && Number.isInteger(p.initial) && p.initial > cents && p.initial <= 1000000 ? p.initial : null,
     currency: cents === null ? null : 'USD', headerUrl: steamImage(data.header_image), checkedAt: new Date(now).toISOString() };
 }
@@ -71,7 +66,9 @@ export async function refreshSteamBatch(db, deps) {
   return { checked: due.length, remaining: ids.filter(id => (retry.get(id) || 0) <= deps.now()).length - due.length };
 }
 export async function enrichGames(db, games) {
-  games = await applyDetails(db, games);
+  const originals = new Map(games.map(game => [game.id, game]));
+  const editedTitles = new Set();
+  games = await applyDetails(db, games, (id, details) => { if (Object.hasOwn(details, 'title')) editedTitles.add(id); });
   const [overrides, cache] = await db.batch([
     query(db, 'SELECT game_id,preview_json FROM preview_overrides WHERE game_id IN(SELECT value FROM json_each(?))', JSON.stringify(games.map(game => game.id))),
     query(db, 'SELECT app_id,payload_json FROM steam_cache WHERE app_id IN(SELECT value FROM json_each(?))', JSON.stringify([...new Set(games.map(game => steamAppId(game.projectUrl)).filter(Boolean))])),
@@ -84,6 +81,8 @@ export async function enrichGames(db, games) {
     const preview = override && game.posts.some(post => post.url === override.sourceUrl) ? override
       : game.preview.storage === 'r2' || !steam?.headerUrl ? game.preview
         : { ...game.preview, kind: 'image', url: steam.headerUrl, posterUrl: null, alt: `${steam.title} · Steam store artwork` };
-    return { ...game, preview, ...(steam ? { steam } : {}) };
+    const source = originals.get(game.id);
+    const name = !editedTitles.has(game.id) && game.projectUrl === source.projectUrl ? nameForGame(source, {steamTitle: steam?.title}) : null;
+    return { ...game, ...(name ? {title: name.title} : {}), preview, ...(steam ? { steam } : {}) };
   });
 }

@@ -1,6 +1,9 @@
 import { updateQuery } from './neorgon-navigation.js';
+import { DEFAULT_CATEGORIES, validCategoryId, validateCategories } from './categories.js';
 
-export const categories = ['action', 'adventure', 'puzzle', 'strategy', 'rpg', 'simulation', 'arcade', 'other'];
+export const categories = DEFAULT_CATEGORIES.map(category=>category.id);
+export const categoryChoices = catalog => catalog?.categories || DEFAULT_CATEGORIES;
+export const categoryLabel = (id, catalog) => categoryChoices(catalog).find(category=>category.id===id)?.label || id.replaceAll('-', ' ');
 export const stages = ['concept', 'prototype', 'playable', 'released', 'unknown'];
 // Distribution describes the linked destination, separately from devices and release stage.
 export const projectPlatforms = Object.freeze([
@@ -72,6 +75,7 @@ export function validateSteam(steam, projectUrl) {
     || !['released', 'coming-soon', 'listed'].includes(steam.state) || typeof steam.isFree !== 'boolean') throw new Error('Invalid store details');
   const project = new URL(safeUrl(projectUrl));
   if (project.hostname !== 'store.steampowered.com' || !new RegExp(`^/app/${steam.appId}(?:/|$)`).test(project.pathname)) throw new Error('Mismatched store listing');
+  if (steam.type !== undefined && !['game','demo'].includes(steam.type)) throw new Error('Invalid store type');
   text(steam.title, 300); date(steam.checkedAt);
   for (const amount of [steam.priceCents, steam.originalPriceCents]) {
     if (amount !== null && (!Number.isInteger(amount) || amount < 0 || amount > 1000000)) throw new Error('Invalid store price');
@@ -99,6 +103,7 @@ export function validateAssets(assets) {
 export function validateCatalog(value) {
   if (value?.schemaVersion !== 1 || !Array.isArray(value.games) || value.source?.subreddit !== 'aigamedev') throw new Error('Invalid catalogue');
   const source = value.source;
+  const categoryOptions = validateCategories(value.categories);
   if (safeUrl(source.subredditUrl) !== 'https://www.reddit.com/r/aigamedev/') throw new Error('Invalid source community');
   safeUrl(source.archiveUrl, true);
   date(source.retrievedAt); date(source.coverageThrough, true); date(source.lastSuccessfulIngestAt, true); date(value.generatedAt);
@@ -110,10 +115,11 @@ export function validateCatalog(value) {
     text(game.title, 160); text(game.summary, 600); text(game.author?.name, 80); safeUrl(game.author?.url);
     if (!/^[A-Za-z0-9_-]{3,32}$/.test(game.author.name)
       || game.author.url.toLowerCase() !== `https://www.reddit.com/user/${game.author.name.toLowerCase()}/`) throw new Error('Invalid source author');
-    if (!categories.includes(game.category) || !stages.includes(game.stage)) throw new Error('Invalid game category');
+    if (!categoryOptions.some(category=>category.id===game.category) || !stages.includes(game.stage)) throw new Error('Invalid game category');
     if (!Array.isArray(game.tags) || game.tags.length > 12 || !Array.isArray(game.platforms) || game.platforms.length > 8) throw new Error('Invalid game tags');
     game.tags.forEach(tag => text(tag, 40)); game.platforms.forEach(platform => text(platform, 80));
-    safeUrl(game.projectUrl, true); date(game.firstSeenAt); date(game.updatedAt);
+    safeUrl(game.projectUrl, true);
+    if (game.repositoryUrl != null) { const repo=new URL(safeUrl(game.repositoryUrl)); if(repo.port || !['github.com','gitlab.com','codeberg.org'].includes(repo.hostname) || !/^\/[^/]+\/[^/]+\/?$/.test(repo.pathname)) throw new Error('Invalid repository URL'); } date(game.firstSeenAt); date(game.updatedAt);
     if (game.steam != null) validateSteam(game.steam, game.projectUrl);
     const preview = game.preview;
     if (!preview || !['image', 'video', 'link'].includes(preview.kind) || !['external', 'r2'].includes(preview.storage)
@@ -133,11 +139,11 @@ export function validateCatalog(value) {
     if (game.reviewStatus != null && !['reviewed', 'source-described'].includes(game.reviewStatus)) throw new Error('Invalid review status');
     return { ...game, distribution: distributionFor(game.projectUrl), reviewStatus: game.reviewStatus || 'reviewed', posts: [...game.posts].sort((a, b) => b.createdAt.localeCompare(a.createdAt)) };
   });
-  return { ...value, games };
+  return { ...value, categories: categoryOptions, games };
 }
 export function readLocation(url, preferredView = 'grid') {
   const p = new URL(url).searchParams;
-  return { query: (p.get('q') || '').slice(0, 200), category: categories.includes(p.get('cat')) ? p.get('cat') : 'all',
+  return { query: (p.get('q') || '').slice(0, 200), category: validCategoryId(p.get('cat')) ? p.get('cat') : 'all',
     platform: projectPlatforms.some(entry => entry.id === p.get('platform')) ? p.get('platform') : 'all',
     stage: stages.includes(p.get('stage')) ? p.get('stage') : 'all', author: (p.get('author') || '').slice(0, 80),
     following: p.get('following') === '1', sort: ['newest', 'oldest', 'name', 'updates'].includes(p.get('sort')) ? p.get('sort') : 'newest',
@@ -157,7 +163,7 @@ export function selectGames(games, state) {
     && (state.stage === 'all' || game.stage === state.stage)
     && (!state.author || game.author.name.toLowerCase() === state.author.toLowerCase())
     && (!state.following || state.follows.includes(game.id))
-    && [game.title, game.summary, game.author.name, game.category, game.distribution?.label || '', ...game.tags, ...game.platforms].join(' ').toLocaleLowerCase().includes(query));
+    && [game.title, game.summary, game.author.name, game.category, categoryLabel(game.category, state.catalog), game.distribution?.label || '', ...game.tags, ...game.platforms].join(' ').toLocaleLowerCase().includes(query));
   if (state.sort === 'name') result.sort((a, b) => a.title.localeCompare(b.title));
   else if (state.sort === 'updates') result.sort((a, b) => b.posts.length - a.posts.length || b.updatedAt.localeCompare(a.updatedAt));
   else result.sort((a, b) => state.sort === 'oldest' ? a.firstSeenAt.localeCompare(b.firstSeenAt) : b.updatedAt.localeCompare(a.updatedAt));
@@ -173,3 +179,9 @@ export function parsePrice(value) {
   const cents = Math.round(Number(value) * 100);
   return Number.isInteger(cents) && cents >= 0 && cents <= 10000 ? cents : null;
 }
+
+export function sourceHeadline(game) {
+  const post = game.posts.find(post => `g_${post.id}` === game.id) || game.posts[0];
+  return post && post.title.toLocaleLowerCase() !== game.title.toLocaleLowerCase() ? post.title : '';
+}
+export const sourceOnlySummary = game => game.summary.startsWith(`Source post by u/${game.author.name}: `);

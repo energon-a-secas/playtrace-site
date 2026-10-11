@@ -11,6 +11,7 @@ import { adminConfigured, authorizeAdmin, members } from './admin.mjs';
 import { submitChange, inbox, resolveChange } from './requests.mjs';
 import { editorGame, editPreview } from './editor.mjs';
 import { editDetails } from './details.mjs';
+import { createCategory } from './categories.mjs';
 import { gameStore, refreshSteamBatch } from './steam.mjs';
 import { hydrateMedia } from './assets.mjs';
 import { quizInfo, startQuiz, finishQuiz, deleteQuizData, quizMetrics } from './quiz.mjs';
@@ -36,6 +37,7 @@ const routes = [
   [/^\/admin\/enrich$/, ['POST'], 'enrich'],
   [/^\/admin\/me$/, ['GET'], 'editorMe'],
   [/^\/admin\/members$/, ['GET', 'PUT'], 'editorMembers'],
+  [/^\/admin\/categories$/, ['POST'], 'editorCategories'],
   [/^\/admin\/requests$/, ['GET'], 'editorInbox'],
   [/^\/admin\/requests\/([a-f0-9-]{36})$/, ['PUT'], 'editorRequest'],
   [/^\/admin\/games\/(g_[a-z0-9]{5,12})$/, ['GET'], 'editorGame'],
@@ -107,6 +109,7 @@ export function createWorker(overrides = {}) {
           const admin = await authorizeAdmin(request, env, deps), db = database(env);
           if (action === 'editorMe') result = json({ email: admin.email, role: admin.role });
           else if (action === 'editorMembers') result = json(await members(db, admin, request.method === 'PUT' ? await readJson(request) : undefined));
+          else if (action === 'editorCategories') result = json(await createCategory(db, await readJson(request), admin, deps));
           else if (action === 'editorInbox') result = json(await inbox(db, url.searchParams.get('status'), url.searchParams.get('cursor')));
           else if (action === 'editorQuiz') result = json(await quizMetrics(db));
           else if (action === 'editorRequest') result = json(await resolveChange(db, match[1], await readJson(request), admin, deps));

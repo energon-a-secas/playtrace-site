@@ -1,11 +1,11 @@
 import { exactKeys, invalid } from './http.mjs';
 import { validateAssets } from './assets.mjs';
 import { REVIEWED_UNLABELED } from './source-policy.mjs';
+import { DEFAULT_CATEGORIES, validateCategories } from '../../js/categories.js';
 
 export const GAME_ID = /^g_[a-z0-9]{5,12}$/;
 export const POST_ID = /^[a-z0-9]{5,12}$/;
 export const AUTHOR = /^[A-Za-z0-9_-]{3,32}$/;
-const CATEGORIES = ['action', 'adventure', 'puzzle', 'strategy', 'rpg', 'simulation', 'arcade', 'other'];
 const STAGES = ['concept', 'prototype', 'playable', 'released', 'unknown'];
 export function text(value, max, min = 1) {
   if (typeof value !== 'string' || value.trim().length < min || value.length > max || /[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(value)) throw invalid();
@@ -52,16 +52,20 @@ export function validatePost(post, author) {
   text(post.title, 300); text(post.excerpt, 600, 0); iso(post.createdAt);
   if (!['showcase', 'update', 'release'].includes(post.kind)) throw invalid();
 }
-export function validateGame(game) {
+export function validateGame(game, categoryOptions = DEFAULT_CATEGORIES) {
   const required = ['id', 'title', 'summary', 'author', 'category', 'tags', 'stage', 'platforms', 'projectUrl', 'firstSeenAt', 'updatedAt', 'preview', 'posts'];
-  exactKeys(game, Object.hasOwn(game || {}, 'reviewStatus') ? [...required, 'reviewStatus'] : required);
+  exactKeys(game, [...required, ...(Object.hasOwn(game || {}, 'reviewStatus') ? ['reviewStatus'] : []), ...(Object.hasOwn(game || {}, 'repositoryUrl') ? ['repositoryUrl'] : [])]);
+  if (game.repositoryUrl != null) {
+    const repo = new URL(httpsUrl(game.repositoryUrl));
+    if (repo.port || !['github.com','gitlab.com','codeberg.org'].includes(repo.hostname) || !/^\/[^/]+\/[^/]+\/?$/.test(repo.pathname)) throw invalid('Use a source-code repository URL.');
+  }
   if (game.reviewStatus !== undefined && !['reviewed', 'source-described'].includes(game.reviewStatus)) throw invalid();
   if (typeof game.id !== 'string' || !GAME_ID.test(game.id)) throw invalid();
   text(game.title, 160); text(game.summary, 600);
   exactKeys(game.author, ['name', 'url']);
   if (typeof game.author.name !== 'string' || !AUTHOR.test(game.author.name) || game.author.name.toLowerCase() === 'automoderator' ||
     game.author.url !== `https://www.reddit.com/user/${game.author.name}/`) throw invalid();
-  if (!CATEGORIES.includes(game.category) || !STAGES.includes(game.stage)) throw invalid();
+  if (!categoryOptions.some(category=>category.id===game.category) || !STAGES.includes(game.stage)) throw invalid();
   stringList(game.tags, 12, 40); stringList(game.platforms, 8, 40);
   httpsUrl(game.projectUrl, true); iso(game.firstSeenAt); iso(game.updatedAt);
   if (!Array.isArray(game.posts) || game.posts.length < 1 || game.posts.length > 1000) throw invalid();
@@ -82,7 +86,9 @@ export function validateGame(game) {
   return game;
 }
 export function validateCatalog(catalog) {
-  exactKeys(catalog, ['schemaVersion', 'generatedAt', 'source', 'games']);
+  exactKeys(catalog, ['schemaVersion', 'generatedAt', 'source', 'games', ...(Object.hasOwn(catalog || {},'categories') ? ['categories'] : [])]);
+  let categoryOptions;
+  try { categoryOptions=validateCategories(catalog.categories); } catch { throw invalid('Invalid category list.'); }
   if (catalog.schemaVersion !== 1) throw invalid('Unsupported catalogue version.');
   iso(catalog.generatedAt);
   const source = catalog.source;
@@ -93,7 +99,7 @@ export function validateCatalog(catalog) {
   if (!Array.isArray(catalog.games) || catalog.games.length > 2000) throw invalid();
   const games = new Set(), posts = new Set();
   for (const game of catalog.games) {
-    validateGame(game);
+    validateGame(game,categoryOptions);
     if (games.has(game.id)) throw invalid('Duplicate game ID.');
     games.add(game.id);
     for (const post of game.posts) {

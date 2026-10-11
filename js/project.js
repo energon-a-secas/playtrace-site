@@ -8,8 +8,8 @@ let generation = 0, controller, pending = false, projectId = '', mediaVersion = 
 const fresh = steam => Date.now() - Date.parse(steam.checkedAt) < 36 * 3600000;
 export function storeLabel(steam) {
   if (!steam) return '';
-  const stateLabel = steam.state === 'released' ? 'Released on Steam' : steam.state === 'coming-soon' ? 'Coming to Steam' : 'On Steam';
-  const price = fresh(steam) && steam.priceCents !== null ? steam.isFree ? 'Free to play' : `${money(steam.priceCents)} USD` : '';
+  const stateLabel = steam.type === 'demo' ? (steam.state === 'released' ? 'Demo on Steam' : 'Upcoming Steam demo') : steam.state === 'released' ? 'Released on Steam' : steam.state === 'coming-soon' ? 'Coming to Steam' : 'On Steam';
+  const price = fresh(steam) && steam.priceCents !== null ? steam.isFree ? (steam.type === 'demo' ? 'Free demo' : 'Free to play') : `${money(steam.priceCents)} USD` : '';
   return `<span class="store-badge">${e(stateLabel)}</span>${price ? `<span class="store-price">${e(price)}</span>` : ''}`;
 }
 function renderStore(game) {

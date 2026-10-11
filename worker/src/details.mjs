@@ -1,15 +1,20 @@
 import { ApiError, exactKeys, invalid } from './http.mjs';
 import { validateGame } from './validation.mjs';
 import { query, getGame } from './store.mjs';
+import { listCategories } from './categories.mjs';
 
-export const DETAIL_FIELDS = ['title', 'summary', 'category', 'stage', 'projectUrl', 'tags', 'platforms'];
-export const detailsOf = game => Object.fromEntries(DETAIL_FIELDS.map(key => [key, game[key]]));
+export const DETAIL_FIELDS = ['title', 'summary', 'category', 'stage', 'projectUrl', 'repositoryUrl', 'tags', 'platforms'];
+export const detailsOf = game => Object.fromEntries(DETAIL_FIELDS.map(key => [key, game[key] ?? null]));
 
-export async function applyDetails(db, games) {
+export async function applyDetails(db, games, onOverride = () => {}) {
   if (!games.length) return games;
   const rows = await query(db, 'SELECT game_id,details_json FROM project_overrides WHERE game_id IN(SELECT value FROM json_each(?))', JSON.stringify(games.map(game => game.id))).all();
   const overrides = new Map(rows.results.map(row => [row.game_id, JSON.parse(row.details_json)]));
-  return games.map(game => ({ ...game, ...overrides.get(game.id) }));
+  return games.map(game => {
+    const details = overrides.get(game.id);
+    if (details) onOverride(game.id, details);
+    return { ...game, ...details };
+  });
 }
 
 export async function editDetails(db, id, body, admin, deps) {
@@ -20,13 +25,15 @@ export async function editDetails(db, id, body, admin, deps) {
   if (!Number.isSafeInteger(body.revision) || body.revision < 0) throw invalid();
   let details = {};
   if (body.mode === 'edit') {
-    exactKeys(body.details, DETAIL_FIELDS);
-    validateGame({ ...source, ...body.details });
+    const categories=await listCategories(db);
+    exactKeys(body.details, DETAIL_FIELDS.filter(key => key !== 'repositoryUrl' || Object.hasOwn(body.details || {}, key)));
+    body.details = {...body.details, repositoryUrl: body.details.repositoryUrl === undefined ? (await applyDetails(db, [source]))[0].repositoryUrl || null : body.details.repositoryUrl};
+    validateGame({ ...source, ...body.details }, categories);
     details = Object.fromEntries(DETAIL_FIELDS.map(key => [key,
       typeof body.details[key] === 'string' ? body.details[key].trim() : body.details[key]]));
     // Reject whitespace-only or duplicate labels after trimming as well.
     for (const key of ['tags', 'platforms']) details[key] = details[key].map(value => value.trim());
-    validateGame({ ...source, ...details });
+    validateGame({ ...source, ...details }, categories);
   }
   const now = new Date(deps.now()).toISOString();
   const row = await query(db, `INSERT INTO project_overrides(game_id,details_json,updated_by,updated_at,revision)

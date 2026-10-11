@@ -142,7 +142,15 @@
               <div class="field details-wide"><label for="detailsTitle">Game title</label><input id="detailsTitle" class="input" required maxlength="160" autocomplete="off"></div>
               <div class="field details-wide"><label for="detailsSummary">Description</label><textarea id="detailsSummary" class="input" rows="3" maxlength="600" required></textarea><p class="field__hint">Describe the game in a few sentences. Original post titles and creator credits stay in the history.</p></div>
               <div class="field details-wide"><label for="detailsUrl">Game or store URL</label><input id="detailsUrl" class="input" type="url" maxlength="2048" placeholder="https://…"><p class="field__hint">Leave blank if there is no public build or store page. Steam and itch.io labels follow this link.</p></div>
-              <div class="field"><label for="detailsCategory">Genre</label><select id="detailsCategory" class="select"><option value="action">Action</option><option value="adventure">Adventure</option><option value="puzzle">Puzzle</option><option value="strategy">Strategy</option><option value="rpg">RPG</option><option value="simulation">Simulation</option><option value="arcade">Arcade</option><option value="other">Other</option></select></div>
+              <div class="field details-wide"><label for="detailsRepository">Source-code repository <span class="field-optional">(optional)</span></label><input id="detailsRepository" class="input" type="url" maxlength="2048" placeholder="https://github.com/maker/game"><p class="field__hint">Keep the playable github.io address in Game or store URL, and the code repository here.</p></div>
+              <div class="field"><label for="detailsCategory">Category</label><select id="detailsCategory" class="select" aria-controls="newCategoryPanel"></select>
+                <div id="newCategoryPanel" class="new-category" hidden>
+                  <label for="newCategoryName">New category name</label><input id="newCategoryName" class="input" maxlength="48" autocomplete="off" placeholder="e.g. Idle RPG" aria-describedby="newCategoryHint">
+                  <p id="newCategoryHint" class="field__hint">Saved to the shared list for every project.</p>
+                  <div class="admin-inline"><button id="addCategory" type="button" class="btn btn--secondary">Add category</button><button id="cancelCategory" type="button" class="text-button">Cancel</button></div>
+                </div>
+                <p id="categoryMessage" role="status" aria-live="polite"></p>
+              </div>
               <div class="field"><label for="detailsStage">Development stage</label><select id="detailsStage" class="select"><option value="concept">Concept</option><option value="prototype">Prototype</option><option value="playable">Playable</option><option value="released">Released</option><option value="unknown">Unspecified</option></select></div>
               <div class="field"><label for="detailsPlatforms">Devices</label><input id="detailsPlatforms" class="input" maxlength="326" placeholder="Browser, Windows, macOS"><p class="field__hint">Separate with commas; up to 8 devices.</p></div>
               <div class="field"><label for="detailsTags">Tags</label><input id="detailsTags" class="input" maxlength="490" placeholder="Co-op, exploration, pixel art"><p class="field__hint">Separate with commas; up to 12 tags.</p></div>
@@ -159,7 +167,7 @@
             <form id="imageForm" class="editor-form">
               <div class="field"><label for="imageUrl">Image URL</label><input id="imageUrl" class="input" type="url" maxlength="2048" placeholder="https://…"><p class="field__hint">Reddit or Steam artwork. A custom selection stays in place when the archive refreshes.</p></div>
               <div class="field"><label for="imageFile">Or upload an image</label><input id="imageFile" type="file" accept="image/png,image/jpeg,image/webp"><p class="field__hint">PNG, JPEG or WebP. Large images are resized before upload.</p></div>
-              <label class="permission-check" id="imagePermissionLabel" hidden><input type="checkbox" id="imagePermission">I have permission to use this image.</label>
+              <label class="permission-check" id="imagePermissionLabel" hidden><input type="checkbox" id="imagePermission" checked>I have permission to use this image.</label>
               <div class="field"><label for="imageAlt">Describe the image</label><input id="imageAlt" class="input" maxlength="300" required><p class="field__hint">A short description for people using screen readers.</p></div>
               <div class="field"><label for="imageSource">Original post</label><select id="imageSource" class="select"></select></div>
               <div class="admin-inline"><button class="btn btn--primary" type="submit" id="saveImage">Save image</button><button class="text-button" type="button" id="resetImage">Restore automatic preview</button></div>

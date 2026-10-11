@@ -1,7 +1,9 @@
-import { AUTHOR, POST_ID, sourceUrl, httpsUrl, canonicalProjectUrl } from './validation.mjs';
+import { AUTHOR, POST_ID, sourceUrl, httpsUrl } from './validation.mjs';
 import { classifySource } from './taxonomy.mjs';
 import { extractAssets } from './assets.mjs';
 import { PROJECT_FLAIR, projectFlair } from './source-policy.mjs';
+import { inferName } from './names.mjs';
+import { projectLinks } from './project-links.mjs';
 
 const unavailableText = value => typeof value === 'string' && /^\[(deleted|removed)\]$/i.test(value.trim());
 export function decodeEntities(value) {
@@ -21,21 +23,6 @@ function previewImage(raw) {
     .map(item => ({ width: item.width, url: safeUrl(item.url) })).filter(item => item.url)
     .sort((a, b) => Math.abs(a.width - 640) - Math.abs(b.width - 640) || b.width - a.width);
   return suitable[0]?.url || safeUrl(image?.source?.url);
-}
-function projectLink(raw) {
-  const body = typeof raw.selftext === 'string' ? raw.selftext.slice(0, 12000) : '';
-  const links = [raw.url, ...(body.match(/https:\/\/[^\s<>"\[\]()]+/g) || []).slice(0, 15)];
-  for (const link of links) {
-    const candidate = canonicalProjectUrl(safeUrl(typeof link === 'string' ? link.replace(/[.,]+$/, '') : link));
-    if (!candidate) continue;
-    const url = new URL(candidate);
-    const knownGame = (url.hostname === 'store.steampowered.com' && /^\/app\/\d+(?:\/|$)/.test(url.pathname)) ||
-      (url.hostname.endsWith('.itch.io') && url.pathname.length > 1);
-    const position = body.indexOf(link);
-    const context = position >= 0 ? body.slice(Math.max(0, position - 100), position) : '';
-    if (knownGame || /\b(play|game|demo|download)\b/i.test(context)) return candidate;
-  }
-  return null;
 }
 export function normalizePost(raw, nowMs, { reviewUnlabeled = false } = {}) {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw) || typeof raw.id !== 'string' || !POST_ID.test(raw.id) ||
@@ -61,7 +48,8 @@ export function normalizePost(raw, nowMs, { reviewUnlabeled = false } = {}) {
   const video = Boolean(raw.is_video || raw.media?.reddit_video || raw.secure_media?.reddit_video);
   const preview = { kind: video ? 'video' : image ? 'image' : 'link', url: video ? source : image,
     posterUrl: video ? image : null, alt: title, storage: 'external', rights: 'source-linked', sourceUrl: source };
-  const projectUrl = projectLink(raw);
+  const {projectUrl, repositoryUrl} = projectLinks(raw);
+  const name = inferName({title, body, projectUrl});
   const firstPerson = /\b(i|i've|i’m|i'm|my|we|we've|we’re|we're|our)\b.{0,100}\b(made|built|building|game|released|working|prototype|develop|created|finished|launch)/i.test(combined) ||
     /\b(made|built|released|created|finished)\b.{0,50}\b(my|our|a game)\b/i.test(title);
   const clear = title.length <= 160 && gameWords.test(title) && firstPerson && Boolean(projectUrl || image || video) && !discussion.test(title);
@@ -71,12 +59,12 @@ export function normalizePost(raw, nowMs, { reviewUnlabeled = false } = {}) {
     excerpt: `Source post by u/${raw.author}: ${title}`.slice(0, 600) };
   const assets = extractAssets(raw);
   post.assets = assets;
-  return { post, projectUrl, preview, clear, requiresReview: post.flair === null, authorKey: raw.author.toLowerCase(), taxonomy: classifySource(title, body) };
+  return { post, projectUrl, repositoryUrl, name, preview, clear, requiresReview: post.flair === null, authorKey: raw.author.toLowerCase(), taxonomy: classifySource(title, body) };
 }
 export function sourceGame(candidate) {
   const { post, projectUrl, preview } = candidate;
-  return { id: `g_${post.id}`, title: post.title, summary: post.excerpt,
+  return { id: `g_${post.id}`, title: candidate.name?.title || post.title, summary: post.excerpt,
     author: { name: post.author, url: `https://www.reddit.com/user/${post.author}/` },
-    ...candidate.taxonomy, tags: [], projectUrl,
+    ...candidate.taxonomy, tags: [], projectUrl, repositoryUrl: candidate.repositoryUrl || null,
     firstSeenAt: post.createdAt, updatedAt: post.createdAt, preview, posts: [post], reviewStatus: 'source-described' };
 }

@@ -575,6 +575,11 @@ dialog.dialog { background: var(--pt-paper); color: var(--pt-text); border: 1px 
 .details-wide { grid-column: 1/-1; }
 .details-fields .input, .details-fields .select { width: 100%; min-width: 0; }
 .details-fields textarea { resize: vertical; }
+.new-category { margin-top: 12px; padding: 16px; border: 1px solid var(--border); border-radius: 12px; }
+.new-category > label { display: block; margin-bottom: 8px; }
+.new-category .admin-inline { margin-top: 12px; }
+#categoryMessage:empty { display: none; }
+#categoryMessage { margin: 8px 0 0; font-size: 13px; color: var(--text-secondary); }
 #detailsMessage:not(:empty) { margin-top: 16px; color: var(--pt-ink); }
 @media (max-width: 650px) { .details-fields { grid-template-columns: minmax(0,1fr); } }
 .image-editor-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 36px; }
@@ -621,3 +626,8 @@ dialog.dialog { background: var(--pt-paper); color: var(--pt-text); border: 1px 
 .admin-section-heading > .admin-inline { flex-shrink: 0; }
 .admin-page input[type="file"] { width: 100%; color: var(--pt-muted); font: 14px var(--pt-body); }
 .admin-page input[type="file"]::file-selector-button { border: 1px solid var(--pt-control-line); border-radius: 7px; background: var(--pt-paper); color: var(--pt-ink); font: 600 14px var(--pt-body); min-height: 42px; padding: 9px 13px; margin-right: 12px; cursor: pointer; }
+
+/* Keep the game name prominent and preserve the maker’s original headline. */
+.project-headline { margin: 10px 0 12px; font-size: 17px; line-height: 1.5; color: var(--pt-text); overflow-wrap: anywhere; }
+.collection-item__headline { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: 14px; margin: 8px 0 12px; }
+.project-utilities [hidden] { display: none; }

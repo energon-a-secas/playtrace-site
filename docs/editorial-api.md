@@ -22,8 +22,9 @@ All paths below follow `/api/v1`. Admin routes require a verified Clerk bearer s
 | `PUT /admin/requests/:id` | `{status,note}`; private note up to 1200 characters. Records reviewer and review time. |
 | `GET /admin/members` | Owner only; email, role, enabled and creation date. |
 | `PUT /admin/members` | Owner only; `{email,enabled}` grants/restores/revokes admin access. No email is sent. |
-| `GET /admin/games/:id` | Effective game, original `sourcePreview` and `sourceDetails`, image/detail override dates, and `detailsRevision`. |
-| `PUT /admin/games/:id/details` | `{mode:"edit", revision, details}` or `{mode:"reset", revision}`. Details contain title, summary, category, stage, projectUrl, tags, and platforms. A stale revision returns 409; removed games return 404. |
+| `GET /admin/games/:id` | Effective game, original `sourcePreview` and `sourceDetails`, image/detail override dates, `detailsRevision`, and the shared `categories` list. |
+| `POST /admin/categories` | Verified admin; `{label}` (1–48 characters). Creates a shared category or returns an existing case-insensitive match. Returns `{category:{id,label},created,categories}`. Up to 200 categories; standard categories remain available. |
+| `PUT /admin/games/:id/details` | `{mode:"edit", revision, details}` or `{mode:"reset", revision}`. Details contain title, summary, category, stage, projectUrl, repositoryUrl, tags, and platforms. `repositoryUrl` is a separate GitHub, GitLab, or Codeberg repository link; older clients may omit it to retain the existing value. A stale revision returns 409; removed games return 404. |
 | `PUT /admin/games/:id/image` | See image modes below. Returns the updated editor record. |
 | `POST /admin/games/:id/media` | `{}`. Checks up to ten previously unchecked source posts for that game. |
 | `GET /games/:id/store` | `{gameId,steam}`. Refreshes expired metadata for the project's exact Steam app link. Null when unlinked or unconfirmed. |
@@ -45,7 +46,7 @@ Append `shared.akamai.steamstatic.com,cdn.akamai.steamstatic.com` to the existin
 
 ## Steam and secondary media
 
-Only exact HTTPS `store.steampowered.com/app/:id` project links are looked up, without guessing an app from a title. The Worker uses the Storefront `appdetails` endpoint with `cc=us`, validates `success`, `steam_appid`, and `type:'game'`, and labels a game released only when `release_date.coming_soon === false`. Prices require integer cents and `currency:'USD'`; no currency conversion is implied. Explicit free games are labelled free. Coming-soon listings do not display a purchase price. A badge confirms the linked store app, not the maker's identity.
+Only exact HTTPS `store.steampowered.com/app/:id` project links are looked up, without guessing an app from a title. The Worker uses the Storefront `appdetails` endpoint with `cc=us`, validates `success`, `steam_appid`, and `type:'game'` or `type:'demo'`, and labels a game released only when `release_date.coming_soon === false`. Prices require integer cents and `currency:'USD'`; no currency conversion is implied. Explicit free games are labelled free. Coming-soon listings do not display a purchase price. A badge confirms the linked store app, not the maker's identity.
 
 Successful/negative lookups are cached for 24 hours; transient failures retry after an hour and preserve the original successful check date. The UI hides prices older than 36 hours. The US region and check date appear in project details. Steam availability and regional prices can change. There is no API key in the browser and no dependency on another site's proxy deployment.
 
@@ -64,3 +65,13 @@ References: [Clerk backend users](https://clerk.com/docs/reference/backend/types
 ## Project details
 
 Migration `0007_project_details.sql` adds separate editorial overrides. Importers continue to match the original creator and project URL, while the public catalogue, store lookup and Steam maintenance use the effective edited URL. Reset clears only the details override and advances the revision, retaining stale-tab protection. Removing a game erases its overrides. Names, descriptions, genre, stage, devices and tags are editable; source authors, post titles, timestamps and IDs remain unchanged. The UI preserves unsaved details when saving an image, exposes a reload action after a conflict, and warns before leaving unsaved details.
+
+## Categories, names and project links
+
+Migration `0008_game_categories.sql` seeds the core category registry, including Clicker. Every catalogue page and editor response includes `categories:[{id,label}]`. Admins can choose “Add category…” inside the dropdown, name it, and then save details to assign it. Creating the category preserves the rest of the draft; saved categories are immediately reusable on other projects and supported by public search, badges and shared filters. Imports cannot create unknown categories. The image-permission checkbox starts checked; an explicit uncheck blocks uploads both in the UI and at the API.
+
+New source imports resolve names conservatively from explicit source names and game URL slugs. Steam’s existing scheduled cache supplies authoritative names by app ID, including demos and URLs with no slug. Public names respect editorial overrides and previously reviewed titles. The original Reddit headline is displayed beneath a distinct game name and retained unchanged in history. Generated “Source post by…” summaries no longer duplicate the card headline.
+
+Playable GitHub Pages addresses remain website destinations, while GitHub/GitLab/Codeberg URLs identify code repositories. If both appear in a post, the playable destination takes priority and the repository appears as a separate Source code shortcut. Neither a playable website nor a store URL proves a completed commercial release.
+
+`scripts/review-game-names.mjs` gathers bounded public-page/Steam metadata and produces a catalogue-wide review JSON and compare-before-update SQL; it does not mutate production. Website metadata must agree with a specific URL or an explicit source name. Opaque hosting IDs, generic paths, error pages and ambiguous titles stay unresolved. Apply only reviewed changes. Field-scoped SQL retains history, contributions and independent admin overrides and skips fields changed since the export.

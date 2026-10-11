@@ -34,7 +34,7 @@ class SchemaTests(unittest.TestCase):
         self.assertEqual(actual, {
             "games", "source_posts", "price_signals", "follows",
             "app_meta", "rate_limits", "media_assets", "removals", "feedback",
-            "admins", "change_requests", "preview_overrides", "project_overrides", "steam_cache", "quiz_rounds", "quiz_answers",
+            "admins", "change_requests", "preview_overrides", "project_overrides", "game_categories", "steam_cache", "quiz_rounds", "quiz_answers",
         })
         self.assertEqual(self.db.execute("PRAGMA foreign_keys").fetchone()[0], 1)
         with self.assertRaises(sqlite3.IntegrityError):

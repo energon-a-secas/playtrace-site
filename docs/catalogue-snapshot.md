@@ -45,3 +45,15 @@ The production import also records the evidence in `app_meta.current_source_revi
 ## Completed archive scan
 
 The October 11, 2026 verification counted **1,306 live projects, 1,381 source posts and 1,014 authors**, across seven catalogue pages. Historical collection completed from the community's creation on December 11, 2022 through October 10, 2026 at 23:13 UTC. The independent recent pass completed through October 11 at 12:55 UTC. The earliest published, individually reviewed source is April 3, 2023. Completion describes the available archive scan; excluded flairs and ambiguous candidates are not automatically published. Both coverage checkpoints, source eligibility, reviewed selections, removed-entry exclusions and the featured DROPZONE record passed the final read-only check.
+
+## Catalogue names and links
+
+The October 11 naming review examined all 1,306 published projects against 1,381 original source posts. `data/game-name-review.json` records 349 supported title corrections, 20 Clicker classifications, 35 separate code-repository links, and 17 project-link corrections. It leaves 811 unresolved source headlines unchanged; existing reviewed names and manual overrides remain authoritative. Only two fallback records required changes. The full live catalogue and the smaller offline fallback remain separate.
+
+Run a future dry review with a raw source export and a source-game export (not an enriched public catalogue):
+
+```sh
+node scripts/review-game-names.mjs --games /tmp/games.json --raw /tmp/posts.json --metadata /tmp/name-metadata.json --out /tmp/name-review --fetch yes
+```
+
+Inspect the `.json` evidence and `.sql` field updates before applying. Reuse the metadata file to avoid refetching successful pages. Game names can come from Steam app IDs (including demos), itch.io metadata/slugs, explicit source names, or corroborated project paths/domains. The pass never changes source post titles, dates or authors. Playable `github.io` addresses take precedence over accompanying `github.com` repositories, which remain available as source-code links.

@@ -1,10 +1,11 @@
 import { state } from './state.js';
-import { categories, projectPlatforms, selectGames, collectionPulse, label, dateLabel, money } from './collection.js';
+import { categoryChoices, categoryLabel, sourceHeadline, sourceOnlySummary, projectPlatforms, selectGames, collectionPulse, label, dateLabel, money } from './collection.js';
 import { CONFIG } from './config.js';
 import { $, escHtml as e } from './utils.js';
 import { storeLabel } from './project.js';
 
 const arrow = '<span aria-hidden="true">↗</span>';
+const genre = id => categoryLabel(id, state.catalog);
 const stageBadge = game => `<span class="stage-badge stage-badge--${e(game.stage)}"><span class="status-dot" aria-hidden="true"></span>${e(label(game.stage))}</span>`;
 const sourceLink = (url, text, className = 'text-link') => `<a class="${className}" href="${e(url)}" target="_blank" rel="noopener noreferrer">${e(text)} ${arrow}<span class="sr-only"> (opens in a new tab)</span></a>`;
 const platformBadge = (game, tag = 'span') => game.distribution
@@ -23,7 +24,7 @@ let platformCounts = new Map(), platformSelection;
 export function render() {
   if (optionsGames !== state.games) {
     optionsGames = state.games;
-    $('categorySelect').innerHTML = '<option value="all">All genres</option>' + categories.filter(category => state.games.some(game => game.category === category)).map(category => `<option value="${category}">${e(label(category))}</option>`).join('');
+    $('categorySelect').innerHTML = '<option value="all">All genres</option>' + categoryChoices(state.catalog).filter(category => state.games.some(game => game.category === category.id) || category.id===state.category).map(category => `<option value="${e(category.id)}">${e(category.label)}</option>`).join('');
     const authors = [...new Set(state.games.map(game => game.author.name))].sort((a, b) => a.localeCompare(b));
     if (state.author && !authors.includes(state.author)) authors.push(state.author);
     $('authorSelect').innerHTML = '<option value="">All makers</option>' + authors.map(author => `<option value="${e(author)}">u/${e(author)}</option>`).join('');
@@ -88,10 +89,11 @@ export function render() {
 }
 
 function card(game) {
+  const headline = sourceHeadline(game);
   const availability = game.steam ? storeLabel(game.steam) : platformBadge(game);
   const latest = [...game.posts].sort((a,b) => b.createdAt.localeCompare(a.createdAt) || b.id.localeCompare(a.id))[0];
   return `<li><article class="collection-item"><div class="collection-item__preview">${image(game)}<span class="preview-label">Explore project ${arrow}</span></div>
-    <div class="collection-item__body"><div class="game-meta"><button class="genre-chip" type="button" data-category="${e(game.category)}" aria-label="Filter by ${e(label(game.category))}">${e(label(game.category))}</button>${stageBadge(game)}</div><h3><button class="card-open" type="button" data-item="${e(game.id)}" aria-label="Explore ${e(game.title)}">${e(game.title)}</button></h3><button class="maker-link" type="button" data-author="${e(game.author.name)}">by u/${e(game.author.name)}</button><p class="collection-item__description">${e(game.summary)}</p>${availability ? `<div class="card-store">${availability}</div>` : ''}<div class="collection-item__foot"><div class="project-date"><time datetime="${e(game.updatedAt)}">${e(dateLabel(game.updatedAt))}</time><span>${game.posts.length > 1 ? `${game.posts.length - 1} ${game.posts.length === 2 ? 'update' : 'updates'}` : 'First post'}</span></div><a class="reddit-shortcut" href="${e(latest.url)}" target="_blank" rel="noopener noreferrer" aria-label="Latest Reddit post for ${e(game.title)} (opens in a new tab)" title="Latest Reddit post"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 8 1.3-5 4.4 1M5.2 9.6a2.5 2.5 0 1 0-2.1 4.4m15.7-4.4a2.5 2.5 0 1 1 2.1 4.4"/><ellipse cx="12" cy="14" rx="9" ry="6"/><circle cx="8.5" cy="13" r="1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="13" r="1" fill="currentColor" stroke="none"/><path d="M8.5 16c1.8 1.4 5.2 1.4 7 0"/><circle cx="19" cy="4.3" r="1.8"/></svg></a></div>${game.reviewStatus === 'source-described' ? '<span class="review-label">Source-described</span>' : ''}</div></article></li>`;
+    <div class="collection-item__body"><div class="game-meta"><button class="genre-chip" type="button" data-category="${e(game.category)}" aria-label="Filter by ${e(genre(game.category))}">${e(genre(game.category))}</button>${stageBadge(game)}</div><h3><button class="card-open" type="button" data-item="${e(game.id)}" aria-label="Explore ${e(game.title)}">${e(game.title)}</button></h3>${headline ? `<p class="project-headline collection-item__headline">${e(headline)}</p>` : ''}<button class="maker-link" type="button" data-author="${e(game.author.name)}">by u/${e(game.author.name)}</button>${sourceOnlySummary(game) ? '' : `<p class="collection-item__description">${e(game.summary)}</p>`}${availability ? `<div class="card-store">${availability}</div>` : ''}<div class="collection-item__foot"><div class="project-date"><time datetime="${e(game.updatedAt)}">${e(dateLabel(game.updatedAt))}</time><span>${game.posts.length > 1 ? `${game.posts.length - 1} ${game.posts.length === 2 ? 'update' : 'updates'}` : 'First post'}</span></div><a class="reddit-shortcut" href="${e(latest.url)}" target="_blank" rel="noopener noreferrer" aria-label="Latest Reddit post for ${e(game.title)} (opens in a new tab)" title="Latest Reddit post"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 8 1.3-5 4.4 1M5.2 9.6a2.5 2.5 0 1 0-2.1 4.4m15.7-4.4a2.5 2.5 0 1 1 2.1 4.4"/><ellipse cx="12" cy="14" rx="9" ry="6"/><circle cx="8.5" cy="13" r="1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="13" r="1" fill="currentColor" stroke="none"/><path d="M8.5 16c1.8 1.4 5.2 1.4 7 0"/><circle cx="19" cy="4.3" r="1.8"/></svg></a></div>${game.reviewStatus === 'source-described' ? '<span class="review-label">Source-described</span>' : ''}</div></article></li>`;
 }
 
 function renderOverview() {
@@ -125,16 +127,21 @@ function renderOverview() {
   $('featuredGame').classList.remove('spotlight--loading'); $('featuredGame').setAttribute('aria-busy', 'false');
   if (!featured) { $('featuredGame').hidden = true; $('featuredGame').innerHTML = ''; return; }
   $('featuredGame').hidden = false;
-  $('featuredGame').innerHTML = `${image(featured, true)}<div class="spotlight__shade"></div><div class="spotlight__top"><span class="spotlight__label">IN FOCUS</span>${stageBadge(featured)}</div><div class="spotlight__body"><p class="eyebrow">${e(label(featured.category))} · ${featured.posts.length} SOURCE ${featured.posts.length === 1 ? 'POST' : 'POSTS'}</p><h3>${e(featured.title)}</h3><p>${e(featured.summary)}</p><div class="spotlight__foot"><span>by u/${e(featured.author.name)}</span><button class="btn btn--primary" type="button" data-item="${e(featured.id)}">Follow the story ${arrow}</button></div></div>`;
+  $('featuredGame').innerHTML = `${image(featured, true)}<div class="spotlight__shade"></div><div class="spotlight__top"><span class="spotlight__label">IN FOCUS</span>${stageBadge(featured)}</div><div class="spotlight__body"><p class="eyebrow">${e(genre(featured.category))} · ${featured.posts.length} SOURCE ${featured.posts.length === 1 ? 'POST' : 'POSTS'}</p><h3>${e(featured.title)}</h3><p>${e(featured.summary)}</p><div class="spotlight__foot"><span>by u/${e(featured.author.name)}</span><button class="btn btn--primary" type="button" data-item="${e(featured.id)}">Follow the story ${arrow}</button></div></div>`;
 }
 
 export function renderDetail(game) {
   state.detail = game; state.detailSignals = null; state.detailSignalError = '';
   $('itemDialogTitle').textContent = game.title;
+  $('itemDialogHeadline').textContent = sourceHeadline(game);
+  $('itemDialogHeadline').hidden = !sourceHeadline(game);
+  $('projectRepository').hidden = !game.repositoryUrl;
+  if (game.repositoryUrl) $('projectRepository').href = game.repositoryUrl; else $('projectRepository').removeAttribute('href');
   $('itemDialogMedia').innerHTML = image(game);
-  $('itemDialogCategory').textContent = `${label(game.category)} · ${label(game.stage)}${game.reviewStatus === 'source-described' ? ' · Source-described' : ''}`;
+  $('itemDialogCategory').textContent = `${genre(game.category)} · ${label(game.stage)}${game.reviewStatus === 'source-described' ? ' · Source-described' : ''}`;
   $('itemDialogAuthor').innerHTML = `Shared by <button class="text-button" type="button" data-author="${e(game.author.name)}">u/${e(game.author.name)}</button>`;
   $('itemDialogDescription').textContent = game.summary;
+  $('itemDialogDescription').hidden = Boolean(sourceHeadline(game)) && sourceOnlySummary(game);
   $('itemDialogFacts').innerHTML = `<div><dt>First shared</dt><dd>${e(dateLabel(game.firstSeenAt))}</dd></div><div><dt>Latest update</dt><dd>${e(dateLabel(game.updatedAt))}</dd></div>${game.distribution ? `<div><dt>Project platform</dt><dd>${sourceLink(game.distribution.url, game.distribution.label)}</dd></div>` : ''}${game.platforms.length ? `<div><dt>Runs on</dt><dd>${e(game.platforms.join(', '))}</dd></div>` : ''}`;
   $('itemDialogTags').innerHTML = platformBadge(game, 'li') + game.tags.map(tag => `<li>${e(tag)}</li>`).join('');
   $('itemDialogLinks').innerHTML = game.projectUrl ? sourceLink(game.projectUrl, 'Visit game', 'btn btn--primary') : '';

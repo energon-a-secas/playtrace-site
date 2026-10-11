@@ -47,6 +47,7 @@ export async function loadCatalog(render) {
         if (cursor) seen.add(cursor);
         if (progressive) {
           state.catalog = value; state.games = value.games; state.loaded = true;
+          if (state.category !== 'all' && !value.categories.some(category=>category.id===state.category)) state.category='all';
           state.catalogTotal = total; state.catalogPartial = Boolean(cursor); render();
         }
       } while (cursor);
@@ -59,6 +60,7 @@ export async function loadCatalog(render) {
     const catalog = validateCatalog(value);
     if (number !== requestNumber) return;
     state.catalog = catalog; state.games = catalog.games; state.loaded = true; state.status = 'ready';
+    if (state.category !== 'all' && !catalog.categories.some(category=>category.id===state.category)) state.category='all';
     state.catalogTotal = catalog.games.length; state.catalogPartial = false;
   } catch (error) {
     if (number !== requestNumber) return;

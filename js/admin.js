@@ -1,13 +1,14 @@
 import { NeoAuth } from './neorgon-auth.js';
 import { request } from './api.js';
-import { validateCatalog, dateLabel, safeUrl } from './collection.js';
+import { validateCatalog, categoryChoices, dateLabel, safeUrl } from './collection.js';
 import { $, escHtml as e } from './utils.js';
 
 let user = null, epoch = 0, admin = null, checking = false, inboxNumber = 0, editorNumber = 0;
 let entries = [], nextCursor = null, games = [], catalogHead, editing = null, candidates = [], videos = [];
 let upload = null, saving = false, frameRun = 0;
 let detailsRevision = 0, detailsSaving = false, detailsDirty = false;
-const detailInputs = { title: 'detailsTitle', summary: 'detailsSummary', projectUrl: 'detailsUrl', category: 'detailsCategory', stage: 'detailsStage', tags: 'detailsTags', platforms: 'detailsPlatforms' };
+let categorySaving = false, categorySelection = '';
+const detailInputs = { title: 'detailsTitle', summary: 'detailsSummary', projectUrl: 'detailsUrl', repositoryUrl: 'detailsRepository', category: 'detailsCategory', stage: 'detailsStage', tags: 'detailsTags', platforms: 'detailsPlatforms' };
 const stale = () => new Error('Your session changed. Please try again.');
 function notice(value) { $('adminMessage').textContent = value; }
 function clearEditor() {
@@ -16,6 +17,8 @@ function clearEditor() {
   $('imageForm').reset(); $('editorPreview').removeAttribute('src'); $('imageCandidates').replaceChildren();
   $('imageEditor').hidden = true; $('imageMessage').textContent = ''; $('framePicker').open = false;
   $('detailsForm').reset(); $('detailsMessage').textContent = ''; $('reloadDetails').hidden = true; detailsDirty = false;
+  categorySaving = false; $('newCategoryPanel').hidden = true; $('categoryMessage').textContent = '';
+  for (const id of ['detailsCategory','newCategoryName','addCategory','cancelCategory']) $(id).disabled=false;
 }
 function lock() {
   epoch++; admin = null; checking = false; inboxNumber++; entries = []; nextCursor = null; clearEditor();
@@ -113,6 +116,7 @@ async function openEditor(id) {
   try {
     const result = await privateRequest(`/admin/games/${id}`);
     if (number !== editorNumber || result.game.id !== id) return;
+    catalogHead = { ...catalogHead, categories: result.categories || catalogHead.categories };
     result.game = validateCatalog({ ...catalogHead, games: [result.game] }).games[0];
     editing = result; paintEditor(); notice(`Editing ${result.game.title}`);
     const url = new URL(location.href); url.searchParams.set('game', id); history.replaceState(null, '', url);
@@ -127,7 +131,7 @@ function paintEditor(withDetails = true) {
   $('previewStatus').textContent = editing.override ? `Custom preview · updated ${dateLabel(editing.override.updatedAt)}` : 'Automatic preview';
   $('imageUrl').value = ''; $('imageAlt').value = (game.preview.alt || game.title).slice(0, 300);
   $('imageSource').innerHTML = game.posts.map(post => `<option value="${e(post.id)}">${e(dateLabel(post.createdAt))} · ${e(post.title.slice(0, 80))}</option>`).join('');
-  $('imagePermissionLabel').hidden = true; $('imagePermission').checked = false; $('imageFile').value = ''; upload = null;
+  $('imagePermissionLabel').hidden = true; $('imagePermission').checked = true; $('imageFile').value = ''; upload = null;
   const original = imageUrl(editing.sourcePreview);
   const choices = [original ? { url: original, label: 'Source preview' } : null,
     game.steam?.headerUrl ? { url: game.steam.headerUrl, label: 'Steam artwork' } : null,
@@ -141,6 +145,9 @@ function paintEditor(withDetails = true) {
   if (withDetails) paintDetails();
 }
 function paintDetails() {
+  catalogHead = { ...catalogHead, categories: editing.categories || catalogHead.categories };
+  paintCategoryOptions(editing.game.category);
+  $('newCategoryPanel').hidden=true; $('newCategoryName').value=''; $('categoryMessage').textContent='';
   for (const [key, id] of Object.entries(detailInputs)) {
     const value = editing.game[key]; $(id).value = Array.isArray(value) ? value.join(', ') : value || '';
   }
@@ -148,12 +155,36 @@ function paintDetails() {
   $('detailsStatus').textContent = editing.detailsOverride ? `Edited details · saved ${dateLabel(editing.detailsOverride.updatedAt)}` : 'Imported details';
   $('resetDetails').disabled = !editing.detailsOverride; $('reloadDetails').hidden = true;
 }
+function paintCategoryOptions(selected) {
+  $('detailsCategory').innerHTML=categoryChoices(catalogHead).map(category=>`<option value="${e(category.id)}">${e(category.label)}</option>`).join('')
+    + '<option value="__add__">＋ Add category…</option>';
+  $('detailsCategory').value=selected; categorySelection=selected;
+}
+function cancelCategory() {
+  $('newCategoryPanel').hidden=true; $('newCategoryName').value=''; $('categoryMessage').textContent=''; $('detailsCategory').focus();
+}
+async function addCategory() {
+  if (!editing || categorySaving || detailsSaving) return;
+  const name=$('newCategoryName').value.trim();
+  if (!name) { $('categoryMessage').textContent='Enter a category name.'; $('newCategoryName').focus(); return; }
+  const current=editorNumber; categorySaving=true; $('categoryMessage').textContent='Adding category…';
+  for (const id of ['detailsCategory','newCategoryName','addCategory','cancelCategory']) $(id).disabled=true;
+  try {
+    const result=await privateRequest('/admin/categories',{method:'POST',body:{label:name}});
+    if (current!==editorNumber) return;
+    catalogHead={...catalogHead,categories:result.categories}; editing.categories=result.categories;
+    paintCategoryOptions(result.category.id); $('newCategoryPanel').hidden=true; $('newCategoryName').value='';
+    detailsDirty=true; $('detailsMessage').textContent='Unsaved changes';
+    $('categoryMessage').textContent=`${result.category.label} ${result.created?'added':'already exists and is selected'}. Save details to apply it to this project.`;
+  } catch(error) { if(current===editorNumber)$('categoryMessage').textContent=error.message; }
+  finally { if(current===editorNumber){categorySaving=false;for(const id of ['detailsCategory','newCategoryName','addCategory','cancelCategory'])$(id).disabled=false;$('detailsCategory').focus();} }
+}
 async function saveDetails(reset = false) {
-  if (!editing || detailsSaving) return;
+  if (!editing || detailsSaving || categorySaving) return;
   const current = editorNumber, gameId = editing.game.id;
   const details = Object.fromEntries(Object.entries(detailInputs).map(([key,id]) => [key,
     ['tags','platforms'].includes(key) ? $(id).value.split(',').map(value => value.trim()).filter(Boolean) : $(id).value.trim()]));
-  details.projectUrl ||= null;
+  details.projectUrl ||= null; details.repositoryUrl ||= null;
   detailsSaving = true; $('detailsFields').disabled = true; $('detailsMessage').textContent = 'Saving details…';
   try {
     const result = await privateRequest(`/admin/games/${gameId}/details`, { method: 'PUT', body: { mode: reset ? 'reset' : 'edit', revision: detailsRevision, ...(reset ? {} : { details }) } });
@@ -167,13 +198,13 @@ async function saveDetails(reset = false) {
   } finally { detailsSaving = false; $('detailsFields').disabled = false; }
 }
 function chooseUrl(url, postId) {
-  upload = null; $('imageFile').value = ''; $('imagePermissionLabel').hidden = true; $('imagePermission').checked = false;
+  upload = null; $('imageFile').value = ''; $('imagePermissionLabel').hidden = true; $('imagePermission').checked = true;
   $('imageUrl').value = url; $('editorPreview').src = url; if (postId) $('imageSource').value = postId;
   $('previewStatus').textContent = 'Selected image · save to publish';
 }
 function chooseUpload(dataUrl, postId) {
   upload = dataUrl; $('imageUrl').value = ''; $('editorPreview').src = dataUrl;
-  $('imagePermissionLabel').hidden = false; $('imagePermission').checked = false;
+  $('imagePermissionLabel').hidden = false; $('imagePermission').checked = true;
   if (postId) $('imageSource').value = postId;
   $('previewStatus').textContent = 'New image · save to publish';
 }
@@ -190,6 +221,7 @@ async function savePreview(reset = false) {
   const body = reset ? { mode: 'reset' } : { mode: upload ? 'upload' : 'external', alt: $('imageAlt').value.trim(), sourcePostId: $('imageSource').value,
     ...(upload ? { dataUrl: upload, permission: $('imagePermission').checked } : { url: $('imageUrl').value.trim() }) };
   if (!reset && (!body.alt || (!upload && !body.url))) { $('imageMessage').textContent = 'Choose an image and add a short description.'; return; }
+  if (!reset && upload && !body.permission) { $('imageMessage').textContent = 'Confirm you have permission to use this image.'; return; }
   saving = true; $('saveImage').disabled = true; $('resetImage').disabled = true; $('imageMessage').textContent = 'Saving image…';
   try {
     const result = await privateRequest(`/admin/games/${gameId}/image`, { method: 'PUT', body });
@@ -278,7 +310,13 @@ $('imageFile').addEventListener('change', async event => {
   catch(error){ if(current===editorNumber)$('imageMessage').textContent=error.message; }
 });
 $('imageForm').addEventListener('submit', event => { event.preventDefault(); savePreview(); });
-$('detailsForm').addEventListener('input', () => { detailsDirty = true; $('detailsMessage').textContent = 'Unsaved changes'; });
+$('detailsForm').addEventListener('input', event => { if(event.target.id==='newCategoryName'||event.target.value==='__add__')return;detailsDirty = true; $('detailsMessage').textContent = 'Unsaved changes'; });
+$('detailsCategory').addEventListener('change',()=>{
+  if($('detailsCategory').value==='__add__'){$('detailsCategory').value=categorySelection;$('newCategoryPanel').hidden=false;$('categoryMessage').textContent='';$('newCategoryName').focus();}
+  else {categorySelection=$('detailsCategory').value;$('newCategoryPanel').hidden=true;}
+});
+$('addCategory').addEventListener('click',addCategory);$('cancelCategory').addEventListener('click',cancelCategory);
+$('newCategoryName').addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();addCategory();}else if(event.key==='Escape'){event.preventDefault();cancelCategory();}});
 $('detailsForm').addEventListener('submit', event => { event.preventDefault(); saveDetails(); });
 $('resetDetails').addEventListener('click', () => saveDetails(true));
 $('reloadDetails').addEventListener('click', async () => {
