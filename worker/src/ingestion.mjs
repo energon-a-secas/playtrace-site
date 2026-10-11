@@ -9,12 +9,12 @@ export const ARCHIVE_URL = 'https://arctic-shift.photon-reddit.com/api/posts/sea
 export const COMMUNITY_CREATED_AT = '2022-12-11T12:00:48.000Z';
 export const ingestionConfigured = env => Boolean(env.DB && env.INGESTION_ENABLED === 'true');
 const MAX_RETRY_WAIT_MS = 5000;
-function retryDelay(headers, now, minimum) {
+function retryDelay(headers, now, minimum, rateLimited) {
   const retry = headers.get('Retry-After');
   const retryMs = /^\d+$/.test(retry || '') ? Number(retry) * 1000 : Date.parse(retry) - now;
-  const reset = headers.get('X-RateLimit-Reset');
+  const reset = rateLimited ? headers.get('X-RateLimit-Reset') : null;
   const resetMs = /^\d+(?:\.\d+)?$/.test(reset || '') ? Number(reset) * 1000 : 0;
-  const resetAt = headers.get('X-RateLimit-Reset-At');
+  const resetAt = rateLimited ? headers.get('X-RateLimit-Reset-At') : null;
   const resetAtMs = /^\d+$/.test(resetAt || '') ? Number(resetAt) - now : 0;
   return Math.max(minimum, resetMs, resetAtMs, Number.isNaN(retryMs) ? 0 : retryMs);
 }
@@ -30,7 +30,9 @@ function classifyArchiveFailure(error) {
 }
 async function archivePage(after, before, deps, ascending = false) {
   const url = new URL(ARCHIVE_URL);
-  url.search = new URLSearchParams({ subreddit: 'aigamedev', sort: ascending ? 'asc' : 'desc', limit: ascending ? 'auto' : '100', after: String(after), before: String(before) });
+  // A fixed limit can time out on sparse windows. Adaptive queries also return
+  // the final few posts reliably; recent scans retain only their bounded page.
+  url.search = new URLSearchParams({ subreddit: 'aigamedev', sort: ascending ? 'asc' : 'desc', limit: 'auto', after: String(after), before: String(before) });
   for (let attempt = 0; attempt < 3; attempt++) {
     let delay = 1000 * 2 ** attempt;
     try {
@@ -39,7 +41,9 @@ async function archivePage(after, before, deps, ascending = false) {
       const response = await deps.fetch(url.href, { signal: AbortSignal.timeout(15000), redirect: 'manual',
         headers: { Accept: 'application/json', 'User-Agent': 'Playtrace/1.0 (+https://playtrace.neorgon.com)' } });
       if (!response.ok) {
-        delay = retryDelay(response.headers, deps.now(), delay);
+        // Reset headers accompany ordinary query errors too. They describe a
+        // counter window, not a required delay unless the response is 429.
+        delay = retryDelay(response.headers, deps.now(), delay, response.status === 429);
         // Arctic Shift sometimes reports upstream query timeouts as HTTP 422.
         // Retry that documented response shape only; malformed query errors remain terminal.
         let timedOut = false;
@@ -48,11 +52,14 @@ async function archivePage(after, before, deps, ascending = false) {
           catch { /* Do not retry other 422 responses or retain their content. */ }
           if (timedOut) delay = Math.max(delay, 4000);
         } else await response.body?.cancel();
-        throw archiveFailure(`ARCHIVE_HTTP_${response.status}`, timedOut || response.status === 429 || response.status >= 500, response.status === 429 ? delay : 0);
+        throw archiveFailure(`ARCHIVE_HTTP_${response.status}`, timedOut || response.status === 429 || response.status >= 500,
+          response.status === 429 || response.headers.has('Retry-After') ? delay : 0);
       }
       const payload = JSON.parse(new TextDecoder().decode(await readBytes(response.body, 8 * 1024 * 1024)));
-      if (!payload || !Array.isArray(payload.data) || payload.data.length > (ascending ? 1000 : 100)) throw archiveFailure('ARCHIVE_MALFORMED_ENVELOPE', false);
-      return payload.data;
+      if (!payload || !Array.isArray(payload.data) || payload.data.length > 1000) throw archiveFailure('ARCHIVE_MALFORMED_ENVELOPE', false);
+      // Keep recent batches bounded. The next cursor comes from the retained
+      // newest 100 rows, so the rest are fetched on subsequent pages.
+      return ascending ? payload.data : payload.data.slice(0, 100);
     } catch (error) {
       const failure = classifyArchiveFailure(error);
       // A long advertised reset ends this request. The run persists its cursor

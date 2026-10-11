@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-11T12:47:01.000Z",
+  "retrievedAt": "2026-10-11T12:47:01.000Z",
+  "scope": "Individual review of missing playable showcases, including a current Reddit correction to stale archived moderation and flair metadata.",
+  "currentSourceChecks": [
+    {
+      "id": "1wxpc76",
+      "url": "https://www.reddit.com/r/aigamedev/comments/1wxpc76/",
+      "author": "surfing_samurai",
+      "title": "The Manor - a text driven adventure with modular expansion looking for validation",
+      "checkedAt": "2026-10-11T12:47:01.000Z",
+      "flair": "Demo | Project | Workflow",
+      "availability": "public",
+      "archived": { "flair": "Questions & Help", "removedByCategory": "reddit" },
+      "reason": "The current canonical Reddit page shows the full author's post, a playable demo link, the Demo | Project | Workflow flair and reader comments. Its archived Questions & Help flair and removal marker are stale. The source identity, timestamp, body and author are unchanged."
+    }
+  ],
+  "selections": [
+    {
+      "postIds": ["1wxpc76"],
+      "title": "The Manor",
+      "summary": "A dark fantasy text adventure with tactical dice combat, resource management and roguelite progression. Explore through different vessels, carry knowledge between runs and decide when to retreat. The creator shared a browser demo with about two hours of content.",
+      "projectUrl": "https://the-manor.onrender.com/",
+      "category": "adventure",
+      "stage": "playable",
+      "platforms": ["Browser"],
+      "tags": ["Text adventure", "Roguelite", "Dark fantasy", "Tactical combat"],
+      "reason": "Named playable game, individually reviewed against the current public Reddit post after a user reported it missing. Current source evidence supersedes stale archived flair and moderation metadata."
+    },
+    {
+      "postIds": ["1v1v91c"],
+      "title": "Cemetery Designer",
+      "summary": "A cemetery-building prototype where players gather resources, craft headstones and decorate the grounds. The creator shared gameplay and asked for feedback on the art and atmosphere; no public build was linked.",
+      "projectUrl": null,
+      "category": "simulation",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": ["Building", "Crafting"],
+      "reason": "July 20 gameplay showcase with the project flair. The game describes a concrete gathering, crafting and placement loop; it remained pending because its post did not use the collector's first-person wording. The title is an editorial description, not a claimed official name."
+    },
+    {
+      "postIds": ["1vgc8w6"],
+      "title": "Reef Shark and Shore",
+      "summary": "A relaxing multiplayer reef sandbox. Create a shark, watch it swim or take control, and invite friends into the same reef. This update adds moving algae and multiplayer, with a linked browser build.",
+      "projectUrl": "https://shoreplay.app/",
+      "category": "simulation",
+      "stage": "playable",
+      "platforms": ["Browser"],
+      "tags": ["Sandbox", "Multiplayer", "Relaxing"],
+      "reason": "Named interactive project with the project flair, gameplay video and a public build link, confirmed on its current Reddit page. The keyword detector missed it because the post described sharks and multiplayer without explicitly saying game."
+    }
+  ]
+}

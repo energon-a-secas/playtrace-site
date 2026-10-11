@@ -34,7 +34,7 @@ Playtrace collects games shared on r/aigamedev so players can discover a project
 
 **Live:** [playtrace.neorgon.com](https://playtrace.neorgon.com/) · **API:** [service status](https://playtrace-api.neorgon.workers.dev/api/v1/status)
 
-Public feedback uses a random browser edit key so visitors can update or remove their contribution. Following remains an optional account feature, disabled while the new domain awaits registration in the shared login service. Existing private account price responses stay private. See [account activation](#account-activation).
+Public feedback uses a random browser edit key so visitors can update or remove their contribution. Following is an optional account feature, enabled now that the live domain is registered with Clerk. Existing private account price responses stay private. See [account activation](#account-activation).
 
 ## Features
 
@@ -106,7 +106,7 @@ Catalogue pages contain up to 200 projects. There is no 2,000-project public col
 
 The production Clerk domain connection and encrypted Worker secret are configured. Open [the admin desk](https://playtrace.neorgon.com/admin.html) and sign in with the verified primary owner email. Real owner sign-in binds that account on its first successful request. No Clerk secret is stored in this checkout.
 
-After the sign-in form loads successfully on the live domain, set `accountsReady: true` in `js/config.js` and publish the change. Verify a real account can follow and unfollow a game and delete its private Playtrace data. Guest notes and ideal prices remain independent of sign-in. Do not count real account flows as tested until then. The browser flag controls availability only; the Worker always verifies sessions for private endpoints.
+The live sign-in form is verified and `accountsReady: true` is published in `js/config.js`. Admin edits, account authorization and persistence are covered with signed fixture sessions; the owner's real Google account has not been used in automated checks. Guest notes and ideal prices remain independent of sign-in. The browser flag controls availability only; the Worker always verifies sessions for private endpoints.
 
 ## Possible next steps
 

@@ -5,6 +5,7 @@ import { decodeEntities } from '../worker/src/archive.mjs';
 import { PROJECT_FLAIR, projectFlair, REVIEWED_UNLABELED } from '../worker/src/source-policy.mjs';
 import { extractAssets } from '../worker/src/assets.mjs';
 import { AUTHOR, POST_ID, canonicalProjectUrl, httpsUrl, sourceUrl, validateCatalog } from '../worker/src/validation.mjs';
+import { applyCurrentSourceEvidence } from './current-source-evidence.mjs';
 
 const clean = value => decodeEntities(value || '').replace(/\\([_&])/g, '$1');
 const safeImage = value => {
@@ -60,7 +61,7 @@ export function buildSnapshot(base, archive, review) {
   }
   const rows = Array.isArray(archive) ? archive : archive.data;
   if (!Array.isArray(rows)) throw new Error('Expected an archive array or {data: [...]} response.');
-  const posts = new Map(rows.map(post => [post.id, post]));
+  const posts = new Map(applyCurrentSourceEvidence(rows, review.currentSourceChecks, review.reviewedAt).map(post => [post.id, post]));
   const games = new Map(structuredClone(base.games).map(game => [game.id, game]));
   for (const id of review.preserveGameIds || []) if (!games.has(id)) throw new Error(`Missing original project: ${id}`);
   const originalPosts = new Map(base.games.flatMap(game => game.posts.map(post => [post.id, game.id])));

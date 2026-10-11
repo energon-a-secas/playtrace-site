@@ -20,12 +20,34 @@ test('unlabeled showcases wait for individual review even when their URL matches
 });
 test('archive timeout-shaped 422 retries within bounds, but query-validation 422 does not retry', async () => {
   for (const error of ['Timeout. Maybe slow down a bit','Invalid query']) {
-    const env=fixtureEnv(); let count=0; const waits=[];
-    const task=ingest(env,{now:()=>NOW,sleep:async ms=>waits.push(ms),fetch:async()=>{count++;return count===1?Response.json({data:null,error},{status:422}):Response.json({data:[]});}});
-    if(error.startsWith('Timeout.')) { assert.equal((await task).status,'ok');assert.equal(count,2);assert.deepEqual(waits,[4000]); }
+    const env=fixtureEnv(); let count=0; const waits=[], limits=[];
+    const task=ingest(env,{now:()=>NOW,sleep:async ms=>waits.push(ms),fetch:async url=>{limits.push(new URL(url).searchParams.get('limit'));count++;return count===1?Response.json({data:null,error},{status:422,headers:{'X-RateLimit-Reset':'60','X-RateLimit-Remaining':'499'}}):Response.json({data:[]});}});
+    if(error.startsWith('Timeout.')) { assert.equal((await task).status,'ok');assert.equal(count,2);assert.deepEqual(waits,[4000]);assert.deepEqual(limits,['auto','auto']); }
     else { await assert.rejects(task);assert.equal(count,1);assert.deepEqual(waits,[]); }
     env.DB.close();
   }
+});
+test('adaptive timeout recovery keeps recent cursors on the retained page without skipping older rows', async () => {
+  const env=fixtureEnv(), urls=[];
+  const rows=Array.from({length:1000},(_,i)=>rawPost((900000+i).toString(36).padStart(5,'0'),{
+    created_utc:NOW/1000-i-10,url:`https://maker.itch.io/recovery-${i}`,
+  }));
+  const result=await ingest(env,{now:()=>NOW,sleep:async()=>{},fetch:async value=>{
+    const url=new URL(value);urls.push(url);
+    if(urls.length===1) return Response.json({error:'Timeout. Maybe slow down a bit'},{status:422});
+    const limit=url.searchParams.get('limit')==='auto'?1000:100;
+    return Response.json({data:rows.filter(row=>row.created_utc<Number(url.searchParams.get('before'))).slice(0,limit)});
+  }});
+  assert.equal(result.status,'partial');
+  assert.equal(urls[1].searchParams.get('limit'),'auto');
+  assert.equal(Number(urls[2].searchParams.get('before')),rows[99].created_utc+1);
+  const imported=(await catalog(env.DB)).games;
+  assert.ok(imported.some(game=>game.id===`g_${rows[297].id}`));
+  assert.ok(!imported.some(game=>game.id===`g_${rows[298].id}`));
+  const checkpoint=await meta(env.DB,'ingestion');
+  assert.equal(checkpoint.resumeBefore,rows[297].created_utc+1);
+  assert.equal(checkpoint.coverageThrough,null);
+  env.DB.close();
 });
 test('a persisted archive rate limit prevents operator or cron retries before the requested reset', async () => {
   const env=fixtureEnv();let calls=0,now=NOW;
@@ -117,7 +139,7 @@ test('three-page cap persists a frozen checkpoint and 300 candidates stay below 
   const checkpoint = await meta(env.DB, 'ingestion'); assert.equal(checkpoint.coverageThrough, null); assert.equal(checkpoint.lastSuccessAt, null);
   assert.equal(checkpoint.targetCoverageThrough, new Date(NOW).toISOString());
   assert.ok(checkpoint.resumeBefore < NOW / 1000); assert.equal(calls, 3);
-  assert.ok(urls.every(url => url.origin + url.pathname === ARCHIVE_URL && url.searchParams.get('subreddit') === 'aigamedev' && url.searchParams.get('limit') === '100'));
+  assert.ok(urls.every(url => url.origin + url.pathname === ARCHIVE_URL && url.searchParams.get('subreddit') === 'aigamedev' && url.searchParams.get('limit') === 'auto'));
   let resumed;
   const next = await ingest(env, { now: () => NOW + 3600000, sleep: async () => {}, fetch: async url => { resumed = new URL(url); return Response.json({ data: [] }); } });
   assert.equal(next.status, 'ok'); assert.equal(Number(resumed.searchParams.get('before')), checkpoint.resumeBefore);

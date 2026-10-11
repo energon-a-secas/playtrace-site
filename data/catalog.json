@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-11T12:09:10.468Z",
+  "generatedAt": "2026-10-11T12:47:01.000Z",
   "source": {
     "subreddit": "aigamedev",
     "subredditUrl": "https://www.reddit.com/r/aigamedev/",
     "archiveUrl": "https://arctic-shift.photon-reddit.com/",
-    "retrievedAt": "2026-10-11T12:09:10.468Z",
+    "retrievedAt": "2026-10-11T12:47:01.000Z",
     "coverageThrough": "2026-10-10T21:04:51.000Z",
     "mode": "manual-snapshot",
     "lastSuccessfulIngestAt": null
@@ -6572,6 +6572,172 @@
           "createdAt": "2025-05-23T05:52:44.000Z",
           "kind": "showcase",
           "excerpt": "A narrative RPG in which settings, characters and visuals respond to the player’s actions."
+        }
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "g_1wxpc76",
+      "title": "The Manor",
+      "summary": "A dark fantasy text adventure with tactical dice combat, resource management and roguelite progression. Explore through different vessels, carry knowledge between runs and decide when to retreat. The creator shared a browser demo with about two hours of content.",
+      "author": {
+        "name": "surfing_samurai",
+        "url": "https://www.reddit.com/user/surfing_samurai/"
+      },
+      "category": "adventure",
+      "stage": "playable",
+      "platforms": [
+        "Browser"
+      ],
+      "tags": [
+        "Text adventure",
+        "Roguelite",
+        "Dark fantasy",
+        "Tactical combat"
+      ],
+      "projectUrl": "https://the-manor.onrender.com/",
+      "firstSeenAt": "2026-10-04T20:12:52.000Z",
+      "updatedAt": "2026-10-04T20:12:52.000Z",
+      "preview": {
+        "kind": "video",
+        "url": "https://www.reddit.com/r/aigamedev/comments/1wxpc76/",
+        "posterUrl": "https://external-preview.redd.it/MW0zaXFoN3hjaXRoMdCmFYypdS2MN0ScAqW5TzZX6kN6tPXSUTWlyL9hcsgV.png?width=640&crop=smart&format=pjpg&auto=webp&s=217305990e615c374ac018527cb679b3747c34a7",
+        "alt": "The Manor: preview shared by u/surfing_samurai",
+        "storage": "external",
+        "rights": "source-linked",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wxpc76/"
+      },
+      "posts": [
+        {
+          "id": "1wxpc76",
+          "url": "https://www.reddit.com/r/aigamedev/comments/1wxpc76/",
+          "title": "The Manor - a text driven adventure with modular expansion looking for validation",
+          "author": "surfing_samurai",
+          "flair": "Demo | Project | Workflow",
+          "assets": [
+            {
+              "kind": "video",
+              "url": "https://v.redd.it/q16gzr6xcith1/CMAF_1080.mp4?source=fallback",
+              "posterUrl": "https://external-preview.redd.it/MW0zaXFoN3hjaXRoMdCmFYypdS2MN0ScAqW5TzZX6kN6tPXSUTWlyL9hcsgV.png?width=640&crop=smart&format=pjpg&auto=webp&s=217305990e615c374ac018527cb679b3747c34a7"
+            },
+            {
+              "kind": "image",
+              "url": "https://external-preview.redd.it/MW0zaXFoN3hjaXRoMdCmFYypdS2MN0ScAqW5TzZX6kN6tPXSUTWlyL9hcsgV.png?width=640&crop=smart&format=pjpg&auto=webp&s=217305990e615c374ac018527cb679b3747c34a7",
+              "posterUrl": null
+            }
+          ],
+          "createdAt": "2026-10-04T20:12:52.000Z",
+          "kind": "showcase",
+          "excerpt": "A dark fantasy text adventure with tactical dice combat, resource management and roguelite progression. Explore through different vessels, carry knowledge between runs and decide when to retreat. The creator shared a browser demo with about two hours of content."
+        }
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "g_1v1v91c",
+      "title": "Cemetery Designer",
+      "summary": "A cemetery-building prototype where players gather resources, craft headstones and decorate the grounds. The creator shared gameplay and asked for feedback on the art and atmosphere; no public build was linked.",
+      "author": {
+        "name": "octaviustf",
+        "url": "https://www.reddit.com/user/octaviustf/"
+      },
+      "category": "simulation",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [
+        "Building",
+        "Crafting"
+      ],
+      "projectUrl": null,
+      "firstSeenAt": "2026-07-20T19:22:13.000Z",
+      "updatedAt": "2026-07-20T19:22:13.000Z",
+      "preview": {
+        "kind": "video",
+        "url": "https://www.reddit.com/r/aigamedev/comments/1v1v91c/",
+        "posterUrl": "https://external-preview.redd.it/dmZ3Nmcza2VxZmVoMfWNxMgYwpHxuinx048xhDqtpcDeeO3pxE5NoZA_vX9j.png?width=640&crop=smart&format=pjpg&auto=webp&s=958210dc7e1aacf0b04dc2a2b3a7d7e1fde2db79",
+        "alt": "Cemetery Designer: preview shared by u/octaviustf",
+        "storage": "external",
+        "rights": "source-linked",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1v1v91c/"
+      },
+      "posts": [
+        {
+          "id": "1v1v91c",
+          "url": "https://www.reddit.com/r/aigamedev/comments/1v1v91c/",
+          "title": "Vibe coded a little cemetery designer game - harvest resources, craft and place headstones and decor/structures.",
+          "author": "octaviustf",
+          "flair": "Demo | Project | Workflow",
+          "assets": [
+            {
+              "kind": "video",
+              "url": "https://v.redd.it/pflmnrjeqfeh1/CMAF_1080.mp4?source=fallback",
+              "posterUrl": "https://external-preview.redd.it/dmZ3Nmcza2VxZmVoMfWNxMgYwpHxuinx048xhDqtpcDeeO3pxE5NoZA_vX9j.png?width=640&crop=smart&format=pjpg&auto=webp&s=958210dc7e1aacf0b04dc2a2b3a7d7e1fde2db79"
+            },
+            {
+              "kind": "image",
+              "url": "https://external-preview.redd.it/dmZ3Nmcza2VxZmVoMfWNxMgYwpHxuinx048xhDqtpcDeeO3pxE5NoZA_vX9j.png?width=640&crop=smart&format=pjpg&auto=webp&s=958210dc7e1aacf0b04dc2a2b3a7d7e1fde2db79",
+              "posterUrl": null
+            }
+          ],
+          "createdAt": "2026-07-20T19:22:13.000Z",
+          "kind": "showcase",
+          "excerpt": "A cemetery-building prototype where players gather resources, craft headstones and decorate the grounds. The creator shared gameplay and asked for feedback on the art and atmosphere; no public build was linked."
+        }
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "g_1vgc8w6",
+      "title": "Reef Shark and Shore",
+      "summary": "A relaxing multiplayer reef sandbox. Create a shark, watch it swim or take control, and invite friends into the same reef. This update adds moving algae and multiplayer, with a linked browser build.",
+      "author": {
+        "name": "octaviustf",
+        "url": "https://www.reddit.com/user/octaviustf/"
+      },
+      "category": "simulation",
+      "stage": "playable",
+      "platforms": [
+        "Browser"
+      ],
+      "tags": [
+        "Sandbox",
+        "Multiplayer",
+        "Relaxing"
+      ],
+      "projectUrl": "https://shoreplay.app/",
+      "firstSeenAt": "2026-08-05T16:27:42.000Z",
+      "updatedAt": "2026-08-05T16:27:42.000Z",
+      "preview": {
+        "kind": "video",
+        "url": "https://www.reddit.com/r/aigamedev/comments/1vgc8w6/",
+        "posterUrl": "https://external-preview.redd.it/ZG54ZTd0bGMxbGhoMTbJEmWq5H0tFJ9DIwcOIUFU2ImMcNsLqCNKzOvGiIU1.png?width=640&crop=smart&format=pjpg&auto=webp&s=2bf0d68e335b5b13751208bd5a86d51ecc442619",
+        "alt": "Reef Shark and Shore: preview shared by u/octaviustf",
+        "storage": "external",
+        "rights": "source-linked",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vgc8w6/"
+      },
+      "posts": [
+        {
+          "id": "1vgc8w6",
+          "url": "https://www.reddit.com/r/aigamedev/comments/1vgc8w6/",
+          "title": "UPDATE: Reef Shark and Shore with Opus 5 - algae and multiplayer added.",
+          "author": "octaviustf",
+          "flair": "Demo | Project | Workflow",
+          "assets": [
+            {
+              "kind": "video",
+              "url": "https://v.redd.it/9n8g32lc1lhh1/CMAF_1080.mp4?source=fallback",
+              "posterUrl": "https://external-preview.redd.it/ZG54ZTd0bGMxbGhoMTbJEmWq5H0tFJ9DIwcOIUFU2ImMcNsLqCNKzOvGiIU1.png?width=640&crop=smart&format=pjpg&auto=webp&s=2bf0d68e335b5b13751208bd5a86d51ecc442619"
+            },
+            {
+              "kind": "image",
+              "url": "https://external-preview.redd.it/ZG54ZTd0bGMxbGhoMTbJEmWq5H0tFJ9DIwcOIUFU2ImMcNsLqCNKzOvGiIU1.png?width=640&crop=smart&format=pjpg&auto=webp&s=2bf0d68e335b5b13751208bd5a86d51ecc442619",
+              "posterUrl": null
+            }
+          ],
+          "createdAt": "2026-08-05T16:27:42.000Z",
+          "kind": "update",
+          "excerpt": "A relaxing multiplayer reef sandbox. Create a shark, watch it swim or take control, and invite friends into the same reef. This update adds moving algae and multiplayer, with a linked browser build."
         }
       ],
       "reviewStatus": "reviewed"
