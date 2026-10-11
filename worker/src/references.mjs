@@ -10,14 +10,18 @@ export function extractReferences(raw) {
   const found = new Map();
   for (const match of body.matchAll(/https:\/\/[^\s<>"\]]+/g)) {
     try {
-      const value = decodeEntities(match[0]).replace(/[).,;!*]+$/, ''), url = publicUrl(value);
+      const value = decodeEntities(match[0]).replace(/\\([_*])/g,'$1').replace(/[).,;!*]+$/, ''), url = publicUrl(value);
       if (/\.(png|jpe?g|gif|webp|mp4|webm)(?:$|\?)/i.test(url.pathname) || url.href.length > 2048) continue;
       url.hash = '';
       const postId = ['reddit.com','www.reddit.com','old.reddit.com'].includes(url.hostname)
-        ? /^\/r\/[^/]+\/comments\/([a-z0-9]{5,12})(?:\/|$)/i.exec(url.pathname)?.[1]
+        ? /^\/(?:r\/[^/]+\/)?comments\/([a-z0-9]{5,12})(?:\/|$)/i.exec(url.pathname)?.[1]
         : url.hostname === 'redd.it' ? /^\/([a-z0-9]{5,12})(?:\/|$)/i.exec(url.pathname)?.[1] : null;
       if (postId === raw.id) continue;
       const slug = decodeURIComponent(url.pathname.split('/').filter(Boolean).at(-1) || url.hostname).replace(/[_-]/g,' ');
+      if(postId){
+        const tail=url.pathname.slice(url.pathname.indexOf(postId)+postId.length),comment=/^\/[^/]+\/([a-z0-9]{5,12})(?:\/|$)/i.exec(tail)?.[1];
+        url.hostname='www.reddit.com';url.pathname=`/comments/${postId}/${comment?`_/${comment}/`:''}`;url.search='';
+      }
       found.set(url.href, { url: url.href, title: (labels.get(value) || slug || url.hostname).slice(0,180), postId: postId || null, sourcePostId: raw.id });
       if (found.size >= 30) break;
     } catch { /* Ignore malformed or private links. */ }
@@ -48,7 +52,7 @@ export async function archiveJson(path, deps) {
 export async function refreshReferences(db, gameId, deps) {
   const game = await getGame(db, gameId), ids = [...game.posts].sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0,25).map(post=>post.id);
   const raw = await archiveJson(`posts/ids?ids=${ids.join(',')}`, deps);
-  const refs = raw.filter(post => ids.includes(post.id) && post.author?.toLowerCase() === game.author.name.toLowerCase() && !/^\[(removed|deleted)\]$/.test(post.selftext || '')).flatMap(extractReferences);
+  const refs = raw.filter(post => ids.includes(post.id) && post.author?.toLowerCase() === game.author.name.toLowerCase() && !/^\[(removed|deleted)\]$/.test(post.selftext || '')).sort((a,b)=>a.created_utc-b.created_utc).flatMap(extractReferences);
   const linkedIds = [...new Set(refs.map(ref=>ref.postId).filter(Boolean))].slice(0,30);
   if (linkedIds.length) {
     const linked = await archiveJson(`posts/ids?ids=${linkedIds.join(',')}`, deps);

@@ -71,6 +71,7 @@ test('same-author different projects or distant updates are never collapsed',()=
 test('shared references reject private destinations and retain source and Markdown titles',()=>{
   const refs=extractReferences({id:'abc12',selftext:'See [Earlier prototype](https://www.reddit.com/r/aigamedev/comments/old123/first_version/) and https://demo.example/game. Ignore https://localhost/admin https://127.0.0.1/secret'});
   assert.equal(refs.length,2);assert.equal(refs[0].title,'Earlier prototype');assert.equal(refs[0].postId,'old123');assert.equal(refs[1].sourcePostId,'abc12');
+  const aliases=extractReferences({id:'abc12',selftext:'https://www.reddit.com/r/aigamedev/comments/old123/first_version/?utm_source=x https://redd.it/old123 https://www.reddit.com/r/aigamedev/comments/old123/title/comment1/'});assert.equal(aliases.length,2);assert.equal(aliases[0].url,'https://www.reddit.com/comments/old123/');assert.equal(aliases[1].url,'https://www.reddit.com/comments/old123/_/comment1/');
 });
 test('public link checks reject private DNS and never forward tokens across redirects',async()=>{
   for(const url of ['http://example.com','https://user:pass@example.com','https://127.1/','https://x.local/','https://example.com:8443/'])assert.throws(()=>publicUrl(url));
