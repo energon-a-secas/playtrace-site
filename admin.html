@@ -97,7 +97,7 @@
   <a class="btn btn--ghost btn--sm" href="browse.html">Browse</a>
   <a class="btn btn--ghost btn--sm" href="profile.html">Favorites</a>
   <a class="btn btn--sm header-quiz-link" href="quiz.html" aria-label="Name that game" data-keep-mobile><span class="header-quiz-label">Name that game</span><span class="header-quiz-short" aria-hidden="true">Quiz</span></a>
-  <a class="btn btn--ghost btn--sm" href="research.html">Playtest</a>
+  <a class="btn btn--ghost btn--sm" href="research.html">Quick reviews</a>
   <a class="btn btn--ghost btn--sm" href="about.html">About</a>
 </div>
   <!-- /template:actions -->
@@ -123,10 +123,19 @@
     <section id="adminGate" class="admin-gate" aria-labelledby="adminGateTitle"><h3 id="adminGateTitle">Sign in to manage Playtrace</h3><p>Admin access is checked against your verified account.</p><button id="adminSignIn" class="btn btn--primary" type="button" disabled>Sign in</button></section>
     <p id="adminMessage" class="admin-message" role="status" aria-live="polite">Checking admin availability…</p>
     <div id="adminWorkspace" hidden>
-      <nav class="admin-tabs" aria-label="Admin views"><button type="button" data-admin-tab="inbox" aria-current="page">Change requests</button><button type="button" data-admin-tab="images">Projects</button><button type="button" data-admin-tab="queue">Review queue</button><button type="button" data-admin-tab="research">Questionnaires</button><button type="button" data-admin-tab="quiz">Game recognition</button><button type="button" data-admin-tab="access" id="accessTab" hidden>Admin access</button></nav>
+      <nav class="admin-tabs" aria-label="Admin views"><button type="button" data-admin-tab="inbox" aria-current="page">Change requests</button><button type="button" data-admin-tab="images">Projects</button><button type="button" data-admin-tab="highlights">Weekly highlights</button><button type="button" data-admin-tab="queue">Review queue</button><button type="button" data-admin-tab="research">Questionnaires</button><button type="button" data-admin-tab="quiz">Game recognition</button><button type="button" data-admin-tab="access" id="accessTab" hidden>Admin access</button></nav>
       <section id="inboxPanel" aria-labelledby="inboxTitle">
         <div class="admin-section-heading"><div><h3 id="inboxTitle">The community inbox</h3><p>Private requests from project pages.</p></div><div class="admin-inline"><label class="sr-only" for="inboxStatus">Request status</label><select id="inboxStatus" class="select"><option value="open">Open requests</option><option value="resolved">Resolved</option><option value="dismissed">Dismissed</option></select><button type="button" id="refreshInbox" class="btn btn--secondary">Refresh</button></div></div>
         <div id="inboxEntries"></div><button type="button" id="moreRequests" class="btn btn--secondary" hidden>Older requests</button>
+      </section>
+      <section id="highlightsPanel" aria-labelledby="highlightsAdminTitle" hidden>
+        <div class="admin-section-heading"><div><h3 id="highlightsAdminTitle">Five games for the week</h3><p id="highlightEdition"></p></div><a class="text-link" href="./" target="_blank" rel="noopener noreferrer">View home page ↗</a></div>
+        <p class="highlight-explainer">Picks rotate every Saturday at midnight in Santiago. Keep a favorite across weeks, rearrange the order, or replace any pick. Removed games stay out of automatic selections until you allow them again.</p>
+        <form id="highlightsForm"><p id="highlightCount" role="status"></p><ol id="highlightSlots" class="highlight-slots"></ol>
+          <div class="field highlight-search"><label for="highlightSearch">Add a project</label><input id="highlightSearch" class="input" type="search" placeholder="Game title or maker…" autocomplete="off" aria-describedby="highlightSearchHint"><p id="highlightSearchHint" class="field__hint"></p></div><ul id="highlightMatches" class="highlight-matches"></ul>
+          <details id="highlightExclusions" hidden><summary>Excluded from automatic picks</summary><ul id="highlightExcluded" class="highlight-matches"></ul></details>
+          <button class="btn btn--primary" id="highlightSave" type="submit" disabled>Save five highlights</button><p id="highlightMessage" role="status"></p><button class="text-button" id="highlightReload" type="button" hidden>Reload saved picks</button>
+        </form>
       </section>
       <section id="imagesPanel" aria-labelledby="imagesTitle" hidden>
         <div class="admin-section-heading"><div><h3 id="imagesTitle">Edit the collection</h3><p>Update project details and artwork. Your changes stay in place when new posts arrive.</p></div></div>

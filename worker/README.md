@@ -57,7 +57,7 @@ Export production data before any schema rollback. Prefer a forward fix or a com
 
 Bind the private bucket as `PREVIEWS` and set exact `PREVIEW_ALLOWED_HOSTS`. The operator-only preview endpoint requires a creator-consent evidence URL and note. It accepts HTTPS PNG/JPEG/WebP up to 5 MiB, with matching MIME/signature, streaming limits, no redirects, and no IP-literal/private-host selection. Consent is audit data and never appears in the catalogue. Videos and GIFs can be linked as secondary assets, with explicit playback and an original-post fallback.
 
-Uploaded previews use `/api/v1/media/:assetId`, validated against the active game and current asset on every read, with explicit MIME, `nosniff`, and `no-store`. Public bucket URLs are not used, so the Worker can suppress access immediately after removal.
+Uploaded previews use `/api/v1/media/:assetId`, authorized by R2 publication and withdrawal records on every read, without a D1 query, with explicit MIME, `nosniff`, and `no-store`. Public bucket URLs are not used, so the Worker can suppress access immediately after removal.
 
 Removal first commits the tombstone, hides/scrubs the game, and deletes source identities, public feedback, quiz answers involving the game, change requests, image overrides, follows and private prices. A per-game media lease prevents cleanup from racing an upload. Storage failure or an active upload returns 503 while the game stays unavailable; retry the same removal until it succeeds. Object keys survive failed cleanup. Tombstones survive game deletion and prevent reimport under a different game ID.
 
@@ -72,3 +72,5 @@ See [the editorial API and activation runbook](../docs/editorial-api.md) for adm
 ## Discovery and research
 
 See [the campaign API and runbook](../docs/discovery-research-api.md) for guest ratings, embedded questionnaires, citations, store enrichment and queue operations. Set `JEV_API_KEY` and `ITCHIO_API_TOKEN` as encrypted Worker secrets. Minute 20 runs a bounded editorial job and schedules due store work; minute 50 consolidates one conservative repost group. These are separate from source ingestion and existing Steam/media maintenance. Admin-generated summaries remain drafts until explicitly published.
+
+Weekly highlights rotate on Saturdays in America/Santiago using the idempotent `0 3,4 * * 6` UTC schedule. Admins manage five picks, pins, order and exclusions. See the campaign runbook for API details and the required one-time publication-record backfill before deploying R2-only image delivery to an existing bucket.

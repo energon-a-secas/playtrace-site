@@ -1,0 +1,339 @@
+{
+  "revision": 1,
+  "week": "2026-10-10",
+  "updatedAt": "2026-10-11T17:41:02.660Z",
+  "timezone": "America/Santiago",
+  "items": [
+    {
+      "gameId": "g_1x2q29h",
+      "pinned": false,
+      "game": {
+        "id": "g_1x2q29h",
+        "title": "DROPZONE",
+        "summary": "Parachute into a 3D minefield and use numbered tiles to find a safe route. Includes a campaign, endless survival, and a shared daily field.",
+        "author": {
+          "name": "Fizassist1",
+          "url": "https://www.reddit.com/user/Fizassist1/"
+        },
+        "category": "puzzle",
+        "tags": [
+          "Minesweeper",
+          "3D",
+          "Daily challenge"
+        ],
+        "stage": "playable",
+        "platforms": [
+          "Browser"
+        ],
+        "projectUrl": "https://dropzone.gamesbyfiz.com/",
+        "firstSeenAt": "2026-10-10T21:04:51.000Z",
+        "updatedAt": "2026-10-10T21:04:51.000Z",
+        "preview": {
+          "kind": "image",
+          "url": "https://preview.redd.it/b2hmek79fpuh1.png?width=640&crop=smart&auto=webp&s=349f2aa9ad756194c6d13b228cbe7a5e29f72217",
+          "posterUrl": "https://preview.redd.it/b2hmek79fpuh1.png?width=640&crop=smart&auto=webp&s=349f2aa9ad756194c6d13b228cbe7a5e29f72217",
+          "alt": "DROPZONE: preview shared by u/Fizassist1",
+          "storage": "external",
+          "rights": "source-linked",
+          "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2q29h/"
+        },
+        "reviewStatus": "reviewed",
+        "posts": [
+          {
+            "id": "1x2q29h",
+            "url": "https://www.reddit.com/r/aigamedev/comments/1x2q29h/",
+            "title": "DROPZONE: my own take on a minesweeper game",
+            "author": "Fizassist1",
+            "createdAt": "2026-10-10T21:04:51.000Z",
+            "kind": "showcase",
+            "excerpt": "Parachute into a 3D minefield and use numbered tiles to find a safe route. Includes a campaign, endless survival, and a shared daily field.",
+            "flair": "Demo | Project | Workflow"
+          }
+        ],
+        "availability": {
+          "status": "reachable",
+          "httpStatus": 200,
+          "finalUrl": "https://dropzone.gamesbyfiz.com/",
+          "checkedAt": "2026-10-11T15:25:18.401Z",
+          "projectUrl": "https://dropzone.gamesbyfiz.com/"
+        }
+      }
+    },
+    {
+      "gameId": "g_1x376pc",
+      "pinned": false,
+      "game": {
+        "id": "g_1x376pc",
+        "title": "Wayward Crown Demo",
+        "summary": "Source post by u/AnywhereOk6003: My indirect-control kingdom game has a free demo. Come break it.",
+        "author": {
+          "name": "AnywhereOk6003",
+          "url": "https://www.reddit.com/user/AnywhereOk6003/"
+        },
+        "category": "strategy",
+        "stage": "playable",
+        "platforms": [],
+        "tags": [],
+        "projectUrl": "https://store.steampowered.com/app/4610750/Wayward_Crown_Demo",
+        "firstSeenAt": "2026-10-11T12:38:47.000Z",
+        "updatedAt": "2026-10-11T12:38:47.000Z",
+        "preview": {
+          "kind": "image",
+          "url": "https://playtrace-api.neorgon.workers.dev/api/v1/media/6a33ea42-06dd-4eeb-b219-605b31713386",
+          "posterUrl": null,
+          "alt": "My indirect-control kingdom game has a free demo. Come break it.",
+          "storage": "r2",
+          "rights": "owner-consent",
+          "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x376pc/"
+        },
+        "posts": [
+          {
+            "id": "1x376pc",
+            "url": "https://www.reddit.com/r/aigamedev/comments/1x376pc/",
+            "title": "My indirect-control kingdom game has a free demo. Come break it.",
+            "author": "AnywhereOk6003",
+            "flair": "Demo | Project | Workflow",
+            "createdAt": "2026-10-11T12:38:47.000Z",
+            "kind": "showcase",
+            "excerpt": "Source post by u/AnywhereOk6003: My indirect-control kingdom game has a free demo. Come break it.",
+            "assets": [
+              {
+                "kind": "image",
+                "url": "https://external-preview.redd.it/anoyZDdlbGgxdXVoMatnWCwnWHaYU61uFRPqWig1LqjXE-4X0dHNzUGxZ_Rb.png?width=640&crop=smart&format=pjpg&auto=webp&s=8b997b6b1e6939fa81a083feaee7efb6823efe6e",
+                "posterUrl": null
+              }
+            ]
+          }
+        ],
+        "reviewStatus": "source-described",
+        "availability": {
+          "status": "reachable",
+          "provider": "steam",
+          "title": "Wayward Crown Demo",
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4610750/a9a801f23713c28eba76ae43b3ab937d8a8df4bb/header.jpg?t=1791633522",
+          "playable": true,
+          "browser": false,
+          "steamState": "released",
+          "steamType": "demo",
+          "finalUrl": "https://store.steampowered.com/app/4610750/Wayward_Crown_Demo",
+          "checkedAt": "2026-10-11T15:25:46.575Z",
+          "projectUrl": "https://store.steampowered.com/app/4610750/Wayward_Crown_Demo",
+          "httpStatus": 200,
+          "storeCheckedAt": "2026-10-11T14:57:09.075Z",
+          "storeStatus": "reachable"
+        },
+        "steam": {
+          "appId": "4610750",
+          "type": "demo",
+          "title": "Wayward Crown Demo",
+          "url": "https://store.steampowered.com/app/4610750/",
+          "state": "released",
+          "isFree": true,
+          "priceCents": 0,
+          "originalPriceCents": null,
+          "currency": "USD",
+          "headerUrl": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4610750/a9a801f23713c28eba76ae43b3ab937d8a8df4bb/header.jpg?t=1791633522",
+          "checkedAt": "2026-10-11T13:18:51.722Z"
+        }
+      }
+    },
+    {
+      "gameId": "g_1x36ues",
+      "pinned": false,
+      "game": {
+        "id": "g_1x36ues",
+        "title": "Underbloom",
+        "summary": "Source post by u/Certain_Ad9908: 12 year game dev, and this is my first AI game",
+        "author": {
+          "name": "Certain_Ad9908",
+          "url": "https://www.reddit.com/user/Certain_Ad9908/"
+        },
+        "category": "other",
+        "stage": "playable",
+        "platforms": [],
+        "tags": [],
+        "projectUrl": "https://motawe3.itch.io/underbloom",
+        "firstSeenAt": "2026-10-11T12:21:13.000Z",
+        "updatedAt": "2026-10-11T12:21:13.000Z",
+        "preview": {
+          "kind": "image",
+          "url": "https://playtrace-api.neorgon.workers.dev/api/v1/media/6de077b4-6658-44ee-ab78-912117be5132",
+          "posterUrl": null,
+          "alt": "12 year game dev, and this is my first AI game",
+          "storage": "r2",
+          "rights": "owner-consent",
+          "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x36ues/"
+        },
+        "posts": [
+          {
+            "id": "1x36ues",
+            "url": "https://www.reddit.com/r/aigamedev/comments/1x36ues/",
+            "title": "12 year game dev, and this is my first AI game",
+            "author": "Certain_Ad9908",
+            "flair": "Demo | Project | Workflow",
+            "createdAt": "2026-10-11T12:21:13.000Z",
+            "kind": "showcase",
+            "excerpt": "Source post by u/Certain_Ad9908: 12 year game dev, and this is my first AI game",
+            "assets": [
+              {
+                "kind": "video",
+                "url": "https://v.redd.it/e61t7ut6ytuh1/CMAF_1080.mp4?source=fallback",
+                "posterUrl": "https://external-preview.redd.it/MDB0cmo2dTZ5dHVoMVbsotEFYFzHUfwHlfPArts0mbbllCMKYJjr5sAoDp74.png?width=640&crop=smart&format=pjpg&auto=webp&s=8df7696bb85cf5e7dbdb867843776a8cffb8b700"
+              },
+              {
+                "kind": "image",
+                "url": "https://external-preview.redd.it/MDB0cmo2dTZ5dHVoMVbsotEFYFzHUfwHlfPArts0mbbllCMKYJjr5sAoDp74.png?width=640&crop=smart&format=pjpg&auto=webp&s=8df7696bb85cf5e7dbdb867843776a8cffb8b700",
+                "posterUrl": null
+              }
+            ]
+          }
+        ],
+        "reviewStatus": "source-described",
+        "availability": {
+          "status": "reachable",
+          "httpStatus": 200,
+          "finalUrl": "https://motawe3.itch.io/underbloom",
+          "title": "Underbloom by Mo",
+          "image": "https://img.itch.zone/aW1nLzMwNjkyMzkyLnBuZw==/original/Jh8DhX.png",
+          "playable": true,
+          "browser": true,
+          "provider": "itch",
+          "evidence": "Store page includes an embedded browser game.",
+          "checkedAt": "2026-10-11T15:08:45.399Z",
+          "projectUrl": "https://motawe3.itch.io/underbloom",
+          "storeStatus": "reachable",
+          "storeCheckedAt": "2026-10-11T14:57:17.229Z"
+        }
+      }
+    },
+    {
+      "gameId": "g_1wxpc76",
+      "pinned": false,
+      "game": {
+        "id": "g_1wxpc76",
+        "title": "The Manor",
+        "summary": "A dark fantasy text adventure with tactical dice combat, resource management and roguelite progression. Explore through different vessels, carry knowledge between runs and decide when to retreat. The creator shared a browser demo with about two hours of content.",
+        "author": {
+          "name": "surfing_samurai",
+          "url": "https://www.reddit.com/user/surfing_samurai/"
+        },
+        "category": "adventure",
+        "stage": "playable",
+        "platforms": [
+          "Browser"
+        ],
+        "tags": [
+          "Text adventure",
+          "Roguelite",
+          "Dark fantasy",
+          "Tactical combat"
+        ],
+        "projectUrl": "https://the-manor.onrender.com/",
+        "firstSeenAt": "2026-10-04T20:12:52.000Z",
+        "updatedAt": "2026-10-04T20:12:52.000Z",
+        "preview": {
+          "kind": "image",
+          "url": "https://playtrace-api.neorgon.workers.dev/api/v1/media/2928b49a-b051-4d26-82f0-cd7cf989c907",
+          "posterUrl": null,
+          "alt": "The Manor: preview shared by u/surfing_samurai",
+          "storage": "r2",
+          "rights": "owner-consent",
+          "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wxpc76/"
+        },
+        "posts": [
+          {
+            "id": "1wxpc76",
+            "url": "https://www.reddit.com/r/aigamedev/comments/1wxpc76/",
+            "title": "The Manor - a text driven adventure with modular expansion looking for validation",
+            "author": "surfing_samurai",
+            "flair": "Demo | Project | Workflow",
+            "assets": [
+              {
+                "kind": "video",
+                "url": "https://v.redd.it/q16gzr6xcith1/CMAF_1080.mp4?source=fallback",
+                "posterUrl": "https://external-preview.redd.it/MW0zaXFoN3hjaXRoMdCmFYypdS2MN0ScAqW5TzZX6kN6tPXSUTWlyL9hcsgV.png?width=640&crop=smart&format=pjpg&auto=webp&s=217305990e615c374ac018527cb679b3747c34a7"
+              },
+              {
+                "kind": "image",
+                "url": "https://external-preview.redd.it/MW0zaXFoN3hjaXRoMdCmFYypdS2MN0ScAqW5TzZX6kN6tPXSUTWlyL9hcsgV.png?width=640&crop=smart&format=pjpg&auto=webp&s=217305990e615c374ac018527cb679b3747c34a7",
+                "posterUrl": null
+              }
+            ],
+            "createdAt": "2026-10-04T20:12:52.000Z",
+            "kind": "showcase",
+            "excerpt": "A dark fantasy text adventure with tactical dice combat, resource management and roguelite progression. Explore through different vessels, carry knowledge between runs and decide when to retreat. The creator shared a browser demo with about two hours of content."
+          }
+        ],
+        "reviewStatus": "reviewed",
+        "availability": {
+          "status": "reachable",
+          "httpStatus": 200,
+          "finalUrl": "https://the-manor.onrender.com/",
+          "checkedAt": "2026-10-11T15:28:54.053Z",
+          "projectUrl": "https://the-manor.onrender.com/"
+        }
+      }
+    },
+    {
+      "gameId": "g_1x2fcsn",
+      "pinned": false,
+      "game": {
+        "id": "g_1x2fcsn",
+        "title": "Wyrmfall",
+        "summary": "A dragon action RPG inspired by loot-driven games. The author shares screenshots and development details, and reports that the web version currently needs a fix.",
+        "author": {
+          "name": "Starstilanx",
+          "url": "https://www.reddit.com/user/Starstilanx/"
+        },
+        "category": "rpg",
+        "tags": [
+          "Dragons",
+          "Action RPG",
+          "Loot"
+        ],
+        "stage": "playable",
+        "platforms": [],
+        "projectUrl": "https://starstilanx.itch.io/wyrmfall-a-dragon-arpg",
+        "firstSeenAt": "2026-10-10T13:29:43.000Z",
+        "updatedAt": "2026-10-10T13:29:43.000Z",
+        "preview": {
+          "kind": "image",
+          "url": "https://img.itch.zone/aW1nLzMwNTc3ODA1LnBuZw==/original/xUXZLg.png",
+          "posterUrl": null,
+          "alt": "Wyrmfall - A Dragon ARPG by Verinax · Store artwork",
+          "storage": "external",
+          "rights": "source-linked",
+          "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2fcsn/"
+        },
+        "reviewStatus": "reviewed",
+        "posts": [
+          {
+            "id": "1x2fcsn",
+            "url": "https://www.reddit.com/r/aigamedev/comments/1x2fcsn/",
+            "title": "Wyrmfall - A Dragon ARPG (Claude Opus)",
+            "author": "Starstilanx",
+            "createdAt": "2026-10-10T13:29:43.000Z",
+            "kind": "showcase",
+            "excerpt": "A dragon action RPG inspired by loot-driven games. The author shares screenshots and development details, and reports that the web version currently needs a fix.",
+            "flair": "Demo | Project | Workflow"
+          }
+        ],
+        "availability": {
+          "status": "reachable",
+          "httpStatus": 200,
+          "finalUrl": "https://starstilanx.itch.io/wyrmfall-a-dragon-arpg",
+          "title": "Wyrmfall - A Dragon ARPG by Verinax",
+          "image": "https://img.itch.zone/aW1nLzMwNTc3ODA1LnBuZw==/original/xUXZLg.png",
+          "playable": true,
+          "browser": true,
+          "provider": "itch",
+          "evidence": "Store page includes an embedded browser game.",
+          "checkedAt": "2026-10-11T15:25:02.315Z",
+          "projectUrl": "https://starstilanx.itch.io/wyrmfall-a-dragon-arpg",
+          "storeCheckedAt": "2026-10-11T14:59:21.584Z",
+          "storeStatus": "reachable"
+        }
+      }
+    }
+  ]
+}

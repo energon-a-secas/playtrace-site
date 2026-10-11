@@ -1,3 +1,4 @@
+import { publishPreview } from './media-publication.mjs';
 import { exactKeys, invalid, unavailable, notFound } from './http.mjs';
 import { text, httpsUrl } from './validation.mjs';
 import { query, getGame } from './store.mjs';
@@ -24,6 +25,7 @@ export async function editPreview(db, env, gameId, body, request, admin, deps) {
     if (!owner) throw unavailable();
     try {
       await query(db, 'DELETE FROM preview_overrides WHERE game_id=?', gameId).run();
+      await publishPreview(db, env.PREVIEWS, gameId);
       return await editorGame(db, gameId);
     } finally { await release(db, name, owner); }
   }
@@ -68,6 +70,7 @@ export async function editPreview(db, env, gameId, body, request, admin, deps) {
       ON CONFLICT(game_id) DO UPDATE SET preview_json=excluded.preview_json,approved_by=excluded.approved_by,updated_at=excluded.updated_at RETURNING game_id`,
     JSON.stringify(preview), admin.subject, new Date(deps.now()).toISOString(), gameId).first();
     if (!updated) throw notFound();
+    await publishPreview(db, env.PREVIEWS, gameId);
     return editorGame(db, gameId);
   } catch (error) {
     if (recorded) { await env.PREVIEWS.delete(key); await query(db, 'DELETE FROM media_assets WHERE id=?', assetId).run(); }

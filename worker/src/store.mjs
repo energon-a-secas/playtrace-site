@@ -1,3 +1,4 @@
+import { publicationKey, withdrawalKey, withdrawPreviews } from './media-publication.mjs';
 import { unavailable, notFound, invalid } from './http.mjs';
 import { validateCatalog, canonicalProjectUrl } from './validation.mjs';
 import { enrichGames } from './steam.mjs';
@@ -122,6 +123,7 @@ export async function importCatalog(db, input) {
 export async function removal(db, bucket, id, reason, now) {
   const known = await query(db, 'SELECT id FROM games WHERE id=? UNION SELECT game_id AS id FROM removals WHERE game_id=?', id, id).first();
   if (!known) throw notFound();
+  await withdrawPreviews(db, bucket, id);
   await db.batch([
     query(db, `INSERT INTO removals(game_id,source_post_ids_json,reason,removed_at,removed_by)
       VALUES(?,COALESCE((SELECT json_group_array(id) FROM source_posts WHERE game_id=?),'[]'),?,?,'operator')
@@ -140,12 +142,13 @@ export async function removal(db, bucket, id, reason, now) {
   const lockName = `media_lock:${id}`;
   const owner = await acquire(db, lockName, Date.parse(now), 120000);
   if (!owner) throw unavailable();
-  const assets = await query(db, 'SELECT object_key FROM media_assets WHERE game_id=?', id).all();
+  const assets = await query(db, 'SELECT id,object_key FROM media_assets WHERE game_id=?', id).all();
   try {
     if (assets.results.length && !bucket) throw unavailable();
     // Tombstone is already committed. Keep asset keys if deletion fails so retry
     // can clean them up; all public routes deny the game during this interval.
-    for (const asset of assets.results) await bucket.delete(asset.object_key);
+    for (const asset of assets.results) { await bucket.delete(publicationKey(asset.id)); await bucket.delete(asset.object_key); }
+    if (bucket) await bucket.delete(withdrawalKey(id));
     await db.batch([
       query(db, 'DELETE FROM games WHERE id IN(SELECT alias_id FROM game_aliases WHERE game_id=?)', id),
       query(db, 'DELETE FROM games WHERE id=?', id),

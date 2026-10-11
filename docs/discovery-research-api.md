@@ -7,8 +7,8 @@ The October 2026 campaign separates the landing page, catalogue and saved games,
 - Home: `/`. Existing root links with project/filter parameters redirect to `/browse.html`, preserving their state.
 - Browse: `/browse.html`. Type in the Maker dropdown and select a result. Cards open project notes; independent genre, favorite, Reddit and game controls retain their own actions.
 - Favorites: `/profile.html`. Sign in to save games with the star. This is a private account list.
-- Playtests: `/research.html`. Choose a topic, questionnaire and project. Project notes link directly to the default five-question study.
-- Admin: `/admin.html`. The verified owner and enabled editors can edit a thumbnail directly on a card/project, edit all details under **Projects**, create studies under **Questionnaires**, and process evidence under **Review queue**.
+- Quick reviews: `/research.html`. Choose a game; optional topics and questionnaires are in a disclosure. Project notes link directly to the default five-question study.
+- Admin: `/admin.html`. The verified owner and enabled editors can edit project details directly from a card/project popup, upload images there, curate **Weekly highlights**, edit all details under **Projects**, create studies under **Questionnaires**, and process evidence under **Review queue**.
 
 The quiz remains at `/quiz.html`. Both the quiz and playtest page support `?embed=1`. A study link can specify `form` and `game`, for example `/research.html?form=playtest&game=g_1x2q29h&embed=1`. The admin builder produces the iframe code. Research can send height updates to an exact HTTPS `parentOrigin`; it never broadcasts to `*`. Embedding depends on the parent site's iframe/CSP policy and browser storage rules. A standalone link remains available.
 
@@ -18,6 +18,7 @@ All paths below use `/api/v1`. Guest ownership uses the existing random browser 
 
 | Method and route | Behavior |
 | --- | --- |
+| `GET /highlights` | The current five weekly picks, with current public project metadata, week and revision. |
 | `GET /games/:id/resolve` | Returns the current published ID for a consolidated repost, with `redirected`. |
 | `GET /games/:id/context` | Shared source links, any explicitly published cited review, and URL-bound enrichment evidence. |
 | `GET /games/:id/rating` | Public count and mean. A valid edit-key header additionally returns this browser's `mine`. |
@@ -100,6 +101,18 @@ Export `id,game_id,window_start,payload_json` for pending feedback jobs with sta
 
 ## Discovery availability
 
-Anonymous catalogue and status responses use a 60-second Worker cache. Each lookup reads one indexed revision row; successful catalogue edits, operator updates and scheduled maintenance advance that revision. Authorization, guest edit keys, cookies and all personal/contribution routes bypass the shared cache. CORS is checked before lookup and applied separately to each response.
+Anonymous catalogue, weekly highlight and status responses use a 60-second Worker cache. Each lookup reads one indexed revision row; successful catalogue edits, operator updates and scheduled maintenance advance that revision. Authorization, guest edit keys, cookies and all personal/contribution routes bypass the shared cache. CORS is checked before lookup and applied separately to each response.
 
 On a first-load service interruption, Home and Browse may use `data/public-catalog.json`, a dated export from the public API. It must be less than 24 hours old and pass normal provenance validation. Browse labels it as a saved collection. It never replaces a partially loaded live archive, hides invalid server data or accepts offline contributions. Keep its timestamp equal to the actual export time; do not renew an old file's date. The curator seed in `data/catalog.json` remains separate.
+
+## Weekly highlights and uploaded images
+
+`GET /admin/highlights` returns the selection plus exclusions. `PUT /admin/highlights` accepts `{revision, items:[{gameId,pinned}], excluded:[gameId]}` with exactly five distinct published games. A conflicting revision returns 409. Removed picks remain excluded from automatic rotation until allowed again. Metadata is stored under `app_meta.weekly_highlights`; no additional migration is required.
+
+The Worker runs `0 3,4 * * 6` in UTC. `highlightWeek()` derives the Saturday in America/Santiago, so only the invocation at local midnight rotates the week; the other is an idempotent no-op. The selection retains pins, excludes broken links and overly long titles, prefers available builds and different makers, and reduces repeats from recent weeks. It reads a bounded window of 200 recent projects plus pinned projects. Initial picks were installed with an insert-only metadata operation; existing editorial choices are never overwritten by deployment.
+
+Uploaded images use R2 publication records at `published-previews/<asset-id>.json`. These records contain only the approved object key, MIME type and project ID. Public delivery reads R2, without consulting D1, so a database read quota cannot hide approved artwork. Upload, replacement, reset and repost consolidation maintain those records. A `withdrawn-previews/<game-id>.json` tombstone denies all that project's images before database removal or object cleanup, including concurrent uploads. This remains a private R2 bucket exposed through the existing Worker media route; no public bucket URL is used. Responses remain `no-store` to honor withdrawals.
+
+For an existing deployment, prepare publication records for **only** current uploaded previews on published, non-removed games before deploying the R2-only route. The seven current uploads were reconciled and their live URLs verified. Keep all original consent and asset records in D1.
+
+The dated public collection includes effective manual details and image overrides. It is regenerated from public records, never the small seed catalogue. `data/highlights.json` is an explicitly labeled fallback with a seven-day age limit; the catalogue fallback remains limited to 24 hours. Neither fallback pretends feedback or admin writes can be saved while the API is unavailable.

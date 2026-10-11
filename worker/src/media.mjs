@@ -1,3 +1,4 @@
+import { publishPreview, publishedPreview } from './media-publication.mjs';
 import { exactKeys, invalid, readBytes, unavailable, notFound } from './http.mjs';
 import { getGame, query } from './store.mjs';
 import { httpsUrl, text } from './validation.mjs';
@@ -53,6 +54,7 @@ export async function storePreview(db, env, gameId, body, request, deps) {
     const updated = await query(db, `UPDATE games SET payload_json=json_set(payload_json,'$.preview',json(?))
       WHERE id=? AND status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id) RETURNING id`, JSON.stringify(preview), gameId).first();
     if (!updated) throw notFound();
+    await publishPreview(db, env.PREVIEWS, gameId);
     return { preview };
   } catch (error) {
     // Keep the object key if cleanup fails, for a later operator removal retry.
@@ -65,13 +67,8 @@ export async function storePreview(db, env, gameId, body, request, deps) {
 }
 export async function serveMedia(db, env, id) {
   if (!env.PREVIEWS) throw unavailable();
-  const suffix = `/api/v1/media/${id}`;
-  const asset = await query(db, `SELECT a.object_key,a.mime_type FROM media_assets a JOIN games g ON g.id=a.game_id LEFT JOIN preview_overrides o ON o.game_id=g.id
-    WHERE a.id=? AND g.status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id)
-    AND substr(json_extract(COALESCE(o.preview_json,json_extract(g.payload_json,'$.preview')),'$.url'),-?)=?`, id, suffix.length, suffix).first();
-  if (!asset) throw notFound();
-  const object = await env.PREVIEWS.get(asset.object_key);
+  const object = await publishedPreview(env.PREVIEWS, id);
   if (!object) throw notFound();
-  return new Response(object.body, { headers: { 'Content-Type': asset.mime_type, 'X-Content-Type-Options': 'nosniff',
+  return new Response(object.body, { headers: { 'Content-Type': object.mime, 'X-Content-Type-Options': 'nosniff',
     'Cache-Control': 'no-store', 'Content-Security-Policy': "default-src 'none'; sandbox" } });
 }

@@ -44,7 +44,7 @@ async function rate(stars){
 }
 export function openQuickImage(){
   if(!state.isAdmin||!state.detail)return;
-  $('quickImagePanel').hidden=false;$('quickImageForm').reset();$('quickImageAlt').value=state.detail.preview.alt||state.detail.title;$('quickImageMessage').textContent='';$('quickImagePermission').checked=true;$('quickImageFile').focus();$('quickImagePanel').scrollIntoView({block:'nearest'});
+  $('inlineProjectEditor').hidden=true;$('quickImagePanel').hidden=false;$('quickImageForm').reset();$('quickImageAlt').value=state.detail.preview.alt||state.detail.title;$('quickImageMessage').textContent='';$('quickImagePermission').checked=true;$('quickImageFile').focus();$('quickImagePanel').scrollIntoView({block:'nearest'});
 }
 async function uploadData(file){
   if(file.size>10*1024*1024||!['image/png','image/jpeg','image/webp'].includes(file.type))throw new Error('Choose a PNG, JPEG or WebP under 10 MiB.');
@@ -69,7 +69,7 @@ export function bindExtras(){
       if(file&&!$('quickImagePermission').checked)throw new Error('Confirm permission to upload this image.');
       const body=file?{mode:'upload',dataUrl:await uploadData(file),permission:true,alt,sourcePostId}:{mode:'external',url:safeUrl($('quickImageUrl').value.trim()),alt,sourcePostId};
       const token=await NeoAuth.state.clerk?.session?.getToken();if(!token||NeoAuth.state.userId!==user)throw new Error('Your session changed. Sign in again.');
-      const result=await request(`/admin/games/${game.id}/image`,{method:'PUT',token,body});if(version!==epoch)return;
+      const result=await request(`/admin/games/${game.id}/image`,{method:'PUT',token,body});if(version!==epoch||!state.isAdmin||NeoAuth.state.userId!==user)return;
       const validated=validateCatalog({...state.catalog,games:[result.game]}).games[0];state.games=state.games.map(item=>item.id===game.id?validated:item);render();renderDetail(validated);$('editThumbnail').focus();
     }catch(error){if(version===epoch)$('quickImageMessage').textContent=error.message;}
     finally{button.disabled=false;}

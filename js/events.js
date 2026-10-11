@@ -1,6 +1,7 @@
+import { bindInlineEditor, openInlineEditor, closeInlineEditor } from './inline-editor.js';
 import { request } from './api.js';
 import { bindMaker } from './maker-combobox.js';
-import { bindExtras, loadExtras, closeExtras, openQuickImage } from './project-extras.js';
+import { bindExtras, loadExtras, closeExtras } from './project-extras.js';
 import { state, restoreLocation, saveView, loadCatalog, loadService } from './state.js';
 import { locationForState } from './collection.js';
 import { render, renderDetail } from './render.js';
@@ -49,11 +50,11 @@ export function syncDetail() {
 export function catalogueReady() { render(); syncDetail(); }
 
 export function bindEvents() {
-  bindFeedback(); bindProject(); bindExtras(); bindMaker(value => applyFilter('author', value));
+  bindInlineEditor(); bindFeedback(); bindProject(); bindExtras(); bindMaker(value => applyFilter('author', value));
   const dialog = $('itemDialog');
   bindDialog(dialog, $('searchInput')); bindDialog($('infoDialog'), $('searchInput'));
   dialog.addEventListener('close', () => {
-    clearChallenge(); clearSignals(); clearFeedback(); closeProject(); closeExtras(); state.detail = null;
+    closeInlineEditor(); clearChallenge(); clearSignals(); clearFeedback(); closeProject(); closeExtras(); state.detail = null;
     if (state.game) { state.game = ''; navigation.replace(); }
   });
   $('infoDialog').addEventListener('close', () => { $('deleteConfirm').hidden = true; });
@@ -65,8 +66,8 @@ export function bindEvents() {
   document.addEventListener('click', async event => {
     const favorite = event.target.closest('[data-favorite]');
     if (favorite) { followGame(favorite, favorite.dataset.favorite); return; }
-    const edit = event.target.closest('[data-edit-thumbnail]');
-    if (edit) { navigation.push(() => { state.game = edit.dataset.editThumbnail; }); syncDetail(); openQuickImage(); return; }
+    const edit = event.target.closest('[data-edit-project]');
+    if (edit) { navigation.push(() => { state.game = edit.dataset.editProject; }); syncDetail(); openInlineEditor(); return; }
     const genre = event.target.closest('button[data-category]');
     if (genre) {
       applyFilter('category', genre.dataset.category);

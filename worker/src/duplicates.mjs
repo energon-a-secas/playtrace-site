@@ -1,3 +1,4 @@
+import { publishPreview } from './media-publication.mjs';
 import { query, putMeta, meta, getGame } from './store.mjs';
 import { acquire, release } from './lease.mjs';
 import { canonicalProjectUrl } from './validation.mjs';
@@ -31,7 +32,7 @@ export async function resolveGame(db,id){
   const alias=await query(db,'SELECT game_id FROM game_aliases WHERE alias_id=?',id).first();
   const game=await getGame(db,alias?.game_id||id);return {gameId:game.id,redirected:Boolean(alias)};
 }
-export async function consolidateReposts(db,deps,apply=false){
+export async function consolidateReposts(db,deps,apply=false,bucket=null){
   const lock=await acquire(db,'ingestion_lock',deps.now());if(!lock)return {busy:true,groups:[]};
   try{
     const rows=await query(db,"SELECT payload_json FROM games WHERE status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id)").all();
@@ -70,6 +71,7 @@ export async function consolidateReposts(db,deps,apply=false){
       query(db,`DELETE FROM feedback WHERE game_id IN(SELECT value FROM json_each(?)) AND status='published'`,ids),
       query(db,`INSERT INTO project_references(game_id,url,title,source_post_id) SELECT ?,url,title,source_post_id FROM project_references WHERE game_id IN(SELECT value FROM json_each(?)) ON CONFLICT(game_id,url) DO NOTHING`,winner.id,ids),
     ]);
+    await publishPreview(db,bucket,winner.id);
     const head=await meta(db,'catalog');if(head)await putMeta(db,'catalog',{...head,generatedAt:now}).run();
     return {merged:old.length,keep:winner.id,aliases:old.map(game=>game.id),remaining:groups.length-1};
   }finally{await release(db,'ingestion_lock',lock);}

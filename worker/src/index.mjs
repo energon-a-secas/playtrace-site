@@ -1,3 +1,4 @@
+import { getHighlights, saveHighlights, rotateHighlights } from './highlights.mjs';
 import { rating, rateGame } from './ratings.mjs';
 import { researchList, getResearch, saveResearch, researchResponse, researchMetrics } from './research.mjs';
 import { projectContext } from './references.mjs';
@@ -23,6 +24,8 @@ import { hydrateMedia } from './assets.mjs';
 import { quizInfo, startQuiz, finishQuiz, deleteQuizData, quizMetrics } from './quiz.mjs';
 
 const routes = [
+  [/^\/highlights$/, ['GET'], 'highlights'],
+  [/^\/admin\/highlights$/, ['GET','PUT'], 'editorHighlights'],
   [/^\/games\/(g_[a-z0-9]{5,12})\/resolve$/, ['GET'], 'resolveGame'],
   [/^\/games\/(g_[a-z0-9]{5,12})\/context$/, ['GET'], 'context'],
   [/^\/games\/(g_[a-z0-9]{5,12})\/rating$/, ['GET','PUT','DELETE'], 'rating'],
@@ -108,11 +111,12 @@ export function createWorker(overrides = {}) {
         const key=cache?await versionedPublicKey(env.DB,publicCacheKey(request,action)):null;
         const cached=await readPublicCache(cache,key);
         if(cached)return withCors(cached,origin);
-        let changedPublic=request.method!=='GET'&&['import','ingest','backfill','enrich','adminGame','editorImage','editorDetails','editorMedia','editorCategories','editorJobsRun','editorReposts'].includes(action);
+        let changedPublic=request.method!=='GET'&&['editorHighlights','import','ingest','backfill','enrich','adminGame','editorImage','editorDetails','editorMedia','editorCategories','editorJobsRun','editorReposts'].includes(action);
         let result;
         if (action === 'status') result = json(await status(env), 200, { 'Cache-Control': request.headers.has('Authorization') ? 'no-store' : 'public, max-age=60' });
         else if (action === 'catalog') result = json(await catalog(database(env), { limit: url.searchParams.get('pageSize') || 200,
           cursor: url.searchParams.get('cursor') }), 200, { 'Cache-Control': request.headers.has('Authorization') ? 'no-store' : 'public, max-age=60' });
+        else if (action === 'highlights') result = json(await getHighlights(database(env)), 200, { 'Cache-Control': 'public, max-age=60' });
         else if (action === 'resolveGame') result = json(await resolveGame(database(env),match[1]));
         else if (action === 'context') result = json(await projectContext(database(env),match[1]));
         else if (action === 'rating') {
@@ -145,13 +149,14 @@ export function createWorker(overrides = {}) {
         else if (action.startsWith('editor')) {
           const admin = await authorizeAdmin(request, env, deps), db = database(env);
           if (action === 'editorMe') result = json({ email: admin.email, role: admin.role, integrations: { jev: Boolean(env.JEV_API_KEY), itch: Boolean(env.ITCHIO_API_TOKEN) } });
+          else if(action==='editorHighlights') result=json(request.method==='GET'?await getHighlights(db,true):await saveHighlights(db,await readJson(request),admin,deps));
           else if(action==='editorResearchList')result=json(await researchList(db,true));
           else if(action==='editorResearchSave')result=json(await saveResearch(db,match[1],await readJson(request),admin,deps));
           else if(action==='editorResearchMetrics')result=json(await researchMetrics(db,match[1]));
           else if(action==='editorJobs')result=json(request.method==='GET'?await listJobs(db,url.searchParams.get('status'),url.searchParams.get('cursor'),url.searchParams.get('kind')):await enqueueJobs(db,await readJson(request),admin,deps));
           else if(action==='editorJobsRun'){const options=await readJson(request);exactKeys(options,Object.hasOwn(options||{},'kind')?['kind']:[]);result=json(await runJobs(db,env,deps,1,options.kind??'all'));}
           else if(action==='editorJob')result=json(await updateJob(db,match[1],await readJson(request),admin,deps));
-          else if(action==='editorReposts'){if(request.method==='POST')exactKeys(await readJson(request),[]);result=json(await consolidateReposts(db,deps,request.method==='POST'));}
+          else if(action==='editorReposts'){if(request.method==='POST')exactKeys(await readJson(request),[]);result=json(await consolidateReposts(db,deps,request.method==='POST',env.PREVIEWS));}
           else if (action === 'editorMembers') result = json(await members(db, admin, request.method === 'PUT' ? await readJson(request) : undefined));
           else if (action === 'editorCategories') result = json(await createCategory(db, await readJson(request), admin, deps));
           else if (action === 'editorInbox') result = json(await inbox(db, url.searchParams.get('status'), url.searchParams.get('cursor')));
@@ -180,7 +185,7 @@ export function createWorker(overrides = {}) {
             changedPublic=body.action==='run'||(body.action==='reposts'&&body.options?.apply===true);
             if(body.action==='enqueue')result=json(await enqueueJobs(db,body.options,{subject:'operator'},deps));
             else if(body.action==='run'){exactKeys(body.options,Object.hasOwn(body.options||{},'kind')?['kind']:[]);result=json(await runJobs(db,env,deps,2,body.options.kind??'all'));}
-            else if(body.action==='reposts'){exactKeys(body.options,['apply']);if(typeof body.options.apply!=='boolean')throw notFound();result=json(await consolidateReposts(db,deps,body.options.apply));}
+            else if(body.action==='reposts'){exactKeys(body.options,['apply']);if(typeof body.options.apply!=='boolean')throw notFound();result=json(await consolidateReposts(db,deps,body.options.apply,env.PREVIEWS));}
             else if(body.action==='jobs'){exactKeys(body.options,['status','cursor']);result=json(await listJobs(db,body.options.status,body.options.cursor));}
             else throw notFound();
           }
@@ -204,8 +209,9 @@ export function createWorker(overrides = {}) {
       const run = (async () => {
         // Separate invocations keep the complete handler below the D1 budget,
         // including six cold Steam caches and a ten-post media hydration batch.
+        if (event?.cron === '0 3,4 * * 6') { await rotateHighlights(database(env), deps); return; }
         if (event?.cron === '20 * * * *') { const db=database(env); await queueStoreMaintenance(db,deps); await runJobs(db,env,deps); return; }
-        if (event?.cron === '50 * * * *') { await consolidateReposts(database(env),deps,true); return; }
+        if (event?.cron === '50 * * * *') { await consolidateReposts(database(env),deps,true,env.PREVIEWS); return; }
         if (event?.cron === '5 * * * *') {
           const db = database(env);
           await refreshSteamBatch(db, deps);

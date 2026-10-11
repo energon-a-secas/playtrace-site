@@ -28,3 +28,14 @@ Implementation checks: 154 Node tests, 11 schema checks, 37 workerd runtime chec
 - 244 cited drafts await admin review; 157 projects require manual interpretation and 236 had no eligible comments. All 1,404 queued jobs are ready. No review was automatically published.
 
 The campaign reached Cloudflare D1's free daily row-read allowance. Stored data and the completed queue remain intact; live API calls are unavailable until the allowance resets at 00:00 UTC (21:00 Santiago) or billing is changed by the owner. No paid plan was enabled. Anonymous catalogue pages now use a 60-second cache with an indexed revision check; successful editorial changes invalidate it. The site can display the dated public export during an interruption, with an explicit saved-collection notice and a 24-hour age limit.
+
+## UI and weekly highlights follow-up, October 11
+
+- Replaced the single focus feature with five dated weekly highlights. Admins can reorder, replace, pin and exclude picks. Saturday rotation uses Santiago calendar dates and handles both UTC offsets.
+- Added admin-only Edit controls on cards and project dialogs. The inline editor supports details, reusable categories and revision conflicts; image upload remains next to it.
+- Renamed Playtest to Quick reviews and made game selection the first step. Added disabled loading controls, clear purpose, retries and an explicit service-unavailable state.
+- Consolidated Browse/Favorites footer content, removed repeated play links, constrained long card headlines, aligned card actions and polished narrow layouts and controls using the Impeccable product register.
+- Fixed approved uploads disappearing during D1 outages by authorizing image delivery through R2 publication/withdrawal records. Reconciled all seven existing uploads and verified HTTP 200 for each, including The Manor. Original assets and consent records are preserved.
+- Refreshed the dated public snapshot: 1,296 games, 1,384 source posts and seven effective uploaded previews.
+
+Validation: 161 Node checks, 40 workerd checks, admin and guest browser checks, desktop/mobile layouts from 320–1440px, light/dark accessibility and outage behavior. Fixtures use disposable storage; no synthetic visitor contributions were written to production. The D1 quota outage still prevents production review submissions and admin saves until the allowance resets; uploaded images now work independently.

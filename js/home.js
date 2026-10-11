@@ -1,26 +1,47 @@
 import { request } from './api.js';
-import { validateCatalog } from './collection.js';
-import { CONFIG } from './config.js';
 import { NeoAuth } from './neorgon-auth.js';
-import { loadPublicSnapshot } from './catalog-snapshot.js';
+import { escHtml as e } from './utils.js';
+import { safeUrl, dateLabel } from './collection.js';
 
-// Preserve every previously shared project/filter URL when moving the collection.
 const current = new URL(location.href);
 if (['game','q','cat','platform','stage','maker','author','following','view','sort'].some(key => current.searchParams.has(key)) || current.hash === '#discover') {
   current.pathname = current.pathname.replace(/(?:index\.html)?$/, 'browse.html'); location.replace(current.href);
 } else {
+  NeoAuth.onChange(async auth => {
+    const user = auth.userId;
+    document.getElementById('editHighlights').hidden = true;
+    if (!auth.signedIn) return;
+    try {
+      const token = await auth.clerk.session.getToken();
+      await request('/admin/me', { token });
+      if (NeoAuth.state.signedIn && NeoAuth.state.userId === user) document.getElementById('editHighlights').hidden = false;
+    } catch { /* Curation is available only after server-verified admin access. */ }
+  });
   NeoAuth.start();
   try {
-    let catalog;
-    try { catalog = validateCatalog(await request('/catalog?pageSize=200')); }
-    catch(error) { if(error.code!=='SERVICE_UNAVAILABLE'&&!(error instanceof TypeError))throw error; catalog=await loadPublicSnapshot(); }
-    const game = catalog.games.find(entry => entry.id === CONFIG.featuredGameId);
-    if (game) {
-      document.getElementById('homeFeatureTitle').textContent = game.title;
-      document.getElementById('homeFeatureMaker').textContent = `Shared by u/${game.author.name}`;
-      document.getElementById('homeFeature').href = `browse.html?game=${game.id}`;
-      const url = game.preview.posterUrl || (game.preview.kind === 'image' ? game.preview.url : null);
-      if (url) { const image = new Image(); image.src = url; image.alt = game.preview.alt; image.fetchPriority = 'high'; image.decoding = 'async'; document.getElementById('homeArtwork').append(image); }
+    let picks, saved = false;
+    try { picks = await request('/highlights'); }
+    catch (error) {
+      if (error.code !== 'SERVICE_UNAVAILABLE' && !(error instanceof TypeError)) throw error;
+      const response = await fetch('data/highlights.json', { cache: 'no-cache' });
+      if (!response.ok) throw error;
+      picks = await response.json(); saved = true;
+      const age = Date.now() - Date.parse(picks.updatedAt);
+      if (!Number.isFinite(age) || age < 0 || age > 7 * 86400000) throw error;
     }
-  } catch { /* The static destinations remain useful if the catalogue is offline. */ }
+    const items = picks.items;
+    if (!Array.isArray(items) || !items.length || items.length > 5) throw new Error('No highlights yet');
+    document.getElementById('highlightWeek').textContent = `Week of ${dateLabel(picks.week + 'T12:00:00Z')}${saved ? ' · Saved picks' : ''}`;
+    document.getElementById('weeklyHighlights').innerHTML = items.map(({game}, index) => {
+      const url = safeUrl(game.preview.posterUrl || (game.preview.kind === 'image' ? game.preview.url : null), true);
+      return `<li><a class="weekly-pick ${index === 0 ? 'weekly-pick--lead' : ''}" href="browse.html?game=${e(game.id)}"><div class="weekly-art">${url ? `<img src="${e(url)}" alt="${e(game.preview.alt || game.title)}" width="640" height="360" decoding="async" ${index === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} referrerpolicy="no-referrer">` : ''}<span class="weekly-number" aria-hidden="true">0${index + 1}</span></div><div class="weekly-caption"><h3>${e(game.title)}</h3><p>u/${e(game.author.name)}</p></div><span class="weekly-arrow" aria-hidden="true">↗</span></a></li>`;
+    }).join('');
+    document.getElementById('weeklyHighlights').setAttribute('aria-busy', 'false');
+  } catch {
+    document.getElementById('weeklyHighlights').innerHTML = '<li class="highlights-empty">Weekly picks are taking a break. <a href="browse.html">Explore the collection ↗</a></li>';
+    document.getElementById('weeklyHighlights').setAttribute('aria-busy', 'false');
+  }
+  document.getElementById('weeklyHighlights').addEventListener('error', event => {
+    if (event.target.tagName === 'IMG') { event.target.hidden = true; event.target.parentElement.classList.add('weekly-art--missing'); }
+  }, true);
 }

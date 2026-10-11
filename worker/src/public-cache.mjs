@@ -1,7 +1,7 @@
 // Cache only anonymous, public discovery reads. Personal and editable data
 // always go through their normal authorization and database paths.
 export function publicCacheKey(request, action) {
-  if (request.method !== 'GET' || !['catalog','status'].includes(action)
+  if (request.method !== 'GET' || !['catalog','status','highlights'].includes(action)
     || ['Authorization','X-Feedback-Key','Cookie'].some(header=>request.headers.has(header))) return null;
   const input=new URL(request.url),key=new URL(input.pathname,input.origin);
   if(action==='catalog') {

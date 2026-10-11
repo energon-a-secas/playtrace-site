@@ -88,3 +88,30 @@ test('new catalogue imports cannot invent R2 consent', async () => {
   await assert.rejects(importCatalog(env.DB, input), error => error.code === 'INVALID_REQUEST');
   assert.equal(env.DB.sql.prepare('SELECT count(*) AS n FROM games').get().n, 0); env.DB.close();
 });
+
+test('approved uploads keep loading with zero D1 reads during a database outage', async () => {
+  const env = fixtureEnv(undefined, { PREVIEWS: bucket(), PREVIEW_ALLOWED_HOSTS: 'preview.redd.it' });
+  await importCatalog(env.DB, fixtureCatalog());
+  const {preview}=await storePreview(env.DB,env,'g_abc12',consent,request('/admin/games/g_abc12/preview'),imageDeps);
+  const id=preview.url.split('/').at(-1), db=env.DB;
+  env.DB={prepare(){throw new Error('D1 daily read quota exhausted');}};
+  const response=await fixtureWorker().fetch(request(`/media/${id}`),env);
+  assert.equal(response.status,200);assert.deepEqual(new Uint8Array(await response.arrayBuffer()),png);
+  db.close();
+});
+
+test('repost consolidation reassigns media publication and winner removal withdraws it', async () => {
+  const {consolidateReposts}=await import('../src/duplicates.mjs');
+  const {fixtureGame}=await import('./helpers.mjs');
+  const env=fixtureEnv(undefined,{PREVIEWS:bucket(),PREVIEW_ALLOWED_HOSTS:'preview.redd.it'});
+  const old=fixtureGame('abc12'),newer=fixtureGame('def34');
+  for(const game of [old,newer])game.posts[0].title='I built a puzzle game with modular levels and would really like your feedback on the controls';
+  newer.posts[0].createdAt=newer.firstSeenAt=newer.updatedAt='2026-10-09T11:00:00.000Z';
+  await importCatalog(env.DB,fixtureCatalog([old,newer]));
+  const stored=await storePreview(env.DB,env,old.id,consent,request('/admin/games/g_abc12/preview'),imageDeps);
+  const merged=await consolidateReposts(env.DB,{now:()=>NOW},true,env.PREVIEWS);assert.equal(merged.keep,newer.id);
+  const path=new URL(stored.preview.url).pathname.replace('/api/v1','');
+  assert.equal((await fixtureWorker().fetch(request(path),env)).status,200);
+  await removal(env.DB,env.PREVIEWS,newer.id,'Creator request',new Date(NOW).toISOString());
+  assert.equal((await fixtureWorker().fetch(request(path),env)).status,404);env.DB.close();
+});
