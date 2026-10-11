@@ -45,10 +45,10 @@ export function initHighlights(hooks) {
   });
   $('highlightsForm').addEventListener('submit', async event => {
     event.preventDefault(); if (loading || items.length !== 5 || !saved) return;
-    const version = epoch; loading = true; $('highlightSave').disabled = true; $('highlightMessage').textContent = 'Saving weekly highlights…';
+    const version = epoch; loading = true; $('highlightSave').disabled = true; $('highlightSlots').querySelectorAll('input').forEach(input => { input.disabled = true; }); $('highlightMessage').textContent = 'Saving weekly highlights…';
     try {
       const value = await api.request('/admin/highlights', { method: 'PUT', body: { revision: saved.revision, items, excluded } }); if (version !== epoch) return;
-      saved = value; $('highlightMessage').textContent = 'Saved. The five highlights are now on the home page.'; $('highlightReload').hidden = true;
+      saved = value; items = value.items.map(({ gameId, pinned }) => ({ gameId, pinned })); excluded = [...value.excluded]; $('highlightMessage').textContent = 'Saved. The five highlights are now on the home page.'; $('highlightReload').hidden = true;
     } catch (error) { if (version === epoch) { $('highlightMessage').textContent = error.message; $('highlightReload').hidden = false; } }
     finally { if (version === epoch) { loading = false; paint(); } }
   });
