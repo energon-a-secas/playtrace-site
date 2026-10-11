@@ -16,10 +16,9 @@ export async function publishPreview(db, bucket, gameId) {
   }
 }
 export async function withdrawPreviews(db, bucket, gameId) {
-  const asset = await query(db, 'SELECT id FROM media_assets WHERE game_id=? LIMIT 1', gameId).first();
   // A tombstone is written before the DB removal. It overrides all publication
-  // records, including a concurrent upload holding the media lease.
-  if (asset && bucket) await bucket.put(withdrawalKey(gameId), '{"removed":true}', { httpMetadata: { contentType: 'application/json' } });
+  // records, including an upload that has not inserted its asset row yet.
+  if (bucket) await bucket.put(withdrawalKey(gameId), '{"removed":true}', { httpMetadata: { contentType: 'application/json' } });
 }
 export async function publishedPreview(bucket, id) {
   const record = await bucket.get(publicationKey(id));
