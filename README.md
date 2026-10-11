@@ -47,7 +47,7 @@ Public feedback uses a random browser edit key so visitors can update or remove 
 - **Following** -- Signed-in users keep a private list of games to revisit for updates.
 - **Visitor controls** -- Browser and network limits reduce spam. Contributions have report links and operator moderation. Clearing browser storage loses editing access; the correction link remains available for help. A browser key does not prove a unique person.
 - **Private account data** -- Existing account prices, their thresholded aggregates, follows, and account-data deletion remain separate from public feedback. Guest contributions never reveal or import old private responses.
-- **Editorial tools** -- A private change-request inbox, verified admin roles with the requested default owner, persistent image edits, and a video-frame picker. See [activation and endpoint details](docs/editorial-api.md).
+- **Editorial tools** -- A private change-request inbox, verified admin roles with the requested default owner, persistent project details and image edits, and a video-frame picker. See [activation and endpoint details](docs/editorial-api.md).
 - **Store and media context** -- Confirmed Steam app badges, cached US prices, source videos/GIFs as secondary media, and an original-post fallback.
 - **Name that game** -- A highlighted header button opens [a dedicated five-screenshot quiz](https://playtrace.neorgon.com/quiz.html). Source-hosted images use smaller variants when available and preload the next clue. Anonymous results contribute recognition counts and remain removable from the same browser. See [the quiz API and delivery notes](docs/name-game-api.md).
 - **Managed previews** -- R2 can store bounded, validated images with a recorded creator permission. Initial previews remain at their original hosts. Removal hides a game immediately and cleans up its stored data and media.
@@ -104,7 +104,7 @@ Catalogue pages contain up to 200 projects. There is no 2,000-project public col
 
 ## Account activation
 
-The production login service currently returns `subdomain_not_allowed` for `playtrace.neorgon.com`. In the production Clerk instance, add that exact hostname to **Allowed Subdomains**, preserving the existing entries and keeping the allowlist enabled. Its [subdomain configuration documentation](https://clerk.com/docs/guides/dashboard/dns-domains/subdomain-allowlist) describes the setting. No Clerk administrator credential is stored in this checkout.
+The production Clerk domain connection and encrypted Worker secret are configured. Open [the admin desk](https://playtrace.neorgon.com/admin.html) and sign in with the verified primary owner email. Real owner sign-in binds that account on its first successful request. No Clerk secret is stored in this checkout.
 
 After the sign-in form loads successfully on the live domain, set `accountsReady: true` in `js/config.js` and publish the change. Verify a real account can follow and unfollow a game and delete its private Playtrace data. Guest notes and ideal prices remain independent of sign-in. Do not count real account flows as tested until then. The browser flag controls availability only; the Worker always verifies sessions for private endpoints.
 

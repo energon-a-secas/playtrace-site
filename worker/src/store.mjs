@@ -1,7 +1,7 @@
 import { unavailable, notFound, invalid } from './http.mjs';
 import { validateCatalog, canonicalProjectUrl } from './validation.mjs';
 import { enrichGames } from './steam.mjs';
-import { projectFlair } from './source-policy.mjs';
+import { includedPost } from './source-policy.mjs';
 
 export function database(env) { if (!env.DB) throw unavailable(); return env.DB; }
 export const query = (db, sql, ...args) => db.prepare(sql).bind(...args);
@@ -59,8 +59,8 @@ const eligible = `NOT EXISTS(SELECT 1 FROM removals r WHERE r.game_id=json_extra
 export async function importCatalog(db, input) {
   const validated = validateCatalog(input);
   const { games, ...head } = validated;
-  if (games.some(game => game.posts.some(post => !projectFlair(post.flair)))) {
-    throw invalid('Only source posts tagged Demo | Project | Workflow belong in the index.');
+  if (games.some(game => game.posts.some(post => !includedPost(post)))) {
+    throw invalid('Sources need the project flair or an individual review of an unlabeled game showcase.');
   }
   // Canonical matching metadata is server-derived, never an author-only merge key.
   const rows = games.map(game => ({ ...game, _canonical: canonicalProjectUrl(game.projectUrl) }));
@@ -127,6 +127,7 @@ export async function removal(db, bucket, id, reason, now) {
     query(db, 'DELETE FROM quiz_answers WHERE game_id=? OR choice_id=?', id, id),
     query(db, 'DELETE FROM change_requests WHERE game_id=?', id),
     query(db, 'DELETE FROM preview_overrides WHERE game_id=?', id),
+    query(db, 'DELETE FROM project_overrides WHERE game_id=?', id),
     query(db, 'DELETE FROM source_posts WHERE game_id=?', id),
   ]);
   const { acquire, release } = await import('./lease.mjs');

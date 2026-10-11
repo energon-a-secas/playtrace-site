@@ -1,5 +1,6 @@
 import { exactKeys, invalid } from './http.mjs';
 import { validateAssets } from './assets.mjs';
+import { REVIEWED_UNLABELED } from './source-policy.mjs';
 
 export const GAME_ID = /^g_[a-z0-9]{5,12}$/;
 export const POST_ID = /^[a-z0-9]{5,12}$/;
@@ -42,8 +43,9 @@ function stringList(value, maxItems, maxLength) {
   value.forEach(item => text(item, maxLength));
 }
 export function validatePost(post, author) {
-  exactKeys(post, ['id', 'url', 'title', 'author', 'createdAt', 'kind', 'excerpt', ...(Object.hasOwn(post || {}, 'assets') ? ['assets'] : []), ...(Object.hasOwn(post || {}, 'flair') ? ['flair'] : [])]);
-  if (post.flair !== undefined) text(post.flair, 100);
+  exactKeys(post, ['id', 'url', 'title', 'author', 'createdAt', 'kind', 'excerpt', ...(Object.hasOwn(post || {}, 'assets') ? ['assets'] : []), ...(Object.hasOwn(post || {}, 'flair') ? ['flair'] : []), ...(Object.hasOwn(post || {}, 'inclusion') ? ['inclusion'] : [])]);
+  if (post.flair !== undefined && post.flair !== null) text(post.flair, 100);
+  if (post.inclusion !== undefined && (post.inclusion !== REVIEWED_UNLABELED || post.flair !== null)) throw invalid();
   if (post.assets !== undefined) validateAssets(post.assets);
   if (typeof post.id !== 'string' || typeof post.author !== 'string' || !POST_ID.test(post.id) || !AUTHOR.test(post.author) || post.author.toLowerCase() !== author.toLowerCase()) throw invalid();
   if (post.url !== sourceUrl(post.id)) throw invalid('Source posts must use their canonical Reddit URL.');

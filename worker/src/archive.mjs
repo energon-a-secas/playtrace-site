@@ -26,7 +26,7 @@ function projectLink(raw) {
   const body = typeof raw.selftext === 'string' ? raw.selftext.slice(0, 12000) : '';
   const links = [raw.url, ...(body.match(/https:\/\/[^\s<>"\[\]()]+/g) || []).slice(0, 15)];
   for (const link of links) {
-    const candidate = canonicalProjectUrl(safeUrl(link));
+    const candidate = canonicalProjectUrl(safeUrl(typeof link === 'string' ? link.replace(/[.,]+$/, '') : link));
     if (!candidate) continue;
     const url = new URL(candidate);
     const knownGame = (url.hostname === 'store.steampowered.com' && /^\/app\/\d+(?:\/|$)/.test(url.pathname)) ||
@@ -37,9 +37,9 @@ function projectLink(raw) {
   }
   return null;
 }
-export function normalizePost(raw, nowMs) {
+export function normalizePost(raw, nowMs, { reviewUnlabeled = false } = {}) {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw) || typeof raw.id !== 'string' || !POST_ID.test(raw.id) ||
-    !projectFlair(raw.link_flair_text) ||
+    !(projectFlair(raw.link_flair_text) || (reviewUnlabeled && raw.link_flair_text == null)) ||
     typeof raw.subreddit !== 'string' || raw.subreddit.toLowerCase() !== 'aigamedev' ||
     typeof raw.author !== 'string' || !AUTHOR.test(raw.author) || raw.author.toLowerCase() === 'automoderator' ||
     raw.over_18 === true || raw.stickied === true || raw.removed_by_category || raw.removed_by ||
@@ -65,13 +65,13 @@ export function normalizePost(raw, nowMs) {
   const firstPerson = /\b(i|i've|i’m|i'm|my|we|we've|we’re|we're|our)\b.{0,100}\b(made|built|building|game|released|working|prototype|develop|created|finished|launch)/i.test(combined) ||
     /\b(made|built|released|created|finished)\b.{0,50}\b(my|our|a game)\b/i.test(title);
   const clear = title.length <= 160 && gameWords.test(title) && firstPerson && Boolean(projectUrl || image || video) && !discussion.test(title);
-  const post = { id: raw.id, url: source, title, author: raw.author, flair: PROJECT_FLAIR,
+  const post = { id: raw.id, url: source, title, author: raw.author, flair: projectFlair(raw.link_flair_text) ? PROJECT_FLAIR : null,
     createdAt: new Date(raw.created_utc * 1000).toISOString(),
     kind: /\b(released|launched|available now)\b/i.test(title) ? 'release' : /\b(update|progress|devlog|added|patch)\b/i.test(title) ? 'update' : 'showcase',
     excerpt: `Source post by u/${raw.author}: ${title}`.slice(0, 600) };
   const assets = extractAssets(raw);
   post.assets = assets;
-  return { post, projectUrl, preview, clear, authorKey: raw.author.toLowerCase(), taxonomy: classifySource(title, body) };
+  return { post, projectUrl, preview, clear, requiresReview: post.flair === null, authorKey: raw.author.toLowerCase(), taxonomy: classifySource(title, body) };
 }
 export function sourceGame(candidate) {
   const { post, projectUrl, preview } = candidate;

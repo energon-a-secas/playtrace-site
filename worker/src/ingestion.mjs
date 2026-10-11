@@ -18,8 +18,8 @@ function retryDelay(headers, now, minimum) {
   const resetAtMs = /^\d+$/.test(resetAt || '') ? Number(resetAt) - now : 0;
   return Math.max(minimum, resetMs, resetAtMs, Number.isNaN(retryMs) ? 0 : retryMs);
 }
-function archiveFailure(code, retryable) {
-  return Object.assign(new ApiError(code, 'Archive request failed.', 503), { archiveFailure: true, retryable });
+function archiveFailure(code, retryable, retryDelayMs = 0) {
+  return Object.assign(new ApiError(code, 'Archive request failed.', 503), { archiveFailure: true, retryable, retryDelayMs });
 }
 function classifyArchiveFailure(error) {
   if (error.archiveFailure) return error;
@@ -40,8 +40,15 @@ async function archivePage(after, before, deps, ascending = false) {
         headers: { Accept: 'application/json', 'User-Agent': 'Playtrace/1.0 (+https://playtrace.neorgon.com)' } });
       if (!response.ok) {
         delay = retryDelay(response.headers, deps.now(), delay);
-        await response.body?.cancel();
-        throw archiveFailure(`ARCHIVE_HTTP_${response.status}`, response.status === 429 || response.status >= 500);
+        // Arctic Shift sometimes reports upstream query timeouts as HTTP 422.
+        // Retry that documented response shape only; malformed query errors remain terminal.
+        let timedOut = false;
+        if (response.status === 422) {
+          try { const detail = JSON.parse(new TextDecoder().decode(await readBytes(response.body, 8192))); timedOut = detail?.error === 'Timeout. Maybe slow down a bit'; }
+          catch { /* Do not retry other 422 responses or retain their content. */ }
+          if (timedOut) delay = Math.max(delay, 4000);
+        } else await response.body?.cancel();
+        throw archiveFailure(`ARCHIVE_HTTP_${response.status}`, timedOut || response.status === 429 || response.status >= 500, response.status === 429 ? delay : 0);
       }
       const payload = JSON.parse(new TextDecoder().decode(await readBytes(response.body, 8 * 1024 * 1024)));
       if (!payload || !Array.isArray(payload.data) || payload.data.length > 100) throw archiveFailure('ARCHIVE_MALFORMED_ENVELOPE', false);
@@ -82,6 +89,7 @@ async function planCandidates(db, candidates) {
     const { post, projectUrl, authorKey } = candidate;
     if (seen.has(post.id) || blockedPosts.has(post.id) || blockedGames.has(`g_${post.id}`)) continue;
     seen.add(post.id);
+    if (candidate.requiresReview) { pending.push(candidate); continue; }
     const found = projectUrl ? matches.get(`${authorKey}\n${projectUrl}`) || [] : [];
     const match = found.length === 1 ? found[0] : null;
     if (match && match.posts.length < 1000) {
@@ -114,6 +122,9 @@ export async function ingest(env, deps, historical = false) {
   let run, previous;
   try {
     previous = await meta(db, checkpointKey);
+    if (Date.parse(previous?.retryAt) > start) {
+      const error = unavailable(); error.retryAfterSeconds = Math.ceil((Date.parse(previous.retryAt) - start) / 1000); throw error;
+    }
     if (historical && previous?.state === 'ok') return { status: 'ok', fetched: 0, candidates: 0, updatedGames: 0 };
     const resuming = Number.isInteger(previous?.resumeBefore) && Number.isInteger(previous?.resumeAfter) &&
       previous.resumeBefore > previous.resumeAfter && Number.isFinite(Date.parse(previous.targetCoverageThrough));
@@ -134,7 +145,11 @@ export async function ingest(env, deps, historical = false) {
     for (let page = 0; page < 3; page++) {
       let rows;
       try { rows = await archivePage(after, before, deps, historical); }
-      catch (error) { run.errorCode = classifyArchiveFailure(error).code; pageFailure = true; break; }
+      catch (error) {
+        const failure = classifyArchiveFailure(error); run.errorCode = failure.code;
+        if (failure.retryDelayMs > 0 && Number.isFinite(deps.now() + failure.retryDelayMs)) run.retryAt = new Date(deps.now() + failure.retryDelayMs).toISOString();
+        pageFailure = true; break;
+      }
       let oldest = before, newest = after;
       for (const raw of rows) {
         if (Number.isFinite(raw?.created_utc)) {
@@ -143,7 +158,7 @@ export async function ingest(env, deps, historical = false) {
         }
         if (typeof raw?.id !== 'string' || seen.has(raw.id)) continue;
         seen.add(raw.id); run.fetched++;
-        const candidate = normalizePost(raw, start);
+        const candidate = normalizePost(raw, start, { reviewUnlabeled: true });
         if (candidate && raw.created_utc > after && raw.created_utc <= Date.parse(target) / 1000) candidates.push(candidate);
       }
       if (historical && newest > after) run.scannedThrough = new Date(Math.min(newest * 1000, Date.parse(target))).toISOString();
@@ -181,7 +196,9 @@ export async function ingest(env, deps, historical = false) {
       run.candidates = await savePending(db, plan.pending, attemptAt);
     }
     await db.batch([...(finalHead ? [putMeta(db, 'catalog', finalHead)] : []), putMeta(db, checkpointKey, run)]);
-    if (run.state === 'error') throw unavailable();
+    if (run.state === 'error') {
+      const error = unavailable(); if (run.retryAt) error.retryAfterSeconds = Math.max(1, Math.ceil((Date.parse(run.retryAt) - deps.now()) / 1000)); throw error;
+    }
     return { runId: run.runId, status: run.state, fetched: run.fetched, candidates: run.candidates, updatedGames: run.updatedGames };
   } catch (error) {
     if (run && run.state !== 'error') {

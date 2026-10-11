@@ -6,6 +6,8 @@ import { $, escHtml as e } from './utils.js';
 let user = null, epoch = 0, admin = null, checking = false, inboxNumber = 0, editorNumber = 0;
 let entries = [], nextCursor = null, games = [], catalogHead, editing = null, candidates = [], videos = [];
 let upload = null, saving = false, frameRun = 0;
+let detailsRevision = 0, detailsSaving = false, detailsDirty = false;
+const detailInputs = { title: 'detailsTitle', summary: 'detailsSummary', projectUrl: 'detailsUrl', category: 'detailsCategory', stage: 'detailsStage', tags: 'detailsTags', platforms: 'detailsPlatforms' };
 const stale = () => new Error('Your session changed. Please try again.');
 function notice(value) { $('adminMessage').textContent = value; }
 function clearEditor() {
@@ -13,6 +15,7 @@ function clearEditor() {
   const video = $('frameVideo'); video.pause(); video.removeAttribute('src'); video.load();
   $('imageForm').reset(); $('editorPreview').removeAttribute('src'); $('imageCandidates').replaceChildren();
   $('imageEditor').hidden = true; $('imageMessage').textContent = ''; $('framePicker').open = false;
+  $('detailsForm').reset(); $('detailsMessage').textContent = ''; $('reloadDetails').hidden = true; detailsDirty = false;
 }
 function lock() {
   epoch++; admin = null; checking = false; inboxNumber++; entries = []; nextCursor = null; clearEditor();
@@ -101,9 +104,10 @@ async function loadInbox(more = false) {
 }
 function renderInbox() {
   $('moreRequests').hidden = !nextCursor;
-  $('inboxEntries').innerHTML = entries.length ? entries.map(item => `<article class="inbox-request" data-request="${e(item.id)}"><div class="request-meta"><span>${e(item.kind)}</span><time datetime="${e(item.createdAt)}">${e(dateLabel(item.createdAt))}</time><span>${e(item.status)}</span></div><h4>${e(item.title)}</h4><p class="request-body">${e(item.body)}</p>${item.suggestedUrl ? `<p><a class="text-link" href="${e(safeUrl(item.suggestedUrl))}" target="_blank" rel="noopener noreferrer">Suggested source ↗</a></p>` : ''}<button type="button" class="text-button" data-edit-project="${e(item.gameId)}">Edit project image ↗</button><details><summary>Review this request</summary><label for="note-${e(item.id)}">Private admin note</label><textarea class="input" id="note-${e(item.id)}" rows="2" maxlength="1200">${e(item.adminNote)}</textarea><div class="admin-inline"><button type="button" class="btn btn--secondary" data-request-status="resolved">Mark resolved</button><button type="button" class="text-button" data-request-status="dismissed">Dismiss</button>${item.status !== 'open' ? '<button type="button" class="text-button" data-request-status="open">Reopen</button>' : ''}</div></details></article>`).join('') : '<p class="inbox-empty">No requests in this view. New requests from project pages will appear here.</p>';
+  $('inboxEntries').innerHTML = entries.length ? entries.map(item => `<article class="inbox-request" data-request="${e(item.id)}"><div class="request-meta"><span>${e(item.kind)}</span><time datetime="${e(item.createdAt)}">${e(dateLabel(item.createdAt))}</time><span>${e(item.status)}</span></div><h4>${e(item.title)}</h4><p class="request-body">${e(item.body)}</p>${item.suggestedUrl ? `<p><a class="text-link" href="${e(safeUrl(item.suggestedUrl))}" target="_blank" rel="noopener noreferrer">Suggested source ↗</a></p>` : ''}<button type="button" class="text-button" data-edit-project="${e(item.gameId)}">Edit project ↗</button><details><summary>Review this request</summary><label for="note-${e(item.id)}">Private admin note</label><textarea class="input" id="note-${e(item.id)}" rows="2" maxlength="1200">${e(item.adminNote)}</textarea><div class="admin-inline"><button type="button" class="btn btn--secondary" data-request-status="resolved">Mark resolved</button><button type="button" class="text-button" data-request-status="dismissed">Dismiss</button>${item.status !== 'open' ? '<button type="button" class="text-button" data-request-status="open">Reopen</button>' : ''}</div></details></article>`).join('') : '<p class="inbox-empty">No requests in this view. New requests from project pages will appear here.</p>';
 }
 async function openEditor(id) {
+  if (detailsDirty && !window.confirm('Discard the unsaved project details?')) { $('adminProject').value = editing.game.id; return; }
   clearEditor(); const number = editorNumber;
   tab('images'); $('adminProject').value = id; notice('Loading project…');
   try {
@@ -115,7 +119,7 @@ async function openEditor(id) {
   } catch (error) { notice(error.message); }
 }
 function imageUrl(preview) { return preview.posterUrl || (preview.kind === 'image' ? preview.url : ''); }
-function paintEditor() {
+function paintEditor(withDetails = true) {
   const game = editing.game;
   $('imageEditor').hidden = false; $('editorTitle').textContent = game.title;
   $('editorProjectLink').href = `./?game=${encodeURIComponent(game.id)}`;
@@ -134,6 +138,33 @@ function paintEditor() {
   $('framePicker').hidden = !videos.length;
   $('frameSource').innerHTML = videos.map((clip,i) => `<option value="${i}">Clip ${i+1} · ${e(dateLabel(clip.date))}</option>`).join('');
   $('frameMessage').textContent = ''; $('imageMessage').textContent = ''; $('resetImage').disabled = !editing.override;
+  if (withDetails) paintDetails();
+}
+function paintDetails() {
+  for (const [key, id] of Object.entries(detailInputs)) {
+    const value = editing.game[key]; $(id).value = Array.isArray(value) ? value.join(', ') : value || '';
+  }
+  detailsRevision = editing.detailsRevision; detailsDirty = false;
+  $('detailsStatus').textContent = editing.detailsOverride ? `Edited details · saved ${dateLabel(editing.detailsOverride.updatedAt)}` : 'Imported details';
+  $('resetDetails').disabled = !editing.detailsOverride; $('reloadDetails').hidden = true;
+}
+async function saveDetails(reset = false) {
+  if (!editing || detailsSaving) return;
+  const current = editorNumber, gameId = editing.game.id;
+  const details = Object.fromEntries(Object.entries(detailInputs).map(([key,id]) => [key,
+    ['tags','platforms'].includes(key) ? $(id).value.split(',').map(value => value.trim()).filter(Boolean) : $(id).value.trim()]));
+  details.projectUrl ||= null;
+  detailsSaving = true; $('detailsFields').disabled = true; $('detailsMessage').textContent = 'Saving details…';
+  try {
+    const result = await privateRequest(`/admin/games/${gameId}/details`, { method: 'PUT', body: { mode: reset ? 'reset' : 'edit', revision: detailsRevision, ...(reset ? {} : { details }) } });
+    if (current !== editorNumber) return;
+    editing = result; paintDetails(); $('editorTitle').textContent = result.game.title;
+    games = games.map(game => game.id === gameId ? result.game : game); projectOptions();
+    notice(`Editing ${result.game.title}`);
+    $('detailsMessage').textContent = reset ? 'Imported details restored.' : 'Details saved. The public collection updates within a minute.';
+  } catch (error) {
+    if (current === editorNumber) { $('detailsMessage').textContent = error.message; $('reloadDetails').hidden = error.status !== 409; }
+  } finally { detailsSaving = false; $('detailsFields').disabled = false; }
 }
 function chooseUrl(url, postId) {
   upload = null; $('imageFile').value = ''; $('imagePermissionLabel').hidden = true; $('imagePermission').checked = false;
@@ -163,7 +194,7 @@ async function savePreview(reset = false) {
   try {
     const result = await privateRequest(`/admin/games/${gameId}/image`, { method: 'PUT', body });
     if (current !== editorNumber) return;
-    editing = result; paintEditor(); $('imageMessage').textContent = reset ? 'Automatic preview restored.' : 'Image saved. It will appear in the public collection on its next refresh.';
+    editing = result; paintEditor(false); $('imageMessage').textContent = reset ? 'Automatic preview restored.' : 'Image saved. It will appear in the public collection on its next refresh.';
   } catch (error) { if (current === editorNumber) $('imageMessage').textContent = error.message; }
   finally { saving = false; $('saveImage').disabled = false; $('resetImage').disabled = !editing?.override; }
 }
@@ -225,7 +256,11 @@ $('adminSignIn').addEventListener('click', async event => {
 document.querySelectorAll('[data-admin-tab]').forEach(button => button.addEventListener('click', () => tab(button.dataset.adminTab)));
 $('refreshQuizMetrics').addEventListener('click',loadQuizMetrics);
 $('adminSearch').addEventListener('input', projectOptions);
-$('adminProject').addEventListener('change', event => { if (event.target.value) openEditor(event.target.value); else clearEditor(); });
+$('adminProject').addEventListener('change', event => {
+  if (event.target.value) openEditor(event.target.value);
+  else if (detailsDirty && !window.confirm('Discard the unsaved project details?')) event.target.value = editing.game.id;
+  else clearEditor();
+});
 $('inboxStatus').addEventListener('change', () => loadInbox());
 $('refreshInbox').addEventListener('click', () => loadInbox()); $('moreRequests').addEventListener('click', () => loadInbox(true));
 $('inboxEntries').addEventListener('click', async event => {
@@ -243,10 +278,19 @@ $('imageFile').addEventListener('change', async event => {
   catch(error){ if(current===editorNumber)$('imageMessage').textContent=error.message; }
 });
 $('imageForm').addEventListener('submit', event => { event.preventDefault(); savePreview(); });
+$('detailsForm').addEventListener('input', () => { detailsDirty = true; $('detailsMessage').textContent = 'Unsaved changes'; });
+$('detailsForm').addEventListener('submit', event => { event.preventDefault(); saveDetails(); });
+$('resetDetails').addEventListener('click', () => saveDetails(true));
+$('reloadDetails').addEventListener('click', async () => {
+  const current = editorNumber; if (!editing) return;
+  try { const result = await privateRequest(`/admin/games/${editing.game.id}`); if (current !== editorNumber) return; editing = result; paintDetails(); $('editorTitle').textContent = result.game.title; notice(`Editing ${result.game.title}`); $('detailsMessage').textContent = 'Saved details loaded.'; }
+  catch (error) { if (current === editorNumber) $('detailsMessage').textContent = error.message; }
+});
+window.addEventListener('beforeunload', event => { if (detailsDirty) { event.preventDefault(); event.returnValue = ''; } });
 $('resetImage').addEventListener('click', () => savePreview(true));
 $('refreshProjectMedia').addEventListener('click', async event => {
   if (!editing) return; const button=event.currentTarget, id=editing.game.id, current=editorNumber; button.disabled=true;
-  try { const result=await privateRequest(`/admin/games/${id}/media`,{method:'POST',body:{}}); if(current!==editorNumber)return; await openEditor(id); $('imageMessage').textContent=result.checked ? `Checked ${result.checked} original posts for media.` : 'Available source media is already loaded.'; }
+  try { const result=await privateRequest(`/admin/games/${id}/media`,{method:'POST',body:{}}); if(current!==editorNumber)return; const record=await privateRequest(`/admin/games/${id}`); if(current!==editorNumber)return; editing=record; paintEditor(false); $('imageMessage').textContent=result.checked ? `Checked ${result.checked} original posts for media.` : 'Available source media is already loaded.'; }
   catch(error){ if(current===editorNumber)$('imageMessage').textContent=error.message; } finally{button.disabled=false;}
 });
 $('framePicker').addEventListener('toggle', () => { if($('framePicker').open&&!$('frameVideo').src)loadClip(); else if(!$('framePicker').open){ frameRun++; $('frameVideo').pause(); } });

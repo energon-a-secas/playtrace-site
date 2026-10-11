@@ -10,6 +10,7 @@ import { feedbackConfigured, publicFeedback, ownFeedback, writeFeedback, hideFee
 import { adminConfigured, authorizeAdmin, members } from './admin.mjs';
 import { submitChange, inbox, resolveChange } from './requests.mjs';
 import { editorGame, editPreview } from './editor.mjs';
+import { editDetails } from './details.mjs';
 import { gameStore, refreshSteamBatch } from './steam.mjs';
 import { hydrateMedia } from './assets.mjs';
 import { quizInfo, startQuiz, finishQuiz, deleteQuizData, quizMetrics } from './quiz.mjs';
@@ -39,6 +40,7 @@ const routes = [
   [/^\/admin\/requests\/([a-f0-9-]{36})$/, ['PUT'], 'editorRequest'],
   [/^\/admin\/games\/(g_[a-z0-9]{5,12})$/, ['GET'], 'editorGame'],
   [/^\/admin\/games\/(g_[a-z0-9]{5,12})\/image$/, ['PUT'], 'editorImage'],
+  [/^\/admin\/games\/(g_[a-z0-9]{5,12})\/details$/, ['PUT'], 'editorDetails'],
   [/^\/admin\/games\/(g_[a-z0-9]{5,12})\/media$/, ['POST'], 'editorMedia'],
   [/^\/admin\/feedback\/([a-f0-9-]{36})\/hide$/, ['POST'], 'hideFeedback'],
   [/^\/admin\/games\/(g_[a-z0-9]{5,12})\/(remove|preview)$/, ['POST'], 'adminGame'],
@@ -110,6 +112,7 @@ export function createWorker(overrides = {}) {
           else if (action === 'editorRequest') result = json(await resolveChange(db, match[1], await readJson(request), admin, deps));
           else if (action === 'editorGame') result = json(await editorGame(db, match[1]));
           else if (action === 'editorImage') result = json(await editPreview(db, env, match[1], await readJson(request, 7 * 1024 * 1024), request, admin, deps));
+          else if (action === 'editorDetails') { await editDetails(db, match[1], await readJson(request), admin, deps); result = json(await editorGame(db, match[1])); }
           else { exactKeys(await readJson(request), []); result = json(await hydrateMedia(env, deps, match[1])); }
         }
         else if (action === 'media') result = await serveMedia(database(env), env, match[1]);

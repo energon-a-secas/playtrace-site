@@ -8,7 +8,7 @@ Apply `worker/migrations/0004_editorial_tools.sql` before deploying its Worker. 
 
 The Worker first verifies a normal Clerk session using the existing pinned issuer/JWKS and allowed origin. It then retrieves that subject from `https://api.clerk.com/v1/users/:id` using a **server-only `CLERK_SECRET_KEY`**. Only the user's verified **primary** email can match an enabled admin invitation. Client-supplied email, browser profile data, and user-editable metadata grant no access. Locked/banned accounts are rejected. An invitation is atomically bound to its first verified Clerk subject; recreating an account with the same email does not inherit that role. Every admin request rechecks Clerk and the enabled role. Owner-only member management cannot alter the default owner.
 
-Production activation requires both the Clerk secret and `playtrace.neorgon.com` in the existing Clerk **Allowed Subdomains** configuration. Preserve the existing hosts. Use a Cloudflare secret binding or `wrangler secret put CLERK_SECRET_KEY`, entering the value interactively; never place it in browser config, source, a command argument, or a chat message. Missing setup reports `capabilities.admin:false` and keeps the admin workspace closed. `accountsReady:false` remains appropriate until the separate following flow has been verified with a real account. The admin page initializes auth independently when the server advertises admin capability.
+Production activation requires both the Clerk secret and `playtrace.neorgon.com` in the existing Clerk **Allowed Subdomains** configuration. Preserve the existing hosts. Use a Cloudflare secret binding or `wrangler secret put CLERK_SECRET_KEY`, entering the value interactively; never place it in browser config, source, a command argument, or a chat message. Missing setup reports `capabilities.admin:false` and keeps the admin workspace closed. The public account entry point is enabled after the live domain connection is checked. The admin page initializes auth independently when the server advertises admin capability.
 
 ## Routes
 
@@ -22,7 +22,8 @@ All paths below follow `/api/v1`. Admin routes require a verified Clerk bearer s
 | `PUT /admin/requests/:id` | `{status,note}`; private note up to 1200 characters. Records reviewer and review time. |
 | `GET /admin/members` | Owner only; email, role, enabled and creation date. |
 | `PUT /admin/members` | Owner only; `{email,enabled}` grants/restores/revokes admin access. No email is sent. |
-| `GET /admin/games/:id` | Effective game, original `sourcePreview`, and optional override date. |
+| `GET /admin/games/:id` | Effective game, original `sourcePreview` and `sourceDetails`, image/detail override dates, and `detailsRevision`. |
+| `PUT /admin/games/:id/details` | `{mode:"edit", revision, details}` or `{mode:"reset", revision}`. Details contain title, summary, category, stage, projectUrl, tags, and platforms. A stale revision returns 409; removed games return 404. |
 | `PUT /admin/games/:id/image` | See image modes below. Returns the updated editor record. |
 | `POST /admin/games/:id/media` | `{}`. Checks up to ten previously unchecked source posts for that game. |
 | `GET /games/:id/store` | `{gameId,steam}`. Refreshes expired metadata for the project's exact Steam app link. Null when unlinked or unconfirmed. |
@@ -52,10 +53,14 @@ Source posts can now include up to six validated image, GIF, or video asset URLs
 
 ## Release and validation
 
-Publish the compatible static frontend and apply migration 0004 before deploying the new Worker. Configure both `35 * * * *` for archive collection and `5 * * * *` for bounded maintenance. Existing guest endpoints and history cursors keep their contracts. Keep `accountsReady:false` until live Clerk setup is verified. Public change requests, Steam metadata and source media can operate while admin sign-in is waiting on that setup.
+Publish the compatible static frontend and apply migration 0004 before deploying the new Worker. Configure both `35 * * * *` for archive collection and `5 * * * *` for bounded maintenance. Existing guest endpoints and history cursors keep their contracts. Keep account features gated until live Clerk setup is verified. Public change requests, Steam metadata and source media can operate while admin sign-in is waiting on that setup.
 
 Run Node tests, schema forward/rollback checks, HTML shell/nesting checks, and disposable browser/runtime flows. Do not post synthetic feedback or requests to production. The author browser harness has 27 checks and covers public request → private inbox → resolution, image replacement/reset, real video frame selection/upload, member grant/revoke, sign-out clearing, mobile layout and accessibility. Sixteen runtime checks exercise the bundled production entrypoint in actual workerd with local D1/R2 and test-only fixed upstream fixtures, including real RSA verification and the Clerk server profile boundary. Node suites have 91 passing tests; schema forward/rollback suites have 10. Live Clerk sign-in remains unverified pending account configuration.
 
 Prefer a forward fix. Once posts have `assets`, older strict Worker validators will reject those records. A code rollback must retain the compatible source validator, media serving rules, and additive tables. The destructive SQL rollback is for disposable test databases or an explicitly authorized data rollback.
 
 References: [Clerk backend users](https://clerk.com/docs/reference/backend/types/backend-user), [Steam Storefront endpoint](https://store.steampowered.com/api/appdetails?appids=620&cc=us&filters=basic,price_overview,release_date), [Arctic Shift ID lookup](https://github.com/ArthurHeitmann/arctic_shift/blob/master/api/README.md#id-lookup), [cross-origin canvas restrictions](https://developer.mozilla.org/en-US/docs/Web/HTML/How_to/CORS_enabled_image).
+
+## Project details
+
+Migration `0007_project_details.sql` adds separate editorial overrides. Importers continue to match the original creator and project URL, while the public catalogue, store lookup and Steam maintenance use the effective edited URL. Reset clears only the details override and advances the revision, retaining stale-tab protection. Removing a game erases its overrides. Names, descriptions, genre, stage, devices and tags are editable; source authors, post titles, timestamps and IDs remain unchanged. The UI preserves unsaved details when saving an image, exposes a reload action after a conflict, and warns before leaving unsaved details.

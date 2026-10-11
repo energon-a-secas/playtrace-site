@@ -1,6 +1,7 @@
 import { readBytes } from './http.mjs';
 import { query, getGame } from './store.mjs';
 import { acquire, release } from './lease.mjs';
+import { applyDetails } from './details.mjs';
 
 export const STEAM_IMAGE_HOSTS = ['shared.akamai.steamstatic.com', 'shared.fastly.steamstatic.com', 'cdn.akamai.steamstatic.com', 'cdn.cloudflare.steamstatic.com'];
 export function steamAppId(value) {
@@ -51,16 +52,17 @@ export async function refreshSteam(db, appId, deps) {
   } finally { await release(db, `steam:${appId}`, owner); }
 }
 export async function gameStore(db, gameId, deps) {
-  const game = await getGame(db, gameId), appId = steamAppId(game.projectUrl);
+  const [game] = await applyDetails(db, [await getGame(db, gameId)]), appId = steamAppId(game.projectUrl);
   if (!appId) return { gameId, steam: null };
   const steam = await refreshSteam(db, appId, deps);
-  await getGame(db, gameId);
-  return { gameId, steam };
+  const [current] = await applyDetails(db, [await getGame(db, gameId)]);
+  return { gameId, steam: steamAppId(current.projectUrl) === appId ? steam : null };
 }
 export async function refreshSteamBatch(db, deps) {
-  const rows = await query(db, `SELECT DISTINCT project_url FROM games WHERE status='published'
-    AND project_url LIKE 'https://store.steampowered.com/app/%'
-    AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id)`).all();
+  const rows = await query(db, `SELECT DISTINCT CASE WHEN json_type(o.details_json,'$.projectUrl') IS NOT NULL
+      THEN json_extract(o.details_json,'$.projectUrl') ELSE g.project_url END AS project_url
+    FROM games g LEFT JOIN project_overrides o ON o.game_id=g.id WHERE g.status='published'
+    AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id)`).all();
   const ids = [...new Set(rows.results.map(row => steamAppId(row.project_url)).filter(Boolean))];
   const checked = await query(db, 'SELECT app_id,retry_at FROM steam_cache').all();
   const retry = new Map(checked.results.map(row => [row.app_id, row.retry_at]));
@@ -69,6 +71,7 @@ export async function refreshSteamBatch(db, deps) {
   return { checked: due.length, remaining: ids.filter(id => (retry.get(id) || 0) <= deps.now()).length - due.length };
 }
 export async function enrichGames(db, games) {
+  games = await applyDetails(db, games);
   const [overrides, cache] = await db.batch([
     query(db, 'SELECT game_id,preview_json FROM preview_overrides WHERE game_id IN(SELECT value FROM json_each(?))', JSON.stringify(games.map(game => game.id))),
     query(db, 'SELECT app_id,payload_json FROM steam_cache WHERE app_id IN(SELECT value FROM json_each(?))', JSON.stringify([...new Set(games.map(game => steamAppId(game.projectUrl)).filter(Boolean))])),

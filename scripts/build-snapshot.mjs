@@ -2,7 +2,8 @@ import { readFile, writeFile, rename } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
 import { pathToFileURL } from 'node:url';
 import { decodeEntities } from '../worker/src/archive.mjs';
-import { PROJECT_FLAIR, projectFlair } from '../worker/src/source-policy.mjs';
+import { PROJECT_FLAIR, projectFlair, REVIEWED_UNLABELED } from '../worker/src/source-policy.mjs';
+import { extractAssets } from '../worker/src/assets.mjs';
 import { AUTHOR, POST_ID, canonicalProjectUrl, httpsUrl, sourceUrl, validateCatalog } from '../worker/src/validation.mjs';
 
 const clean = value => decodeEntities(value || '').replace(/\\([_&])/g, '$1');
@@ -15,7 +16,7 @@ const safeImage = value => {
 function projectLinks(post) {
   const content = clean(`${post.url || ''}\n${post.title}\n${post.selftext || ''}`);
   return new Set((content.match(/https?:\/\/[^\s<>"\[\]()]+/g) || [])
-    .map(url => canonicalProjectUrl(url.replace(/^http:/, 'https:'))).filter(Boolean));
+    .map(url => canonicalProjectUrl(url.replace(/[.,]+$/, '').replace(/^http:/, 'https:'))).filter(Boolean));
 }
 function preview(post, title) {
   const image = post.preview?.images?.[0];
@@ -38,8 +39,8 @@ function preview(post, title) {
     posterUrl: poster, alt: `${title}: preview shared by u/${post.author}`,
     storage: 'external', rights: 'source-linked', sourceUrl: sourceUrl(post.id) };
 }
-function checkedPost(post, reviewedAt) {
-  if (!post || !projectFlair(post.link_flair_text) || !POST_ID.test(post.id) || !AUTHOR.test(post.author) || post.author.toLowerCase() === 'automoderator'
+function checkedPost(post, reviewedAt, reviewUnlabeled = false) {
+  if (!post || !(projectFlair(post.link_flair_text) || (reviewUnlabeled && post.link_flair_text == null)) || !POST_ID.test(post.id) || !AUTHOR.test(post.author) || post.author.toLowerCase() === 'automoderator'
     || post.subreddit?.toLowerCase() !== 'aigamedev' || post.over_18 || post.stickied || post.removed
     || post.removed_by_category || post.removed_by || post.banned_by
     || [post.title, post.selftext].some(value => /^\[(deleted|removed)\]$/i.test(value || ''))
@@ -66,10 +67,12 @@ export function buildSnapshot(base, archive, review) {
   const selected = new Set();
   for (const entry of review.selections) {
     if (!Array.isArray(entry.postIds) || !entry.postIds.length) throw new Error('A selection needs source posts.');
+    const reviewUnlabeled = entry.inclusion === REVIEWED_UNLABELED && typeof entry.reason === 'string' && entry.reason.trim().length >= 20;
+    if (entry.inclusion !== undefined && !reviewUnlabeled) throw new Error('An unlabeled source needs an explicit individual review and reason.');
     const history = entry.postIds.map(id => {
       if (selected.has(id)) throw new Error(`Source post selected twice: ${id}`);
       selected.add(id);
-      return checkedPost(posts.get(id), review.reviewedAt);
+      return checkedPost(posts.get(id), review.reviewedAt, reviewUnlabeled);
     }).sort((a, b) => a.created_utc - b.created_utc || a.id.localeCompare(b.id));
     const author = history[0].author;
     const id = `g_${history[0].id}`;
@@ -88,7 +91,9 @@ export function buildSnapshot(base, archive, review) {
     const sameProject = project && [...games.values()].find(game => game.id !== id
       && game.author.name.toLowerCase() === author.toLowerCase() && canonicalProjectUrl(game.projectUrl) === project);
     if (sameProject) throw new Error(`Project already exists as ${sameProject.id}; review its timeline instead.`);
-    const timeline = history.map(post => ({ id: post.id, url: sourceUrl(post.id), title: clean(post.title), author: post.author, flair: PROJECT_FLAIR,
+    const timeline = history.map(post => ({ id: post.id, url: sourceUrl(post.id), title: clean(post.title), author: post.author,
+      flair: projectFlair(post.link_flair_text) ? PROJECT_FLAIR : null,
+      ...(!projectFlair(post.link_flair_text) ? { inclusion: REVIEWED_UNLABELED } : {}), assets: extractAssets(post),
       createdAt: new Date(post.created_utc * 1000).toISOString(),
       kind: /\b(update|progress|devlog|added|patch)\b/i.test(post.title) ? 'update'
         : /\b(released|launched|available now)\b/i.test(post.title) ? 'release' : 'showcase',

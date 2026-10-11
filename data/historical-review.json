@@ -1,0 +1,1632 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-11T12:09:10.468Z",
+  "retrievedAt": "2026-10-11T12:09:10.468Z",
+  "scope": "Individual review of unlabeled historical game showcases. Missing flair is preserved. Explicitly excluded flairs remain ineligible. Prototype labels and build links describe the archived source; availability is not implied today.",
+  "selections": [
+    {
+      "postIds": [
+        "12admsb"
+      ],
+      "title": "Infinite Adversaries",
+      "summary": "A choose-your-own-adventure game narrated by ChatGPT, shared with a link to its project site.",
+      "projectUrl": "https://infiniteadversaries.com/",
+      "category": "adventure",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A choose-your-own-adventure game narrated by ChatGPT, shared with a link to its project site. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "135mk3f"
+      ],
+      "title": "Interactive story prototype",
+      "summary": "A video showcase of a web game where the player is the protagonist of an AI-generated story.",
+      "projectUrl": null,
+      "category": "adventure",
+      "stage": "prototype",
+      "platforms": [
+        "Browser"
+      ],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A video showcase of a web game where the player is the protagonist of an AI-generated story. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "14lz9bo"
+      ],
+      "title": "Story puzzle prototype",
+      "summary": "An interactive fiction concept combining puzzles with player-defined backgrounds and generated artwork.",
+      "projectUrl": null,
+      "category": "puzzle",
+      "stage": "concept",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An interactive fiction concept combining puzzles with player-defined backgrounds and generated artwork. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "14q3m2y"
+      ],
+      "title": "Cursed Realm",
+      "summary": "A chat-driven game in which players talk with NPCs to discover clues. The team shared a closed beta.",
+      "projectUrl": "https://cr.capplay.io/",
+      "category": "rpg",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A chat-driven game in which players talk with NPCs to discover clues. The team shared a closed beta. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "14u6sqe"
+      ],
+      "title": "MEMORAI",
+      "summary": "Memory, sliding and swapping puzzles with AI-generated image collections and unlockable theme packs. The original build link is currently unavailable.",
+      "projectUrl": null,
+      "category": "puzzle",
+      "stage": "prototype",
+      "platforms": [
+        "Mobile"
+      ],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "Memory, sliding and swapping puzzles with AI-generated image collections and unlockable theme packs. Archived source has no flair; individually reviewed as a specific game showcase.",
+      "originalProjectUrl": "https://entity.be/memorai"
+    },
+    {
+      "postIds": [
+        "15an9o3"
+      ],
+      "title": "CapyMask",
+      "summary": "A multiplayer social deduction game where players identify the AI participant or convincingly impersonate it.",
+      "projectUrl": null,
+      "category": "other",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A multiplayer social deduction game where players identify the AI participant or convincingly impersonate it. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "15wkm3d"
+      ],
+      "title": "Mirage Island",
+      "summary": "A creature collection beta with battles and AI-generated creatures, shared by its developer.",
+      "projectUrl": "https://mirageisland.ai/",
+      "category": "rpg",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A creature collection beta with battles and AI-generated creatures, shared by its developer. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "16nn1kg"
+      ],
+      "title": "Altmon",
+      "summary": "A 2D creature-battling roguelite RPG with turn-based combat, introduced by its development account.",
+      "projectUrl": null,
+      "category": "rpg",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A 2D creature-battling roguelite RPG with turn-based combat, introduced by its development account. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "16or35s"
+      ],
+      "title": "Embark",
+      "summary": "A video introduction to the team’s RPG featuring AI-powered NPCs.",
+      "projectUrl": null,
+      "category": "rpg",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A video introduction to the team’s RPG featuring AI-powered NPCs. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "173pcsq",
+        "1bi9qiz"
+      ],
+      "title": "Detective Deviant",
+      "summary": "A short detective game built for an AI game jam, with natural-language NPC conversations and generated assets.",
+      "projectUrl": "https://kokutouchichi.itch.io/detective-deviant",
+      "category": "adventure",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A short detective game built for an AI game jam, with natural-language NPC conversations and generated assets. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "17dww6i"
+      ],
+      "title": "AIdventure",
+      "summary": "A trailer for a text adventure that uses AI as its storyteller.",
+      "projectUrl": null,
+      "category": "adventure",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A trailer for a text adventure that uses AI as its storyteller. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "17sztzp"
+      ],
+      "title": "AI character RPG prototype",
+      "summary": "A gameplay video showing an original JRPG-style project with AI-powered monsters and characters.",
+      "projectUrl": null,
+      "category": "rpg",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A gameplay video showing an original JRPG-style project with AI-powered monsters and characters. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1810qvm"
+      ],
+      "title": "Choose-your-own-adventure prototype",
+      "summary": "An early interactive story experiment whose developer is testing prompts, story structure and player choices.",
+      "projectUrl": "https://bio.site/aiadventure",
+      "category": "adventure",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An early interactive story experiment whose developer is testing prompts, story structure and player choices. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "18om8td"
+      ],
+      "title": "Generated platformer prototype",
+      "summary": "A gameplay demonstration of 2D platformer levels generated in real time.",
+      "projectUrl": null,
+      "category": "action",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A gameplay demonstration of 2D platformer levels generated in real time. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "18p37gb"
+      ],
+      "title": "Echoes of Somewhere",
+      "summary": "A free AI-assisted point-and-click adventure demo shared by its developer.",
+      "projectUrl": null,
+      "category": "adventure",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A free AI-assisted point-and-click adventure demo shared by its developer. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "18q9ixz"
+      ],
+      "title": "TripoGO",
+      "summary": "Players generate monsters from words, battle them and combine their features after winning.",
+      "projectUrl": "https://tripogo.holymolly.ai/",
+      "category": "rpg",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "Players generate monsters from words, battle them and combine their features after winning. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "18z31x3"
+      ],
+      "title": "Llama2 Exploder",
+      "summary": "A browser game shared with a direct Rosebud build link.",
+      "projectUrl": "https://play.rosebud.ai/games/cb85d6ae-8bed-40bd-8cbd-9fd4babff4d2",
+      "category": "arcade",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A browser game shared with a direct Rosebud build link. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "198a2z2"
+      ],
+      "title": "Quest Machina",
+      "summary": "A development update about an AI text-and-image game reaching its Steam store-page milestone.",
+      "projectUrl": null,
+      "category": "adventure",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A development update about an AI text-and-image game reaching its Steam store-page milestone. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "19ae7o6"
+      ],
+      "title": "Alchemic AI: Infinity Mix",
+      "summary": "A mobile combination game using generative AI, shared with App Store and Google Play links.",
+      "projectUrl": "https://apps.apple.com/ca/app/alchemic-ai-infinity-mix/id6466730288",
+      "category": "puzzle",
+      "stage": "playable",
+      "platforms": [
+        "Mobile"
+      ],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A mobile combination game using generative AI, shared with App Store and Google Play links. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1aktc4u"
+      ],
+      "title": "Guncade",
+      "summary": "A visual novel with AI-generated artwork, shared while its demo was taking part in Steam Next Fest.",
+      "projectUrl": "https://store.steampowered.com/app/2398950/Guncade",
+      "category": "adventure",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A visual novel with AI-generated artwork, shared while its demo was taking part in Steam Next Fest. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1ar3k1t"
+      ],
+      "title": "Hummingbird prototype",
+      "summary": "Explore environments and activate flower switches in a solo developer’s Unity hummingbird game.",
+      "projectUrl": null,
+      "category": "adventure",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "Explore environments and activate flower switches in a solo developer’s Unity hummingbird game. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1c86giu"
+      ],
+      "title": "Spark Rush",
+      "summary": "A Unity WebGL game with an online leaderboard and assets made using several AI tools.",
+      "projectUrl": "https://strangeboltz.itch.io/spark-rush",
+      "category": "arcade",
+      "stage": "playable",
+      "platforms": [
+        "Browser"
+      ],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A Unity WebGL game with an online leaderboard and assets made using several AI tools. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1c8pawz"
+      ],
+      "title": "Inkvestigations",
+      "summary": "Investigate as Sherlock Holmes by corresponding with a police chief, giving orders and gathering clues.",
+      "projectUrl": "https://inkvestigations.com/",
+      "category": "puzzle",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "Investigate as Sherlock Holmes by corresponding with a police chief, giving orders and gathering clues. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1cbs546"
+      ],
+      "title": "Undercover: Speed Dating with Wolves",
+      "summary": "A conversation-focused game using AI to expand its dialogue and survival-style interactions.",
+      "projectUrl": "https://store.steampowered.com/app/2492310/Undercover_Speed_Dating_with_Wolves",
+      "category": "adventure",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A conversation-focused game using AI to expand its dialogue and survival-style interactions. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1ccvqw7"
+      ],
+      "title": "Alien abduction prototype",
+      "summary": "A gameplay showcase of a project where the player lures AI-powered NPCs to an alien ship.",
+      "projectUrl": null,
+      "category": "adventure",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A gameplay showcase of a project where the player lures AI-powered NPCs to an alien ship. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1cuyqx7"
+      ],
+      "title": "GPT World",
+      "summary": "An interactive fiction release supporting player choices and generated adventures.",
+      "projectUrl": "https://restathome.itch.io/gpt-world",
+      "category": "adventure",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An interactive fiction release supporting player choices and generated adventures. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1d4p5k3"
+      ],
+      "title": "Chain reaction prototype",
+      "summary": "A visual demonstration of a developer’s chain reaction game.",
+      "projectUrl": null,
+      "category": "puzzle",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A visual demonstration of a developer’s chain reaction game. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1d7h482"
+      ],
+      "title": "1001 Nights",
+      "summary": "An AI-driven storytelling game shared with a gameplay demonstration and references to its demo and research.",
+      "projectUrl": null,
+      "category": "adventure",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An AI-driven storytelling game shared with a gameplay demonstration and references to its demo and research. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1di8a4z"
+      ],
+      "title": "AI Hunter",
+      "summary": "A short visual novel built as a game design degree project, using AI characters for a Turing-test-inspired experience.",
+      "projectUrl": "https://swieczka.itch.io/aihunter",
+      "category": "adventure",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A short visual novel built as a game design degree project, using AI characters for a Turing-test-inspired experience. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1dr9cqw"
+      ],
+      "title": "The Arcbow Anthology",
+      "summary": "An illustrated interactive fiction game set on a Martian frontier dominated by powerful corporations.",
+      "projectUrl": "https://loressa.itch.io/the-arcbow-anthology",
+      "category": "adventure",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An illustrated interactive fiction game set on a Martian frontier dominated by powerful corporations. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1drx69j"
+      ],
+      "title": "Delve",
+      "summary": "An interactive fiction game about a difficult job interview, using generated artwork.",
+      "projectUrl": "https://loressa.itch.io/delve",
+      "category": "adventure",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An interactive fiction game about a difficult job interview, using generated artwork. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1dzau0n"
+      ],
+      "title": "What Beats Rock?",
+      "summary": "A word game extending rock-paper-scissors: propose what beats the previous answer and let an LLM judge the result.",
+      "projectUrl": "https://whatbeatsrock.com/",
+      "category": "puzzle",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A word game extending rock-paper-scissors: propose what beats the previous answer and let an LLM judge the result. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1e0a0mv"
+      ],
+      "title": "EcoClicker",
+      "summary": "An idle ecosystem simulator built with AI coding assistance.",
+      "projectUrl": "https://alkalidum.itch.io/ecoclicker",
+      "category": "simulation",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An idle ecosystem simulator built with AI coding assistance. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1eayu1x"
+      ],
+      "title": "The Big Red Button Game",
+      "summary": "A browser game built around pressing a red button, inspired by The Stanley Parable.",
+      "projectUrl": "https://alkalidum.itch.io/the-big-red-button-game",
+      "category": "adventure",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A browser game built around pressing a red button, inspired by The Stanley Parable. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1ecu2tq",
+        "1eij4ux"
+      ],
+      "title": "Battle, Die, Repeat!",
+      "summary": "An RPG prototype with AI-assisted item crafting, materials and an evolving inventory system.",
+      "projectUrl": "https://battle-die-repeat.flutterflow.app/",
+      "category": "rpg",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An RPG prototype with AI-assisted item crafting, materials and an evolving inventory system. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1edzv8o"
+      ],
+      "title": "Neurotide",
+      "summary": "A cinematic game in production with AI-assisted code, video, sound effects and audio.",
+      "projectUrl": null,
+      "category": "adventure",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A cinematic game in production with AI-assisted code, video, sound effects and audio. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1ef5cud"
+      ],
+      "title": "Illimitale",
+      "summary": "A browser game with minigames, shown through screenshots and a linked public project.",
+      "projectUrl": "https://www.illimitale.com/",
+      "category": "adventure",
+      "stage": "playable",
+      "platforms": [
+        "Browser"
+      ],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A browser game with minigames, shown through screenshots and a linked public project. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1epq4uc"
+      ],
+      "title": "Arderico’s Journey",
+      "summary": "A choose-your-own-adventure game with dynamic character interactions, built by two developers using generated art and UI.",
+      "projectUrl": "https://store.steampowered.com/app/2998500/Ardericos_Journey",
+      "category": "adventure",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A choose-your-own-adventure game with dynamic character interactions, built by two developers using generated art and UI. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1g63wqc"
+      ],
+      "title": "Echo of Mobius",
+      "summary": "An AI game showcased during Steam Next Fest, with a developer account of its demo and growing wishlists.",
+      "projectUrl": "https://store.steampowered.com/app/2974560",
+      "category": "adventure",
+      "stage": "playable",
+      "platforms": [
+        "PC",
+        "Mobile"
+      ],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An AI game showcased during Steam Next Fest, with a developer account of its demo and growing wishlists. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1g6ccq5"
+      ],
+      "title": "Mind Bender Simulator",
+      "summary": "A Unity prototype where players persuade AI characters to reveal information or change their plans. The original build link is currently unavailable.",
+      "projectUrl": null,
+      "category": "puzzle",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A Unity prototype where players persuade AI characters to reveal information or change their plans. Archived source has no flair; individually reviewed as a specific game showcase.",
+      "originalProjectUrl": "https://fantasticostudio.itch.io/mind-bender-simulator"
+    },
+    {
+      "postIds": [
+        "1g7kl4y"
+      ],
+      "title": "AI Fantasy",
+      "summary": "A text RPG whose stories, events, items, images and music are generated before play.",
+      "projectUrl": null,
+      "category": "rpg",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A text RPG whose stories, events, items, images and music are generated before play. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1gf5noe"
+      ],
+      "title": "Robo Janitor",
+      "summary": "A trailer for a mobile game built largely with AI-generated assets.",
+      "projectUrl": null,
+      "category": "arcade",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A trailer for a mobile game built largely with AI-generated assets. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1gk3ek6"
+      ],
+      "title": "Your Story: Games with Death",
+      "summary": "A solo developer’s visual novel and text adventure, with an account of how AI changed its artwork.",
+      "projectUrl": "https://store.steampowered.com/app/3257780/Your_Story_Games_with_Death",
+      "category": "adventure",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A solo developer’s visual novel and text adventure, with an account of how AI changed its artwork. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1gkpoz0"
+      ],
+      "title": "Infinite Match",
+      "summary": "A short AI-powered word game shared for community feedback.",
+      "projectUrl": "https://www.foryu.me/?id=2a285f88-1d79-4b42-b672-b4bf42ea6ed4",
+      "category": "puzzle",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A short AI-powered word game shared for community feedback. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1gu9aax"
+      ],
+      "title": "Identity IV",
+      "summary": "A Persona-inspired visual novel shown in a development video.",
+      "projectUrl": null,
+      "category": "adventure",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A Persona-inspired visual novel shown in a development video. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1h374hb"
+      ],
+      "title": "Prompt Golf",
+      "summary": "A competitive game about writing AI prompts, shown through project screenshots.",
+      "projectUrl": null,
+      "category": "puzzle",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A competitive game about writing AI prompts, shown through project screenshots. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1h3orz3"
+      ],
+      "title": "Hexagen",
+      "summary": "A shared browser world where participants contribute generated imagery.",
+      "projectUrl": "https://www.hexagen.world/",
+      "category": "simulation",
+      "stage": "playable",
+      "platforms": [
+        "Browser"
+      ],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A shared browser world where participants contribute generated imagery. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1hahihu"
+      ],
+      "title": "JOBifAI",
+      "summary": "A free comedy visual novel about talking your way into a job in games.",
+      "projectUrl": "https://store.steampowered.com/app/3248650/JOBifAI",
+      "category": "adventure",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A free comedy visual novel about talking your way into a job in games. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1hwae2f"
+      ],
+      "title": "Glimmer",
+      "summary": "An early preview of an open-world AI game in development. The original build link is currently unavailable.",
+      "projectUrl": null,
+      "category": "adventure",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An early preview of an open-world AI game in development. Archived source has no flair; individually reviewed as a specific game showcase.",
+      "originalProjectUrl": "https://www.aurorapicturecompany.com/glimmer"
+    },
+    {
+      "postIds": [
+        "1i655uw"
+      ],
+      "title": "Feral Pooh",
+      "summary": "A text-based survival game where familiar characters try to calm an unpredictable Pooh Bear.",
+      "projectUrl": "https://pooh.figment.games/",
+      "category": "adventure",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A text-based survival game where familiar characters try to calm an unpredictable Pooh Bear. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1ic6i44"
+      ],
+      "title": "ASCII arcade prototype",
+      "summary": "An arcade game whose visuals are drawn with ASCII characters, built through prompts.",
+      "projectUrl": "https://play.rosebud.ai/p/f8a4f15b-24ad-465c-a98c-84a1a1846cbe",
+      "category": "arcade",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An arcade game whose visuals are drawn with ASCII characters, built through prompts. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1ic8pe0"
+      ],
+      "title": "Always On",
+      "summary": "A developer’s Steam game made with extensive AI assistance, introduced just before launch.",
+      "projectUrl": "https://store.steampowered.com/app/3087090/Always_On",
+      "category": "adventure",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A developer’s Steam game made with extensive AI assistance, introduced just before launch. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1idl2px"
+      ],
+      "title": "Rodmel",
+      "summary": "An open-source text puzzle adventure that parses free-form actions within the rules of each room.",
+      "projectUrl": "https://rodmel.me/",
+      "category": "puzzle",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An open-source text puzzle adventure that parses free-form actions within the rules of each room. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1ih3gab"
+      ],
+      "title": "Mekkablood",
+      "summary": "A gameplay showcase from a developer using a custom GPT and DALL-E for game assets.",
+      "projectUrl": null,
+      "category": "action",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A gameplay showcase from a developer using a custom GPT and DALL-E for game assets. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1ip159d",
+        "1iqj4ll"
+      ],
+      "title": "Career Simulator",
+      "summary": "A life and career simulation where choices and starting conditions lead to different possible futures.",
+      "projectUrl": "https://careers.figment.games/",
+      "category": "simulation",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A life and career simulation where choices and starting conditions lead to different possible futures. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1isoc9z"
+      ],
+      "title": "Craft to Infinity",
+      "summary": "An infinite-crafting-style RPG designed to run locally on a PC.",
+      "projectUrl": null,
+      "category": "rpg",
+      "stage": "playable",
+      "platforms": [
+        "PC"
+      ],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An infinite-crafting-style RPG designed to run locally on a PC. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1izp8hq"
+      ],
+      "title": "Neighborhood Havoc",
+      "summary": "An early social simulation concept focusing on character depth and narrative prompts.",
+      "projectUrl": null,
+      "category": "simulation",
+      "stage": "concept",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An early social simulation concept focusing on character depth and narrative prompts. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1j09zdj"
+      ],
+      "title": "CubeTrix Web",
+      "summary": "A browser game built using AI assistance for its code and music.",
+      "projectUrl": "https://anttiluode.github.io/CubeTrixWeb/",
+      "category": "puzzle",
+      "stage": "playable",
+      "platforms": [
+        "Browser"
+      ],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A browser game built using AI assistance for its code and music. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1j4301z"
+      ],
+      "title": "The Threshold",
+      "summary": "A procedurally generated first-person horror prototype shared with its public build.",
+      "projectUrl": "https://3d-first-person-world--alkalidum.on.websim.ai/",
+      "category": "adventure",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A procedurally generated first-person horror prototype shared with its public build. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1j85f0k"
+      ],
+      "title": "Journey Space LLM",
+      "summary": "Act as captain and director of a space crew whose AI characters remember events and pursue goals.",
+      "projectUrl": "https://tippinggoat.itch.io/journey-space-llm",
+      "category": "simulation",
+      "stage": "playable",
+      "platforms": [
+        "Windows"
+      ],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "Act as captain and director of a space crew whose AI characters remember events and pursue goals. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1j937ht"
+      ],
+      "title": "Probable Cause",
+      "summary": "A generative-AI-powered murder mystery shown through development screenshots.",
+      "projectUrl": null,
+      "category": "adventure",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A generative-AI-powered murder mystery shown through development screenshots. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1jajyx2"
+      ],
+      "title": "V-Blaster",
+      "summary": "A space shooter shared through a gameplay video.",
+      "projectUrl": null,
+      "category": "action",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A space shooter shared through a gameplay video. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1jkzucd"
+      ],
+      "title": "Master of Dungeon",
+      "summary": "A gameplay-screen update for an AI adventure RPG.",
+      "projectUrl": null,
+      "category": "rpg",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A gameplay-screen update for an AI adventure RPG. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1jmrw7u",
+        "1jrjiat"
+      ],
+      "title": "Realms Uncharted",
+      "summary": "A multiplayer browser RPG with generated locations, enemies, loot, crafting and player trading.",
+      "projectUrl": "https://realmsuncharted.app/",
+      "category": "rpg",
+      "stage": "playable",
+      "platforms": [
+        "Browser"
+      ],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A multiplayer browser RPG with generated locations, enemies, loot, crafting and player trading. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1jptep2"
+      ],
+      "title": "Dragon’s Breath",
+      "summary": "A short dragon game made for a game jam, using face tracking for control and including a boss encounter.",
+      "projectUrl": "https://upit.com/@blackwidowink/play/eyL9HytHDO",
+      "category": "action",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A short dragon game made for a game jam, using face tracking for control and including a boss encounter. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1jr4wf3"
+      ],
+      "title": "FreeGuessr",
+      "summary": "A geography guessing game experimenting with AI-transformed images of real places.",
+      "projectUrl": "https://freeguessr.com/",
+      "category": "puzzle",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A geography guessing game experimenting with AI-transformed images of real places. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1jru1ta"
+      ],
+      "title": "Dashing Dan",
+      "summary": "A game jam project demonstrated by its developer, with a public build referenced in the post.",
+      "projectUrl": null,
+      "category": "arcade",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A game jam project demonstrated by its developer, with a public build referenced in the post. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1jsbf3x"
+      ],
+      "title": "Unnamed Story Game",
+      "summary": "A mobile chat RPG where conversations with characters determine progress through each chapter. The original build link is currently unavailable.",
+      "projectUrl": null,
+      "category": "rpg",
+      "stage": "playable",
+      "platforms": [
+        "Mobile"
+      ],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A mobile chat RPG where conversations with characters determine progress through each chapter. Archived source has no flair; individually reviewed as a specific game showcase.",
+      "originalProjectUrl": "https://apps.apple.com/ca/app/unnamed-chat-rpg/id6740737090"
+    },
+    {
+      "postIds": [
+        "1jwqo6h"
+      ],
+      "title": "Stratosphere",
+      "summary": "A month-one prototype of an alien shooter rock opera, shared by its developer.",
+      "projectUrl": null,
+      "category": "action",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A month-one prototype of an alien shooter rock opera, shared by its developer. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1jxtfvj"
+      ],
+      "title": "Neno Super Button Soccer Deluxe",
+      "summary": "A browser button-soccer game using a simplified Carioca rule set.",
+      "projectUrl": "https://weebitgames.com/elioengcomp/neno-super-button-soccer-deluxe",
+      "category": "simulation",
+      "stage": "playable",
+      "platforms": [
+        "Browser"
+      ],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A browser button-soccer game using a simplified Carioca rule set. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1k21yc1"
+      ],
+      "title": "Baby’s Day Out",
+      "summary": "An experimental browser escape game where toys and distractions influence a baby’s decisions.",
+      "projectUrl": "https://www.babydayout.xyz/",
+      "category": "puzzle",
+      "stage": "playable",
+      "platforms": [
+        "Browser"
+      ],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An experimental browser escape game where toys and distractions influence a baby’s decisions. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1k237xj"
+      ],
+      "title": "Finance Frontier",
+      "summary": "A financial literacy simulation developed with AI coding tools and generated imagery.",
+      "projectUrl": null,
+      "category": "simulation",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A financial literacy simulation developed with AI coding tools and generated imagery. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1k5blhi"
+      ],
+      "title": "Converge",
+      "summary": "A daily puzzle game using an AI model as part of its wordplay.",
+      "projectUrl": "https://convergegame.com/",
+      "category": "puzzle",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A daily puzzle game using an AI model as part of its wordplay. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1k7bq06"
+      ],
+      "title": "Quiet on Set",
+      "summary": "A murder mystery game with AI-powered NPCs, shared with its Steam page.",
+      "projectUrl": "https://store.steampowered.com/app/2544030/Quiet_on_Set",
+      "category": "adventure",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A murder mystery game with AI-powered NPCs, shared with its Steam page. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1k7yem4"
+      ],
+      "title": "Orange Smash!",
+      "summary": "A visual novel development showcase describing its generated artwork and animated lighting.",
+      "projectUrl": null,
+      "category": "adventure",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A visual novel development showcase describing its generated artwork and animated lighting. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1k8ehah"
+      ],
+      "title": "The AI Drawing Game",
+      "summary": "An iOS drawing game where an AI judge evaluates drawings against a prompt. The original build link is currently unavailable.",
+      "projectUrl": null,
+      "category": "puzzle",
+      "stage": "playable",
+      "platforms": [
+        "iOS"
+      ],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An iOS drawing game where an AI judge evaluates drawings against a prompt. Archived source has no flair; individually reviewed as a specific game showcase.",
+      "originalProjectUrl": "https://apps.apple.com/us/app/the-ai-drawing-game/id6744956625"
+    },
+    {
+      "postIds": [
+        "1k8znpl"
+      ],
+      "title": "Already Dead",
+      "summary": "A text-driven 3D interactive story shared with an itch.io build.",
+      "projectUrl": "https://01postmortem.itch.io/already-dead",
+      "category": "adventure",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A text-driven 3D interactive story shared with an itch.io build. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1k922ga"
+      ],
+      "title": "Mysteria",
+      "summary": "An online multiplayer card game built with AI coding assistance and generated art.",
+      "projectUrl": "https://fialagames.itch.io/mysteria",
+      "category": "strategy",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An online multiplayer card game built with AI coding assistance and generated art. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1kasgoo",
+        "1ksv9t4"
+      ],
+      "title": "Rotem",
+      "summary": "A puzzle game with generated image collections and music, including its launch announcement.",
+      "projectUrl": "https://store.steampowered.com/app/3660540/Rotem",
+      "category": "puzzle",
+      "stage": "released",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A puzzle game with generated image collections and music, including its launch announcement. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1kbbke1"
+      ],
+      "title": "Pizza deckbuilder prototype",
+      "summary": "A pizza-themed roguelike deckbuilder combining card synergies and run progression.",
+      "projectUrl": null,
+      "category": "strategy",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A pizza-themed roguelike deckbuilder combining card synergies and run progression. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1kc7zn2"
+      ],
+      "title": "Galactic Striker",
+      "summary": "An open-source Python space shooter inspired by Warblade and Galaga, using generated art.",
+      "projectUrl": null,
+      "category": "action",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An open-source Python space shooter inspired by Warblade and Galaga, using generated art. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1kdzboi"
+      ],
+      "title": "Mysterious Maze",
+      "summary": "An action RPG with a maze generated from a seed, built using AI coding and asset tools.",
+      "projectUrl": "https://fialagames.itch.io/mysteriousmaze",
+      "category": "rpg",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An action RPG with a maze generated from a seed, built using AI coding and asset tools. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1khdw5i"
+      ],
+      "title": "Social deception prototype",
+      "summary": "Infiltrate a group of AI specialists and convince them that you belong.",
+      "projectUrl": "https://alpha.tempestengine.ai/play/229/",
+      "category": "other",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "Infiltrate a group of AI specialists and convince them that you belong. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1kj0l17"
+      ],
+      "title": "Hexagonal Breakout",
+      "summary": "An HTML5 breakout game with controls for desktop and mobile.",
+      "projectUrl": "https://hexagonalbreakout.neocities.org/",
+      "category": "arcade",
+      "stage": "playable",
+      "platforms": [
+        "Browser"
+      ],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "An HTML5 breakout game with controls for desktop and mobile. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1kk3r1e"
+      ],
+      "title": "Vibe Coder",
+      "summary": "A humorous management game about making a hit game in ten days while balancing ideas, bugs and code coherence.",
+      "projectUrl": "https://upit.com/@blackwidowink/play/FXg5lHA0Ew",
+      "category": "simulation",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A humorous management game about making a hit game in ten days while balancing ideas, bugs and code coherence. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1knbotm"
+      ],
+      "title": "Endless dungeon runner",
+      "summary": "A developer’s dungeon runner with AI-assisted code, music and assets, shared for playtesting.",
+      "projectUrl": "https://upit.com/@blackwidowink/play/_CK2GYKD5Y",
+      "category": "action",
+      "stage": "playable",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A developer’s dungeon runner with AI-assisted code, music and assets, shared for playtesting. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1knwks4"
+      ],
+      "title": "In Our Blood",
+      "summary": "A concept art showcase for an action RPG inspired by West African mythology.",
+      "projectUrl": null,
+      "category": "rpg",
+      "stage": "concept",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A concept art showcase for an action RPG inspired by West African mythology. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1kpihjs"
+      ],
+      "title": "Tiny World prototype",
+      "summary": "A game jam proof of concept about identifying the smallest planet among other planets.",
+      "projectUrl": "https://rosebud.ai/p/49ce36bd-6e8e-415e-9c5d-afe5e9e7558b",
+      "category": "puzzle",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A game jam proof of concept about identifying the smallest planet among other planets. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1kpn7xd"
+      ],
+      "title": "Vinegar Mutter",
+      "summary": "A game development video showing artwork made with ChatGPT’s image model.",
+      "projectUrl": null,
+      "category": "adventure",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A game development video showing artwork made with ChatGPT’s image model. Archived source has no flair; individually reviewed as a specific game showcase."
+    },
+    {
+      "postIds": [
+        "1ktc6tk"
+      ],
+      "title": "Dream Novel",
+      "summary": "A narrative RPG in which settings, characters and visuals respond to the player’s actions.",
+      "projectUrl": null,
+      "category": "rpg",
+      "stage": "prototype",
+      "platforms": [],
+      "tags": [],
+      "inclusion": "reviewed-unlabeled-game",
+      "reason": "A narrative RPG in which settings, characters and visuals respond to the player’s actions. Archived source has no flair; individually reviewed as a specific game showcase."
+    }
+  ],
+  "linkChecks": [
+    {
+      "id": "12admsb",
+      "url": "https://infiniteadversaries.com/",
+      "status": 200,
+      "finalUrl": "https://expireddomains.com/domain/infiniteadversaries.com?utm_source=redi"
+    },
+    {
+      "id": "14q3m2y",
+      "url": "https://cr.capplay.io/",
+      "status": "unconfirmed"
+    },
+    {
+      "id": "14u6sqe",
+      "url": "https://entity.be/memorai",
+      "status": 404
+    },
+    {
+      "id": "15wkm3d",
+      "url": "https://mirageisland.ai/",
+      "status": "unconfirmed"
+    },
+    {
+      "id": "173pcsq",
+      "url": "https://kokutouchichi.itch.io/detective-deviant",
+      "status": 200,
+      "finalUrl": "https://ameripon.itch.io/detective-deviant"
+    },
+    {
+      "id": "1810qvm",
+      "url": "https://bio.site/aiadventure",
+      "status": 200,
+      "finalUrl": "https://bio.site/aiadventure"
+    },
+    {
+      "id": "18q9ixz",
+      "url": "https://tripogo.holymolly.ai/",
+      "status": "unconfirmed"
+    },
+    {
+      "id": "18z31x3",
+      "url": "https://play.rosebud.ai/games/cb85d6ae-8bed-40bd-8cbd-9fd4babff4d2",
+      "status": 308
+    },
+    {
+      "id": "19ae7o6",
+      "url": "https://apps.apple.com/ca/app/alchemic-ai-infinity-mix/id6466730288",
+      "status": 200,
+      "finalUrl": "https://apps.apple.com/ca/app/alchemy-ai-infinite-elements/id6466730288"
+    },
+    {
+      "id": "1aktc4u",
+      "url": "https://store.steampowered.com/app/2398950/Guncade",
+      "status": 200,
+      "finalUrl": "https://store.steampowered.com/app/2398950/Guncade"
+    },
+    {
+      "id": "1c86giu",
+      "url": "https://strangeboltz.itch.io/spark-rush",
+      "status": 200,
+      "finalUrl": "https://strangeboltz.itch.io/spark-rush"
+    },
+    {
+      "id": "1c8pawz",
+      "url": "https://inkvestigations.com/",
+      "status": 200,
+      "finalUrl": "https://inkvestigations.com/"
+    },
+    {
+      "id": "1cbs546",
+      "url": "https://store.steampowered.com/app/2492310/Undercover_Speed_Dating_with_Wolves",
+      "status": 200,
+      "finalUrl": "https://store.steampowered.com/app/2492310/Undercover_Speed_Dating_with_Wolves"
+    },
+    {
+      "id": "1cuyqx7",
+      "url": "https://restathome.itch.io/gpt-world",
+      "status": 200,
+      "finalUrl": "https://restathome.itch.io/gpt-world"
+    },
+    {
+      "id": "1di8a4z",
+      "url": "https://swieczka.itch.io/aihunter",
+      "status": 200,
+      "finalUrl": "https://swieczka.itch.io/aihunter"
+    },
+    {
+      "id": "1dr9cqw",
+      "url": "https://loressa.itch.io/the-arcbow-anthology",
+      "status": 200,
+      "finalUrl": "https://loressa.itch.io/the-arcbow-anthology"
+    },
+    {
+      "id": "1drx69j",
+      "url": "https://loressa.itch.io/delve",
+      "status": 200,
+      "finalUrl": "https://loressa.itch.io/delve"
+    },
+    {
+      "id": "1dzau0n",
+      "url": "https://whatbeatsrock.com/",
+      "status": 308
+    },
+    {
+      "id": "1e0a0mv",
+      "url": "https://alkalidum.itch.io/ecoclicker",
+      "status": 200,
+      "finalUrl": "https://alkalidum.itch.io/ecoclicker"
+    },
+    {
+      "id": "1eayu1x",
+      "url": "https://alkalidum.itch.io/the-big-red-button-game",
+      "status": 200,
+      "finalUrl": "https://alkalidum.itch.io/the-big-red-button-game"
+    },
+    {
+      "id": "1ecu2tq",
+      "url": "https://battle-die-repeat.flutterflow.app/",
+      "status": 200,
+      "finalUrl": "https://battle-die-repeat.flutterflow.app/"
+    },
+    {
+      "id": "1ef5cud",
+      "url": "https://www.illimitale.com/",
+      "status": "unconfirmed"
+    },
+    {
+      "id": "1epq4uc",
+      "url": "https://store.steampowered.com/app/2998500/Ardericos_Journey",
+      "status": 200,
+      "finalUrl": "https://store.steampowered.com/app/2998500/Ardericos_Journey"
+    },
+    {
+      "id": "1g63wqc",
+      "url": "https://store.steampowered.com/app/2974560",
+      "status": 200,
+      "finalUrl": "https://store.steampowered.com/"
+    },
+    {
+      "id": "1g6ccq5",
+      "url": "https://fantasticostudio.itch.io/mind-bender-simulator",
+      "status": 404
+    },
+    {
+      "id": "1gk3ek6",
+      "url": "https://store.steampowered.com/app/3257780/Your_Story_Games_with_Death",
+      "status": 200,
+      "finalUrl": "https://store.steampowered.com/app/3257780/Your_Story_Games_with_Death"
+    },
+    {
+      "id": "1gkpoz0",
+      "url": "https://www.foryu.me/?id=2a285f88-1d79-4b42-b672-b4bf42ea6ed4",
+      "status": 503
+    },
+    {
+      "id": "1h3orz3",
+      "url": "https://www.hexagen.world/",
+      "status": 200,
+      "finalUrl": "https://hexagen.world/"
+    },
+    {
+      "id": "1hahihu",
+      "url": "https://store.steampowered.com/app/3248650/JOBifAI",
+      "status": 200,
+      "finalUrl": "https://store.steampowered.com/app/3248650/JOBifAI"
+    },
+    {
+      "id": "1hwae2f",
+      "url": "https://www.aurorapicturecompany.com/glimmer",
+      "status": 404
+    },
+    {
+      "id": "1i655uw",
+      "url": "https://pooh.figment.games/",
+      "status": 200,
+      "finalUrl": "https://pooh.figment.games/"
+    },
+    {
+      "id": "1ic6i44",
+      "url": "https://play.rosebud.ai/p/f8a4f15b-24ad-465c-a98c-84a1a1846cbe",
+      "status": 308
+    },
+    {
+      "id": "1ic8pe0",
+      "url": "https://store.steampowered.com/app/3087090/Always_On",
+      "status": 200,
+      "finalUrl": "https://store.steampowered.com/app/3087090/Always_On"
+    },
+    {
+      "id": "1idl2px",
+      "url": "https://rodmel.me/",
+      "status": 200,
+      "finalUrl": "https://www.rodmel.me/"
+    },
+    {
+      "id": "1ip159d",
+      "url": "https://careers.figment.games/",
+      "status": 200,
+      "finalUrl": "https://careers.figment.games/"
+    },
+    {
+      "id": "1j09zdj",
+      "url": "https://anttiluode.github.io/CubeTrixWeb/",
+      "status": 200,
+      "finalUrl": "https://anttiluode.github.io/CubeTrixWeb/"
+    },
+    {
+      "id": "1j4301z",
+      "url": "https://3d-first-person-world--alkalidum.on.websim.ai/",
+      "status": 400
+    },
+    {
+      "id": "1j85f0k",
+      "url": "https://tippinggoat.itch.io/journey-space-llm",
+      "status": 200,
+      "finalUrl": "https://tippinggoat.itch.io/journey-space-llm"
+    },
+    {
+      "id": "1jmrw7u",
+      "url": "https://realmsuncharted.app/",
+      "status": "unconfirmed"
+    },
+    {
+      "id": "1jptep2",
+      "url": "https://upit.com/@blackwidowink/play/eyL9HytHDO",
+      "status": 200,
+      "finalUrl": "https://upit.com/@blackwidowink/play/eyL9HytHDO"
+    },
+    {
+      "id": "1jr4wf3",
+      "url": "https://freeguessr.com/",
+      "status": 200,
+      "finalUrl": "https://freeguessr.com/"
+    },
+    {
+      "id": "1jsbf3x",
+      "url": "https://apps.apple.com/ca/app/unnamed-chat-rpg/id6740737090",
+      "status": 404
+    },
+    {
+      "id": "1jxtfvj",
+      "url": "https://weebitgames.com/elioengcomp/neno-super-button-soccer-deluxe",
+      "status": 200,
+      "finalUrl": "https://weebitgames.com/elioengcomp/neno-super-button-soccer-deluxe"
+    },
+    {
+      "id": "1k21yc1",
+      "url": "https://www.babydayout.xyz/",
+      "status": 200,
+      "finalUrl": "https://babydayout.xyz/"
+    },
+    {
+      "id": "1k5blhi",
+      "url": "https://convergegame.com/",
+      "status": 200,
+      "finalUrl": "https://www.convergegame.com/"
+    },
+    {
+      "id": "1k7bq06",
+      "url": "https://store.steampowered.com/app/2544030/Quiet_on_Set",
+      "status": 200,
+      "finalUrl": "https://store.steampowered.com/app/2544030/Quiet_on_Set"
+    },
+    {
+      "id": "1k8ehah",
+      "url": "https://apps.apple.com/us/app/the-ai-drawing-game/id6744956625",
+      "status": 404
+    },
+    {
+      "id": "1k8znpl",
+      "url": "https://01postmortem.itch.io/already-dead",
+      "status": 200,
+      "finalUrl": "https://01postmortem.itch.io/already-dead"
+    },
+    {
+      "id": "1k922ga",
+      "url": "https://fialagames.itch.io/mysteria",
+      "status": 200,
+      "finalUrl": "https://fialagames.itch.io/mysteria"
+    },
+    {
+      "id": "1kasgoo",
+      "url": "https://store.steampowered.com/app/3660540/Rotem",
+      "status": 200,
+      "finalUrl": "https://store.steampowered.com/app/3660540/Rotem"
+    },
+    {
+      "id": "1kdzboi",
+      "url": "https://fialagames.itch.io/mysteriousmaze",
+      "status": 200,
+      "finalUrl": "https://fialagames.itch.io/mysteriousmaze"
+    },
+    {
+      "id": "1khdw5i",
+      "url": "https://alpha.tempestengine.ai/play/229/",
+      "status": "unconfirmed"
+    },
+    {
+      "id": "1kj0l17",
+      "url": "https://hexagonalbreakout.neocities.org/",
+      "status": 200,
+      "finalUrl": "https://hexagonalbreakout.neocities.org/"
+    },
+    {
+      "id": "1kk3r1e",
+      "url": "https://upit.com/@blackwidowink/play/FXg5lHA0Ew",
+      "status": 200,
+      "finalUrl": "https://upit.com/@blackwidowink/play/FXg5lHA0Ew"
+    },
+    {
+      "id": "1knbotm",
+      "url": "https://upit.com/@blackwidowink/play/_CK2GYKD5Y",
+      "status": 200,
+      "finalUrl": "https://upit.com/@blackwidowink/play/_CK2GYKD5Y"
+    },
+    {
+      "id": "1kpihjs",
+      "url": "https://rosebud.ai/p/49ce36bd-6e8e-415e-9c5d-afe5e9e7558b",
+      "status": 308
+    }
+  ]
+}

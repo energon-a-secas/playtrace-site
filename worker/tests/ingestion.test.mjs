@@ -8,7 +8,34 @@ import { acquire } from '../src/lease.mjs';
 import { NOW, fixtureEnv, fixtureCatalog, rawPost, fixtureWorker, request } from './helpers.mjs';
 
 const deps = data => ({ now: () => NOW, sleep: async () => {}, fetch: async () => Response.json({ data }) });
-test('only the exact project flair can enter the index, through recent or historical ingestion', async () => {
+test('unlabeled showcases wait for individual review even when their URL matches an existing game', async () => {
+  const env = fixtureEnv();
+  await ingest(env, deps([rawPost('keep1')]));
+  await ingest(env, deps([rawPost('later',{link_flair_text:null})]), true);
+  assert.equal((await catalog(env.DB)).games[0].posts.length, 1);
+  const pending = env.DB.sql.prepare("SELECT payload_json,status FROM source_posts WHERE id='later'").get();
+  assert.equal(pending.status,'pending'); assert.equal(JSON.parse(pending.payload_json).post.flair,null);
+  for (const flair of ['News','Discussion','Media']) assert.equal(normalizePost(rawPost('bad12',{link_flair_text:flair}), NOW, {reviewUnlabeled:true}),null);
+  env.DB.close();
+});
+test('archive timeout-shaped 422 retries within bounds, but query-validation 422 does not retry', async () => {
+  for (const error of ['Timeout. Maybe slow down a bit','Invalid query']) {
+    const env=fixtureEnv(); let count=0; const waits=[];
+    const task=ingest(env,{now:()=>NOW,sleep:async ms=>waits.push(ms),fetch:async()=>{count++;return count===1?Response.json({data:null,error},{status:422}):Response.json({data:[]});}});
+    if(error.startsWith('Timeout.')) { assert.equal((await task).status,'ok');assert.equal(count,2);assert.deepEqual(waits,[4000]); }
+    else { await assert.rejects(task);assert.equal(count,1);assert.deepEqual(waits,[]); }
+    env.DB.close();
+  }
+});
+test('a persisted archive rate limit prevents operator or cron retries before the requested reset', async () => {
+  const env=fixtureEnv();let calls=0,now=NOW;
+  const limited={now:()=>now,sleep:async()=>{},fetch:async()=>{calls++;return Response.json({error:'Slow down'},{status:429,headers:{'Retry-After':'90'}});}};
+  await assert.rejects(ingest(env,limited,true),error=>error.retryAfterSeconds===90);
+  assert.equal((await meta(env.DB,'history')).retryAt,new Date(NOW+90000).toISOString());
+  now+=30000;await assert.rejects(ingest(env,limited,true),error=>error.retryAfterSeconds===60);assert.equal(calls,1);
+  now=NOW+91000;assert.equal((await ingest(env,{...limited,fetch:async()=>{calls++;return Response.json({data:[]});}},true)).status,'ok');assert.equal(calls,2);env.DB.close();
+});
+test('only the exact project flair is automatically published, through recent or historical ingestion', async () => {
   for (const flair of ['News','Discussion','Questions & Help','Tools or Resource','Workflow Not Included','Research','Commercial Self Promotion','Media','Workflow',null,undefined]) {
     assert.equal(normalizePost(rawPost('new12', { link_flair_text: flair }), NOW), null);
   }
@@ -18,7 +45,7 @@ test('only the exact project flair can enter the index, through recent or histor
     await ingest(env,deps(rows),historical);
     assert.deepEqual((await catalog(env.DB)).games.map(game=>game.id),['g_keep1']);
     const invalid = fixtureCatalog(); delete invalid.games[0].posts[0].flair;
-    await assert.rejects(importCatalog(env.DB,invalid),/Only source posts/);
+    await assert.rejects(importCatalog(env.DB,invalid),/Sources need/);
     env.DB.close();
   }
 });
