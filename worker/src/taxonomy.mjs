@@ -1,5 +1,5 @@
 const GENRES = [
-  ['clicker', /\b(clicker|incremental|idle game)\b/gi],
+  ['clicker', /\b(clicker|incremental(?!\s+(?:changes|updates|improvements|builds)\b)|idle game(?!\s+(?:states?|logic|code)\b))\b/gi],
   ['action', /\b(action|shooter|platformer|fighting)\b/gi],
   ['adventure', /\b(adventure|metroidvania|visual novel)\b/gi],
   ['puzzle', /\bpuzzle\b/gi], ['strategy', /\b(strategy|deckbuilder|tower defense|rts)\b/gi],

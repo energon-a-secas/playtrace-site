@@ -48,7 +48,7 @@ The October 11, 2026 verification counted **1,306 live projects, 1,381 source po
 
 ## Catalogue names and links
 
-The October 11 naming review examined all 1,306 published projects against 1,381 original source posts. `data/game-name-review.json` records 349 supported title corrections, 20 Clicker classifications, 35 separate code-repository links, and 17 project-link corrections. It leaves 811 unresolved source headlines unchanged; existing reviewed names and manual overrides remain authoritative. Only two fallback records required changes. The full live catalogue and the smaller offline fallback remain separate.
+The October 11 naming review examined all 1,306 published projects against 1,381 original source posts. `data/game-name-review.json` records 349 supported title corrections, 19 Clicker classifications, 35 separate code-repository links, and 17 project-link corrections. It leaves 811 unresolved source headlines unchanged; existing reviewed names and manual overrides remain authoritative. Only two fallback records required changes. The full live catalogue and the smaller offline fallback remain separate.
 
 Run a future dry review with a raw source export and a source-game export (not an enriched public catalogue):
 

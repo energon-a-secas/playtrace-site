@@ -4,6 +4,7 @@ import { inferName, nameForGame } from '../src/names.mjs';
 import { projectLinks } from '../src/project-links.mjs';
 import { normalizePost, sourceGame } from '../src/archive.mjs';
 import { normalizeSteam } from '../src/steam.mjs';
+import { classifySource } from '../src/taxonomy.mjs';
 import { fixtureEnv, fixtureGame, fixtureCatalog, rawPost, NOW } from './helpers.mjs';
 import { catalog, importCatalog } from '../src/store.mjs';
 import { detailsOf, editDetails } from '../src/details.mjs';
@@ -38,6 +39,10 @@ test('playable GitHub Pages links win over code repositories in either source or
   assert.equal(projectLinks({url:repo,selftext:'My open source game'}).projectUrl,repo);
   assert.equal(projectLinks({selftext:'Play my game: https://maker.github.io/moon/**'}).projectUrl,'https://maker.github.io/moon');
   assert.equal(projectLinks({selftext:'Music generation: I stumbled upon https://github.com/vitling/acid-banger'}).repositoryUrl,null);
+});
+test('incremental development and idle program states are not clicker genres',()=>{
+  assert.equal(classifySource('My physics game','AI tracks active vs. idle game states. I made incremental improvements.').category,'other');
+  assert.equal(classifySource('My incremental game','A clicker about restoring a lake.').category,'clicker');
 });
 test('Steam demos provide verified names without masquerading as full releases; explicit admin names always win',async()=>{
   const data={steam_appid:4610750,type:'demo',name:'Wayward Crown Demo',is_free:true,release_date:{coming_soon:false}};

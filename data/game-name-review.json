@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-11T13:24:01.397Z",
+  "checkedAt": "2026-10-11T13:32:44.580Z",
   "scanned": 1306,
   "changes": [
     {
@@ -1938,12 +1938,10 @@
     {
       "id": "g_1ukexmw",
       "before": {
-        "title": "Building a free browser physics game with AI - Today's challenge: A \"Passive Scoring\" Dilemma",
-        "category": "other"
+        "title": "Building a free browser physics game with AI - Today's challenge: A \"Passive Scoring\" Dilemma"
       },
       "after": {
-        "title": "ShuffleBall Arena",
-        "category": "clicker"
+        "title": "ShuffleBall Arena"
       },
       "evidence": [
         {
@@ -10089,7 +10087,7 @@
   ],
   "summary": {
     "renamed": 349,
-    "categoryCorrections": 20,
+    "categoryCorrections": 19,
     "repositoryLinks": 35,
     "projectLinkCorrections": 17,
     "unresolved": 811
