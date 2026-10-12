@@ -30,14 +30,14 @@ export function extractReferences(raw) {
   }
   return [...found.values()];
 }
-export async function archiveJson(path, deps) {
-  for(let attempt=0;attempt<2;attempt++){
+export async function archiveJson(path, deps, { maxAttempts = 2 } = {}) {
+  for(let attempt=0;attempt<maxAttempts;attempt++){
     const response = await deps.fetch(`https://arctic-shift.photon-reddit.com/api/${path}`, { headers: { Accept: 'application/json', 'User-Agent': 'Playtrace/1.0 (+https://playtrace.neorgon.com)' }, redirect: 'manual', signal: AbortSignal.timeout(15000) });
     if (!response.ok) {
       let timedOut=false;
       if(response.status===422){try{const data=JSON.parse(new TextDecoder().decode(await readBytes(response.body,8192)));timedOut=data.error==='Timeout. Maybe slow down a bit';}catch{}}
       else await response.body?.cancel();
-      if(timedOut&&attempt===0){await deps.sleep(4000);continue;}
+      if(timedOut&&attempt+1<maxAttempts){await deps.sleep(4000);continue;}
       const error=new Error(`Archive HTTP ${response.status}`);
       if(response.status===429){
         const retry=response.headers.get('Retry-After'),reset=Number(response.headers.get('X-RateLimit-Reset'))||0,rawAt=Number(response.headers.get('X-RateLimit-Reset-At'))||0;

@@ -41,8 +41,9 @@ export async function refreshSourceRecords(db, rawRows, deps) {
   const rawById=new Map(rawRows.filter(raw=>typeof raw?.id==='string'&&/^[a-z0-9]{5,12}$/.test(raw.id)).map(raw=>[raw.id,raw]));
   if(!rawById.size)return {checked:0,changed:0,updatedGames:0};
   const rows=await query(db,`SELECT p.id,p.game_id,p.author_key,p.status,p.payload_json,
-      g.payload_json AS game_json,e.payload_json AS evidence_json,e.content_hash
+      g.payload_json AS game_json,e.payload_json AS evidence_json,e.content_hash,s.post_id AS scored_post
     FROM source_posts p LEFT JOIN games g ON g.id=p.game_id LEFT JOIN source_evidence e ON e.post_id=p.id
+    LEFT JOIN reddit_scores s ON s.post_id=p.id
     WHERE p.id IN(SELECT value FROM json_each(?)) AND p.status<>'rejected'
       AND (p.game_id IS NULL OR (g.status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id)))`,JSON.stringify([...rawById.keys()])).all();
   const records=[],games=new Map(),posts=[],scores=[];
@@ -54,7 +55,9 @@ export async function refreshSourceRecords(db, rawRows, deps) {
     const observed=sourceObservation(raw,candidate,deps.now());
     if(review)observed.currentReview={url:review.url,checkedAt:review.checkedAt,flair:review.flair,reason:review.reason,archived:review.archived};
     if(observed.state!=='removed'&&raw.author?.toLowerCase()!==row.author_key)continue;
-    const score=observed.state==='available'?scoreObservation(archived,deps.now()):null;
+    // Ingestion can seed a score without another request. Existing scores are
+    // refreshed exclusively by the bounded Sunday maintenance job.
+    const score=!row.scored_post&&observed.state==='available'?scoreObservation(archived,deps.now()):null;
     if(score)scores.push(score);
     const previous=row.evidence_json?JSON.parse(row.evidence_json):null;
     if(previous?.archiveRetrievedAt&&observed.archiveRetrievedAt&&previous.archiveRetrievedAt>observed.archiveRetrievedAt){
@@ -111,7 +114,7 @@ export async function refreshSourceRecords(db, rawRows, deps) {
   if(updates.length)statements.push(query(db,`UPDATE games SET payload_json=(SELECT json_extract(value,'$.game') FROM json_each(?) WHERE json_extract(value,'$.id')=games.id),
     project_url=(SELECT json_extract(value,'$.url') FROM json_each(?) WHERE json_extract(value,'$.id')=games.id)
     WHERE id IN(SELECT json_extract(value,'$.id') FROM json_each(?))`,JSON.stringify(updates),JSON.stringify(updates),JSON.stringify(updates)));
-  if(scores.length)statements.push(saveScoreObservations(db,scores));
+  if(scores.length)statements.push(saveScoreObservations(db,scores,{initialOnly:true}));
   if(updates.length||changed||scores.length)statements.push(query(db,"UPDATE app_meta SET value_json=json_set(value_json,'$.generatedAt',?) WHERE key='catalog'",at));
   statements.push(query(db,"DELETE FROM app_meta WHERE key='source_refresh_guard'"));
   try{await db.batch(statements);}catch(error){if(/NOT NULL.*app_meta\.value_json/.test(error.message))throw unavailable();throw error;}

@@ -149,6 +149,11 @@
 .queue-entry h4 a { color: var(--pt-ink); }
 .queue-entry p { max-width: 75ch; }
 .queue-entry .admin-inline { margin-top: 20px; }
+.queue-entry .request-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 13px; color: var(--pt-muted); }
+.review-editor > label { display: block; margin: 14px 0 6px; }
+.review-labels { min-width: 0; padding: 16px 0; margin: 16px 0 0; border: 0; border-top: 1px solid var(--pt-line); }
+.review-labels legend { padding-right: 12px; font-weight: 600; color: var(--pt-muted); }
+.review-labels blockquote { margin: 4px 0 18px; max-width: 85ch; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.6; color: var(--pt-text); }
 .job-status { border: 1px solid var(--pt-line); border-radius: 4px; padding: 3px 8px; }
 .job-status--failed, .job-error { color: var(--pt-gold); }
 .job-status--ready { color: var(--pt-green); background: var(--pt-green-soft); }

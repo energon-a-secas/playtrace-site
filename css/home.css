@@ -34,8 +34,6 @@
 .showcase--motion > li { position: absolute; inset: 0 auto 0 0; margin: 0; width: var(--canvas-width); transform: translateX(var(--panel-x)); }
 .showcase-panels.showcase--motion > li .showcase-game { clip-path: polygon(var(--cut-start) 0, var(--cut-top) 0, var(--cut-bottom) 100%, 0 100%); }
 .showcase--motion .showcase-art { transform: translateX(var(--art-x)); }
-.showcase--animate > li, .showcase--animate .showcase-art { transition: transform 580ms cubic-bezier(.22,1,.36,1); }
-.showcase--animate .showcase-game { transition: clip-path 580ms cubic-bezier(.22,1,.36,1); }
 .showcase--motion .showcase-caption { width: calc(var(--base-width) * .64); }
 .showcase--motion .showcase-play { opacity: 0; transform: translateX(-6px); pointer-events: none; transition: opacity 160ms ease-out, transform 220ms ease-out; }
 .showcase--motion .is-expanded .showcase-play, .showcase--motion .showcase-play:focus-visible { opacity: 1; transform: none; pointer-events: auto; }

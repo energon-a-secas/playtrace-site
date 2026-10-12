@@ -2,12 +2,12 @@ import { query, getGame } from './store.mjs';
 import { exactKeys, invalid, unavailable, forbidden, notFound, strongSecret } from './http.mjs';
 import { hmac, mutationLimit } from './limits.mjs';
 import { text } from './validation.mjs';
-import { feedbackOptions, validChoices } from '../../js/feedback-options.js';
+import { feedbackOptions, feedbackExperiences, validChoices } from '../../js/feedback-options.js';
 
 export const feedbackConfigured = env => Boolean(env.DB && strongSecret(env.RATE_LIMIT_SECRET));
-const publicFields = 'id,display_name,body,ideal_price_cents,created_at,updated_at,choices_json';
+const publicFields = 'id,display_name,body,ideal_price_cents,created_at,updated_at,choices_json,experience';
 const entry = row => ({ id: row.id, displayName: row.display_name, body: row.body,
-  choices: JSON.parse(row.choices_json),
+  choices: JSON.parse(row.choices_json), experience: row.experience,
   idealPriceCents: row.ideal_price_cents, currency: 'USD', createdAt: row.created_at, updatedAt: row.updated_at });
 
 export async function guestIdentity(request, env) {
@@ -55,6 +55,12 @@ export async function ownFeedback(db, env, request, gameId) {
   const row = await query(db, `SELECT ${publicFields},status FROM feedback WHERE game_id=? AND guest_key_hash=?`, gameId, key).first();
   return { gameId, feedback: row?.status === 'published' ? entry(row) : null, moderated: row?.status === 'hidden' };
 }
+export async function feedbackEntry(db, gameId, id) {
+  await getGame(db, gameId);
+  const row = await query(db, `SELECT ${publicFields} FROM feedback WHERE game_id=? AND id=? AND status='published'`, gameId, id).first();
+  if (!row) throw notFound();
+  return { gameId, entry: entry(row) };
+}
 export async function writeFeedback(db, env, request, gameId, body, deps) {
   await getGame(db, gameId);
   const key = await guestIdentity(request, env);
@@ -65,7 +71,9 @@ export async function writeFeedback(db, env, request, gameId, body, deps) {
     return { deleted: true };
   }
   const hasChoices = Object.hasOwn(body || {}, 'choices');
-  exactKeys(body, ['displayName', 'body', 'idealPriceCents', ...(hasChoices ? ['choices'] : [])]);
+  const hasExperience = Object.hasOwn(body || {}, 'experience');
+  exactKeys(body, ['displayName', 'body', 'idealPriceCents', ...(hasChoices ? ['choices'] : []), ...(hasExperience ? ['experience'] : [])]);
+  if (hasExperience && !Object.hasOwn(feedbackExperiences, body.experience)) throw invalid('Choose first look or played, or leave it unspecified.');
   if (hasChoices && !validChoices(body.choices)) throw invalid('Choose from the listed feedback options.');
   const choices = hasChoices ? [...body.choices].sort() : [];
   text(body.displayName, 40, 0); text(body.body, 1500, 0);
@@ -76,13 +84,14 @@ export async function writeFeedback(db, env, request, gameId, body, deps) {
   if (message.length < 8 && amount === null && !choices.length) throw invalid('Pick a quick answer, write a note of at least 8 characters, or share an ideal price.');
   await mutationLimit(db, env, `guest:${key}`, request, 'price', deps.now());
   const at = new Date(deps.now()).toISOString();
-  const row = await query(db, `INSERT INTO feedback(id,game_id,guest_key_hash,display_name,body,ideal_price_cents,created_at,updated_at,choices_json)
-    SELECT ?,id,?,?,?,?,?,?,? FROM games WHERE id=? AND status='published'
+  const row = await query(db, `INSERT INTO feedback(id,game_id,guest_key_hash,display_name,body,ideal_price_cents,created_at,updated_at,choices_json,experience)
+    SELECT ?,id,?,?,?,?,?,?,?,? FROM games WHERE id=? AND status='published'
       AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id)
     ON CONFLICT(game_id,guest_key_hash) DO UPDATE SET
       display_name=excluded.display_name,body=excluded.body,ideal_price_cents=excluded.ideal_price_cents,updated_at=excluded.updated_at
       ,choices_json=CASE WHEN ? THEN excluded.choices_json ELSE feedback.choices_json END
-    WHERE feedback.status='published' RETURNING ${publicFields}`, crypto.randomUUID(), key, displayName, message, amount, at, at, JSON.stringify(choices), gameId, hasChoices ? 1 : 0).first();
+      ,experience=CASE WHEN ? THEN excluded.experience ELSE feedback.experience END
+    WHERE feedback.status='published' RETURNING ${publicFields}`, crypto.randomUUID(), key, displayName, message, amount, at, at, JSON.stringify(choices), body.experience || 'unspecified', gameId, hasChoices ? 1 : 0, hasExperience ? 1 : 0).first();
   if (!row) {
     // Removal may win after the initial read, including while media cleanup
     // keeps a tombstoned game row alive. An active game's hidden row is 403.

@@ -52,7 +52,7 @@ test('guest feedback works without auth, stays public, edits in place and keeps 
   const publicPage = await (await worker.fetch(request('/games/g_abc12/feedback'), env)).json();
   assert.equal(publicPage.entries.length, 1); assert.equal(publicPage.count, 1);
   assert.deepEqual(publicPage.idealPrices, { currency: 'USD', count: 1, medianCents: 1200 });
-  assert.deepEqual(Object.keys(publicPage.entries[0]).sort(), ['body', 'choices', 'createdAt', 'currency', 'displayName', 'id', 'idealPriceCents', 'updatedAt']);
+  assert.deepEqual(Object.keys(publicPage.entries[0]).sort(), ['body', 'choices', 'createdAt', 'currency', 'displayName', 'experience', 'id', 'idealPriceCents', 'updatedAt']);
   assert.equal(JSON.stringify(publicPage).includes(keyA), false);
   assert.equal(JSON.stringify(publicPage).includes('private-member'), false);
   response = await worker.fetch(guestRequest(undefined, { method: 'PUT', body: { ...body, body: 'An updated suggestion.', idealPriceCents: null } }), env);

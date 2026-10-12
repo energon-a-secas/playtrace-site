@@ -12,6 +12,7 @@ export const feedbackQuestions = Object.freeze([
   ] },
 ]);
 export const feedbackOptions = feedbackQuestions.flatMap(question => question.options);
+export const feedbackExperiences = Object.freeze({ unspecified: 'Not specified', preview: 'First look', played: 'I’ve played it' });
 export function validChoices(value) {
   return Array.isArray(value) && value.length <= feedbackOptions.length && new Set(value).size === value.length
     && value.every(id => feedbackOptions.some(option => option.id === id));

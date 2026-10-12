@@ -5,6 +5,7 @@ import { NeoAuth } from './neorgon-auth.js';
 // An hourly public snapshot avoids re-reading the entire archive per visitor.
 // Never use the admin endpoint or cache an authenticated response here.
 async function evidenceRequest(path){
+  if(path==='/feedback-patterns'||path.startsWith('/feedback-patterns?'))return request(path);
   if(path!=='/insights'&&!path.startsWith('/insights?'))throw new Error('This view only reads public catalogue evidence.');
   if(path==='/insights')try{
     const response=await fetch('data/community-insights.json',{cache:'no-cache'});

@@ -1,11 +1,12 @@
 import { insightPage } from './catalogue-insights.mjs';
+import { feedbackPatterns } from './feedback-patterns.mjs';
 import { recordUsage, usageMetrics, pruneUsage } from './usage.mjs';
 import { publicGame } from './discovery.mjs';
 import { getHighlights, saveHighlights, rotateHighlights } from './highlights.mjs';
 import { rating, rateGame } from './ratings.mjs';
 import { researchList, getResearch, saveResearch, researchResponse, researchMetrics } from './research.mjs';
 import { projectContext } from './references.mjs';
-import { listJobs, enqueueJobs, runJobs, updateJob, queueStoreMaintenance } from './jobs.mjs';
+import { listJobs, enqueueJobs, runJobs, updateJob, queueStoreMaintenance, queueFeedbackMaintenance } from './jobs.mjs';
 import { consolidateReposts, resolveGame } from './duplicates.mjs';
 import { json, errorResponse, exactKeys, readJson, readBytes, checkOrigin, withCors, notFound, strongSecret } from './http.mjs';
 import { authenticate, authenticateOperator, accountConfigured } from './auth.mjs';
@@ -16,7 +17,7 @@ import { ingest, ingestionConfigured, COMMUNITY_CREATED_AT } from './ingestion.m
 import { mediaConfigured, storePreview, serveMedia } from './media.mjs';
 import { signalProtection } from './limits.mjs';
 import { text } from './validation.mjs';
-import { feedbackConfigured, publicFeedback, ownFeedback, writeFeedback, hideFeedback } from './feedback.mjs';
+import { feedbackConfigured, publicFeedback, ownFeedback, feedbackEntry, writeFeedback, hideFeedback } from './feedback.mjs';
 import { adminConfigured, authorizeAdmin, members } from './admin.mjs';
 import { submitChange, inbox, resolveChange } from './requests.mjs';
 import { editorGame, editPreview } from './editor.mjs';
@@ -25,14 +26,17 @@ import { createCategory } from './categories.mjs';
 import { gameStore, refreshSteamBatch } from './steam.mjs';
 import { hydrateMedia } from './assets.mjs';
 import { refreshSourceBatch } from './source-evidence.mjs';
+import { refreshWeeklyScores, scorePolicy, scoreMaintenanceStatus } from './score-maintenance.mjs';
 import { removeEntry, removeSourcePost } from './moderation.mjs';
 import { quizInfo, startQuiz, finishQuiz, deleteQuizData, quizMetrics } from './quiz.mjs';
 
 const routes = [
   [/^\/insights$/, ['GET'], 'insights'],
+  [/^\/feedback-patterns$/, ['GET'], 'feedbackPatterns'],
   [/^\/usage$/, ['POST'], 'usage'],
   [/^\/admin\/insights$/, ['GET'], 'editorInsights'],
   [/^\/admin\/usage$/, ['GET'], 'editorUsage'],
+  [/^\/admin\/maintenance$/, ['GET'], 'editorMaintenance'],
   [/^\/games\/(g_[a-z0-9]{5,12})$/, ['GET'], 'game'],
   [/^\/highlights$/, ['GET'], 'highlights'],
   [/^\/admin\/highlights$/, ['GET','PUT'], 'editorHighlights'],
@@ -62,6 +66,7 @@ const routes = [
   [/^\/games\/(g_[a-z0-9]{5,12})\/signals$/, ['GET'], 'signals'],
   [/^\/games\/(g_[a-z0-9]{5,12})\/feedback$/, ['GET', 'PUT', 'DELETE'], 'feedback'],
   [/^\/games\/(g_[a-z0-9]{5,12})\/feedback\/mine$/, ['GET'], 'ownFeedback'],
+  [/^\/games\/(g_[a-z0-9]{5,12})\/feedback\/([a-f0-9-]{36})$/, ['GET'], 'feedbackEntry'],
   [/^\/games\/(g_[a-z0-9]{5,12})\/store$/, ['GET'], 'store'],
   [/^\/games\/(g_[a-z0-9]{5,12})\/change-requests$/, ['POST'], 'changeRequest'],
   [/^\/games\/(g_[a-z0-9]{5,12})\/(price|follow)$/, ['PUT', 'DELETE'], 'mutation'],
@@ -132,6 +137,7 @@ export function createWorker(overrides = {}) {
           cursor: url.searchParams.get('cursor') }), 200, { 'Cache-Control': request.headers.has('Authorization') ? 'no-store' : 'public, max-age=60' });
         else if (action === 'game') result = json(await publicGame(database(env),match[1]),200,{'Cache-Control':'public, max-age=60'});
         else if (action === 'insights') result = json(await insightPage(database(env),url.searchParams.get('cursor'),deps),200,{'Cache-Control':'public, max-age=60'});
+        else if (action === 'feedbackPatterns') result = json(await feedbackPatterns(database(env),deps,url.searchParams.get('cursor')));
         else if (action === 'highlights') result = json(await getHighlights(database(env)), 200, { 'Cache-Control': 'public, max-age=60' });
         else if (action === 'resolveGame') result = json(await resolveGame(database(env),match[1]));
         else if (action === 'context') result = json(await projectContext(database(env),match[1]));
@@ -160,6 +166,7 @@ export function createWorker(overrides = {}) {
           }
         }
         else if (action === 'ownFeedback') result = json(await ownFeedback(database(env), env, request, match[1]));
+        else if (action === 'feedbackEntry') result = json(await feedbackEntry(database(env), match[1], match[2]));
         else if (action === 'store') result = json(await gameStore(database(env), match[1], deps));
         else if (action === 'changeRequest') result = json(await submitChange(database(env), env, request, match[1], await readJson(request), deps), 201);
         else if (action.startsWith('editor')) {
@@ -167,6 +174,7 @@ export function createWorker(overrides = {}) {
           changedPublic=request.method!=='GET'&&['editorHighlights','editorImage','editorDetails','editorMedia','editorCategories','editorJobsRun','editorReposts','editorRemove','editorRemovePost'].includes(action);
           if (action === 'editorInsights') result = json(await insightPage(db,url.searchParams.get('cursor'),deps));
           else if (action === 'editorUsage') result = json(await usageMetrics(db,deps));
+          else if (action === 'editorMaintenance') result = json({ scores: await scoreMaintenanceStatus(db), jev: { connected: Boolean(env.JEV_API_KEY), dailyBudget: await meta(db,'editorial_daily_budget'), cooldown: (await meta(db,'editorial_cooldown'))?.jev || null } });
           else if (action === 'editorMe') result = json({ email: admin.email, role: admin.role, integrations: { jev: Boolean(env.JEV_API_KEY), itch: Boolean(env.ITCHIO_API_TOKEN) } });
           else if(action==='editorHighlights') result=json(request.method==='GET'?await getHighlights(db,true):await saveHighlights(db,await readJson(request),admin,deps));
           else if(action==='editorResearchList')result=json(await researchList(db,true));
@@ -174,7 +182,7 @@ export function createWorker(overrides = {}) {
           else if(action==='editorResearchMetrics')result=json(await researchMetrics(db,match[1]));
           else if(action==='editorJobs')result=json(request.method==='GET'?await listJobs(db,url.searchParams.get('status'),url.searchParams.get('cursor'),url.searchParams.get('kind')):await enqueueJobs(db,await readJson(request),admin,deps));
           else if(action==='editorJobsRun'){const options=await readJson(request);exactKeys(options,Object.hasOwn(options||{},'kind')?['kind']:[]);result=json(await runJobs(db,env,deps,1,options.kind??'all'));}
-          else if(action==='editorJob')result=json(await updateJob(db,match[1],await readJson(request),admin,deps));
+          else if(action==='editorJob')result=json(await updateJob(db,match[1],await readJson(request,32768),admin,deps));
           else if(action==='editorReposts'){if(request.method==='POST')exactKeys(await readJson(request),[]);result=json(await consolidateReposts(db,deps,request.method==='POST',env.PREVIEWS));}
           else if (action === 'editorMembers') result = json(await members(db, admin, request.method === 'PUT' ? await readJson(request) : undefined));
           else if (action === 'editorCategories') result = json(await createCategory(db, await readJson(request), admin, deps));
@@ -202,7 +210,7 @@ export function createWorker(overrides = {}) {
           await authenticateOperator(request, env);
           changedPublic=request.method!=='GET'&&['import','ingest','backfill','enrich','adminGame'].includes(action);
           const db = database(env);
-          const body = await readJson(request, action === 'import' ? 2 * 1024 * 1024 : 8192);
+          const body = await readJson(request, action === 'import' ? 2 * 1024 * 1024 : action==='campaign' ? 32768 : 8192);
           if (action === 'campaign') {
             exactKeys(body,['action','options']);
             changedPublic=body.action==='run'||(body.action==='reposts'&&body.options?.apply===true);
@@ -210,6 +218,10 @@ export function createWorker(overrides = {}) {
             else if(body.action==='run'){exactKeys(body.options,Object.hasOwn(body.options||{},'kind')?['kind']:[]);result=json(await runJobs(db,env,deps,2,body.options.kind??'all'));}
             else if(body.action==='reposts'){exactKeys(body.options,['apply']);if(typeof body.options.apply!=='boolean')throw notFound();result=json(await consolidateReposts(db,deps,body.options.apply,env.PREVIEWS));}
             else if(body.action==='jobs'){exactKeys(body.options,['status','cursor']);result=json(await listJobs(db,body.options.status,body.options.cursor));}
+            else if(body.action==='review'){
+              const {id,...decision}=body.options||{};if(!/^[a-f0-9-]{36}$/.test(id||''))throw notFound();
+              result=json(await updateJob(db,id,decision,{subject:'operator'},deps));
+            }
             else throw notFound();
           }
           else if (action === 'import') result = json(await importCatalog(db, body));
@@ -238,8 +250,14 @@ export function createWorker(overrides = {}) {
         const sourceTick=event?.cron==='45 * * * *'||(maintenance&&new Date(event.scheduledTime??deps.now()).getUTCMinutes()===45);
         // Separate invocations keep the complete handler below the D1 budget,
         // including six cold Steam caches and a ten-post media hydration batch.
-        if (event?.cron === '0 3,4 * * 6') return (await rotateHighlights(database(env), deps)).rotated;
-        if (event?.cron === '20 * * * *') { const db=database(env); await queueStoreMaintenance(db,deps); return (await runJobs(db,env,deps,2)).processed>0; }
+        const scheduledAt=new Date(event?.scheduledTime??deps.now());
+        // Reuse the hourly :50 trigger; keep the account within five triggers.
+        if (event?.cron === scorePolicy.cron || event?.cron==='50 * * * *'&&scheduledAt.getUTCDay()===0&&scheduledAt.getUTCHours()===12) {
+          if(!ingestionConfigured(env))return false;
+          const db=database(env),result=await refreshWeeklyScores(db,deps);await queueFeedbackMaintenance(db,deps,{weekly:true});return result.updated>0;
+        }
+        if (event?.cron === '0 3,4 * * SAT' || event?.cron === '0 3,4 * * 6') return (await rotateHighlights(database(env), deps)).rotated;
+        if (event?.cron === '20 * * * *') { const db=database(env); await queueFeedbackMaintenance(db,deps);await queueStoreMaintenance(db,deps); return (await runJobs(db,env,deps,2)).processed>0; }
         if (event?.cron === '50 * * * *') { await pruneUsage(database(env),deps); return (await consolidateReposts(database(env),deps,true,env.PREVIEWS)).merged>0; }
         if (sourceTick) { if(!ingestionConfigured(env))return false;const refreshed=await refreshSourceBatch(database(env),deps);return refreshed.changed>0||refreshed.updatedGames>0||refreshed.scoreObservations>0; }
         if (event?.cron === '5 * * * *'||maintenance) {

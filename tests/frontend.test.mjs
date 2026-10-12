@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { validateCatalog, selectGames, defaults, locationForState, readLocation, parsePrice, distributionFor } from '../js/collection.js';
 import * as collection from '../js/collection.js';
 import { redditScoreBadge } from '../js/reddit-score.js';
-import { feedbackQuestions, feedbackOptions, validChoices } from '../js/feedback-options.js';
+import { feedbackQuestions, feedbackOptions, feedbackExperiences, validChoices } from '../js/feedback-options.js';
 import { createFavoritesStore } from '../js/favorites.js';
 
 const seed = JSON.parse(await readFile(new URL('../data/catalog.json', import.meta.url), 'utf8'));
@@ -388,7 +388,9 @@ const feedbackPage = (entries = [], gameId = 'g_abc12') => ({ gameId, entries, c
 async function feedbackModule(request) {
   const $ = fakeNodes(), state = { service: { capabilities: { feedback: true } } };
   const guest = await isolatedModule('guest-key.js', {});
-  const api = await isolatedModule('feedback.js', { state, $, request, apiConfigured: true, parsePrice, feedbackQuestions, feedbackOptions, validChoices,
+  const api = await isolatedModule('feedback.js', { state, $, request, apiConfigured: true, parsePrice, feedbackQuestions, feedbackOptions, feedbackExperiences, validChoices,
+    location: globalThis.location || {href:'https://playtrace.example/browse.html'},
+    document: {querySelector:()=>null,getElementById:()=>null,dispatchEvent(){}},
     guestEditKey: guest.editKey, keyPersists: guest.keyPersists,
     money: collection.money, dateLabel: collection.dateLabel, e: value => String(value).replaceAll('<', '&lt;').replaceAll('>', '&gt;') });
   return { api, $, state };

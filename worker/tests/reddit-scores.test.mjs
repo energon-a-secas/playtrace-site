@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { scoreObservation } from '../src/reddit-scores.mjs';
+import { scoreObservation, saveScoreObservations } from '../src/reddit-scores.mjs';
 import { catalog, importCatalog, removal } from '../src/store.mjs';
 import { refreshSourceRecords } from '../src/source-evidence.mjs';
 import { fixtureEnv, fixtureCatalog, fixtureGame, rawPost, NOW } from './helpers.mjs';
@@ -22,6 +22,8 @@ test('highest single source score survives imports, preserves newer observations
   await refreshSourceRecords(env.DB,[raw('abc12',100,NOW/1000-60),raw('def34',null)],deps);
   assert.equal((await catalog(env.DB)).games[0].redditScore.score,20);
   await refreshSourceRecords(env.DB,[raw('abc12',0,NOW/1000+60),raw('def34',-1,NOW/1000+60)],{now:()=>NOW+120000});
+  assert.equal((await catalog(env.DB)).games[0].redditScore.score,20,'hourly source checks leave existing scores alone');
+  await saveScoreObservations(env.DB,[scoreObservation(raw('abc12',0,NOW/1000+60),NOW+120000),scoreObservation(raw('def34',-1,NOW/1000+60),NOW+120000)]).run();
   assert.equal((await catalog(env.DB)).games[0].redditScore.score,0);
   await refreshSourceRecords(env.DB,[{...raw('abc12',999),author:'WrongMaker'}],deps);
   assert.equal((await catalog(env.DB)).games[0].redditScore.score,0);

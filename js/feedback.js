@@ -2,7 +2,7 @@ import { state } from './state.js';
 import { apiConfigured, request } from './api.js';
 import { parsePrice, money, dateLabel } from './collection.js';
 import { $, escHtml as e } from './utils.js';
-import { feedbackQuestions, feedbackOptions, validChoices } from './feedback-options.js';
+import { feedbackQuestions, feedbackOptions, feedbackExperiences, validChoices } from './feedback-options.js';
 import { editKey as guestEditKey, keyPersists } from './guest-key.js';
 
 let session = 0, readNumber = 0, controller;
@@ -14,6 +14,7 @@ export const editKey = guestEditKey;
 function validEntry(value) {
   return value && /^[a-f0-9-]{36}$/.test(value.id) && typeof value.displayName === 'string' && value.displayName.length <= 40
     && (value.choices === undefined || validChoices(value.choices))
+    && (value.experience === undefined || Object.hasOwn(feedbackExperiences,value.experience))
     && typeof value.body === 'string' && value.body.length <= 1500 && value.currency === 'USD'
     && (value.idealPriceCents === null || (Number.isInteger(value.idealPriceCents) && value.idealPriceCents >= 0 && value.idealPriceCents <= 10000))
     && typeof value.createdAt === 'string' && Number.isFinite(Date.parse(value.createdAt))
@@ -37,6 +38,7 @@ function fillOwn() {
   $('feedbackPrice').value = feedback.mine?.idealPriceCents == null ? '' : (feedback.mine.idealPriceCents / 100).toFixed(2);
   $('feedbackExtras').open = Boolean($('feedbackName').value || $('feedbackPrice').value);
   for (const option of feedbackOptions) $(`feedbackChoice-${option.id}`).checked = feedback.mine?.choices?.includes(option.id) || false;
+  for (const option of Object.keys(feedbackExperiences)) $(`feedbackExperience-${option}`).checked = (feedback.mine?.experience || 'unspecified') === option;
 }
 export function clearFeedback() {
   session++; readNumber++; controller?.abort(); feedback = empty();
@@ -58,7 +60,7 @@ export function renderFeedback() {
   const disabled = !available || feedback.busy || feedback.loading || feedback.ownError || feedback.moderated || (!feedback.loaded && Boolean(feedback.error));
   $('feedbackCount').textContent = feedback.loaded ? `${feedback.count} ${feedback.count === 1 ? 'contribution' : 'contributions'}` : '';
   $('feedbackList').innerHTML = feedback.entries.map(item => `<li class="feedback-note" id="feedback-${e(item.id)}">
-    <div class="feedback-note__heading"><strong>${e(item.displayName)}</strong><span>Visitor</span><time datetime="${e(item.createdAt)}">${e(dateLabel(item.createdAt))}</time></div>
+    <div class="feedback-note__heading"><strong>${e(item.displayName)}</strong><span>${e(item.experience==='played'?'Played · self-reported':item.experience==='preview'?'First look':'Experience not specified')}</span><time datetime="${e(item.createdAt)}">${e(dateLabel(item.createdAt))}</time></div>
     ${item.body ? `<p class="feedback-note__body">${e(item.body)}</p>` : ''}
     ${(item.choices || []).length ? `<div class="feedback-note__choices">${feedbackQuestions.map(question => {
       const labels = question.options.filter(option => item.choices.includes(option.id)).map(option => e(option.label));
@@ -79,6 +81,7 @@ export function renderFeedback() {
   $('feedbackSubmit').textContent = feedback.busy ? 'Saving…' : feedback.mine ? 'Update my feedback' : 'Share feedback';
   for (const id of ['feedbackName', 'feedbackBody', 'feedbackPrice']) $(id).disabled = disabled;
   for (const option of feedbackOptions) $(`feedbackChoice-${option.id}`).disabled = disabled;
+  for (const option of Object.keys(feedbackExperiences)) $(`feedbackExperience-${option}`).disabled = disabled;
   $('feedbackRemove').hidden = !feedback.mine;
   $('feedbackRemove').disabled = disabled;
   $('feedbackMessage').textContent = feedback.message;
@@ -108,8 +111,11 @@ export async function loadFeedback(gameId = feedback.gameId, more = false) {
     if (!apiConfigured) throw new Error('Community feedback is not available in this offline snapshot.');
     const key = editKey();
     const ownRequest = key && !more ? request(`/games/${gameId}/feedback/mine`, { feedbackKey: key, signal }) : Promise.resolve(null);
-    const [pageResult, ownResult] = await Promise.allSettled([
+    const citedId = !more ? new URL(location.href).searchParams.get('feedback') : null;
+    const linked = /^[a-f0-9-]{36}$/.test(citedId || '') ? request(`/games/${gameId}/feedback/${citedId}`, { signal }) : Promise.resolve(null);
+    const [pageResult, ownResult, citedResult] = await Promise.allSettled([
       request(`/games/${gameId}/feedback${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ''}`, { signal }), ownRequest,
+      linked,
     ]);
     if (number !== readNumber || current !== session) return;
     if (pageResult.status === 'rejected') throw pageResult.reason;
@@ -117,6 +123,8 @@ export async function loadFeedback(gameId = feedback.gameId, more = false) {
     if (!validPage(page, gameId)) throw new Error('The feedback could not be read. Please try again.');
     const entries = more ? [...feedback.entries, ...page.entries] : page.entries;
     feedback.entries = [...new Map(entries.map(item => [item.id, item])).values()];
+    if(citedResult.status==='fulfilled'&&citedResult.value?.gameId===gameId&&validEntry(citedResult.value.entry)&&!feedback.entries.some(item=>item.id===citedId))feedback.entries.push(citedResult.value.entry);
+    if(citedId&&citedResult.status==='rejected')feedback.message=citedResult.reason.status===404?'That cited note is no longer public.':'The cited note could not be loaded. Try again.';
     feedback.count = page.count; feedback.prices = page.idealPrices; feedback.choices = page.choices || []; feedback.nextCursor = page.nextCursor; feedback.loaded = true;
     if (ownResult.status === 'rejected') feedback.ownError = true;
     else if (ownResult.value) {
@@ -128,7 +136,10 @@ export async function loadFeedback(gameId = feedback.gameId, more = false) {
   } catch (error) {
     if (number === readNumber && current === session) feedback.error = error.status === 404 ? 'Community feedback is not available yet. Please try again shortly.' : error.message;
   } finally {
-    if (number === readNumber && current === session) { feedback.loading = false; renderFeedback(); }
+    if (number === readNumber && current === session) {
+      feedback.loading = false; renderFeedback();
+      if(!more){const id=new URL(location.href).searchParams.get('feedback');if(/^[a-f0-9-]{36}$/.test(id||''))document.getElementById(`feedback-${id}`)?.scrollIntoView({block:'center'});}
+    }
   }
 }
 export async function saveFeedback() {
@@ -145,7 +156,8 @@ export async function saveFeedback() {
   readNumber++; controller?.abort(); feedback.busy = true; feedback.message = ''; renderFeedback();
   try {
     const result = await request(`/games/${gameId}/feedback`, { method: 'PUT', feedbackKey: editKey(true),
-      body: { displayName: $('feedbackName').value.trim(), body, idealPriceCents: amount, choices } });
+      body: { displayName: $('feedbackName').value.trim(), body, idealPriceCents: amount, choices,
+        experience: document.querySelector('input[name="experience"]:checked')?.value || 'unspecified' } });
     if (current !== session) return;
     if (result.gameId !== gameId || !validEntry(result.feedback)) throw new Error('Your saved feedback could not be read. Please refresh before trying again.');
     feedback.mine = result.feedback; feedback.dirty = false; feedback.busy = false;
@@ -164,10 +176,12 @@ export async function removeFeedback() {
     if (current !== session) return;
     feedback.mine = null; feedback.dirty = false; feedback.busy = false; feedback.message = 'Your contribution has been removed.';
     fillOwn(); await loadFeedback(gameId); $('feedbackBody').focus();
+    document.dispatchEvent(new CustomEvent('feedback-removed',{detail:{gameId}}));
   } catch (error) { if (current === session) feedback.message = error.message; }
   finally { if (current === session) { feedback.busy = false; renderFeedback(); } }
 }
 export function bindFeedback() {
+  $('feedbackExperience').innerHTML = `<fieldset class="feedback-question"><legend>Your perspective <span class="field-optional">(optional)</span></legend><div class="feedback-chips">${Object.entries(feedbackExperiences).map(([id,label])=>`<label class="feedback-chip"><input type="radio" name="experience" id="feedbackExperience-${id}" value="${id}" ${id==='unspecified'?'checked':''}><span>${e(id==='unspecified'?'Skip':label)}</span></label>`).join('')}</div></fieldset>`;
   $('feedbackQuestions').innerHTML = feedbackQuestions.map((question, index) => `<fieldset class="feedback-question"><legend><span aria-hidden="true">0${index+1}</span> ${e(question.title)}</legend><div class="feedback-chips">${question.options.map(option => `<label class="feedback-chip"><input type="checkbox" id="feedbackChoice-${option.id}" name="choices" value="${option.id}"><span><span class="feedback-chip__check" aria-hidden="true">+</span>${e(option.label)}</span></label>`).join('')}</div></fieldset>`).join('');
   $('feedbackForm').addEventListener('submit', event => { event.preventDefault(); saveFeedback(); });
   $('feedbackForm').addEventListener('input', () => { feedback.dirty = true; });

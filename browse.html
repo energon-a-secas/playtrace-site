@@ -301,6 +301,7 @@
           <h4 id="feedbackFormTitle">A quick first impression</h4><a id="projectResearch" class="text-link" href="research.html">Share a quick review ↗</a>
           <p class="field__hint">Pick any that fit. A first look is welcome; skip anything you haven’t tried.</p>
           <form id="feedbackForm">
+            <div id="feedbackExperience"></div>
             <div id="feedbackQuestions"></div>
             <label for="feedbackBody">Anything to add? <span class="field-optional">(optional)</span></label>
             <textarea class="input" id="feedbackBody" name="feedback" rows="3" maxlength="1500" placeholder="A moment you loved, a place you got stuck, an idea to try…" aria-describedby="feedbackPublic feedbackMessage"></textarea>
@@ -316,7 +317,7 @@
                 </div>
               </div>
             </details>
-            <p id="feedbackPublic" class="field__hint">Your choices, note, display name, and optional price will be public.</p>
+            <p id="feedbackPublic" class="field__hint">Your answers, note, display name and optional price are public. Reviewed, AI-assisted summaries may cite your note. You can edit or remove it here.</p>
             <button type="submit" class="btn btn--primary" id="feedbackSubmit">Share feedback</button>
             <button type="button" class="text-button" id="feedbackRemove" hidden>Remove my feedback</button>
           </form>

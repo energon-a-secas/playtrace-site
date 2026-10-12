@@ -6,6 +6,7 @@ import { safeUrl, validateCatalog, dateLabel } from './collection.js';
 import { icon } from './icons.js';
 import { NeoAuth } from './neorgon-auth.js';
 import { render, renderDetail } from './render.js';
+import { reviewMarkup, revealReviewSource } from './feedback-review.js';
 
 let epoch=0,currentId='',controller,ratings;
 export async function loadExtras(game){
@@ -22,9 +23,7 @@ export async function loadExtras(game){
     }).join(''):'<p class="field__hint">No additional links collected yet. The original posts may contain more context.</p>';
     const review=context.review;
     if(review){
-      const citationMap=new Map(review.citations.map(citation=>[citation.number,citation]));
-      const summary=e(review.summary).replace(/\[(\d+)\]/g,(match,n)=>citationMap.has(Number(n))?`<a href="#review-source-${n}">[${n}]</a>`:match);
-      $('publishedReview').innerHTML=`<p class="eyebrow">COMMUNITY FIELD NOTES</p><h3>From the conversation</h3><p>${summary}</p><p class="field__hint">${review.reviewedComments ? `Editorial summary · ${review.reviewedComments} cited comments from ${review.classifiedComments} archived comments` : `Reviewed, AI-assisted summary of ${review.classifiedComments} archived comments`} · ${e(dateLabel(review.windowStart))}–${e(dateLabel(review.windowEnd))}${review.sampled?' · Sampled':''}</p><details><summary>Read the cited comments</summary><ol>${review.citations.map(citation=>`<li id="review-source-${citation.number}"><a href="${e(safeUrl(citation.url))}" target="_blank" rel="noopener noreferrer">[${citation.number}] u/${e(citation.author)} ↗</a><blockquote>${e(citation.body)}</blockquote></li>`).join('')}</ol></details>`;$('publishedReview').hidden=false;
+      $('publishedReview').innerHTML=reviewMarkup(review);$('publishedReview').hidden=false;revealReviewSource($('publishedReview'));
     }
   }catch{if(version===epoch)$('projectReferences').textContent='Shared links could not be loaded. Visit the original posts for more context.';}
 }
@@ -42,6 +41,10 @@ async function uploadData(file){
   try{if(bitmap.width*bitmap.height>50000000)throw new Error('Choose an image under 50 million pixels.');const scale=Math.min(1,1600/Math.max(bitmap.width,bitmap.height)),canvas=document.createElement('canvas');canvas.width=Math.round(bitmap.width*scale);canvas.height=Math.round(bitmap.height*scale);canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);return canvas.toDataURL('image/webp',.88);}finally{bitmap.close();}
 }
 export function bindExtras(){
+  addEventListener('hashchange',()=>revealReviewSource($('publishedReview')));
+  for(const event of ['feedback-saved','feedback-removed'])document.addEventListener(event,()=>{
+    if(!state.detail)return;currentId='';loadExtras(state.detail);
+  });
   ratings=ratingControl($('ratingControl'));
   for(const name of ['Updates','References']){
     const tab=$(`history${name}Tab`);tab.addEventListener('click',()=>selectHistory(name.toLowerCase()));

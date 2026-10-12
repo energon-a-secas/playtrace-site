@@ -177,7 +177,7 @@ test('a dated archive batch reuses only matching player comments and can publish
   assert.equal(validFeedbackBatch({...sample,windowStart:until},game,since,NOW),false);
   assert.equal(validFeedbackBatch({...sample,evidence:[{...sample.evidence[0],url:'https://evil.example/'}]},game,since,NOW),false);
   const env=await setup([game]);env.JEV_API_KEY='fixture';let calls=0;
-  const result=await feedbackReview(game,since,env,{...deps,fetch:async url=>{assert.equal(url,'https://api.typesafe.ai/v1/systemone');calls++;return Response.json({model:'jev-fixture',answers:{theme_0:{type:'choice',choice:'controls',probabilities:{controls:.95}},tone_0:{type:'choice',choice:'praise',probabilities:{praise:.95}}}});}},sample);
+  const result=await feedbackReview(game,since,env,{...deps,fetch:async url=>{assert.equal(url,'https://api.typesafe.ai/v1/systemone');calls++;return Response.json({model:'jev-fixture',answers:{experience_0:{type:'choice',choice:'unspecified',probabilities:{unspecified:.95}},theme_0:{type:'choice',choice:'controls',probabilities:{controls:.95}},tone_0:{type:'choice',choice:'praise',probabilities:{praise:.95}}}});}},sample);
   assert.equal(calls,1);assert.equal(result.citations[0].author,'PlayerOne');assert.match(result.summary,/\[1\]/);
   await enqueueJobs(env.DB,{kind:'feedback',scope:'game',gameId:game.id},admin,deps);
   const job=(await listJobs(env.DB,'pending')).jobs[0];env.DB.sql.prepare("UPDATE editorial_jobs SET status='ready',payload_json=? WHERE id=?").run(JSON.stringify(result),job.id);

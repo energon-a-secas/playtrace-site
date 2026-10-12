@@ -5,6 +5,7 @@ import { modelReleases } from './insight-evidence.js';
 import { trend, breakdown, valuesFor, mentionDimensions, compareRelease, csv, missingLabel } from './insight-analysis.js';
 import { feedbackOptions } from './feedback-options.js';
 import { releaseTimeline } from './release-evidence.js';
+import { loadFeedbackPatterns } from './feedback-pattern-view.js';
 
 const $=id=>document.getElementById(id),n=value=>Number(value).toLocaleString(),pct=(a,b)=>b?`${(a/b*100).toFixed(1)}%`:'No sample';
 let api,run=0,busy=false,data=null,usage=null,exportRows=[],evidenceLimit=20,publicView=false;
@@ -42,6 +43,7 @@ export async function loadInsights(refresh=false){
     $('insightsContent').hidden=false;$('insightStatus').textContent=`${n(games.length)} projects · evidence read ${dateLabel(data.observedAt)}${publicView?' · Public catalogue evidence':' · Admin view'}`;
     setValues('trend');setValues('comparison');$('releaseEvent').innerHTML=modelReleases.map((item,i)=>`<option value="${i}">${e(item.name)} · ${item.date}</option>`).join('');$('releaseEvent').value=String(modelReleases.length-1);
     paintOverview();paintTrend();paintComparison();paintUsage();paintReleases();
+    loadFeedbackPatterns($('feedbackPatterns'),api,data.games,data.categories);
   }catch(error){if(current===run)$('insightStatus').textContent=error.message;}
   finally{if(current===run){busy=false;$('refreshInsights').disabled=false;}}
 }

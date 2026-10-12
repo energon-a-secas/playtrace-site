@@ -8,15 +8,15 @@ export function scoreObservation(raw, now) {
   return { postId: raw.id, score: raw.score, observedAt, checkedAt: new Date(now).toISOString() };
 }
 
-export function saveScoreObservations(db, observations) {
+export function saveScoreObservations(db, observations, { initialOnly = false } = {}) {
   return query(db, `INSERT INTO reddit_scores(post_id,score,observed_at,checked_at)
     SELECT json_extract(j.value,'$.postId'),json_extract(j.value,'$.score'),json_extract(j.value,'$.observedAt'),json_extract(j.value,'$.checkedAt')
     FROM json_each(?) j JOIN source_posts p ON p.id=json_extract(j.value,'$.postId')
     JOIN games g ON g.id=p.game_id WHERE p.status='published' AND g.status='published'
       AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id)
-    ON CONFLICT(post_id) DO UPDATE SET score=excluded.score,observed_at=excluded.observed_at,checked_at=excluded.checked_at
+    ON CONFLICT(post_id) ${initialOnly ? 'DO NOTHING' : `DO UPDATE SET score=excluded.score,observed_at=excluded.observed_at,checked_at=excluded.checked_at
     WHERE (reddit_scores.observed_at IS NULL OR excluded.observed_at>=reddit_scores.observed_at)
-      AND excluded.checked_at>=reddit_scores.checked_at`, JSON.stringify(observations));
+      AND excluded.checked_at>=reddit_scores.checked_at`}`, JSON.stringify(observations));
 }
 
 // Highest single source-post score. Adding posts never adds their scores together.

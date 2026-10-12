@@ -8,10 +8,16 @@ import { NeoAuth } from './neorgon-auth.js';
 import { favorites } from './favorites.js';
 import { ratingControl } from './rating-control.js';
 import { bindFeedback, resetFeedback, loadFeedback, renderFeedback } from './feedback.js';
+import { reviewMarkup, revealReviewSource } from './feedback-review.js';
 
-let user=null,authVersion=0,syncing=null;
+let user=null,authVersion=0,syncing=null,reviewVersion=0;
 const initial=validateCatalog(JSON.parse($('gameData').textContent));
 let game=initial.games[0];
+async function loadReview(){
+  const node=$('pageReview'),current=++reviewVersion;if(!node)return;
+  node.hidden=true;node.replaceChildren();
+  try{const {review}=await request(`/games/${game.id}/context`);if(review&&current===reviewVersion){node.innerHTML=reviewMarkup(review,{heading:'h2'});node.hidden=false;revealReviewSource(node);}}catch{/* A summary is optional; original posts remain available. */}
+}
 function paintFavorite(){
   const saved=favorites.ids(user).includes(game.id),button=$('pageFavorite');
   if(!button)return;
@@ -65,6 +71,9 @@ async function boot(){
   bindFeedback();resetFeedback(game.id);
   request('/status').then(service=>{state.service=service;renderFeedback();}).catch(()=>{});
   loadFeedback(game.id);paintFavorite();
+  loadReview();
+  addEventListener('hashchange',()=>revealReviewSource($('pageReview')));
+  for(const event of ['feedback-saved','feedback-removed'])document.addEventListener(event,loadReview);
   $('pageFavorite').addEventListener('click',()=>{
     const result=favorites.toggle(user,game.id);if(!result)return;
     paintFavorite();$('gameActionMessage').textContent=result.persisted?(result.saved?'Saved to favorites.':'Removed from favorites.'):'Saved for this visit. Browser storage is unavailable.';

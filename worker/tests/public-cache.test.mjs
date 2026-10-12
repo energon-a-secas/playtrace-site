@@ -15,7 +15,7 @@ test('a score-only archive refresh invalidates a warm catalogue cache',async()=>
   await importCatalog(env.DB,fixtureCatalog());await refreshSourceRecords(env.DB,[row],{now:()=>NOW});
   const worker=createWorker({cache,now:()=>NOW+8*86400000,sleep:async()=>{},fetch:async()=>Response.json({data:[{...row,score:9,retrieved_on:NOW/1000+8*86400}]})});
   assert.equal((await(await worker.fetch(request('/catalog'),env)).json()).games[0].redditScore.score,4);
-  await worker.scheduled({cron:'45 * * * *'},env);
+  await worker.scheduled({cron:'50 * * * *'},env);
   assert.equal((await(await worker.fetch(request('/catalog'),env)).json()).games[0].redditScore.score,9);env.DB.close();
 });
 test('public discovery cache uses one revision read and reapplies CORS per request',async()=>{

@@ -6,9 +6,32 @@ import { feedbackReview, classifyEvidence } from './insights.mjs';
 import { exactKeys, invalid, notFound, ApiError } from './http.mjs';
 import { GAME_ID } from './validation.mjs';
 import { acquire, release } from './lease.mjs';
+import { currentNotesSql } from './feedback-evidence.mjs';
+import { feedbackTopics } from '../../js/feedback-patterns.js';
 
 export const jobKinds = ['links','store','feedback','references','research'];
 const projectUrl = effectiveProjectUrl;
+export async function queueFeedbackMaintenance(db,deps,{weekly=false}={}) {
+  const at=new Date(deps.now()).toISOString(),since=new Date(deps.now()-60*86400000).toISOString();
+  const key='weekly_feedback_queue',week=at.slice(0,10);
+  if(weekly&&(await meta(db,key))?.week===week)return {queued:0};
+  const pending=await query(db,"SELECT count(*) AS count FROM editorial_jobs WHERE kind='feedback' AND status IN('pending','running')").first();
+  if(pending.count>=8)return {queued:0,backlog:true};
+  const due=await query(db,`SELECT g.id FROM games g WHERE g.status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id)
+    AND NOT EXISTS(SELECT 1 FROM editorial_jobs j WHERE j.game_id=g.id AND j.kind='feedback' AND j.status IN('pending','running'))
+    AND ${weekly?`g.updated_at>=? AND NOT EXISTS(SELECT 1 FROM editorial_jobs j WHERE j.game_id=g.id AND j.kind='feedback' AND j.updated_at>=?)`
+      :`EXISTS(SELECT 1 FROM feedback f WHERE f.game_id=g.id AND f.status='published' AND length(trim(f.body))>=8 AND f.updated_at>=?
+        AND NOT EXISTS(SELECT 1 FROM editorial_jobs j WHERE j.game_id=g.id AND j.kind='feedback' AND j.updated_at>=f.updated_at))`}
+    ORDER BY COALESCE((SELECT max(updated_at) FROM editorial_jobs j WHERE j.game_id=g.id AND j.kind='feedback'),''),g.updated_at DESC,g.id LIMIT ?`,
+    since,...(weekly?[new Date(deps.now()-7*86400000).toISOString()]:[]),Math.min(weekly?8:1,8-pending.count)).all();
+  const start=since.slice(0,10)+'T00:00:00.000Z',items=due.results.map(row=>({id:crypto.randomUUID(),gameId:row.id}));
+  const statements=[query(db,`INSERT INTO editorial_jobs(id,game_id,kind,window_start,created_at,updated_at,requested_by)
+    SELECT json_extract(value,'$.id'),json_extract(value,'$.gameId'),'feedback',?,?,?,'feedback-maintenance' FROM json_each(?) WHERE 1
+    ON CONFLICT(game_id,kind,window_start) DO UPDATE SET status='pending',payload_json='{}',updated_at=excluded.updated_at
+      WHERE editorial_jobs.status NOT IN('pending','running') RETURNING id`,start,at,at,JSON.stringify(items))];
+  if(weekly)statements.push(putMeta(db,key,{week,queued:items.length,at}));
+  const [result]=await db.batch(statements);return {queued:result.results.length};
+}
 export async function queueStoreMaintenance(db, deps) {
   const at=new Date(deps.now()).toISOString(), weekAgo=new Date(deps.now()-7*86400000).toISOString();
   const rows=await query(db,`SELECT g.id FROM games g LEFT JOIN project_overrides o ON o.game_id=g.id
@@ -26,7 +49,7 @@ export async function queueStoreMaintenance(db, deps) {
     SELECT json_extract(value,'$.id'),json_extract(value,'$.gameId'),'store',?,?,?,'maintenance' FROM json_each(?) WHERE 1
     ON CONFLICT(game_id,kind,window_start) DO NOTHING`,at.slice(0,10)+'T00:00:00.000Z',at,at,JSON.stringify(rows.results.map(row=>({id:crypto.randomUUID(),gameId:row.id})))).run();
 }
-export function reviewWindow(now) { const date = new Date(now); date.setUTCMonth(date.getUTCMonth()-2); return date.toISOString(); }
+export function reviewWindow(now) { return new Date(now-60*86400000).toISOString(); }
 export async function enqueueJobs(db, body, admin, deps) {
   exactKeys(body, ['kind','scope','gameId']);
   if (!jobKinds.includes(body.kind) || !['recent','all','game'].includes(body.scope) || (body.scope === 'game' ? !GAME_ID.test(body.gameId || '') : body.gameId !== null)) throw invalid('Choose a job and a collection scope.');
@@ -77,7 +100,7 @@ export async function runJobs(db, env, deps, limit = 1, kind = 'all') {
     const rows=await query(db,`SELECT * FROM editorial_jobs WHERE status='pending'
       ${kind==='all'?'':'AND kind=?'}
       AND (kind NOT IN('feedback','references') OR ?<=? OR (kind='feedback' AND json_type(payload_json,'$.archiveBatch')='object')) AND (kind NOT IN('feedback','research') OR ?<=?)
-      ORDER BY created_at,id LIMIT ?`,...(kind==='all'?[]:[kind]),cooldown.archive||0,deps.now(),cooldown.jev||0,deps.now(),limit).all();
+      ORDER BY CASE WHEN kind='feedback' AND requested_by='feedback-maintenance' THEN 0 ELSE 1 END,created_at,id LIMIT ?`,...(kind==='all'?[]:[kind]),cooldown.archive||0,deps.now(),cooldown.jev||0,deps.now(),limit).all();
     if(!rows.results.length){
       const pending=await query(db,`SELECT count(*) AS count FROM editorial_jobs WHERE status='pending' ${kind==='all'?'':'AND kind=?'}`,...(kind==='all'?[]:[kind])).first();
       const retryAt=Math.min(...Object.values(cooldown).filter(at=>at>deps.now()));
@@ -101,7 +124,11 @@ export async function runJobs(db, env, deps, limit = 1, kind = 'all') {
           const evidence=answers.results.slice(0,30).map((row,i)=>({id:String(i+1),body:JSON.parse(row.questions_json).map(q=>{const answer=JSON.parse(row.answers_json)[q.id];return `${q.title}: ${Array.isArray(answer)?answer.map(n=>q.options[n]).join(', '):typeof answer==='number'?q.options[answer]:answer||'Skipped'}`;}).join('\n'),questionnaireId:row.questionnaire_id,revision:row.revision,createdAt:row.updated_at}));
           result={...await classifyEvidence(evidence,env,deps),sampled:answers.results.length>30,note:evidence.length?'Private analysis of questionnaire responses. These are browser contributions, not unique players.':'No questionnaire responses in this window.'};
         }
-        await query(db,"UPDATE editorial_jobs SET status='ready',payload_json=?,updated_at=? WHERE id=?",JSON.stringify(result),new Date(deps.now()).toISOString(),job.id).run();
+        const payload=JSON.stringify(result);
+        const saved=await query(db,`UPDATE editorial_jobs SET status='ready',payload_json=?,updated_at=? WHERE id=?
+          AND EXISTS(SELECT 1 FROM games g WHERE g.id=editorial_jobs.game_id AND g.status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id))
+          ${job.kind==='feedback'?`AND ${currentNotesSql('evidence')}`:''} RETURNING id`,payload,new Date(deps.now()).toISOString(),job.id,...(job.kind==='feedback'?[payload,job.game_id]:[])).first();
+        if(!saved)throw new Error('Public evidence changed while this review was running.');
       }catch(error){
         const message=/^(Jev |Archive HTTP )/.test(error.message||'')?error.message:'This job could not finish. The source may be unavailable. Retry to check again.';
         if(error.queueCooldown&&Number.isFinite(error.retryAt)){
@@ -116,16 +143,43 @@ export async function runJobs(db, env, deps, limit = 1, kind = 'all') {
   }finally{await release(db,'editorial_queue_lock',owner);}
 }
 export async function updateJob(db,id,body,admin,deps){
-  exactKeys(body,['action']); if(!['retry','dismiss','publish'].includes(body.action))throw invalid();
+  const edited=Object.hasOwn(body||{},'review');
+  const versioned=Object.hasOwn(body||{},'expectedUpdatedAt');
+  exactKeys(body,['action',...(edited?['review']:[]),...(versioned?['expectedUpdatedAt']:[])]); if(!['retry','dismiss','publish'].includes(body.action)||edited&&body.action!=='publish')throw invalid();
   const job=await query(db,'SELECT * FROM editorial_jobs WHERE id=?',id).first(); if(!job)throw notFound();
+  if(versioned&&body.expectedUpdatedAt!==job.updated_at)throw new ApiError('EDIT_CONFLICT','This draft changed. Refresh the queue and check its sources again.',409);
   await getGame(db,job.game_id);
   if(job.status==='running')throw new ApiError('CONFLICT','This job is still running.',409);
   const at=new Date(deps.now()).toISOString();
   if(body.action==='publish'){
     const data=JSON.parse(job.payload_json);
     if(job.kind!=='feedback'||job.status!=='ready'||!data.summary||!data.citations?.length)throw invalid('Only a cited feedback draft can be published.');
-    const review={summary:data.summary,citations:data.citations,windowStart:data.windowStart,windowEnd:data.windowEnd,sampled:data.sampled,model:data.model,classifiedComments:data.classifiedComments};
-    await db.batch([query(db,`INSERT INTO feedback_reviews(game_id,payload_json,published_at,published_by) VALUES(?,?,?,?) ON CONFLICT(game_id) DO UPDATE SET payload_json=excluded.payload_json,published_at=excluded.published_at,published_by=excluded.published_by`,job.game_id,JSON.stringify(review),at,admin.subject),query(db,"UPDATE editorial_jobs SET status='published',updated_at=? WHERE id=? AND status='ready'",at,id)]);
+    if(edited){
+      exactKeys(body.review,['summary','labels']);
+      if(typeof body.review.summary!=='string'||body.review.summary.trim().length<20||body.review.summary.length>6000
+        ||!Array.isArray(body.review.labels)||body.review.labels.length!==data.citations.length)throw invalid('Review the summary and each source label.');
+      const seen=new Set();
+      for(const label of body.review.labels){
+        exactKeys(label,['number','theme','tone','experience']);
+        const source=data.citations.find(source=>source.number===label.number);
+        if(!source||seen.has(label.number)||label.theme!==null&&!Object.hasOwn(feedbackTopics,label.theme)
+          ||label.tone!==null&&!['praise','concern','suggestion','mixed'].includes(label.tone)||!['preview','played','unspecified'].includes(label.experience)
+          ||source.source==='playtrace'&&label.experience!==source.experience)throw invalid('Use the listed labels and preserve the visitor’s stated perspective.');
+        seen.add(label.number);Object.assign(source,label);
+      }
+      const refs=[...body.review.summary.matchAll(/\[(\d+)\]/g)].map(match=>Number(match[1]));
+      if(refs.some(number=>!seen.has(number))||[...seen].some(number=>!refs.includes(number)))throw invalid('Keep a numbered reference for every cited contribution.');
+      data.summary=body.review.summary.trim();
+    }
+    const review={version:data.version||1,summary:data.summary,citations:data.citations,windowStart:data.windowStart,windowEnd:data.windowEnd,sampled:data.sampled,model:data.model,classifiedComments:data.classifiedComments,
+      ...(data.sources?{sources:data.sources,archiveWindowEnd:data.archiveWindowEnd}:{}),editorialReview:{checkedAt:at,method:'Admin-approved cited review'}};
+    const [saved]=await db.batch([query(db,`INSERT INTO feedback_reviews(game_id,payload_json,published_at,published_by)
+      SELECT ?,?,?,? WHERE EXISTS(SELECT 1 FROM editorial_jobs WHERE id=? AND status='ready' AND payload_json=? AND updated_at=?)
+        AND EXISTS(SELECT 1 FROM games WHERE id=? AND status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id))
+        AND ${currentNotesSql('citations')}
+      ON CONFLICT(game_id) DO UPDATE SET payload_json=excluded.payload_json,published_at=excluded.published_at,published_by=excluded.published_by RETURNING game_id`,job.game_id,JSON.stringify(review),at,admin.subject,id,job.payload_json,job.updated_at,job.game_id,JSON.stringify(review),job.game_id),
+      query(db,"UPDATE editorial_jobs SET status='published',payload_json=?,updated_at=? WHERE id=? AND status='ready' AND payload_json=? AND EXISTS(SELECT 1 FROM feedback_reviews WHERE game_id=? AND published_at=? AND payload_json=?)",JSON.stringify({...data,editorialReview:review.editorialReview}),at,id,job.payload_json,job.game_id,at,JSON.stringify(review))]);
+    if(!saved.results.length)throw new ApiError('CONFLICT','A cited public note changed. Run this review again before publishing.',409);
   }else await query(db,'UPDATE editorial_jobs SET status=?,updated_at=? WHERE id=?',body.action==='retry'?'pending':'dismissed',at,id).run();
   return {updated:true};
 }
