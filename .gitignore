@@ -46,3 +46,6 @@ skills-archived/
 # wrangler's local state and the Worker's dev secrets.
 .wrangler/
 .dev.vars*
+
+# Generated static Pages artifact
+_site/

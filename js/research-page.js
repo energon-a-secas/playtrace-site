@@ -3,10 +3,13 @@ import { editKey } from './guest-key.js';
 import { $, escHtml as e } from './utils.js';
 import { validateCatalog, safeUrl } from './collection.js';
 import { questionFlow } from './question-flow.js';
+import { searchSelect } from './search-select.js';
+import { projectPath } from './project-url.js';
 import { NeoAuth } from './neorgon-auth.js';
 
 const params=new URL(location.href).searchParams;
 let forms=[],games=[],current=null,loaded=false,epoch=0,booting=false;
+const picker=searchSelect($('researchGamePicker'),selectedGame);
 const embedded=params.get('embed')==='1';
 if(embedded)document.body.classList.add('research-embedded');else NeoAuth.start();
 function options(){
@@ -16,14 +19,11 @@ function options(){
   if([...$('researchFormSelect').options].some(option=>option.value===selected))$('researchFormSelect').value=selected;
 }
 function gameOptions(){
-  const term=$('researchGameSearch').value.trim().toLowerCase(), form=forms.find(form=>form.id===$('researchFormSelect').value);
-  const matching=games.filter(game=>(!form?.gameId||form.gameId===game.id)&&`${game.title} ${game.author.name}`.toLowerCase().includes(term));
-  const selected=$('researchGame').value||params.get('game');
-  $('researchGame').innerHTML='<option value="">Choose a project…</option>'+matching.slice(0,100).map(game=>`<option value="${game.id}">${e(game.title)} · u/${e(game.author.name)}</option>`).join('');
-  if(selected&&matching.some(game=>game.id===selected))$('researchGame').value=selected;
-  if(form?.gameId)$('researchGame').value=form.gameId;
-  selectedGame();
-  $('researchGameCount').textContent=matching.length>100?'Showing the first 100 matches. Type a name to narrow the list.':`${matching.length} projects available`;
+  const form=forms.find(form=>form.id===$('researchFormSelect').value);
+  const matching=games.filter(game=>!form?.gameId||form.gameId===game.id);
+  const selected=form?.gameId||$('researchGame').value||params.get('game')||'';
+  picker.setOptions(matching.map(game=>({value:game.id,label:game.title,description:`u/${game.author.name}`})),selected);
+  $('researchGameCount').textContent=`${matching.length.toLocaleString()} projects available`;
 }
 function selectedGame(){
   const game=games.find(game=>game.id===$('researchGame').value);
@@ -59,10 +59,11 @@ async function start(formId,gameId){
     $('researchPicker').hidden=true;$('researchSession').hidden=false;$('researchTitle').textContent=questionnaire.title;
     $('researchProject').textContent=game.title;
     $('researchVisit').hidden=!game.projectUrl;if(game.projectUrl)$('researchVisit').href=safeUrl(game.projectUrl);
-    $('researchProjectLink').href=`browse.html?game=${game.id}`;
+    $('researchProjectLink').href=projectPath(game);
     const img=game.preview.posterUrl||(game.preview.kind==='image'?game.preview.url:null);
     $('researchImage').hidden=!img;if(img){$('researchImage').src=safeUrl(img);$('researchImage').alt=game.preview.alt;}
     $('researchMessage').textContent='';
+    document.dispatchEvent(new CustomEvent('research-started',{detail:{gameId:game.id}}));
     let own;try{own=await request(`/research/${questionnaire.id}/responses?game=${game.id}`,{feedbackKey:editKey(false)});}catch{}
     if(version!==epoch)return;
     $('removeResearch').hidden=!own?.answers;
@@ -73,6 +74,7 @@ async function start(formId,gameId){
     questionFlow($('questionFlow'),{questions:questionnaire.questions,answers:own?.revision===questionnaire.revision?own.answers:{},onComplete:async answers=>{
       await request(`/research/${questionnaire.id}/responses`,{method:'PUT',feedbackKey:editKey(true),body:{gameId:game.id,revision:questionnaire.revision,answers}});
       if(version!==epoch)return;
+      document.dispatchEvent(new CustomEvent('research-completed',{detail:{gameId:game.id}}));
       $('questionFlow').innerHTML='<div class="research-thanks" tabindex="-1"><span aria-hidden="true">✓</span><h3>That helps the next version.</h3><p>Your review is saved for the editorial team. Thanks for taking a closer look.</p><button id="editResearchAnswers" type="button" class="btn btn--secondary">Edit my answers</button></div>';
       $('questionFlow').firstElementChild.focus();$('removeResearch').hidden=false;$('editResearchAnswers').onclick=()=>start(questionnaire.id,game.id);
     }});
@@ -84,8 +86,6 @@ $('researchImage').addEventListener('error',()=>{$('researchImage').hidden=true;
 $('researchPicker').addEventListener('submit',event=>{event.preventDefault();start($('researchFormSelect').value,$('researchGame').value);});
 $('researchCategory').addEventListener('change',()=>{options();gameOptions();});
 $('researchFormSelect').addEventListener('change',gameOptions);
-$('researchGameSearch').addEventListener('input',gameOptions);
-$('researchGame').addEventListener('change',selectedGame);
 $('changeResearch').addEventListener('click',()=>{epoch++;$('researchSession').hidden=true;const url=new URL(location.href);url.searchParams.delete('game');history.replaceState(null,'',url);params.delete('game');boot(false);});
 $('removeResearch').addEventListener('click',async event=>{const {game,questionnaire}=current;event.currentTarget.disabled=true;try{await request(`/research/${questionnaire.id}/responses?game=${game.id}`,{method:'DELETE',feedbackKey:editKey(false)});$('removeResearch').hidden=true;await start(questionnaire.id,game.id);$('researchMessage').textContent='Your answers were removed.';}catch(error){$('researchMessage').textContent=error.message;}finally{$('removeResearch').disabled=false;}});
 async function boot(direct=true){

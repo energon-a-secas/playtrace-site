@@ -1,0 +1,53 @@
+.game-page { max-width: 1080px; margin-inline: auto; padding: 28px 24px 64px; }
+.game-breadcrumb { display: flex; gap: 12px; align-items: baseline; margin-bottom: 24px; font-size: 13px; color: var(--pt-muted); }
+.game-breadcrumb > span:last-child { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.game-breadcrumb a { white-space: nowrap; color: var(--pt-gold); }
+.game-page-record { background: var(--pt-paper); border: 1px solid var(--pt-line); border-radius: 10px; overflow: hidden; }
+.game-page-art { aspect-ratio: 16 / 7; overflow: hidden; background: var(--pt-soft); }
+.game-page-art img { width: 100%; height: 100%; object-fit: cover; }
+.game-page-copy { padding: 28px 36px 36px; }
+.game-page-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; color: var(--pt-muted); font-size: 13px; }
+.game-page-meta .genre-chip { text-decoration: none; }
+.game-page-shortcuts { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+.game-page-shortcuts .project-icon { min-height: 40px; min-width: 40px; }
+.game-page-heading { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 24px; align-items: start; margin-top: 24px; }
+.game-page-heading h1 { font-family: var(--pt-display); font-size: 36px; line-height: 1.12; letter-spacing: -.035em; color: var(--pt-ink); margin: 0 0 12px; overflow-wrap: anywhere; }
+.game-page-credit { color: var(--pt-muted); font-size: 14px; margin-top: 16px; }
+.game-page-credit a { color: var(--pt-gold); }
+.game-page-description { max-width: 70ch; font-size: 18px; line-height: 1.7; color: var(--pt-text); margin-block: 32px; }
+.game-page-facts { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 20px 28px; margin: 28px 0; }
+.game-page-facts dt { font-size: 12px; color: var(--pt-muted); margin-bottom: 5px; }
+.game-page-facts dd { margin: 0; font-size: 14px; color: var(--pt-ink); overflow-wrap: anywhere; }
+.game-page-gallery, .game-page-history { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--pt-line); }
+.game-page-gallery summary { cursor: pointer; font-weight: 600; }
+.game-page-gallery summary span { color: var(--pt-muted); font-weight: 400; }
+.game-page .timeline h3 { font-size: 18px; line-height: 1.4; }
+.game-page .timeline p { max-width: 70ch; }
+.game-page-provenance { font-size: 12px; color: var(--pt-muted); margin-top: 24px; }
+.game-page > .project-feedback { padding-top: 32px; margin-top: 40px; }
+.game-page [role=status]:empty { display: none; }
+.game-page-related { margin-top: 40px; }
+.game-page-related ul { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 20px; padding: 0; list-style: none; }
+.game-page-related a { color: var(--pt-ink); text-decoration: none; }
+.game-page-related img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 6px; margin-bottom: 8px; }
+.game-page-related small { display: block; color: var(--pt-muted); }
+.game-page-unavailable { padding: 48px 0; max-width: 60ch; }
+.directory-list { list-style: none; padding: 0; }
+.directory-list li { padding: 16px 0; border-bottom: 1px solid var(--pt-line); }
+.directory-list a { color: var(--pt-ink); font-size: 18px; font-weight: 600; }
+.directory-list small { display: block; color: var(--pt-muted); margin-top: 6px; }
+.directory-pagination { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 28px; }
+.directory-pagination a { padding: 8px 12px; border: 1px solid var(--pt-line); border-radius: 5px; }
+.directory-pagination [aria-current] { background: var(--pt-soft); color: var(--pt-ink); }
+@media (max-width: 700px) {
+ .game-page { padding: 20px 16px 40px; }
+ .game-page-copy { padding: 20px; }
+ .game-page-art { aspect-ratio: 16 / 9; }
+ .game-page-heading { grid-template-columns: minmax(0,1fr); gap: 20px; }
+ .game-page-heading h1 { font-size: 28px; }
+ .game-page-heading .project-actions { justify-items: start; }
+ .game-page-shortcuts { margin-left: 0; }
+ .game-page-facts { grid-template-columns: repeat(2,minmax(0,1fr)); }
+ .game-page-description { font-size: 16px; }
+ .game-page-related ul { grid-template-columns: 1fr; }
+}

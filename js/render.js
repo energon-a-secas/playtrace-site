@@ -2,6 +2,7 @@ import { state } from './state.js';
 import { categoryChoices, categoryLabel, sourceHeadline, sourceOnlySummary, projectPlatforms, selectGames, collectionPulse, label, dateLabel, money } from './collection.js';
 import { CONFIG } from './config.js';
 import { $, escHtml as e } from './utils.js';
+import { projectPath } from './project-url.js';
 import { icon, playLink } from './icons.js';
 import { syncMakers } from './maker-combobox.js';
 
@@ -86,7 +87,7 @@ function card(game) {
   const availability = playLink(game) + (price ? `<span class="card-price">${e(price)}</span>` : '');
   const latest = [...game.posts].sort((a,b) => b.createdAt.localeCompare(a.createdAt) || b.id.localeCompare(a.id))[0];
   return `<li><article class="collection-item"><div class="collection-item__preview">${image(game)}<span class="preview-label">Explore project ${arrow}</span><button type="button" class="card-favorite favorite-star" data-favorite="${e(game.id)}" aria-label="${state.follows.includes(game.id) ? 'Remove from' : 'Save to'} favorites: ${e(game.title)}" aria-pressed="${state.follows.includes(game.id)}" title="Save to favorites">${icon('star')}</button>${state.isAdmin ? `<button type="button" class="card-edit" data-edit-project="${e(game.id)}" aria-label="Edit project: ${e(game.title)}" title="Edit project">${icon('edit')}<span>Edit</span></button>` : ''}</div>
-    <div class="collection-item__body"><div class="game-meta"><button class="genre-chip" type="button" data-category="${e(game.category)}" aria-label="Filter by ${e(genre(game.category))}">${e(genre(game.category))}</button>${stageBadge(game)}</div><h3><button class="card-open" type="button" data-item="${e(game.id)}" aria-label="Explore ${e(game.title)}">${e(game.title)}</button></h3><div class="card-byline"><button class="maker-link" type="button" data-author="${e(game.author.name)}">by u/${e(game.author.name)}</button><time datetime="${e(game.updatedAt)}">${e(dateLabel(game.updatedAt))}</time></div>${headline ? `<p class="project-headline collection-item__headline">${e(headline)}</p>` : ''}${sourceOnlySummary(game) ? '' : `<p class="collection-item__description">${e(game.summary)}</p>`}<p class="card-update">${game.availability?.status === 'broken' ? 'Link needs attention · ' : ''}${game.posts.length > 1 ? `${game.posts.length - 1} ${game.posts.length === 2 ? 'update' : 'updates'}` : 'First post'}</p><div class="collection-item__foot"><div class="card-store">${availability}</div><a class="card-shortcut brand-action" data-brand="reddit" href="${e(latest.url)}" target="_blank" rel="noopener noreferrer" aria-label="Latest Reddit post for ${e(game.title)} (opens in a new tab)" title="Latest Reddit post">${icon('reddit')}</a></div></div></article></li>`;
+    <div class="collection-item__body"><div class="game-meta"><button class="genre-chip" type="button" data-category="${e(game.category)}" aria-label="Filter by ${e(genre(game.category))}">${e(genre(game.category))}</button>${stageBadge(game)}</div><h3><a class="card-open" href="${projectPath(game)}" data-item="${e(game.id)}" aria-label="Explore ${e(game.title)}">${e(game.title)}</a></h3><div class="card-byline"><button class="maker-link" type="button" data-author="${e(game.author.name)}">by u/${e(game.author.name)}</button><time datetime="${e(game.updatedAt)}">${e(dateLabel(game.updatedAt))}</time></div>${headline ? `<p class="project-headline collection-item__headline">${e(headline)}</p>` : ''}${sourceOnlySummary(game) ? '' : `<p class="collection-item__description">${e(game.summary)}</p>`}<p class="card-update">${game.availability?.status === 'broken' ? 'Link needs attention · ' : ''}${game.posts.length > 1 ? `${game.posts.length - 1} ${game.posts.length === 2 ? 'update' : 'updates'}` : 'First post'}</p><div class="collection-item__foot"><div class="card-store">${availability}</div><a class="card-shortcut brand-action" data-brand="reddit" href="${e(latest.url)}" target="_blank" rel="noopener noreferrer" aria-label="Latest Reddit post for ${e(game.title)} (opens in a new tab)" title="Latest Reddit post">${icon('reddit')}</a></div></div></article></li>`;
 }
 
 function renderOverview() {
@@ -148,7 +149,8 @@ export function renderAccount() {
   $('followGame').setAttribute('aria-pressed', String(following));
   $('followGame').hidden = false;
   $('followingFilter').disabled = false;
-  $('followingFilter').title = 'Show favorite games';
+  $('followingFilter').title = state.following ? 'Show all games' : 'Show favorites';
+  $('followingFilter').setAttribute('aria-label', state.following ? 'Show all games' : 'Show favorites');
   $('deleteMyData').disabled = !accountsReady || state.accountBusy || !state.service?.capabilities?.following;
   $('confirmDelete').disabled = !accountsReady || state.accountBusy;
   if (!accountsReady) { $('deleteConfirm').hidden = true; $('privacyMessage').textContent = 'Account features are not available yet.'; }

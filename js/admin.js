@@ -1,3 +1,4 @@
+import { initInsights, loadInsights, resetInsights } from './admin-insights.js';
 import { initHighlights, loadHighlightsAdmin, resetHighlights } from './admin-highlights.js';
 import { initCampaign, loadQueue, loadResearchAdmin, resetCampaign } from './admin-campaign.js';
 import { NeoAuth } from './neorgon-auth.js';
@@ -23,7 +24,7 @@ function clearEditor() {
   for (const id of ['detailsCategory','newCategoryName','addCategory','cancelCategory']) $(id).disabled=false;
 }
 function lock() {
-  resetHighlights(); resetCampaign(); epoch++; admin = null; checking = false; inboxNumber++; entries = []; nextCursor = null; clearEditor();
+  resetHighlights(); resetCampaign(); resetInsights(); epoch++; admin = null; checking = false; inboxNumber++; entries = []; nextCursor = null; clearEditor();
   $('adminWorkspace').hidden = true; $('adminGate').hidden = false; $('inboxEntries').replaceChildren(); $('adminMembers').replaceChildren();
   $('quizMetricsList').replaceChildren(); $('quizMetricsSummary').textContent='';
 }
@@ -43,11 +44,12 @@ async function privateRequest(path, options = {}) {
 }
 function tab(name) {
   if (name === 'access' && admin?.role !== 'owner') return;
-  for (const panel of ['inbox', 'images', 'quiz', 'queue', 'research', 'highlights', 'access']) $(`${panel}Panel`).hidden = name !== panel;
+  for (const panel of ['inbox', 'images', 'quiz', 'queue', 'research', 'highlights', 'access', 'insights']) $(`${panel}Panel`).hidden = name !== panel;
   document.querySelectorAll('[data-admin-tab]').forEach(button => {
     if (button.dataset.adminTab === name) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current');
   });
   if (name !== 'images') { frameRun++; $('frameVideo').pause(); }
+  if (name === 'insights') loadInsights();
   if (name === 'highlights') loadHighlightsAdmin();
   if (name === 'quiz') loadQuizMetrics();
   if (name === 'queue') loadQueue();
@@ -75,6 +77,7 @@ async function checkAccess() {
     if (current !== epoch) return;
     const id = new URL(location.href).searchParams.get('game');
     if (/^g_[a-z0-9]{5,12}$/.test(id || '')) await openEditor(id);
+    else if (location.hash === '#insights') tab('insights');
     else if (location.hash === '#highlights') tab('highlights');
     else if (location.hash === '#queue') tab('queue');
     else if (location.hash === '#research') tab('research');
@@ -291,6 +294,7 @@ async function memberChange(email, enabled) {
   await loadMembers(); notice(enabled ? 'Admin access granted for the verified primary email.' : 'Admin access revoked.');
 }
 
+initInsights({ request: privateRequest });
 initHighlights({ request: privateRequest, games: () => games });
 initCampaign({ request: privateRequest, games: () => games, editing: () => editing });
 

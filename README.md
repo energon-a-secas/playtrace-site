@@ -38,7 +38,7 @@ Public feedback uses a random browser edit key so visitors can update or remove 
 
 ## Features
 
-- **Focused navigation** -- A standalone Home introduces the collection; Browse, Favorites, the screenshot game, Playtest and About have dedicated pages. Existing shared project/filter links still work.
+- **Focused navigation** -- Home showcases five weekly picks; Browse includes a star filter for local/account favorites. Quick reviews and About have dedicated pages. The quiz remains available but is not promoted in navigation. Existing shared project/filter links still work.
 - **Source-linked discovery** -- Real previews, genre and development-stage filters, a searchable Maker dropdown, search, grid/list layouts, and shareable project links.
 - **Project platforms** -- Filter by itch.io, Steam, mobile stores, game portals, code repositories, other websites, or projects without a link. Cards and details identify the destination automatically from the project URL. Hosting, supported devices, and development stage remain separate facts.
 - **Project histories** -- Older and newer posts join an existing game only when author and canonical project link match. Existing project links stay stable when an earlier source is found. Closely matching same-author reposts within 48 hours retain the newest entry, with old links redirected. Sharing an author alone never merges games.
@@ -124,3 +124,12 @@ The live sign-in form is verified and `accountsReady: true` is published in `js/
 <div align="center">
 <sub>Part of <a href="https://neorgon.com/">Neorgon</a></sub>
 </div>
+
+
+### Search pages and admin insights
+
+The Pages workflow in `.github/workflows/pages.yml` builds `_site/` from a complete live catalogue hourly, on pushes to main and on manual dispatch. It publishes permanent `/games/<id>/` pages, a crawlable directory and `sitemap.xml`. Project metadata and JSON-LD are present without JavaScript. The artifact allowlist excludes Worker code, private files and editorial analysis documents. An incomplete fetch fails without replacing the last deployment. The Pages repository must use GitHub Actions as its build source.
+
+For a local snapshot build: `node scripts/build-site.mjs --catalog data/public-catalog.json`. For current production reads: `node scripts/build-site.mjs`. `_site/` is generated and ignored. Search Console ownership and sitemap submission require the property owner; generating a sitemap does not guarantee indexing.
+
+Admin desk → Insights (`admin.html#insights`) provides catalogue trends, model-release comparisons, source inspection, CSV export, community choices and anonymous usage counts. See [the dashboard methodology](docs/dashboard-methodology.md). The pilot endpoints require verified admin authorization; do not publish their response files in Pages. Apply migration `0011_usage_metrics.sql` before deploying the Worker. Existing comments, ratings, favorites and editorial overrides are unaffected by this additive migration.

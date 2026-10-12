@@ -65,7 +65,7 @@ async function start() {
   try {
     const value=await request('/quiz/rounds',{method:'POST',feedbackKey:editKey(true),body:{id:roundId}});
     if(!validRound(value))throw new Error('The screenshots could not be read. Try again.');
-    round=value;answers=[];index=0;message('');paintQuestion();
+    round=value;document.dispatchEvent(new CustomEvent('quiz-started'));answers=[];index=0;message('');paintQuestion();
   } catch(error) {
     if([409,410].includes(error.status))roundId=null;
     message(error.message);$('quizStart').hidden=false;$('quizPanel').hidden=true;
@@ -109,7 +109,7 @@ async function advance() {
   try {
     const value=await request(`/quiz/rounds/${round.id}`,{method:'PUT',feedbackKey:editKey(),body:{answers}});
     if(!validResult(value))throw new Error('Your results could not be read. Try saving the round again.');
-    result=value;paintResult();message('Round saved. Your guesses are included in the recognition counts.');
+    result=value;document.dispatchEvent(new CustomEvent('quiz-completed'));paintResult();message('Round saved. Your guesses are included in the recognition counts.');
   } catch(error) {
     if([409,410,404].includes(error.status)){expired=true;$('quizFresh').hidden=false;}
     message(error.message);

@@ -107,8 +107,6 @@
       <!-- template:actions -->
 <div class="header-actions">
   <a class="btn btn--ghost btn--sm" href="browse.html">Browse</a>
-  <a class="btn btn--ghost btn--sm" href="profile.html">Favorites</a>
-  <a class="btn btn--sm header-quiz-link" href="quiz.html" aria-label="Name that game" data-keep-mobile><span class="header-quiz-label">Name that game</span><span class="header-quiz-short" aria-hidden="true">Quiz</span></a>
   <a class="btn btn--ghost btn--sm" href="research.html" aria-current="page">Quick reviews</a>
   <a class="btn btn--ghost btn--sm" href="about.html">About</a>
 </div>
@@ -134,7 +132,7 @@
 <div class="research-intro"><p class="eyebrow">COMMUNITY / QUICK REVIEWS</p><h2 id="researchTitle">Try a game.<br>Share your take.</h2><p>Played something from the collection? Answer up to five short questions about how it felt and whether it worked. Your answers help Playtrace editors improve the catalogue.</p><p class="research-how">Choose a game <span aria-hidden="true">→</span> Try its build <span aria-hidden="true">→</span> Share a quick review</p></div>
 <div id="researchUnavailable" class="research-unavailable" hidden><h3>Quick reviews are temporarily unavailable</h3><p>Your saved answers are safe. You can still browse games and visit their original posts. Please try again when the review service is available.</p><div class="admin-inline"><button type="button" id="retryResearch" class="btn btn--secondary">Try again</button><a href="browse.html" class="btn btn--primary">Browse games ↗</a></div></div>
 <form id="researchPicker" class="research-picker" aria-busy="true"><fieldset id="researchPickerFields" disabled><legend class="sr-only">Choose a game to review</legend>
-<div class="field"><label for="researchGameSearch">Find a game you’ve tried</label><input id="researchGameSearch" class="input" type="search" placeholder="Search by game or maker…"></div><div class="field"><label for="researchGame">Game</label><select id="researchGame" class="select" required><option value="">Loading games…</option></select><p id="researchGameCount" class="field__hint" role="status">Loading projects…</p></div>
+<div class="field research-game-field"><label for="researchGameSearch">Find a game you’ve tried</label><div class="search-select" id="researchGamePicker"><input id="researchGameSearch" class="input" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="researchGameOptions" autocomplete="off" placeholder="Search by game or maker…"><button type="button" aria-label="Show game options" tabindex="-1">⌄</button><input type="hidden" id="researchGame"><ul id="researchGameOptions" role="listbox" aria-label="Games" hidden></ul></div><p id="researchGameCount" class="field__hint" role="status">Loading projects…</p></div>
 <details class="research-topics"><summary>Choose a different questionnaire</summary><div class="research-topic-fields"><div class="field"><label for="researchCategory">Topic</label><select id="researchCategory" class="select"><option value="">All topics</option></select></div><div class="field"><label for="researchFormSelect">Questionnaire</label><select id="researchFormSelect" class="select" required></select></div></div></details>
 <div id="researchChoice" class="research-choice" hidden><p id="researchChoiceTitle"></p><a id="researchTry" class="play-link" target="_blank" rel="noopener noreferrer">Try this game ↗</a></div>
 <div class="research-start"><button class="btn btn--primary" id="startResearch" type="submit" disabled>Review this game →</button><span>No account needed</span></div></fieldset></form>
@@ -151,5 +149,6 @@
 
   <div id="app-toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
   <script type="module" src="js/research-page.js"></script>
+  <script type="module" src="js/usage.js"></script>
 </body>
 </html>

@@ -1,4 +1,5 @@
 import { bindInlineEditor, openInlineEditor, closeInlineEditor } from './inline-editor.js';
+import { projectPath } from './project-url.js';
 import { request } from './api.js';
 import { bindMaker } from './maker-combobox.js';
 import { bindExtras, loadExtras, closeExtras } from './project-extras.js';
@@ -44,12 +45,16 @@ export function syncDetail() {
     }
     return;
   }
-  renderDetail(game); prepareProject(game); loadExtras(game); resetFeedback(game.id); openDialog($('itemDialog'), $('searchInput')); loadFeedback(game.id);
+  renderDetail(game); prepareProject(game); loadExtras(game); resetFeedback(game.id); openDialog($('itemDialog'), $('searchInput')); loadFeedback(game.id); document.dispatchEvent(new CustomEvent('game-viewed',{detail:{gameId:game.id}}));
+  const intent=new URL(location.href).searchParams;
+  if(intent.get('change')==='1')$('requestChange').click();
+  if(intent.get('edit')==='1'&&state.isAdmin)openInlineEditor();
 }
 
 export function catalogueReady() { render(); syncDetail(); }
 
 export function bindEvents() {
+  document.addEventListener('playtrace:admin-ready',()=>{if(new URL(location.href).searchParams.get('edit')==='1'&&state.detail)openInlineEditor();});
   bindInlineEditor(); bindFeedback(); bindProject(); bindExtras(); bindMaker(value => applyFilter('author', value));
   const dialog = $('itemDialog');
   bindDialog(dialog, $('searchInput')); bindDialog($('infoDialog'), $('searchInput'));
@@ -92,16 +97,18 @@ export function bindEvents() {
       requestAnimationFrame(() => $('authorSelect').focus());
       $('discover').scrollIntoView({ block: 'start', behavior: 'instant' }); return;
     }
-    const item = event.target.closest('button[data-item]');
+    const item = event.target.closest('[data-item]');
     if (item) {
+      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button) return;
+      event.preventDefault();
       const game = state.games.find(entry => entry.id === item.dataset.item);
       if (!game) return;
       navigation.push(() => { state.game = game.id; });
-      renderDetail(game); prepareProject(game); loadExtras(game); resetFeedback(game.id); openDialog(dialog, item); loadFeedback(game.id); return;
+      renderDetail(game); prepareProject(game); loadExtras(game); resetFeedback(game.id); openDialog(dialog, item); loadFeedback(game.id); document.dispatchEvent(new CustomEvent('game-viewed',{detail:{gameId:game.id}})); return;
     }
     if (event.target.closest('[data-open-info]')) { openDialog($('infoDialog'), event.target.closest('button')); return; }
     if (event.target.closest('#shareGame')) {
-      const projectLink = new URL('browse.html', location.href); projectLink.searchParams.set('game',state.game); const copied = await copyText(projectLink.href);
+      const projectLink = new URL(projectPath(state.game), location.origin); const copied = await copyText(projectLink.href);
       showToast(copied ? 'Project link copied.' : 'Could not copy. Copy the address from your browser.');
     }
   });
@@ -119,7 +126,7 @@ export function bindEvents() {
   $('showMoreGames').addEventListener('click', () => {
     const previous = $('itemList').children.length;
     state.visibleLimit = (state.visibleLimit || 60) + 60; render();
-    $('itemList').children[previous]?.querySelector('button')?.focus({ preventScroll: true });
+    $('itemList').children[previous]?.querySelector('.card-open')?.focus({ preventScroll: true });
   });
   $('deleteMyData').addEventListener('click', event => deleteMyData(event.currentTarget));
   $('confirmDelete').addEventListener('click', confirmDelete);

@@ -1,6 +1,6 @@
 import { request } from './api.js';
 import { NeoAuth } from './neorgon-auth.js';
-import { escHtml as e } from './utils.js';
+import { highlightPanels } from './highlight-view.js';
 import { safeUrl, dateLabel } from './collection.js';
 
 const current = new URL(location.href);
@@ -32,16 +32,13 @@ if (['game','q','cat','platform','stage','maker','author','following','view','so
     const items = picks.items;
     if (!Array.isArray(items) || !items.length || items.length > 5) throw new Error('No highlights yet');
     document.getElementById('highlightWeek').textContent = `Week of ${dateLabel(picks.week + 'T12:00:00Z')}${saved ? ' · Saved picks' : ''}`;
-    document.getElementById('weeklyHighlights').innerHTML = items.map(({game}, index) => {
-      const url = safeUrl(game.preview.posterUrl || (game.preview.kind === 'image' ? game.preview.url : null), true);
-      return `<li><a class="weekly-pick ${index === 0 ? 'weekly-pick--lead' : ''}" href="browse.html?game=${e(game.id)}"><div class="weekly-art">${url ? `<img src="${e(url)}" alt="${e(game.preview.alt || game.title)}" width="640" height="360" decoding="async" ${index === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} referrerpolicy="no-referrer">` : ''}<span class="weekly-number" aria-hidden="true">0${index + 1}</span></div><div class="weekly-caption"><h3>${e(game.title)}</h3><p>u/${e(game.author.name)}</p></div><span class="weekly-arrow" aria-hidden="true">↗</span></a></li>`;
-    }).join('');
+    document.getElementById('weeklyHighlights').innerHTML = highlightPanels(items);
     document.getElementById('weeklyHighlights').setAttribute('aria-busy', 'false');
   } catch {
     document.getElementById('weeklyHighlights').innerHTML = '<li class="highlights-empty">Weekly picks are taking a break. <a href="browse.html">Explore the collection ↗</a></li>';
     document.getElementById('weeklyHighlights').setAttribute('aria-busy', 'false');
   }
   document.getElementById('weeklyHighlights').addEventListener('error', event => {
-    if (event.target.tagName === 'IMG') { event.target.hidden = true; event.target.parentElement.classList.add('weekly-art--missing'); }
+    if (event.target.tagName === 'IMG') { event.target.hidden = true; event.target.parentElement.classList.add('showcase-art--missing'); }
   }, true);
 }

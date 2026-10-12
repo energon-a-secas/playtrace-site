@@ -1,5 +1,5 @@
 import { request } from './api.js';
-import { editKey } from './guest-key.js';
+import { ratingControl } from './rating-control.js';
 import { state } from './state.js';
 import { $, escHtml as e } from './utils.js';
 import { safeUrl, validateCatalog, dateLabel } from './collection.js';
@@ -7,16 +7,13 @@ import { icon } from './icons.js';
 import { NeoAuth } from './neorgon-auth.js';
 import { render, renderDetail } from './render.js';
 
-let epoch=0,currentId='',rating=null,busy=false,controller;
-function paintRating(){
-  $('ratingControl').innerHTML=`<div class="rating-stars" role="radiogroup" aria-label="Rate this game">${[1,2,3,4,5].map(n=>`<button type="button" role="radio" aria-checked="${rating?.mine===n}" tabindex="${n===(rating?.mine||1)?0:-1}" data-rating="${n}" class="${n<=(rating?.mine||0)?'is-filled':''}" aria-label="${n} ${n===1?'star':'stars'}" title="Rate ${n} ${n===1?'star':'stars'}" ${busy?'disabled':''}>${icon('star')}</button>`).join('')}</div>${rating?.count?`<small class="rating-average" aria-label="Average ${rating.average.toFixed(1)} out of 5 from ${rating.count} ratings">${rating.average.toFixed(1)} <span>(${rating.count})</span></small>`:''}<button type="button" class="text-button" id="removeRating" ${rating?.mine?'':'hidden'} ${busy?'disabled':''}>Clear rating</button><p id="ratingMessage" role="status"></p>`;
-}
+let epoch=0,currentId='',controller,ratings;
 export async function loadExtras(game){
   if(currentId===game.id)return;
-  currentId=game.id;const version=++epoch;controller?.abort();controller=new AbortController();rating=null;busy=false;paintRating();
+  currentId=game.id;const version=++epoch;controller?.abort();controller=new AbortController();ratings.load(game.id);
   $('projectReferences').textContent='Loading shared links…';$('publishedReview').hidden=true;selectHistory('updates');
   const options={signal:controller.signal};
-  request(`/games/${game.id}/rating`,{...options,feedbackKey:editKey(false)}).then(result=>{if(version===epoch){rating=result;paintRating();}}).catch(()=>{if(version===epoch)$('ratingMessage').textContent='Ratings could not be loaded. You can try again by selecting a star.';});
+
   try{
     const context=await request(`/games/${game.id}/context`,options);if(version!==epoch)return;
     $('projectReferences').innerHTML=context.references.length?context.references.map(ref=>{
@@ -31,16 +28,9 @@ export async function loadExtras(game){
     }
   }catch{if(version===epoch)$('projectReferences').textContent='Shared links could not be loaded. Visit the original posts for more context.';}
 }
-export function closeExtras(){epoch++;controller?.abort();currentId='';}
+export function closeExtras(){epoch++;controller?.abort();ratings?.close();currentId='';}
 function selectHistory(which){
   for(const name of ['updates','references']){const cap=name[0].toUpperCase()+name.slice(1),tab=$(`history${cap}Tab`);tab.setAttribute('aria-selected',String(name===which));tab.tabIndex=name===which?0:-1;$(`history${cap}Panel`).hidden=name!==which;}
-}
-async function rate(stars){
-  if(busy||!currentId)return;const id=currentId,version=epoch;busy=true;paintRating();
-  try{const result=await request(`/games/${id}/rating`,{method:stars?'PUT':'DELETE',feedbackKey:editKey(true),...(stars?{body:{stars}}:{})});if(version!==epoch)return;rating=result;}
-  catch(error){if(version===epoch){busy=false;paintRating();$('ratingMessage').textContent=error.message;return;}}
-  finally{if(version===epoch){busy=false;}}
-  if(version===epoch){paintRating();$('ratingMessage').textContent=stars?'Your rating is saved.':'Your rating was removed.';$('ratingControl').querySelector(`[data-rating="${stars||1}"]`)?.focus({preventScroll:true});}
 }
 export function openQuickImage(){
   if(!state.isAdmin||!state.detail)return;
@@ -52,8 +42,7 @@ async function uploadData(file){
   try{if(bitmap.width*bitmap.height>50000000)throw new Error('Choose an image under 50 million pixels.');const scale=Math.min(1,1600/Math.max(bitmap.width,bitmap.height)),canvas=document.createElement('canvas');canvas.width=Math.round(bitmap.width*scale);canvas.height=Math.round(bitmap.height*scale);canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);return canvas.toDataURL('image/webp',.88);}finally{bitmap.close();}
 }
 export function bindExtras(){
-  $('ratingControl').addEventListener('click',event=>{const star=event.target.closest('[data-rating]');if(star)rate(Number(star.dataset.rating));else if(event.target.closest('#removeRating'))rate(null);});
-  $('ratingControl').addEventListener('keydown',event=>{const star=event.target.closest('[data-rating]');if(!star||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key))return;event.preventDefault();const next=(Number(star.dataset.rating)-1+(['ArrowRight','ArrowUp'].includes(event.key)?1:4))%5+1;rate(next);});
+  ratings=ratingControl($('ratingControl'));
   for(const name of ['Updates','References']){
     const tab=$(`history${name}Tab`);tab.addEventListener('click',()=>selectHistory(name.toLowerCase()));
     tab.addEventListener('keydown',event=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();const next=event.key==='Home'?'updates':event.key==='End'?'references':name==='Updates'?'references':'updates';selectHistory(next);$(`history${next[0].toUpperCase()+next.slice(1)}Tab`).focus();});

@@ -18,7 +18,7 @@ Find a game to try, understand what changed, and share a useful note with an opt
 
 Two optional multi-select questions invite a quick first impression, followed by an optional note. Keep the questions before existing contributions on narrow screens. Display name and ideal price expand only when wanted. Publish aggregate choices alongside the conversation without presenting visitor responses as verified players.
 
-A highlighted header link opens a dedicated screenshot-game page, separate from the collection. Its five-question round offers a short discovery break using 20 curated projects with available builds and verified game names. Include demos, label them honestly, and avoid Reddit headlines or title-screen images as clues. Reveal names after the round, connect results to the real projects, and save recognition and chosen-name counts. Skips and unavailable images are separate from wrong answers; repeat rounds do not represent unique people. Visitors can delete their own quiz records, and admins can view aggregated choice distributions.
+The screenshot quiz remains available at its dedicated route, but is not promoted in primary navigation or home. Discovery, Browse and Quick reviews take priority.
 
 ## Voice and principles
 
@@ -50,9 +50,11 @@ Use the actual game name as the title and the original Reddit headline as suppor
 
 ## Discovery and research navigation
 
-Home is a focused introduction with five weekly highlights and clear routes into Browse, the quiz, Quick reviews and Favorites. Show all five picks without an automatic carousel. Rotate unpinned picks on Saturdays at midnight in America/Santiago, preserving administrator exclusions and pinned games. Admins can reorder and replace the selection under Weekly highlights. Browse owns collection search and filters. The Maker field supports typing and keyboard selection. Favorites are account-private; a separate guest rating is one editable one-to-five-star contribution per browser/game. Branded Steam, itch.io and Reddit actions open their destinations independently of the card. Hover glints are brief and disabled for reduced motion.
+Home leads with five adjacent clickable game-art panels, inspired by FromSoftware’s artwork-led arrangement. Each keeps its title and creator credit visible. Use the existing community preview assets, preserve approved uploads, and stack the panels on narrow screens. No automatic carousel. Rotate unpinned picks on Saturdays at midnight in America/Santiago, preserving administrator exclusions and pinned games. Admins can reorder and replace the selection under Weekly highlights.
 
-Quick reviews (`research.html`) is a standalone, embeddable surface. Start with a game selection and an obvious link to try it; keep optional questionnaire topics in a disclosure. Disable loading forms and replace unavailable ones with a retry and a Browse route. Present one question at a time, with back/skip controls and a final save. Admins can create reusable or project-specific forms with one to five questions and research topics. Preserve revision-specific metrics. Research answers are private and may be analyzed by Jev, with that use disclosed before submission. Public project comments retain their existing visible consent and removal controls.
+Browse owns collection search and filters, including a star toggle for Favorites. The old profile route redirects to this filter. Favorites save without login and reconcile with the account after sign-in. The Maker field supports typing and keyboard selection. A guest rating is one editable one-to-five-star contribution per browser/game. Branded Steam, itch.io and Reddit actions open independently of the card. A verified released Steam demo has one Play demo action. Hover glints are brief and disabled for reduced motion.
+
+Quick reviews (`research.html`) is a standalone, embeddable surface. Start with one searchable game combobox and an obvious link to try it; keep optional questionnaire topics in a disclosure. Disable loading forms and replace unavailable ones with a retry and a Browse route. Present one question at a time, with back/skip controls and a final save. Admins can create reusable or project-specific forms with one to five questions and research topics. Preserve revision-specific metrics. Research answers are private and may be analyzed by Jev, with that use disclosed before submission. Public project comments retain their existing visible consent and removal controls.
 
 ## Evidence queue
 
@@ -61,3 +63,16 @@ Editors can inspect link health, store metadata, linked source posts and cited f
 Near-identical reposts by the same author within 48 hours keep the latest entry and combine source history, with redirects and preserved contributions. Different known project links prevent consolidation. The source timeline and original attribution remain readable.
 
 Administrators see Edit buttons directly on cards and in project notes. Edit details in the existing project dialog with revision conflict protection; keep thumbnail uploads beside that editor. Approved uploaded images are served from R2 without catalogue database reads. Source and privacy controls belong in the single site footer.
+
+
+## Discoverability and measurement
+
+Each project has a permanent `/games/<id>/` page with prerendered content, original sources, sharing metadata and structured data. Browse retains quick popup details. Search-ready pages enter the sitemap; uncertain source headlines remain accessible with noindex until enrichment improves them. A server-rendered game directory provides crawlable links. A complete live catalogue build runs hourly and refuses partial or changing snapshots. Removed projects disappear on the next successful build; live pages check withdrawal immediately when JavaScript runs.
+
+Anonymous usage counts measure actions, never unique people or verified plays. No account IDs, browser IDs, search terms, referrers or written feedback enter this dataset. Respect DNT, GPC and the About-page opt-out. Delivery UUIDs deduplicate retries for one day; hourly network hashes limit spam. Retain daily totals for 180 UTC dates and purge expired records during hourly maintenance. Do not calculate a conversion funnel from unrelated action totals.
+
+## Admin research dashboard
+
+The initial Insights view is server-gated to verified admins. Its catalogue projection contains public source evidence only, so it can later support a public edition without exposing accounts, private questionnaire answers or editorial notes.
+
+Distinguish original post-date mention trends from first-shared cohorts labeled with current metadata. Show denominators, unknown classifications, text coverage and source excerpts. Art styles, engines and models are explicit text matches, not screenshot analysis or proof of use; preserve unspecified versions. Compare equal 28/56/84-day windows around sourced provider announcements, deduplicate each project per window, show small/partial samples and state that timing does not establish causation. CSV exports and accessible chart tables retain the same definitions.

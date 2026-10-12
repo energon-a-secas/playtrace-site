@@ -1,0 +1,48 @@
+.insights-intro { max-width: 72ch; }
+.insights-intro h3 { font: 650 32px/1.2 var(--pt-display); letter-spacing: -.035em; margin: 0 0 12px; }
+.insights-intro p { color: var(--pt-text); line-height: 1.6; }
+.insights-toolbar, .insight-controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: end; }
+.insights-toolbar { justify-content: space-between; margin: 24px 0; }
+.insights-toolbar p { color: var(--pt-muted); margin: 0; font-size: 14px; }
+.insight-controls .field { flex: 1 1 150px; min-width: 0; }
+.insight-controls .input, .insight-controls .select { width: 100%; }
+.insight-controls label { font-size: 13px; }
+.insight-section { padding: 28px 0; border-top: 1px solid var(--pt-line); }
+.insight-section h4 { font: 650 22px/1.3 var(--pt-display); color: var(--pt-ink); margin: 0 0 12px; }
+.insight-section > p { max-width: 80ch; color: var(--pt-muted); font-size: 14px; line-height: 1.6; }
+.insight-overview { display: flex; flex-wrap: wrap; gap: 24px 48px; margin: 22px 0; }
+.insight-overview > div { min-width: 140px; }
+.insight-overview dt { color: var(--pt-muted); font-size: 13px; }
+.insight-overview dd { margin: 5px 0 0; font: 650 25px/1.3 var(--pt-display); color: var(--pt-ink); }
+.insight-overview dd small { display: block; font: 13px/1.5 var(--pt-body); color: var(--pt-muted); }
+.insight-chart { overflow-x: auto; margin: 24px 0; }
+.insight-chart svg { display: block; width: 100%; min-width: 580px; height: auto; color: var(--pt-muted); }
+.insight-chart text { fill: currentColor; font: 12px var(--pt-body); }
+.insight-chart .chart-bar { fill: var(--pt-gold); }
+.insight-chart .chart-line { stroke: var(--pt-line); }
+.insight-chart .chart-label { fill: var(--pt-ink); }
+.insight-chart figcaption { font-size: 13px; margin-top: 8px; color: var(--pt-muted); }
+.insight-table-wrap { width: 100%; overflow: auto; }
+.insight-table { border-collapse: collapse; width: 100%; font-size: 14px; text-align: left; }
+.insight-table th, .insight-table td { padding: 11px 12px; border-bottom: 1px solid var(--pt-line); vertical-align: top; }
+.insight-table th { font-weight: 600; color: var(--pt-ink); }
+.insight-table td { color: var(--pt-text); font-variant-numeric: tabular-nums; }
+.insight-table caption { text-align: left; margin-bottom: 12px; color: var(--pt-muted); }
+.insight-section details > summary { cursor: pointer; color: var(--pt-ink); padding-block: 10px; }
+.insight-splits { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 32px; }
+.insight-distribution { list-style: none; padding: 0; margin: 12px 0; }
+.insight-distribution li { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 8px; font-size: 14px; margin: 15px 0; }
+.insight-distribution meter { width: 100%; grid-column: 1 / -1; height: 5px; appearance: none; border: 0; background: var(--pt-soft); }
+.insight-distribution meter::-webkit-meter-bar { background: var(--pt-soft); border: 0; height: 5px; }
+.insight-distribution meter::-webkit-meter-optimum-value { background: var(--pt-gold); }
+.insight-distribution meter::-moz-meter-bar { background: var(--pt-gold); }
+.insight-callout { padding: 18px 22px; background: var(--pt-soft); border: 1px solid var(--pt-line); border-radius: 8px; font-size: 15px; line-height: 1.6; margin-top: 20px; }
+.insight-callout p { margin: 0; }
+.insight-callout p + p { margin-top: 10px; }
+.insight-evidence { padding: 0; list-style: none; }
+.insight-evidence > li { padding: 18px 0; border-bottom: 1px solid var(--pt-line); }
+.insight-evidence h5 { font: 600 17px var(--pt-body); margin: 0 0 5px; }
+.insight-evidence blockquote { border: 0; margin: 10px 0; padding: 0; color: var(--pt-text); max-width: 80ch; font-size: 15px; }
+.insight-evidence small { color: var(--pt-muted); }
+.insight-method { max-width: 80ch; font-size: 14px; line-height: 1.7; color: var(--pt-text); }
+@media (max-width: 760px) { .insight-splits { grid-template-columns: 1fr; gap: 24px; } .insights-intro h3 { font-size: 28px; } .insight-overview { gap: 24px; } .insight-overview > div { flex: 1 1 140px; } }

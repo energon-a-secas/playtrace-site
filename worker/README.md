@@ -100,3 +100,15 @@ The itch.io adapter now retains versioned public listing facts: structured title
 Favorites first persist on the visitor's device. Signing in moves anonymous saves into an account-specific local outbox and unions them with server favorites. `PUT /api/v1/me/favorites` accepts at most 200 explicit `{gameId,saved}` changes per authenticated, rate-limited transaction, resolves aliases and ignores withdrawn entries. Acknowledgements are matched to local operation revisions so late responses cannot undo newer edits. Signing out hides account caches; deleting account data clears its local outbox after pending writes finish. No login or API connection is needed to use local favorites.
 
 Verified admins can remove an entry through `POST /api/v1/admin/games/:id/delete` with `{confirm:gameId,reason}`. This uses the existing tombstone/media withdrawal process and records the admin actor. The inline editor presents the exact target and the loss of contributions before submission. `POST /api/v1/admin/games/:id/posts/:postId/remove` instead excludes an extra history post, preserving the entry and contributions; the only source and preview-credit sources are protected. Excluded source IDs remain rejected during ingestion and cannot be resurrected by a stale import. Snapshot guards reject concurrent project/image edits. Nearby same-author posts and matching links/titles are review flags; automatic repost consolidation retains its stricter existing rules.
+
+
+### Discovery pages, insights and anonymous counts
+
+- `GET /games/:id` returns the current public catalogue record and follows a merge alias. Withdrawn records return 404. It uses the same versioned public cache as the catalogue.
+- `GET /admin/insights?cursor=...` returns at most 200 projects per page with public-safe mention evidence. Verified Clerk admin authorization is required; responses are `no-store`. No private feedback, user IDs or jobs are read by this projection.
+- `POST /usage` accepts up to ten allowlisted anonymous actions, random delivery IDs and a published game ID where needed. Retry receipts expire after 24 hours; rate buckets use an hourly rotating HMAC of the network address. DNT/GPC and obvious bots are ignored. No fingerprint, persistent visitor ID or event stream is retained.
+- `GET /admin/usage` returns daily action totals and aggregate contribution counts. It requires verified admin authorization and does not expose private questionnaire text or account identities.
+
+Apply `0011_usage_metrics.sql` before this Worker release. The :50 maintenance invocation prunes expired anonymous totals/receipts alongside duplicate maintenance. Rollback `0011` only after deploying a Worker that no longer reads those tables. No schema rollback is needed for a code rollback to the prior release.
+
+Built-in review studies are seeded with conflict-safe inserts. Difficulty, Controls, Accessibility and Link Health are included; administrator edits and inactive states survive reseeding. Public topic options reflect active forms only.

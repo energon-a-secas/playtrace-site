@@ -4,11 +4,12 @@ import { mutationLimit } from './limits.mjs';
 import { exactKeys, invalid, notFound, ApiError } from './http.mjs';
 import { text, GAME_ID } from './validation.mjs';
 import { enrichGames } from './steam.mjs';
-import { defaultQuestions, researchCategories, validQuestions, validAnswers } from '../../js/research-schema.js';
+import { builtInQuestionnaires, researchCategories, validQuestions, validAnswers } from '../../js/research-schema.js';
 
 export async function ensureResearch(db) {
   await query(db, `INSERT INTO questionnaires(id,title,category,questions_json,updated_at,updated_by)
-    VALUES('playtest','A quick playtest','First impressions',?,'2026-10-11T00:00:00.000Z','system') ON CONFLICT DO NOTHING`, JSON.stringify(defaultQuestions)).run();
+    SELECT json_extract(value,'$.id'),json_extract(value,'$.title'),json_extract(value,'$.category'),json_extract(value,'$.questions'),'2026-10-11T00:00:00.000Z','system'
+    FROM json_each(?) WHERE 1 ON CONFLICT DO NOTHING`, JSON.stringify(builtInQuestionnaires)).run();
 }
 const form = row => ({ id: row.id, title: row.title, category: row.category, gameId: row.game_id, questions: JSON.parse(row.questions_json), revision: row.revision, active: Boolean(row.active), updatedAt: row.updated_at });
 export async function researchList(db, admin = false) {
@@ -16,11 +17,11 @@ export async function researchList(db, admin = false) {
   const rows = await query(db, `SELECT q.*,count(r.guest_key_hash) AS responses FROM questionnaires q
     LEFT JOIN research_responses r ON r.questionnaire_id=q.id WHERE ${admin ? '1' : 'q.active=1'}
     AND (q.game_id IS NULL OR EXISTS(SELECT 1 FROM games g WHERE g.id=q.game_id AND g.status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id)))
-    GROUP BY q.id ORDER BY q.updated_at DESC LIMIT 200`).all();
-  return { questionnaires: rows.results.map(row => ({ ...form(row), ...(admin ? { responses: row.responses } : {}) })), categories: researchCategories };
+    GROUP BY q.id ORDER BY (q.id='playtest') DESC,q.updated_at DESC,q.id LIMIT 200`).all();
+  return { questionnaires: rows.results.map(row => ({ ...form(row), ...(admin ? { responses: row.responses } : {}) })), categories: admin ? researchCategories : researchCategories.filter(category => rows.results.some(row => row.category === category)) };
 }
 export async function getResearch(db, id, gameId, allowClosed = true) {
-  if (id === 'playtest') await ensureResearch(db);
+  if (builtInQuestionnaires.some(item => item.id === id)) await ensureResearch(db);
   const row = await query(db, `SELECT * FROM questionnaires WHERE id=? ${allowClosed?'':'AND active=1'}`, id).first();
   if (!row) throw notFound();
   const questionnaire = form(row), selected = gameId || questionnaire.gameId;

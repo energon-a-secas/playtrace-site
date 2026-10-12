@@ -42,7 +42,7 @@ export function startAccounts(render) {
     render(); renderAccount();
     if (auth.signedIn && apiConfigured) { refreshMe();
       const expected = auth.userId;
-      freshToken(expected).then(token => request('/admin/me', { token })).then(() => { if (state.userId === expected) { state.isAdmin = true; rerender(); } }).catch(() => {});
+      freshToken(expected).then(token => request('/admin/me', { token })).then(() => { if (state.userId === expected) { state.isAdmin = true; rerender(); globalThis.document?.dispatchEvent?.(new CustomEvent('playtrace:admin-ready')); } }).catch(() => {});
     }
   });
   NeoAuth.start();
@@ -113,6 +113,7 @@ export async function followGame(invoker, gameId = state.detail?.id) {
   // Re-rendering a card replaces its button. Restore keyboard focus only when
   // that button was the active control, without scrolling the collection.
   if (restoreFocus && invoker?.dataset?.favorite) document.querySelector(`[data-favorite="${gameId}"]`)?.focus({preventScroll:true});
+  globalThis.document?.dispatchEvent?.(new CustomEvent('favorite-changed',{detail:{gameId,saved:value.saved}}));
   await syncLocalFavorites();
 }
 

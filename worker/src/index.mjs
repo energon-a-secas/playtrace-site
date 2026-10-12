@@ -1,3 +1,6 @@
+import { insightPage } from './catalogue-insights.mjs';
+import { recordUsage, usageMetrics, pruneUsage } from './usage.mjs';
+import { publicGame } from './discovery.mjs';
 import { getHighlights, saveHighlights, rotateHighlights } from './highlights.mjs';
 import { rating, rateGame } from './ratings.mjs';
 import { researchList, getResearch, saveResearch, researchResponse, researchMetrics } from './research.mjs';
@@ -26,6 +29,10 @@ import { removeEntry, removeSourcePost } from './moderation.mjs';
 import { quizInfo, startQuiz, finishQuiz, deleteQuizData, quizMetrics } from './quiz.mjs';
 
 const routes = [
+  [/^\/usage$/, ['POST'], 'usage'],
+  [/^\/admin\/insights$/, ['GET'], 'editorInsights'],
+  [/^\/admin\/usage$/, ['GET'], 'editorUsage'],
+  [/^\/games\/(g_[a-z0-9]{5,12})$/, ['GET'], 'game'],
   [/^\/highlights$/, ['GET'], 'highlights'],
   [/^\/admin\/highlights$/, ['GET','PUT'], 'editorHighlights'],
   [/^\/games\/(g_[a-z0-9]{5,12})\/resolve$/, ['GET'], 'resolveGame'],
@@ -118,9 +125,11 @@ export function createWorker(overrides = {}) {
         const cached=await readPublicCache(cache,key);
         if(cached)return withCors(cached,origin);
         let result;
-        if (action === 'status') result = json(await status(env), 200, { 'Cache-Control': request.headers.has('Authorization') ? 'no-store' : 'public, max-age=60' });
+        if (action === 'usage') result = json(await recordUsage(database(env),env,request,await readJson(request,8192),deps));
+        else if (action === 'status') result = json(await status(env), 200, { 'Cache-Control': request.headers.has('Authorization') ? 'no-store' : 'public, max-age=60' });
         else if (action === 'catalog') result = json(await catalog(database(env), { limit: url.searchParams.get('pageSize') || 200,
           cursor: url.searchParams.get('cursor') }), 200, { 'Cache-Control': request.headers.has('Authorization') ? 'no-store' : 'public, max-age=60' });
+        else if (action === 'game') result = json(await publicGame(database(env),match[1]),200,{'Cache-Control':'public, max-age=60'});
         else if (action === 'highlights') result = json(await getHighlights(database(env)), 200, { 'Cache-Control': 'public, max-age=60' });
         else if (action === 'resolveGame') result = json(await resolveGame(database(env),match[1]));
         else if (action === 'context') result = json(await projectContext(database(env),match[1]));
@@ -154,7 +163,9 @@ export function createWorker(overrides = {}) {
         else if (action.startsWith('editor')) {
           const admin = await authorizeAdmin(request, env, deps), db = database(env);
           changedPublic=request.method!=='GET'&&['editorHighlights','editorImage','editorDetails','editorMedia','editorCategories','editorJobsRun','editorReposts','editorRemove','editorRemovePost'].includes(action);
-          if (action === 'editorMe') result = json({ email: admin.email, role: admin.role, integrations: { jev: Boolean(env.JEV_API_KEY), itch: Boolean(env.ITCHIO_API_TOKEN) } });
+          if (action === 'editorInsights') result = json(await insightPage(db,url.searchParams.get('cursor'),deps));
+          else if (action === 'editorUsage') result = json(await usageMetrics(db,deps));
+          else if (action === 'editorMe') result = json({ email: admin.email, role: admin.role, integrations: { jev: Boolean(env.JEV_API_KEY), itch: Boolean(env.ITCHIO_API_TOKEN) } });
           else if(action==='editorHighlights') result=json(request.method==='GET'?await getHighlights(db,true):await saveHighlights(db,await readJson(request),admin,deps));
           else if(action==='editorResearchList')result=json(await researchList(db,true));
           else if(action==='editorResearchSave')result=json(await saveResearch(db,match[1],await readJson(request),admin,deps));
@@ -227,7 +238,7 @@ export function createWorker(overrides = {}) {
         // including six cold Steam caches and a ten-post media hydration batch.
         if (event?.cron === '0 3,4 * * 6') return (await rotateHighlights(database(env), deps)).rotated;
         if (event?.cron === '20 * * * *') { const db=database(env); await queueStoreMaintenance(db,deps); return (await runJobs(db,env,deps,2)).processed>0; }
-        if (event?.cron === '50 * * * *') return (await consolidateReposts(database(env),deps,true,env.PREVIEWS)).merged>0;
+        if (event?.cron === '50 * * * *') { await pruneUsage(database(env),deps); return (await consolidateReposts(database(env),deps,true,env.PREVIEWS)).merged>0; }
         if (sourceTick) return ingestionConfigured(env) ? (await refreshSourceBatch(database(env),deps)).updatedGames>0 : false;
         if (event?.cron === '5 * * * *'||maintenance) {
           const db = database(env);

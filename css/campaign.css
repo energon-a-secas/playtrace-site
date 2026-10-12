@@ -74,7 +74,7 @@
 .rating-stars button:hover { background: var(--pt-amber-soft); }
 .rating-control p { margin: 4px 0; font-size: 13px; color: var(--pt-muted); }
 .rating-control p:empty { display: none; }
-.rating-control #ratingMessage { flex-basis: 100%; text-align: end; }
+.rating-control [role="status"] { flex-basis: 100%; text-align: end; }
 .rating-average { color: var(--pt-ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .rating-average span { color: var(--pt-muted); }
 .inline-moderation { margin-top: 24px; border-top: 1px solid var(--pt-line); padding-top: 16px; }
@@ -87,7 +87,7 @@
 .inline-removal-confirm .admin-inline { margin-top: 16px; }
 @media (max-width: 700px) {
   .project-actions .rating-control { justify-content: flex-start; }
-  .project-actions #ratingMessage { text-align: start; }
+  .project-actions .rating-control [role="status"] { text-align: start; }
 }
 @media (prefers-color-scheme: dark) {
   .brand-action[data-brand="reddit"] { --brand-color: oklch(.77 .14 35); }
@@ -352,3 +352,22 @@
 @media (prefers-reduced-motion: reduce) { .collection .btn, .dialog .btn, .play-link, .card-shortcut { transition: none; } }
 
 .card-price { display: block; flex-basis: 100%; color: var(--pt-muted); text-align: center; font-size: 12px; }
+
+.collection-item .card-open { color: var(--pt-ink); text-decoration: none; font-family: var(--pt-display); }
+
+#followingFilter { display: inline-flex; align-items: center; gap: 7px; }
+#followingFilter[aria-pressed="true"] { border-color: var(--pt-gold); color: var(--pt-gold); background: var(--pt-amber-soft); }
+#followingFilter[aria-pressed="true"] svg { fill: var(--pt-amber); }
+.header-site-name { font-family: var(--pt-display); font-weight: 700; font-size: 22px; color: var(--pt-ink); }
+
+.research-game-field { grid-column: 1 / -1; }
+.search-select { position: relative; }
+.search-select > input[role="combobox"] { width: 100%; padding-right: 48px; }
+.search-select > button { position: absolute; right: 2px; top: 2px; width: 42px; height: 42px; border: 0; background: transparent; color: var(--pt-text); cursor: pointer; font-size: 23px; }
+.search-select [role="listbox"] { position: absolute; z-index: 30; inset: calc(100% + 6px) 0 auto; max-height: 320px; overflow-y: auto; margin: 0; padding: 6px; list-style: none; border: 1px solid var(--pt-control-line); border-radius: 8px; background: var(--pt-paper); box-shadow: 0 16px 40px oklch(.2 .02 260 / .15); }
+.search-select [role="option"] { padding: 10px 12px; border-radius: 5px; cursor: pointer; color: var(--pt-ink); overflow-wrap: anywhere; }
+.search-select [role="option"] strong { display: block; font-weight: 600; }
+.search-select [role="option"] small { color: var(--pt-muted); }
+.search-select [role="option"]:hover, .search-select .is-active { background: var(--pt-soft); }
+.search-select [role="option"][aria-selected="true"] { color: var(--pt-gold); background: var(--pt-amber-soft); }
+.combobox-empty { padding: 10px 12px; color: var(--pt-muted); font-size: 14px; }

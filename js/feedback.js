@@ -150,6 +150,7 @@ export async function saveFeedback() {
     if (result.gameId !== gameId || !validEntry(result.feedback)) throw new Error('Your saved feedback could not be read. Please refresh before trying again.');
     feedback.mine = result.feedback; feedback.dirty = false; feedback.busy = false;
     feedback.message = 'Your feedback is public. Thanks for helping this project grow.';
+    globalThis.document?.dispatchEvent?.(new CustomEvent('feedback-saved',{detail:{gameId}}));
     fillOwn(); renderFeedback(); await loadFeedback(gameId);
   } catch (error) { if (current === session) feedback.message = error.message; }
   finally { if (current === session) { feedback.busy = false; renderFeedback(); } }
