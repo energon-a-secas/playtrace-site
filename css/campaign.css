@@ -221,9 +221,20 @@
 .collection-item__headline { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 6px; }
 .collection-item__body { padding-top: 16px; }
 .collection-item__description { -webkit-line-clamp: 2; }
-.card-store { margin-top: auto; padding-block: 16px 14px; width: 100%; }
-.collection-item__foot { margin-top: 0; }
-.collection-item__body > .collection-item__foot:last-child { margin-top: auto; }
+.card-byline { width: 100%; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0 12px; color: var(--pt-muted); font-size: 12px; margin-block: 7px 4px; }
+.card-byline .maker-link { margin: 0; min-width: 0; overflow-wrap: anywhere; text-align: left; }
+.card-byline time { white-space: nowrap; }
+.card-update { margin: auto 0 0; padding-block: 16px 8px; color: var(--pt-muted); font-size: 12px; }
+.collection-item__foot { display: grid; grid-template-columns: 40px minmax(0, 1fr) 40px; gap: 10px; align-items: center; margin-top: 0; border-top: 1px solid var(--pt-line); }
+.collection-item__foot .card-store { grid-column: 2; justify-content: center; margin: 0; padding: 0; width: auto; }
+.collection-item__foot > .card-shortcut { grid-column: 3; }
+.collection-item__foot .play-link { max-width: 100%; }
+.collection-item__foot .play-link > span:not([aria-hidden]) { overflow-wrap: anywhere; }
+@media (max-width: 600px) {
+  [data-view="list"] .collection-item__foot { grid-template-columns: minmax(0, 1fr) 36px; gap: 6px; }
+  [data-view="list"] .collection-item__foot .card-store { grid-column: 1; justify-content: start; }
+  [data-view="list"] .collection-item__foot > .card-shortcut { grid-column: 2; width: 36px; }
+}
 .collection-item .play-link { font-size: 13px; min-height: 40px; padding: 8px 12px; }
 .card-favorite, .card-edit { box-shadow: 0 2px 8px oklch(.18 .02 260 / .12); }
 .card-favorite:hover, .card-edit:hover { background: var(--pt-amber-soft); color: var(--pt-gold); border-color: var(--pt-gold); }
@@ -232,7 +243,7 @@
 [data-view="list"] .collection-item__body { min-width: 0; }
 [data-view="list"] .collection-item__headline { -webkit-line-clamp: 1; }
 [data-view="list"] .collection-item__preview .game-image { min-height: 220px; }
-[data-view="list"] .card-store { padding-block: 10px; }
+
 .collection-footer { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: 10px 20px; width: 100%; font: 12px/1.5 var(--pt-body); }
 .collection-footer > span { margin-right: auto; }
 .collection-footer .text-button, .collection-footer .text-link { font-size: 12px; }
@@ -336,6 +347,8 @@
  .highlight-actions { width: 100%; justify-content: flex-end; }
  .highlight-game label { font-size: 13px; }
 }
-.collection-item__body:not(:has(.card-store)) .collection-item__foot { margin-top: auto; }
+
 .collection .select { appearance: none; padding-right: 40px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23768194' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 13px center; background-size: 16px; text-overflow: ellipsis; cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { .collection .btn, .dialog .btn, .play-link, .card-shortcut { transition: none; } }
+
+.card-price { display: block; flex-basis: 100%; color: var(--pt-muted); text-align: center; font-size: 12px; }
