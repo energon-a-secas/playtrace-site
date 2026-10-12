@@ -19,7 +19,7 @@ All paths below use `/api/v1`. Guest ownership uses the existing random browser 
 | Method and route | Behavior |
 | --- | --- |
 | `GET /insights?cursor=...` | At most 200 public project evidence records, accepted field sources and store-reported release dates. No account, questionnaire or editorial data. |
-| `GET /highlights` | The current five weekly picks, with current public project metadata, week and revision. |
+| `GET /highlights` | Five weekly `items` and a separate nullable `editorPick`, with current public project metadata, week and revision. |
 | `GET /games/:id/resolve` | Returns the current published ID for a consolidated repost, with `redirected`. |
 | `GET /games/:id/context` | Shared source links, any explicitly published cited review, and URL-bound enrichment evidence. |
 | `GET /games/:id/rating` | Public count and mean. A valid edit-key header additionally returns this browser's `mine`. |
@@ -108,7 +108,7 @@ On a first-load service interruption, Home and Browse may use `data/public-catal
 
 ## Weekly highlights and uploaded images
 
-`GET /admin/highlights` returns the selection plus exclusions. `PUT /admin/highlights` accepts `{revision, items:[{gameId,pinned}], excluded:[gameId]}` with exactly five distinct published games. A conflicting revision returns 409. Removed picks remain excluded from automatic rotation until allowed again. Metadata is stored under `app_meta.weekly_highlights`; no additional migration is required.
+`GET /admin/highlights` returns the selection plus exclusions. `PUT /admin/highlights` accepts `{revision, items:[{gameId,pinned}], excluded:[gameId], editorPickId:gameId|null}` with exactly five distinct published weekly games. The editor’s pick is a separate sixth project, excluded from weekly rotation, and stays until an admin replaces or clears it. Omitting `editorPickId` preserves it for older clients. All choices must be published; the editor’s pick cannot duplicate a weekly or excluded project. Withdrawn entries disappear from public picks. A conflicting revision returns 409. Removed weekly picks remain excluded from automatic rotation until allowed again. Metadata is stored under `app_meta.weekly_highlights`; no additional migration is required. The weekly five remain curated, not vote-ranked.
 
 The Worker runs `0 3,4 * * 6` in UTC. `highlightWeek()` derives the Saturday in America/Santiago, so only the invocation at local midnight rotates the week; the other is an idempotent no-op. The selection retains pins, excludes broken links and overly long titles, prefers available builds and different makers, and reduces repeats from recent weeks. It reads a bounded window of 200 recent projects plus pinned projects. Initial picks were installed with an insert-only metadata operation; existing editorial choices are never overwritten by deployment.
 

@@ -88,10 +88,12 @@ export async function buildSite({catalog,highlights,insights,out=path.join(root,
   for(const name of ['catalog.json','highlights.json'])await cp(path.join(root,'data',name),path.join(out,'data',name));
   const picks=highlights||JSON.parse(await readFile(path.join(root,'data/highlights.json'),'utf8'));
   const items=(picks.items||[]).map(item=>({...item,game:checked.games.find(game=>game.id===item.game.id)})).filter(item=>item.game);
+  const editorGame=checked.games.find(game=>game.id===(picks.editorPick?.gameId||picks.editorPick?.game?.id));
+  const editorPick=editorGame?{gameId:editorGame.id,game:editorGame}:null;
   if(items.length){
     const home=await readFile(path.join(out,'index.html'),'utf8');
-    await writeFile(path.join(out,'index.html'),home.replace(/(<ol id="weeklyHighlights"[^>]*>)[\s\S]*?<\/ol>/,`$1${highlightPanels(items)}</ol>`).replace('aria-busy="true"','aria-busy="false"').replace('>Community highlights</span>',`>Week of ${e(picks.week)}</span>`));
-    await writeFile(path.join(out,'data/highlights.json'),JSON.stringify({...picks,items}));
+    await writeFile(path.join(out,'index.html'),home.replace(/(<ol id="weeklyHighlights"[^>]*>)[\s\S]*?<\/ol>/,`$1${highlightPanels(items,editorPick)}</ol>`).replace('aria-busy="true"','aria-busy="false"').replace('>Community highlights</span>',`>Week of ${e(picks.week)}</span>`));
+    await writeFile(path.join(out,'data/highlights.json'),JSON.stringify({...picks,items,editorPick}));
   }
   const browse=await readFile(path.join(root,'browse.html'),'utf8');
   const head=browse.slice(0,browse.indexOf('</head>')+7).replace(/\b(href|src)="(?!https?:|\/|#|data:)([^"]+)"/g,(_,attr,url)=>`${attr}="/${url.replace(/^\.\//,'')}"`);

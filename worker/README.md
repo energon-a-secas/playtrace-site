@@ -73,7 +73,7 @@ See [the editorial API and activation runbook](../docs/editorial-api.md) for adm
 
 See [the campaign API and runbook](../docs/discovery-research-api.md) for guest ratings, embedded questionnaires, citations, store enrichment and queue operations. Set `JEV_API_KEY` and `ITCHIO_API_TOKEN` as encrypted Worker secrets. Minute 20 runs a bounded editorial job and schedules due store work; minute 50 consolidates one conservative repost group. These are separate from source ingestion and existing Steam/media maintenance. Admin-generated summaries remain drafts until explicitly published.
 
-Weekly highlights rotate on Saturdays in America/Santiago using the idempotent `0 3,4 * * 6` UTC schedule. Admins manage five picks, pins, order and exclusions. See the campaign runbook for API details and the required one-time publication-record backfill before deploying R2-only image delivery to an existing bucket.
+Weekly highlights rotate on Saturdays in America/Santiago using the idempotent `0 3,4 * * 6` UTC schedule. Admins manage five picks, pins, order and exclusions, plus a separate persistent sixth editor’s pick. The editor’s choice is never duplicated in automatic weekly selections. See the campaign runbook for API details and the required one-time publication-record backfill before deploying R2-only image delivery to an existing bucket.
 
 ## Source enrichment and read budgets
 

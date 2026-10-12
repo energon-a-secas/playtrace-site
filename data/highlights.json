@@ -1,7 +1,7 @@
 {
-  "revision": 1,
+  "revision": 2,
   "week": "2026-10-10",
-  "updatedAt": "2026-10-11T17:41:02.660Z",
+  "updatedAt": "2026-10-12T12:31:57.440Z",
   "timezone": "America/Santiago",
   "items": [
     {
@@ -117,11 +117,10 @@
           "browser": false,
           "steamState": "released",
           "steamType": "demo",
-          "finalUrl": "https://store.steampowered.com/app/4610750/Wayward_Crown_Demo",
-          "checkedAt": "2026-10-11T15:25:46.575Z",
+          "finalUrl": "https://store.steampowered.com/app/4610750/",
+          "storeCheckedAt": "2026-10-11T19:47:56.911Z",
+          "checkedAt": "2026-10-12T11:43:03.626Z",
           "projectUrl": "https://store.steampowered.com/app/4610750/Wayward_Crown_Demo",
-          "httpStatus": 200,
-          "storeCheckedAt": "2026-10-11T14:57:09.075Z",
           "storeStatus": "reachable"
         },
         "steam": {
@@ -193,7 +192,7 @@
           "name": "Certain_Ad9908",
           "url": "https://www.reddit.com/user/Certain_Ad9908/"
         },
-        "category": "other",
+        "category": "rpg",
         "stage": "playable",
         "platforms": [
           "Browser"
@@ -312,9 +311,9 @@
             "screenshots": "Store screenshot gallery"
           },
           "evidence": "Store page includes an embedded browser game; gameplay has not been tested.",
-          "checkedAt": "2026-10-12T00:46:21.838Z",
+          "checkedAt": "2026-10-12T11:43:04.128Z",
           "projectUrl": "https://motawe3.itch.io/underbloom",
-          "storeCheckedAt": "2026-10-12T00:46:21.838Z",
+          "storeCheckedAt": "2026-10-12T11:43:04.128Z",
           "storeStatus": "reachable"
         }
       }
@@ -382,8 +381,32 @@
           "status": "reachable",
           "httpStatus": 200,
           "finalUrl": "https://the-manor.onrender.com/",
-          "checkedAt": "2026-10-11T15:28:54.053Z",
-          "projectUrl": "https://the-manor.onrender.com/"
+          "metadataVersion": 2,
+          "provider": "website",
+          "title": "The Manor",
+          "description": "",
+          "image": null,
+          "sourceUrl": "https://the-manor.onrender.com/",
+          "playable": false,
+          "browser": false,
+          "downloadable": false,
+          "purchaseOffered": false,
+          "platforms": [],
+          "genres": [],
+          "tags": [],
+          "engines": [],
+          "inputs": [],
+          "languages": [],
+          "aiDisclosure": [],
+          "releaseStatus": null,
+          "screenshots": [],
+          "provenance": {
+            "title": "Page title"
+          },
+          "checkedAt": "2026-10-12T11:43:07.992Z",
+          "projectUrl": "https://the-manor.onrender.com/",
+          "storeCheckedAt": "2026-10-12T11:43:07.992Z",
+          "storeStatus": "reachable"
         }
       }
     },
@@ -511,5 +534,70 @@
       }
     }
   ],
-  "snapshotAt": "2026-10-12T00:56:10.924Z"
+  "editorPick": {
+    "gameId": "g_1x2oye3",
+    "game": {
+      "id": "g_1x2oye3",
+      "title": "Aetherfall",
+      "summary": "A pixel-art multiplayer RPG with town NPCs that choose their own actions. The developer is seeking feedback while tightening the scope and polishing the existing systems.",
+      "author": {
+        "name": "Pointline",
+        "url": "https://www.reddit.com/user/Pointline/"
+      },
+      "category": "rpg",
+      "tags": [
+        "Pixel art",
+        "MMO",
+        "NPC simulation"
+      ],
+      "stage": "prototype",
+      "platforms": [
+        "Browser"
+      ],
+      "projectUrl": "https://aetherfall.dev/",
+      "firstSeenAt": "2026-10-10T20:17:27.000Z",
+      "updatedAt": "2026-10-10T20:17:27.000Z",
+      "preview": {
+        "kind": "image",
+        "url": "https://playtrace-api.neorgon.workers.dev/api/v1/media/46b770ef-4de9-4a93-b390-6b5a724d6d24",
+        "posterUrl": null,
+        "alt": "Aetherfall: preview shared by u/Pointline",
+        "storage": "r2",
+        "rights": "owner-consent",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2oye3/"
+      },
+      "reviewStatus": "reviewed",
+      "posts": [
+        {
+          "id": "1x2oye3",
+          "url": "https://www.reddit.com/r/aigamedev/comments/1x2oye3/",
+          "title": "Making a pixelart MMO RPG - looking for feedback",
+          "author": "Pointline",
+          "createdAt": "2026-10-10T20:17:27.000Z",
+          "kind": "showcase",
+          "excerpt": "Hey all, long-time lurker and looking for feedback. I’m a web dev and just getting into game dev with Claude Opus 5.5. Started out as a small project and has grown to this. It’s using React, Vite for the front end and a go server. Assets are bought from itch.io because I was not liking what Claude was doing and instead of burning more tokens, I just tried to focus on using it for the typescript logic. The music and some of the effects are made by me in Ableton (I play guitar and keyboard so I wanted to feel like I did something lol). Latest feature was having the NPCs from the town…",
+          "assets": [
+            {
+              "kind": "video",
+              "url": "https://v.redd.it/p9q839f87puh1/CMAF_1080.mp4?source=fallback",
+              "posterUrl": "https://external-preview.redd.it/cnBrMmU0Yzg3cHVoMX1pwEwu9Y7M8Yh3hrsGVZcBfcT5odyr9awQ-nWzHWvl.jpeg?width=640&crop=smart&format=pjpg&auto=webp&s=93eaacb8788b9ab287b7a239c8a6e6fc1009161a"
+            },
+            {
+              "kind": "image",
+              "url": "https://external-preview.redd.it/cnBrMmU0Yzg3cHVoMX1pwEwu9Y7M8Yh3hrsGVZcBfcT5odyr9awQ-nWzHWvl.jpeg?width=640&crop=smart&format=pjpg&auto=webp&s=93eaacb8788b9ab287b7a239c8a6e6fc1009161a",
+              "posterUrl": null
+            }
+          ],
+          "flair": "Demo | Project | Workflow"
+        }
+      ],
+      "availability": {
+        "status": "reachable",
+        "httpStatus": 200,
+        "finalUrl": "https://aetherfall.dev/",
+        "checkedAt": "2026-10-11T15:08:56.016Z",
+        "projectUrl": "https://aetherfall.dev/"
+      }
+    }
+  }
 }

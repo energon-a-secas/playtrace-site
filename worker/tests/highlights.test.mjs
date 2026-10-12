@@ -44,3 +44,18 @@ test('weekly picks are public and editing is authenticated',async()=>{
  assert.equal((await worker.fetch(request('/admin/highlights'),env)).status,401);
  assert.equal((await worker.fetch(request('/admin/highlights',{method:'PUT',body:{}}),env)).status,401);env.DB.close();
 });
+test('the separate editor pick persists through old clients and Saturday rotation, and hides on withdrawal',async()=>{
+ const env=fixtureEnv(),pool=games();await importCatalog(env.DB,fixtureCatalog(pool));await rotateHighlights(env.DB,deps);
+ let saved=await getHighlights(env.DB,true);const editorPickId=pool.find(g=>!saved.items.some(i=>i.gameId===g.id)).id;
+ const fields=value=>({revision:value.revision,items:value.items.map(({gameId,pinned})=>({gameId,pinned})),excluded:value.excluded||[]});
+ saved=await saveHighlights(env.DB,{...fields(saved),editorPickId},admin,deps);
+ assert.equal(saved.items.length,5);assert.equal(saved.editorPick.gameId,editorPickId);
+ await assert.rejects(saveHighlights(env.DB,{...fields(saved),editorPickId:saved.items[0].gameId},admin,deps));
+ await assert.rejects(saveHighlights(env.DB,{...fields(saved),editorPickId,excluded:[editorPickId]},admin,deps));
+ await assert.rejects(saveHighlights(env.DB,{...fields(saved),editorPickId:'g_missing'},admin,deps));
+ saved=await saveHighlights(env.DB,fields(saved),admin,deps);assert.equal(saved.editorPick.gameId,editorPickId);
+ await rotateHighlights(env.DB,{now:()=>NOW+7*86400000});saved=await getHighlights(env.DB);
+ assert.equal(saved.editorPick.gameId,editorPickId);assert.equal(saved.items.length,5);assert.ok(saved.items.every(i=>i.gameId!==editorPickId));
+ await removal(env.DB,null,editorPickId,'Creator request',new Date(NOW).toISOString());
+ assert.equal((await getHighlights(env.DB)).editorPick,null);env.DB.close();
+});

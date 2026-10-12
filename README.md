@@ -38,7 +38,7 @@ Public feedback uses a random browser edit key so visitors can update or remove 
 
 ## Features
 
-- **Focused navigation** -- Home showcases five weekly picks; Browse includes a star filter for local/account favorites. Quick reviews and About have dedicated pages. The quiz remains available but is not promoted in navigation. Existing shared project/filter links still work.
+- **Focused navigation** -- Home showcases five weekly picks and a separate editor’s pick in a full-width artwork wall; Browse includes a star filter for local/account favorites. Quick reviews and About have dedicated pages. The quiz remains available but is not promoted in navigation. Existing shared project/filter links still work.
 - **Source-linked discovery** -- Real previews, genre and development-stage filters, a searchable Maker dropdown, search, grid/list layouts, and shareable project links.
 - **Project platforms** -- Filter by itch.io, Steam, mobile stores, game portals, code repositories, other websites, or projects without a link. Cards and details identify the destination automatically from the project URL. Hosting, supported devices, and development stage remain separate facts.
 - **Project histories** -- Older and newer posts join an existing game only when author and canonical project link match. Existing project links stay stable when an earlier source is found. Closely matching same-author reposts within 48 hours retain the newest entry, with old links redirected. Sharing an author alone never merges games.

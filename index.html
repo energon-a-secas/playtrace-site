@@ -131,23 +131,21 @@
   </header>
 
   <main id="main" tabindex="-1" class="home-stage">
-    <section class="home-introduction" aria-labelledby="homeTitle">
-      <div><p class="eyebrow">FROM THE r/aigamedev COMMUNITY</p><h2 id="homeTitle">Small teams. Uncharted worlds.</h2></div>
-      <div class="home-invitation"><p>Find your next game in the making.<br>Play something unexpected. Leave a trace.</p><a href="browse.html" class="btn btn--primary">Explore the collection <span aria-hidden="true">↗</span></a></div>
-    </section>
     <section class="home-showcase" aria-labelledby="highlightsTitle">
-      <div class="showcase-heading"><h2 id="highlightsTitle">This week’s five</h2><div><span id="highlightWeek">Community highlights</span><a id="editHighlights" class="btn btn--secondary btn--sm" href="admin.html#highlights" hidden>Edit picks</a></div></div>
+      <div class="showcase-heading"><div><h2 id="highlightsTitle">This week’s picks</h2><span id="highlightWeek">Community highlights</span></div><a id="editHighlights" class="btn btn--secondary btn--sm" href="admin.html#highlights" hidden>Edit picks</a></div>
       <ol id="weeklyHighlights" class="showcase-panels" aria-busy="true"><li class="highlights-empty">Loading this week’s picks…</li></ol>
-      <div class="showcase-foot"><p>A fresh selection every Saturday. Each one has a story.</p><a href="browse.html?stage=playable">Find a playable build ↗</a></div>
     </section>
-    <div class="home-community"><p>An independent index with original sources and maker credits.</p><a href="research.html">Tried something? Share a quick review ↗</a></div>
+    <section class="home-invitation" aria-label="Explore the community">
+      <a class="home-community-link" href="https://www.reddit.com/r/aigamedev/" target="_blank" rel="noopener noreferrer">From the <strong>r/aigamedev</strong> community <span aria-hidden="true">↗</span></a>
+      <div class="home-invitation-action"><p>Find your next game in the making.<br>Play something unexpected. Leave a trace.</p><a href="browse.html" class="btn btn--primary">Explore the collection <span aria-hidden="true">↗</span></a></div>
+    </section>
   </main>
 
   <!-- Neorgon Footer Kit contract. data-footer-mode: minimal (default) | content | app.
        Replace the copy with a real note (privacy, data provenance, disclaimer) or drop
        the text entirely, the kit appends "Part of Neorgon" and any version stamps. -->
   <footer class="neo-footer" data-footer-mode="minimal">
-    <p class="neo-footer-note">Playtrace · Follow the idea.</p>
+    <p class="neo-footer-note">An independent index with <a href="about.html">original sources and maker credits</a>. <a class="home-review-link" href="research.html">Share a quick review ↗</a></p>
   </footer>
 
   <div id="app-toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>

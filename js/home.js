@@ -1,12 +1,14 @@
 import { request } from './api.js';
 import { NeoAuth } from './neorgon-auth.js';
 import { highlightPanels } from './highlight-view.js';
-import { safeUrl, dateLabel } from './collection.js';
+import { dateLabel } from './collection.js';
+import { bindShowcase } from './showcase-motion.js';
 
 const current = new URL(location.href);
 if (['game','q','cat','platform','stage','maker','author','following','view','sort'].some(key => current.searchParams.has(key)) || current.hash === '#discover') {
   current.pathname = current.pathname.replace(/(?:index\.html)?$/, 'browse.html'); location.replace(current.href);
 } else {
+  const refreshShowcase = bindShowcase(document.getElementById('weeklyHighlights'));
   NeoAuth.onChange(async auth => {
     const user = auth.userId;
     document.getElementById('editHighlights').hidden = true;
@@ -32,8 +34,9 @@ if (['game','q','cat','platform','stage','maker','author','following','view','so
     const items = picks.items;
     if (!Array.isArray(items) || !items.length || items.length > 5) throw new Error('No highlights yet');
     document.getElementById('highlightWeek').textContent = `Week of ${dateLabel(picks.week + 'T12:00:00Z')}${saved ? ' · Saved picks' : ''}`;
-    document.getElementById('weeklyHighlights').innerHTML = highlightPanels(items);
+    document.getElementById('weeklyHighlights').innerHTML = highlightPanels(items, picks.editorPick);
     document.getElementById('weeklyHighlights').setAttribute('aria-busy', 'false');
+    refreshShowcase();
   } catch {
     document.getElementById('weeklyHighlights').innerHTML = '<li class="highlights-empty">Weekly picks are taking a break. <a href="browse.html">Explore the collection ↗</a></li>';
     document.getElementById('weeklyHighlights').setAttribute('aria-busy', 'false');

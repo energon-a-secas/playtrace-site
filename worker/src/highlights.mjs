@@ -13,17 +13,17 @@ export function highlightWeek(now) {
   date.setUTCDate(date.getUTCDate() - (date.getUTCDay() + 1) % 7);
   return date.toISOString().slice(0, 10);
 }
-const empty = () => ({ revision: 0, week: null, updatedAt: null, items: [], excluded: [], recent: [] });
+const empty = () => ({ revision: 0, week: null, updatedAt: null, items: [], editorPickId: null, excluded: [], recent: [] });
 async function selectedGames(db, ids) {
   if (!ids.length) return [];
   const rows = await query(db, `SELECT payload_json FROM games WHERE id IN(SELECT value FROM json_each(?)) AND status='published'
     AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id)`, JSON.stringify(ids)).all();
   return enrichGames(db, rows.results.map(row => JSON.parse(row.payload_json)));
 }
-export function chooseHighlights(games, { items = [], excluded = [], recent = [] } = {}) {
+export function chooseHighlights(games, { items = [], excluded = [], recent = [], editorPickId = null } = {}) {
   const byId = new Map(games.map(game => [game.id, game]));
-  const picked = items.filter(item => item.pinned && byId.has(item.gameId) && !excluded.includes(item.gameId)).slice(0, 5);
-  const blocked = new Set([...excluded, ...picked.map(item => item.gameId)]);
+  const picked = items.filter(item => item.pinned && item.gameId !== editorPickId && byId.has(item.gameId) && !excluded.includes(item.gameId)).slice(0, 5);
+  const blocked = new Set([...excluded, editorPickId, ...picked.map(item => item.gameId)]);
   const candidates = games.filter(game => !blocked.has(game.id) && game.projectUrl && game.title.length <= 80
     && (game.preview.posterUrl || (game.preview.kind === 'image' && game.preview.url))
     && game.availability?.status !== 'broken');
@@ -39,14 +39,17 @@ export function chooseHighlights(games, { items = [], excluded = [], recent = []
 }
 export async function getHighlights(db, admin = false) {
   const saved = await meta(db, KEY) || empty();
-  const games = await selectedGames(db, saved.items.map(item => item.gameId));
+  const games = await selectedGames(db, [...saved.items.map(item => item.gameId), ...(saved.editorPickId ? [saved.editorPickId] : [])]);
   const byId = new Map(games.map(game => [game.id, game]));
-  const items = saved.items.filter(item => byId.has(item.gameId)).map(item => ({ ...item, game: byId.get(item.gameId) }));
-  return { revision: saved.revision, week: saved.week, updatedAt: saved.updatedAt, timezone: HIGHLIGHT_ZONE, items,
+  const items = saved.items.filter(item => byId.has(item.gameId) && item.gameId !== saved.editorPickId).map(item => ({ ...item, game: byId.get(item.gameId) }));
+  const editorPick = byId.has(saved.editorPickId) ? { gameId: saved.editorPickId, game: byId.get(saved.editorPickId) } : null;
+  return { revision: saved.revision, week: saved.week, updatedAt: saved.updatedAt, timezone: HIGHLIGHT_ZONE, items, editorPick,
     ...(admin ? { excluded: saved.excluded || [] } : {}) };
 }
 export async function saveHighlights(db, body, admin, deps) {
-  exactKeys(body, ['revision', 'items', 'excluded']);
+  const editsEditor = body && Object.hasOwn(body, 'editorPickId');
+  exactKeys(body, ['revision', 'items', 'excluded', ...(editsEditor ? ['editorPickId'] : [])]);
+  if (editsEditor && body.editorPickId !== null && (typeof body.editorPickId !== 'string' || !/^g_[a-z0-9]{5,12}$/.test(body.editorPickId))) throw invalid('Choose a published project for the editor’s pick.');
   if (!Number.isSafeInteger(body.revision) || body.revision < 0 || !Array.isArray(body.items) || body.items.length !== 5
     || !Array.isArray(body.excluded) || body.excluded.length > 100) throw invalid('Choose five different projects for this week.');
   for (const item of body.items) {
@@ -59,8 +62,11 @@ export async function saveHighlights(db, body, admin, deps) {
   try {
     const saved = await meta(db, KEY) || empty();
     if (saved.revision !== body.revision) throw new ApiError('EDIT_CONFLICT', 'The highlights changed in another tab or rotated for the week. Reload before saving.', 409);
-    if ((await selectedGames(db, body.items.map(item => item.gameId))).length !== 5) throw invalid('One of these projects is no longer published. Choose another.');
-    await putMeta(db, KEY, { ...saved, ...body, revision: saved.revision + 1, week: highlightWeek(deps.now()), updatedAt: new Date(deps.now()).toISOString(), updatedBy: admin.subject }).run();
+    const editorPickId = editsEditor ? body.editorPickId : saved.editorPickId || null;
+    if (editorPickId && (body.items.some(item => item.gameId === editorPickId) || body.excluded.includes(editorPickId))) throw invalid('The editor’s pick needs its own project, separate from weekly picks and exclusions.');
+    const ids = [...body.items.map(item => item.gameId), ...(editorPickId ? [editorPickId] : [])];
+    if ((await selectedGames(db, ids)).length !== ids.length) throw invalid('One of these projects is no longer published. Choose another.');
+    await putMeta(db, KEY, { ...saved, ...body, editorPickId, revision: saved.revision + 1, week: highlightWeek(deps.now()), updatedAt: new Date(deps.now()).toISOString(), updatedBy: admin.subject }).run();
     return getHighlights(db, true);
   } finally { await release(db, KEY + '_lock', lock); }
 }
