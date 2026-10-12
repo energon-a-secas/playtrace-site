@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { validateCatalog, selectGames, defaults, locationForState, readLocation, parsePrice, distributionFor } from '../js/collection.js';
 import * as collection from '../js/collection.js';
 import { feedbackQuestions, feedbackOptions, validChoices } from '../js/feedback-options.js';
+import { createFavoritesStore } from '../js/favorites.js';
 
 const seed = JSON.parse(await readFile(new URL('../data/catalog.json', import.meta.url), 'utf8'));
 const copy = () => structuredClone(seed);
@@ -143,14 +144,16 @@ function fakeNodes() {
 }
 async function accountModule(request, accountsReady = true) {
   const $ = fakeNodes();
+  const saved=new Map(),favorites=createFavoritesStore(key=>saved.get(key), (key,value)=>{saved.set(key,structuredClone(value));return true;});
+  favorites.reconcile('user_a',['g_abc12']);
   const state = { signedIn: true, userId: 'user_a', follows: ['g_abc12'], prices: [], accountLoaded: true,
     accountBusy: false, detail: { id: 'g_abc12' }, service: { capabilities: { signals: true, following: true }, signalProtection: 'account-rate-limit' } };
   const authCalls = { starts: 0, listeners: 0, prompts: 0, tokens: 0 };
   const NeoAuth = { state: { signedIn: true, userId: 'user_a', clerk: { session: { getToken: async () => { authCalls.tokens++; return 'test-token'; } } } },
     start() { authCalls.starts++; }, onChange() { authCalls.listeners++; }, requireSignIn: async () => { authCalls.prompts++; return true; } };
-  const api = await isolatedModule('accounts.js', { state, $, NeoAuth, request, CONFIG: { accountsReady }, apiConfigured: true, parsePrice,
+  const api = await isolatedModule('accounts.js', { state, $, NeoAuth, request, favorites, CONFIG: { accountsReady }, apiConfigured: true, parsePrice,
     priceChallenge: async () => '', clearChallenge() {}, renderAccount() {}, renderSignals() {}, showToast() {} });
-  return { api, state, $, authCalls };
+  return { api, state, $, authCalls, favorites };
 }
 async function flushRequests() { for (let i = 0; i < 12; i++) await Promise.resolve(); }
 const insufficient = { gameId: 'g_abc12', state: 'insufficient', count: null, medianCents: null, buckets: null };
@@ -254,7 +257,7 @@ test('unavailable accounts never initialize Clerk, prompt, mint tokens or reques
   // Stale or manually assigned account state cannot bypass the configured gate.
   state.signedIn = true; state.userId = 'user_a'; state.accountLoaded = true;
   $('priceAmount').value = '10';
-  assert.equal(await api.prepareFollowing({}), false);
+  assert.equal(await api.prepareFollowing({}), true);
   await api.followGame({}); await api.savePrice({}); await api.withdrawPrice();
   await api.deleteMyData({}); await api.confirmDelete(); await api.refreshMe();
   assert.deepEqual(calls, []);
@@ -264,23 +267,24 @@ test('unavailable accounts never initialize Clerk, prompt, mint tokens or reques
   assert.equal(state.detailSignals.state, 'insufficient');
 });
 
-test('ready accounts initialize the kit and retain verified private action flow', async () => {
+test('favorites save locally and sync through verified auth without a sign-in prompt', async () => {
   const calls = [];
   const { api, authCalls } = await accountModule(async (path, options = {}) => {
     calls.push({ path, method: options.method || 'GET', token: options.token });
-    return path === '/me' ? { follows: [], prices: [] } : { gameId: 'g_abc12', following: false };
+    return { follows: [], prices: [] };
   }, true);
   api.startAccounts(() => {}); await api.followGame({});
-  assert.equal(authCalls.starts, 1); assert.equal(authCalls.listeners, 1); assert.equal(authCalls.prompts, 1);
-  assert.deepEqual(calls, [{ path: '/games/g_abc12/follow', method: 'DELETE', token: 'test-token' }, { path: '/me', method: 'GET', token: 'test-token' }]);
+  assert.equal(authCalls.starts, 1); assert.equal(authCalls.listeners, 1); assert.equal(authCalls.prompts, 0);
+  assert.deepEqual(calls, [{ path: '/me/favorites', method: 'PUT', token: 'test-token' }]);
 });
 
-test('unavailable account controls show availability without a sign-in call to action', async () => {
+test('favorites remain available when account services are not configured', async () => {
   const $ = fakeNodes(), state = { follows: [], prices: [], detail: { id: 'g_abc12' }, service: { capabilities: { signals: true, following: true }, signalProtection: 'account-rate-limit' } };
   const renderer = await isolatedModule('render.js', { state, $, CONFIG: { accountsReady: false }, e: String });
   renderer.renderAccount();
-  for (const id of ['followingFilter', 'followGame', 'deleteMyData', 'confirmDelete']) assert.equal($(id).disabled, true, id);
-  assert.equal($('followGame').hidden, true);
+  for (const id of ['deleteMyData', 'confirmDelete']) assert.equal($(id).disabled, true, id);
+  for (const id of ['followingFilter', 'followGame']) assert.equal($(id).disabled, false, id);
+  assert.equal($('followGame').hidden, false);
   assert.match($('privacyMessage').textContent, /not available yet/);
 });
 

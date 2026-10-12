@@ -168,7 +168,7 @@
           <button type="button" data-stage="playable" aria-pressed="false">Playable <span data-stage-count="playable">…</span></button>
           <button type="button" data-stage="prototype" aria-pressed="false">In development <span data-stage-count="prototype">…</span></button>
         </div>
-        <button type="button" class="btn btn--ghost btn--sm" id="followingFilter" aria-pressed="false">Following <span id="followingCount" hidden></span></button>
+        <button type="button" class="btn btn--ghost btn--sm" id="followingFilter" aria-pressed="false">Favorites <span id="followingCount" hidden></span></button>
         <div class="view-switch" role="group" aria-label="Collection layout">
           <button type="button" data-view="grid" aria-pressed="true" aria-label="Grid view" title="Grid view"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
           <button type="button" data-view="list" aria-pressed="false" aria-label="List view" title="List view"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M9 5h12M9 12h12M9 19h12"/><rect x="3" y="4" width="2" height="2"/><rect x="3" y="11" width="2" height="2"/><rect x="3" y="18" width="2" height="2"/></svg></button>
@@ -220,6 +220,17 @@
       <p class="field__hint field--wide">Separate devices and tags with commas. Creator credits and original posts stay in the history.</p>
       <div class="field--wide"><button type="submit" class="btn btn--primary">Save details</button></div>
     </fieldset></form><p id="inlineEditorMessage" role="status"></p><button id="inlineReload" type="button" class="text-button" hidden>Reload saved details</button>
+    <details class="inline-moderation"><summary>Duplicates &amp; removal</summary>
+      <div id="inlineDuplicateFlags" hidden></div>
+      <ul id="inlineSourcePosts" class="inline-source-posts"></ul>
+      <p class="field__hint">The only source, and posts that credit the preview, stay attached to the entry.</p>
+      <button id="inlineRemoveGame" type="button" class="text-button">Remove this entry from Playtrace</button>
+      <div id="inlineRemovalConfirm" class="inline-removal-confirm" hidden>
+        <p id="inlineRemovalText"></p>
+        <label for="inlineRemovalReason">Reason</label><select id="inlineRemovalReason" class="select"><option>Duplicate or corrected repost</option><option>No longer a game showcase</option><option>Broken or abandoned project</option><option>Creator requested removal</option></select>
+        <div class="admin-inline"><button id="inlineConfirmRemoval" type="button" class="btn btn--secondary">Remove</button><button id="inlineCancelRemoval" type="button" class="text-button">Keep it</button></div>
+      </div>
+    </details>
   </section>
   <section id="quickImagePanel" class="quick-image-panel" aria-labelledby="quickImageTitle" hidden>
     <h3 id="quickImageTitle">Update thumbnail</h3>
@@ -250,7 +261,7 @@
           <span class="project-icon__label" aria-hidden="true">Leave feedback</span>
         </button>
         <button type="button" class="project-icon" id="requestChange" aria-label="Request a change" aria-controls="changeRequestPanel" aria-expanded="false">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M4 20l5-1L21 7a2.8 2.8 0 0 0-4-4L5 15l-1 5ZM13 20h8"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v6m0 3v.01"/></svg>
           <span class="project-icon__label" aria-hidden="true">Request a change</span>
         </button>
       </nav>
@@ -261,10 +272,9 @@
         <p id="itemDialogHeadline" class="project-headline" hidden></p>
         <p id="itemDialogAuthor" class="dialog__author"></p>
       </div>
-      <aside class="project-actions" aria-label="Open this game"><div id="itemDialogLinks"></div></aside>
+      <aside class="project-actions" aria-label="Game links and rating"><div id="itemDialogLinks"></div><div id="ratingControl" class="rating-control" aria-label="Community rating"></div></aside>
     </div>
     <div id="itemDialogStore"></div>
-    <div id="ratingControl" class="rating-control" aria-label="Community rating"></div>
     <p id="itemDialogDescription" class="project-description"></p>
     <section id="changeRequestPanel" class="change-request" aria-labelledby="changeRequestTitle" hidden>
       <div class="feedback-heading"><h3 id="changeRequestTitle">Help improve this listing</h3><button type="button" class="text-button" id="closeChangeRequest">Cancel</button></div>

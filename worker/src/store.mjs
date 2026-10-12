@@ -79,7 +79,7 @@ export async function importCatalog(db, input) {
     query(db, `INSERT INTO app_meta(key,value_json) VALUES('catalog_import_guard',
       CASE WHEN EXISTS(SELECT 1 FROM (${eligibleInput}) j JOIN json_each(j.value,'$.posts') p
         JOIN source_posts old ON old.id=json_extract(p.value,'$.id')
-        WHERE old.game_id IS NOT NULL AND old.game_id<>json_extract(j.value,'$.id'))
+        WHERE old.status='rejected' OR (old.game_id IS NOT NULL AND old.game_id<>json_extract(j.value,'$.id')))
       OR EXISTS(SELECT 1 FROM (${eligibleInput}) j WHERE json_extract(j.value,'$.preview.storage')='r2'
         AND NOT EXISTS(SELECT 1 FROM games g JOIN media_assets a ON a.game_id=g.id
           WHERE g.id=json_extract(j.value,'$.id') AND json_extract(g.payload_json,'$.preview.url')=json_extract(j.value,'$.preview.url')))
@@ -114,20 +114,20 @@ export async function importCatalog(db, input) {
   let result;
   try { result = await db.batch(statements); }
   catch (error) {
-    if (/NOT NULL.*app_meta\.value_json/.test(error.message)) throw invalid('A source post already belongs to another game or stored-preview consent is missing.');
+    if (/NOT NULL.*app_meta\.value_json/.test(error.message)) throw invalid('A source post was excluded, belongs to another game, or stored-preview consent is missing.');
     throw error;
   }
   return { importedGames: result[1].results.length, importedPosts: result[2].results.length };
 }
 
-export async function removal(db, bucket, id, reason, now) {
+export async function removal(db, bucket, id, reason, now, actor = 'operator') {
   const known = await query(db, 'SELECT id FROM games WHERE id=? UNION SELECT game_id AS id FROM removals WHERE game_id=?', id, id).first();
   if (!known) throw notFound();
   await withdrawPreviews(db, bucket, id);
   await db.batch([
     query(db, `INSERT INTO removals(game_id,source_post_ids_json,reason,removed_at,removed_by)
-      VALUES(?,COALESCE((SELECT json_group_array(id) FROM source_posts WHERE game_id=?),'[]'),?,?,'operator')
-      ON CONFLICT(game_id) DO NOTHING`, id, id, reason, now),
+      VALUES(?,COALESCE((SELECT json_group_array(id) FROM source_posts WHERE game_id=?),'[]'),?,?,?)
+      ON CONFLICT(game_id) DO NOTHING`, id, id, reason, now, actor),
     query(db, "UPDATE games SET status='removed',author_key='',project_url=NULL,payload_json='{}' WHERE id=?", id),
     query(db, 'DELETE FROM price_signals WHERE game_id=?', id),
     query(db, 'DELETE FROM follows WHERE game_id=?', id),

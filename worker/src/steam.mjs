@@ -111,12 +111,16 @@ export async function enrichGames(db, games) {
       : game.preview.storage === 'r2' || !(steam?.headerUrl || storeArt) ? game.preview
         : { ...game.preview, kind: 'image', url: steam?.headerUrl || storeArt, posterUrl: null, alt: `${steam?.title || availability?.title || game.title} · Store artwork` };
     const source = originals.get(game.id);
-    const name = !editedTitles.has(game.id) && game.projectUrl === source.projectUrl ? nameForGame(source, {steamTitle: steam?.title}) : null;
+    const name = !editedTitles.has(game.id) && game.projectUrl === source.projectUrl ? nameForGame(source, {steamTitle: steam?.title, pageTitle: availability?.provider==='itch'?availability.title:null}) : null;
     const verifiedPlayable = availability?.playable === true && (availability.storeStatus||availability.status) === 'reachable' && availability.status !== 'broken'
       && ['itch','steam'].includes(availability.provider) && Date.now()-Date.parse(availability.storeCheckedAt||availability.checkedAt)<7*86400000;
     const stage = !editedStages.has(game.id) && !['released','playable'].includes(game.stage) && verifiedPlayable ? 'playable' : game.stage;
-    const platforms=!editedPlatforms.has(game.id)&&!game.platforms.length&&steam?.platforms?.length?steam.platforms:game.platforms;
-    const summary=!editedSummaries.has(game.id)&&/^Source post by u\/[^:]+:/.test(game.summary)&&steam?.description?steam.description:game.summary;
+    const storePlatforms=steam?.platforms?.length?steam.platforms:availability?.provider==='itch'&&availability.metadataVersion===2?availability.platforms:[];
+    const storeDescription=steam?.description||(availability?.provider==='itch'&&availability.metadataVersion===2?availability.description:null);
+    const platforms=!editedPlatforms.has(game.id)&&!game.platforms.length&&storePlatforms?.length?storePlatforms:game.platforms;
+    const automaticSummary=/^Source post by u\/[^:]+:/.test(game.summary)
+      || (source.reviewStatus==='source-described'&&source.posts.some(post=>post.excerpt===source.summary));
+    const summary=!editedSummaries.has(game.id)&&automaticSummary&&storeDescription?storeDescription:game.summary;
     return { ...game, stage, platforms, summary, ...(availability ? {availability} : {}), ...(name ? {title: name.title} : {}), preview, ...(steam ? { steam } : {}) };
   });
 }

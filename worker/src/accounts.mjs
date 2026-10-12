@@ -32,6 +32,30 @@ export async function getMe(db, subject) {
   ]);
   return { follows: follows.results.map(row => row.game_id), prices: prices.results.map(row => ({ gameId: row.game_id, amountCents: row.amount_cents, currency: 'USD', updatedAt: row.updated_at })) };
 }
+export async function syncFavorites(db, env, subject, request, body, deps) {
+  exactKeys(body, ['changes']);
+  if (!Array.isArray(body.changes) || !body.changes.length || body.changes.length > 200) throw invalid();
+  const ids = new Set();
+  for (const change of body.changes) {
+    exactKeys(change, ['gameId','saved']);
+    if (!/^g_[a-z0-9]{5,12}$/.test(change.gameId) || typeof change.saved !== 'boolean' || ids.has(change.gameId)) throw invalid();
+    ids.add(change.gameId);
+  }
+  await mutationLimit(db, env, subject, request, 'account', deps.now());
+  const input = JSON.stringify(body.changes), now = new Date(deps.now()).toISOString();
+  // Resolve consolidated entries and ignore withdrawn projects. A single batch
+  // avoids one mutation/rate-limit charge for every locally saved favorite.
+  const targets = `SELECT COALESCE(a.game_id,json_extract(j.value,'$.gameId')) AS id,json_extract(j.value,'$.saved') AS saved
+    FROM json_each(?) j LEFT JOIN game_aliases a ON a.alias_id=json_extract(j.value,'$.gameId')`;
+  await db.batch([
+    query(db, `INSERT INTO follows(subject,game_id,created_at)
+      SELECT ?,g.id,? FROM (${targets}) t JOIN games g ON g.id=t.id
+      WHERE t.saved=1 AND g.status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id)
+      ON CONFLICT(subject,game_id) DO NOTHING`, subject, now, input),
+    query(db, `DELETE FROM follows WHERE subject=? AND game_id IN(SELECT id FROM (${targets}) WHERE saved=0)`, subject, input),
+  ]);
+  return { follows: (await getMe(db, subject)).follows };
+}
 export async function deleteMe(db, env, subject, request, body, deps) {
   exactKeys(body, ['confirm']);
   if (body.confirm !== 'delete-my-data') throw invalid();

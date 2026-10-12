@@ -28,6 +28,23 @@ export function duplicateGroups(games) {
   }
   return groups.filter(group=>group.length>1);
 }
+export function repostFlags(games) {
+  const flags = [];
+  const ordered = [...games].sort((a,b)=>anchor(b).createdAt.localeCompare(anchor(a).createdAt));
+  const previous = new Map();
+  for (const game of ordered) {
+    const author = game.author.name.toLowerCase(), newer = previous.get(author); previous.set(author, game);
+    if (!newer) continue;
+    const hours = Math.abs(Date.parse(anchor(newer).createdAt)-Date.parse(anchor(game).createdAt))/3600000;
+    const sameTitle = normalized(anchor(game).title) === normalized(anchor(newer).title);
+    const sameLink = canonicalProjectUrl(game.projectUrl) && canonicalProjectUrl(game.projectUrl) === canonicalProjectUrl(newer.projectUrl);
+    if (hours > 48 && !(sameTitle || sameLink)) continue;
+    flags.push({ gameId: game.id, title: game.title, otherId: newer.id, otherTitle: newer.title, author: game.author.name,
+      reason: sameLink ? 'Same maker and project link' : sameTitle ? 'Same maker and source title' : `Consecutive showcases by this maker, ${Math.round(hours)} hours apart`,
+      automaticMatch: likelyRepost(game,newer) });
+  }
+  return flags.slice(0,50);
+}
 export async function resolveGame(db,id){
   const alias=await query(db,'SELECT game_id FROM game_aliases WHERE alias_id=?',id).first();
   const game=await getGame(db,alias?.game_id||id);return {gameId:game.id,redirected:Boolean(alias)};
@@ -38,7 +55,7 @@ export async function consolidateReposts(db,deps,apply=false,bucket=null){
     const rows=await query(db,"SELECT payload_json FROM games WHERE status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id)").all();
     const games=rows.results.map(row=>JSON.parse(row.payload_json)), byId=new Map(games.map(game=>[game.id,game]));
     const groups=duplicateGroups(await applyDetails(db,games)).map(group=>group.map(game=>byId.get(game.id)));
-    if(!apply)return {groups:groups.map(group=>({keep:group[0].id,title:group[0].title,aliases:group.slice(1).map(game=>game.id)}))};
+    if(!apply)return {groups:groups.map(group=>({keep:group[0].id,title:group[0].title,aliases:group.slice(1).map(game=>game.id)})),flags:repostFlags(await applyDetails(db,games))};
     // One group per invocation keeps this bounded under the D1 statement budget.
     const group=groups[0];if(!group)return {merged:0,remaining:0};
     const [winner,...old]=group, ids=JSON.stringify(old.map(game=>game.id));

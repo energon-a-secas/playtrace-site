@@ -8,7 +8,7 @@ import { json, errorResponse, exactKeys, readJson, readBytes, checkOrigin, withC
 import { authenticate, authenticateOperator, accountConfigured } from './auth.mjs';
 import { database, catalog, importCatalog, meta, removal } from './store.mjs';
 import { publicCacheKey, versionedPublicKey, invalidatePublicCache, readPublicCache, writePublicCache } from './public-cache.mjs';
-import { signals, getMe, deleteMe, mutateGame } from './accounts.mjs';
+import { signals, getMe, deleteMe, mutateGame, syncFavorites } from './accounts.mjs';
 import { ingest, ingestionConfigured, COMMUNITY_CREATED_AT } from './ingestion.mjs';
 import { mediaConfigured, storePreview, serveMedia } from './media.mjs';
 import { signalProtection } from './limits.mjs';
@@ -22,6 +22,7 @@ import { createCategory } from './categories.mjs';
 import { gameStore, refreshSteamBatch } from './steam.mjs';
 import { hydrateMedia } from './assets.mjs';
 import { refreshSourceBatch } from './source-evidence.mjs';
+import { removeEntry, removeSourcePost } from './moderation.mjs';
 import { quizInfo, startQuiz, finishQuiz, deleteQuizData, quizMetrics } from './quiz.mjs';
 
 const routes = [
@@ -49,6 +50,7 @@ const routes = [
   [/^\/quiz\/rounds\/([a-f0-9-]{36})$/, ['PUT'], 'quizFinish'],
   [/^\/admin\/quiz-metrics$/, ['GET'], 'editorQuiz'],
   [/^\/me$/, ['GET', 'DELETE'], 'me'],
+  [/^\/me\/favorites$/, ['PUT'], 'favorites'],
   [/^\/games\/(g_[a-z0-9]{5,12})\/signals$/, ['GET'], 'signals'],
   [/^\/games\/(g_[a-z0-9]{5,12})\/feedback$/, ['GET', 'PUT', 'DELETE'], 'feedback'],
   [/^\/games\/(g_[a-z0-9]{5,12})\/feedback\/mine$/, ['GET'], 'ownFeedback'],
@@ -67,6 +69,8 @@ const routes = [
   [/^\/admin\/games\/(g_[a-z0-9]{5,12})$/, ['GET'], 'editorGame'],
   [/^\/admin\/games\/(g_[a-z0-9]{5,12})\/image$/, ['PUT'], 'editorImage'],
   [/^\/admin\/games\/(g_[a-z0-9]{5,12})\/details$/, ['PUT'], 'editorDetails'],
+  [/^\/admin\/games\/(g_[a-z0-9]{5,12})\/delete$/, ['POST'], 'editorRemove'],
+  [/^\/admin\/games\/(g_[a-z0-9]{5,12})\/posts\/([a-z0-9]{5,12})\/remove$/, ['POST'], 'editorRemovePost'],
   [/^\/admin\/games\/(g_[a-z0-9]{5,12})\/media$/, ['POST'], 'editorMedia'],
   [/^\/admin\/feedback\/([a-f0-9-]{36})\/hide$/, ['POST'], 'hideFeedback'],
   [/^\/admin\/games\/(g_[a-z0-9]{5,12})\/(remove|preview)$/, ['POST'], 'adminGame'],
@@ -149,7 +153,7 @@ export function createWorker(overrides = {}) {
         else if (action === 'changeRequest') result = json(await submitChange(database(env), env, request, match[1], await readJson(request), deps), 201);
         else if (action.startsWith('editor')) {
           const admin = await authorizeAdmin(request, env, deps), db = database(env);
-          changedPublic=request.method!=='GET'&&['editorHighlights','editorImage','editorDetails','editorMedia','editorCategories','editorJobsRun','editorReposts'].includes(action);
+          changedPublic=request.method!=='GET'&&['editorHighlights','editorImage','editorDetails','editorMedia','editorCategories','editorJobsRun','editorReposts','editorRemove','editorRemovePost'].includes(action);
           if (action === 'editorMe') result = json({ email: admin.email, role: admin.role, integrations: { jev: Boolean(env.JEV_API_KEY), itch: Boolean(env.ITCHIO_API_TOKEN) } });
           else if(action==='editorHighlights') result=json(request.method==='GET'?await getHighlights(db,true):await saveHighlights(db,await readJson(request),admin,deps));
           else if(action==='editorResearchList')result=json(await researchList(db,true));
@@ -165,15 +169,18 @@ export function createWorker(overrides = {}) {
           else if (action === 'editorQuiz') result = json(await quizMetrics(db));
           else if (action === 'editorRequest') result = json(await resolveChange(db, match[1], await readJson(request), admin, deps));
           else if (action === 'editorGame') result = json(await editorGame(db, match[1]));
+          else if (action === 'editorRemove') result = json(await removeEntry(db,env,match[1],await readJson(request),admin,deps));
+          else if (action === 'editorRemovePost') result = json(await removeSourcePost(db,match[1],match[2],await readJson(request),admin,deps));
           else if (action === 'editorImage') result = json(await editPreview(db, env, match[1], await readJson(request, 7 * 1024 * 1024), request, admin, deps));
           else if (action === 'editorDetails') { await editDetails(db, match[1], await readJson(request), admin, deps); result = json(await editorGame(db, match[1])); }
           else { exactKeys(await readJson(request), []); result = json(await hydrateMedia(env, deps, match[1])); }
         }
         else if (action === 'media') result = await serveMedia(database(env), env, match[1]);
-        else if (action === 'me' || action === 'mutation') {
+        else if (action === 'me' || action === 'mutation' || action === 'favorites') {
           const db = database(env);
           const subject = await authenticate(request, env, deps);
-          if (action === 'me') result = json(request.method === 'GET' ? await getMe(db, subject) : await deleteMe(db, env, subject, request, await readJson(request), deps));
+          if (action === 'favorites') result = json(await syncFavorites(db, env, subject, request, await readJson(request, 16384), deps));
+          else if (action === 'me') result = json(request.method === 'GET' ? await getMe(db, subject) : await deleteMe(db, env, subject, request, await readJson(request), deps));
           else {
             if (request.method === 'DELETE') await readBytes(request.body, 0);
             result = json(await mutateGame(db, env, subject, request, match[1], match[2], request.method === 'PUT' ? await readJson(request) : null, deps));
@@ -219,7 +226,7 @@ export function createWorker(overrides = {}) {
         // Separate invocations keep the complete handler below the D1 budget,
         // including six cold Steam caches and a ten-post media hydration batch.
         if (event?.cron === '0 3,4 * * 6') return (await rotateHighlights(database(env), deps)).rotated;
-        if (event?.cron === '20 * * * *') { const db=database(env); await queueStoreMaintenance(db,deps); return (await runJobs(db,env,deps)).processed>0; }
+        if (event?.cron === '20 * * * *') { const db=database(env); await queueStoreMaintenance(db,deps); return (await runJobs(db,env,deps,2)).processed>0; }
         if (event?.cron === '50 * * * *') return (await consolidateReposts(database(env),deps,true,env.PREVIEWS)).merged>0;
         if (sourceTick) return ingestionConfigured(env) ? (await refreshSourceBatch(database(env),deps)).updatedGames>0 : false;
         if (event?.cron === '5 * * * *'||maintenance) {

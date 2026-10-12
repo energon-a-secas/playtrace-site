@@ -46,7 +46,7 @@
             "author": "Fizassist1",
             "createdAt": "2026-10-10T21:04:51.000Z",
             "kind": "showcase",
-            "excerpt": "Parachute into a 3D minefield and use numbered tiles to find a safe route. Includes a campaign, endless survival, and a shared daily field.",
+            "excerpt": "DROPZONE is basically my take on turning Minesweeper into an actual 3D game. You parachute into a minefield, read the numbered tiles, and physically walk your way through it without stepping on a mine. There’s a 10-level campaign, an endless survival mode, and a new Daily Drop where everyone gets the same field and one attempt per day, with verified scores and leaderboards. Survival maps are procedurally generated, and the goal is to get as far from your landing point as you can without blowing yourself up. It’s fully playable in the browser. Would love to hear what people think!…",
             "flair": "Demo | Project | Workflow"
           }
         ],
@@ -65,7 +65,7 @@
       "game": {
         "id": "g_1x376pc",
         "title": "Wayward Crown Demo",
-        "summary": "Whenever people around my age see my game, they think it's Age of Mythology. But aside from the medieval setting (and the fact that my 3D models are nowhere near as polished), the gameplay is completely different! The game now has a free demo available, so feel free to download it and give it a try! It's an indirect-control kingdom strategy game. You don't have to command your heroes directly. Instead, you focus on building your kingdom, managing its economy, and occasionally placing bounties. The heroes will take care of the rest on their own. The game is still in development, and I'd love…",
+        "summary": "Wayward Crown Demo — an early development build for collecting player feedback. Content is limited and bugs are expected. More adventurers, monsters, buildings, and skills are coming. Thank you for trying it and sharing your thoughts!",
         "author": {
           "name": "AnywhereOk6003",
           "url": "https://www.reddit.com/user/AnywhereOk6003/"
@@ -188,14 +188,16 @@
       "game": {
         "id": "g_1x36ues",
         "title": "Underbloom",
-        "summary": "Code & Art are 100% made with AI My role: game design, code architecture, art direction & QA Built solo for the DreamLayer AI game jam in 8 days. You can try it at: Built with: Unity 6, Claude Opus 5.5, DreamLayerAI, and Magnific. More details on how it was built are on the game page.",
+        "summary": "Raid monster nests and harvest their parts to grow. A top-down survival RPG where you are the colony invader.",
         "author": {
           "name": "Certain_Ad9908",
           "url": "https://www.reddit.com/user/Certain_Ad9908/"
         },
         "category": "other",
         "stage": "playable",
-        "platforms": [],
+        "platforms": [
+          "Browser"
+        ],
         "tags": [],
         "projectUrl": "https://motawe3.itch.io/underbloom",
         "firstSeenAt": "2026-10-11T12:21:13.000Z",
@@ -238,16 +240,82 @@
           "status": "reachable",
           "httpStatus": 200,
           "finalUrl": "https://motawe3.itch.io/underbloom",
-          "title": "Underbloom by Mo",
+          "metadataVersion": 2,
+          "provider": "itch",
+          "title": "Underbloom",
+          "description": "Raid monster nests and harvest their parts to grow. A top-down survival RPG where you are the colony invader.",
           "image": "https://img.itch.zone/aW1nLzMwNjkyMzkyLnBuZw==/original/Jh8DhX.png",
+          "sourceUrl": "https://motawe3.itch.io/underbloom",
           "playable": true,
           "browser": true,
-          "provider": "itch",
-          "evidence": "Store page includes an embedded browser game.",
-          "checkedAt": "2026-10-11T15:08:45.399Z",
+          "downloadable": false,
+          "purchaseOffered": false,
+          "platforms": [
+            "Browser"
+          ],
+          "genres": [
+            "Action",
+            "Role Playing"
+          ],
+          "tags": [
+            "bioluminescent",
+            "dreamlayer",
+            "insects",
+            "Monsters",
+            "procedural-animation",
+            "Roguelite",
+            "survivors-like",
+            "Top-Down",
+            "Unity"
+          ],
+          "engines": [
+            "Unity"
+          ],
+          "inputs": [
+            "Keyboard",
+            "Mouse",
+            "Xbox controller"
+          ],
+          "languages": [
+            "English"
+          ],
+          "aiDisclosure": [
+            "AI Assisted",
+            "Code",
+            "Graphics",
+            "Sounds",
+            "Text"
+          ],
+          "releaseStatus": "Released",
+          "screenshots": [
+            "https://img.itch.zone/aW1hZ2UvNTEyNzEzMS8zMDY5MjY4NS5qcGc=/original/lun8fV.jpg",
+            "https://img.itch.zone/aW1hZ2UvNTEyNzEzMS8zMDY5MjY4OS5qcGc=/original/p8UXLM.jpg",
+            "https://img.itch.zone/aW1hZ2UvNTEyNzEzMS8zMDY5MjY4OC5qcGc=/original/af0zqB.jpg",
+            "https://img.itch.zone/aW1hZ2UvNTEyNzEzMS8zMDc3MTA0My5qcGc=/original/Td%2Bxjq.jpg",
+            "https://img.itch.zone/aW1hZ2UvNTEyNzEzMS8zMDY5MjY4Ny5qcGc=/original/tBuYGb.jpg",
+            "https://img.itch.zone/aW1hZ2UvNTEyNzEzMS8zMDc3MTE5OS5qcGc=/original/KyOasR.jpg"
+          ],
+          "provenance": {
+            "title": "JSON-LD name",
+            "description": "JSON-LD description",
+            "image": "og:image",
+            "genres": "More information: genre",
+            "tags": "More information: tags",
+            "engines": "More information: made with",
+            "inputs": "More information: inputs",
+            "languages": "More information: languages",
+            "aiDisclosure": "More information: ai disclosure",
+            "platforms": "More information: platforms",
+            "releaseStatus": "More information: status",
+            "browser": "Embedded HTML5 player",
+            "playable": "Embedded HTML5 player",
+            "screenshots": "Store screenshot gallery"
+          },
+          "evidence": "Store page includes an embedded browser game; gameplay has not been tested.",
+          "checkedAt": "2026-10-12T00:46:21.838Z",
           "projectUrl": "https://motawe3.itch.io/underbloom",
-          "storeStatus": "reachable",
-          "storeCheckedAt": "2026-10-11T14:57:17.229Z"
+          "storeCheckedAt": "2026-10-12T00:46:21.838Z",
+          "storeStatus": "reachable"
         }
       }
     },
@@ -337,7 +405,10 @@
           "Loot"
         ],
         "stage": "playable",
-        "platforms": [],
+        "platforms": [
+          "Browser",
+          "Windows"
+        ],
         "projectUrl": "https://starstilanx.itch.io/wyrmfall-a-dragon-arpg",
         "firstSeenAt": "2026-10-10T13:29:43.000Z",
         "updatedAt": "2026-10-10T13:29:43.000Z",
@@ -345,7 +416,7 @@
           "kind": "image",
           "url": "https://img.itch.zone/aW1nLzMwNTc3ODA1LnBuZw==/original/xUXZLg.png",
           "posterUrl": null,
-          "alt": "Wyrmfall - A Dragon ARPG by Verinax · Store artwork",
+          "alt": "Wyrmfall - A Dragon ARPG · Store artwork",
           "storage": "external",
           "rights": "source-linked",
           "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2fcsn/"
@@ -359,7 +430,7 @@
             "author": "Starstilanx",
             "createdAt": "2026-10-10T13:29:43.000Z",
             "kind": "showcase",
-            "excerpt": "A dragon action RPG inspired by loot-driven games. The author shares screenshots and development details, and reports that the web version currently needs a fix.",
+            "excerpt": "Hello! I wanted to share my game with all of you! It's called Wyrmfall. It's a game entirely about dragons with a bunch of elements inspired by Path of Exile. It was coded completely with Claude Opus 5. Art is by PixelLab and Gemini (Weapon, armor, and item sprite sheets). Sounds are from the Humble Bundle game dev audio packs that they occasionally release. Currently, the web version doesn't work so far as I know from my own testing (I'm looking to fix that today), but the page has a ton of screenshots and information about the game. Let me know what you think!",
             "flair": "Demo | Project | Workflow"
           }
         ],
@@ -367,19 +438,78 @@
           "status": "reachable",
           "httpStatus": 200,
           "finalUrl": "https://starstilanx.itch.io/wyrmfall-a-dragon-arpg",
-          "title": "Wyrmfall - A Dragon ARPG by Verinax",
+          "metadataVersion": 2,
+          "provider": "itch",
+          "title": "Wyrmfall - A Dragon ARPG",
+          "description": "An infinite dragon ARPG based heavily on Path of Exile's systems and league mechanics",
           "image": "https://img.itch.zone/aW1nLzMwNTc3ODA1LnBuZw==/original/xUXZLg.png",
+          "sourceUrl": "https://starstilanx.itch.io/wyrmfall-a-dragon-arpg",
           "playable": true,
           "browser": true,
-          "provider": "itch",
-          "evidence": "Store page includes an embedded browser game.",
-          "checkedAt": "2026-10-11T15:25:02.315Z",
+          "downloadable": false,
+          "purchaseOffered": true,
+          "platforms": [
+            "Browser",
+            "Windows"
+          ],
+          "genres": [
+            "Action"
+          ],
+          "tags": [
+            "Action RPG",
+            "arpg",
+            "Co-op",
+            "Dragons",
+            "Hack and Slash",
+            "Loot",
+            "Pixel Art",
+            "Procedural Generation",
+            "Singleplayer",
+            "Top-Down"
+          ],
+          "engines": [
+            "Unity"
+          ],
+          "inputs": [],
+          "languages": [],
+          "aiDisclosure": [
+            "AI Assisted",
+            "Code",
+            "Graphics",
+            "Sounds"
+          ],
+          "releaseStatus": "In development",
+          "screenshots": [
+            "https://img.itch.zone/aW1hZ2UvNTEwNzYzMi8zMDU3NzgyMC5wbmc=/original/MmucSA.png",
+            "https://img.itch.zone/aW1hZ2UvNTEwNzYzMi8zMDU3NzgyNC5wbmc=/original/DXyJk%2B.png",
+            "https://img.itch.zone/aW1hZ2UvNTEwNzYzMi8zMDU3NzgzMC5wbmc=/original/XpZxIp.png",
+            "https://img.itch.zone/aW1hZ2UvNTEwNzYzMi8zMDU3Nzg0MS5wbmc=/original/hQQZW0.png",
+            "https://img.itch.zone/aW1hZ2UvNTEwNzYzMi8zMDU3Nzg0OS5wbmc=/original/dvJILJ.png",
+            "https://img.itch.zone/aW1hZ2UvNTEwNzYzMi8zMDU3Nzg3NS5wbmc=/original/eaowIf.png"
+          ],
+          "provenance": {
+            "title": "JSON-LD name",
+            "description": "JSON-LD description",
+            "image": "og:image",
+            "genres": "More information: genre",
+            "tags": "More information: tags",
+            "engines": "More information: made with",
+            "aiDisclosure": "More information: ai disclosure",
+            "platforms": "More information: platforms",
+            "releaseStatus": "More information: status",
+            "browser": "Embedded HTML5 player",
+            "purchaseOffered": "Purchase control (access not tested)",
+            "playable": "Embedded HTML5 player",
+            "screenshots": "Store screenshot gallery"
+          },
+          "evidence": "Store page includes an embedded browser game; gameplay has not been tested.",
+          "checkedAt": "2026-10-12T00:46:22.477Z",
           "projectUrl": "https://starstilanx.itch.io/wyrmfall-a-dragon-arpg",
-          "storeCheckedAt": "2026-10-11T14:59:21.584Z",
+          "storeCheckedAt": "2026-10-12T00:46:22.477Z",
           "storeStatus": "reachable"
         }
       }
     }
   ],
-  "snapshotAt": "2026-10-11T19:51:44.753Z"
+  "snapshotAt": "2026-10-12T00:56:10.924Z"
 }

@@ -530,6 +530,13 @@ dialog.dialog { background: var(--pt-paper); color: var(--pt-text); border: 1px 
 .store-price { font-size: 14px; font-weight: 650; color: var(--pt-ink); font-variant-numeric: tabular-nums; }
 .store-summary { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 6px; }
 .store-summary small { flex-basis: 100%; font-size: 12px; color: var(--pt-muted); }
+.store-details { flex-basis: 100%; min-width: 0; font-size: 13px; }
+.store-details summary { cursor: pointer; font-weight: 600; padding-block: 8px; }
+.store-details dl { margin: 8px 0 12px; max-width: 70ch; }
+.store-details dl > div { display: grid; grid-template-columns: minmax(85px, 1fr) minmax(0, 3fr); gap: 16px; padding-block: 8px; border-bottom: 1px solid var(--pt-line); }
+.store-details dt { color: var(--pt-muted); }
+.store-details dd { margin: 0; overflow-wrap: anywhere; }
+.store-details dd small { display: block; margin-top: 4px; }
 .project-media { padding: 16px 0 0; border-top: 1px solid var(--pt-line); }
 .project-media summary { cursor: pointer; font-weight: 600; }
 .project-media summary > span { font-size: 12px; color: var(--pt-muted); margin-left: 8px; }

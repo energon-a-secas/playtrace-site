@@ -1,0 +1,211 @@
+{
+  "checkedAt": "2026-10-12T00:56:10.924Z",
+  "scope": "20 deliberately selected itch.io listings, including historical, browser and downloadable examples; not a representative sample.",
+  "checked": 20,
+  "enriched": 18,
+  "blocked": 2,
+  "coverage": {
+    "description": 18,
+    "platforms": 16,
+    "genres": 17,
+    "engines": 8,
+    "inputs": 6,
+    "languages": 6,
+    "aiDisclosure": 13,
+    "screenshots": 17
+  },
+  "approvedImagesPreserved": 9,
+  "existingProtectedRecordsPreserved": [
+    "project_overrides",
+    "preview_overrides",
+    "media_assets"
+  ],
+  "privateContributionWritesByCampaign": 0,
+  "backgroundQueue": {
+    "queued": 223,
+    "matched": 243,
+    "windowStart": "2026-10-12T00:00:00.000Z"
+  },
+  "records": [
+    {
+      "gameId": "g_1x36ues",
+      "title": "Underbloom",
+      "url": "https://motawe3.itch.io/underbloom",
+      "status": "reachable",
+      "metadataVersion": 2,
+      "checkedAt": "2026-10-12T00:46:21.838Z",
+      "screenshots": 6
+    },
+    {
+      "gameId": "g_1x2fcsn",
+      "title": "Wyrmfall",
+      "url": "https://starstilanx.itch.io/wyrmfall-a-dragon-arpg",
+      "status": "reachable",
+      "metadataVersion": 2,
+      "checkedAt": "2026-10-12T00:46:22.477Z",
+      "screenshots": 6
+    },
+    {
+      "gameId": "g_1x2noww",
+      "title": "Dwarf Breaks Out",
+      "url": "https://yukajii.itch.io/dwarf-breaks-out",
+      "status": "reachable",
+      "metadataVersion": 2,
+      "checkedAt": "2026-10-12T00:46:23.705Z",
+      "screenshots": 0
+    },
+    {
+      "gameId": "g_1x2bwu2",
+      "title": "MiniMachines: Steam to Singularities",
+      "url": "https://kaydedm.itch.io/minimachines-steam-to-singularities",
+      "status": "reachable",
+      "metadataVersion": 2,
+      "checkedAt": "2026-10-12T00:46:24.068Z",
+      "screenshots": 5
+    },
+    {
+      "gameId": "g_1x1t0f3",
+      "title": "3 Pros vs 100 Kids",
+      "url": "https://kober13.itch.io/3-pros-vs-100-kids",
+      "status": "reachable",
+      "metadataVersion": 2,
+      "checkedAt": "2026-10-12T00:46:25.321Z",
+      "screenshots": 6
+    },
+    {
+      "gameId": "g_1x0rf7i",
+      "title": "Cave Drop",
+      "url": "https://wilsonb9000.itch.io/cave-drop",
+      "status": "reachable",
+      "metadataVersion": 2,
+      "checkedAt": "2026-10-12T00:46:25.726Z",
+      "screenshots": 6
+    },
+    {
+      "gameId": "g_1x1jgp6",
+      "title": "Somnaworld",
+      "url": "https://michelowm.itch.io/somnaworld",
+      "status": "reachable",
+      "metadataVersion": 2,
+      "checkedAt": "2026-10-12T00:46:26.967Z",
+      "screenshots": 4
+    },
+    {
+      "gameId": "g_1dr9cqw",
+      "title": "The Arcbow Anthology",
+      "url": "https://loressa.itch.io/the-arcbow-anthology",
+      "status": "reachable",
+      "metadataVersion": 2,
+      "checkedAt": "2026-10-12T00:46:27.885Z",
+      "screenshots": 6
+    },
+    {
+      "gameId": "g_1di8a4z",
+      "title": "AI Hunter",
+      "url": "https://swieczka.itch.io/aihunter",
+      "status": "reachable",
+      "metadataVersion": 2,
+      "checkedAt": "2026-10-12T00:46:29.450Z",
+      "screenshots": 4
+    },
+    {
+      "gameId": "g_1cuyqx7",
+      "title": "GPT World",
+      "url": "https://restathome.itch.io/gpt-world",
+      "status": "reachable",
+      "metadataVersion": 2,
+      "checkedAt": "2026-10-12T00:46:29.845Z",
+      "screenshots": 5
+    },
+    {
+      "gameId": "g_1c86giu",
+      "title": "Spark Rush",
+      "url": "https://strangeboltz.itch.io/spark-rush",
+      "status": "reachable",
+      "metadataVersion": 2,
+      "checkedAt": "2026-10-12T00:46:31.563Z",
+      "screenshots": 6
+    },
+    {
+      "gameId": "g_173pcsq",
+      "title": "Detective Deviant",
+      "url": "https://kokutouchichi.itch.io/detective-deviant",
+      "status": "reachable",
+      "metadataVersion": 2,
+      "checkedAt": "2026-10-12T00:46:32.017Z",
+      "screenshots": 6
+    },
+    {
+      "gameId": "g_1x2x5qq",
+      "title": "Gleipnir",
+      "url": "https://sprite123.itch.io/gleipnir",
+      "status": "blocked",
+      "metadataVersion": 1,
+      "checkedAt": "2026-10-12T00:46:33.498Z",
+      "screenshots": 0
+    },
+    {
+      "gameId": "g_1x2izrh",
+      "title": "Generic South London Mystery",
+      "url": "https://thuggish-games.itch.io/generic-south-london-mystery",
+      "status": "blocked",
+      "metadataVersion": 1,
+      "checkedAt": "2026-10-11T14:56:40.962Z",
+      "screenshots": 0
+    },
+    {
+      "gameId": "g_1x2c8w8",
+      "title": "Tap Turn Battler",
+      "url": "https://tapturnbattler.itch.io/ttb",
+      "status": "reachable",
+      "metadataVersion": 2,
+      "checkedAt": "2026-10-12T00:46:34.932Z",
+      "screenshots": 6
+    },
+    {
+      "gameId": "g_1x1y16r",
+      "title": "NEON AFTERHOURS",
+      "url": "https://rexzen.itch.io/neon-afterhours",
+      "status": "reachable",
+      "metadataVersion": 2,
+      "checkedAt": "2026-10-12T00:46:36.001Z",
+      "screenshots": 5
+    },
+    {
+      "gameId": "g_1x1usxz",
+      "title": "Idle Freelance",
+      "url": "https://sezl.itch.io/idle-freelance",
+      "status": "reachable",
+      "metadataVersion": 2,
+      "checkedAt": "2026-10-12T00:46:37.804Z",
+      "screenshots": 5
+    },
+    {
+      "gameId": "g_1x1u7g1",
+      "title": "A Place Beyond",
+      "url": "https://bcaa777.itch.io/a-place-beyond",
+      "status": "reachable",
+      "metadataVersion": 2,
+      "checkedAt": "2026-10-12T00:46:38.609Z",
+      "screenshots": 5
+    },
+    {
+      "gameId": "g_1x1n7fu",
+      "title": "Looks Legit",
+      "url": "https://webholt.itch.io/looks-legit",
+      "status": "reachable",
+      "metadataVersion": 2,
+      "checkedAt": "2026-10-12T00:46:40.121Z",
+      "screenshots": 5
+    },
+    {
+      "gameId": "g_1x18uma",
+      "title": "Lanterns of Aldermere",
+      "url": "https://rivetmothgames.itch.io/lanterns-of-aldermere",
+      "status": "reachable",
+      "metadataVersion": 2,
+      "checkedAt": "2026-10-12T00:46:40.633Z",
+      "screenshots": 5
+    }
+  ]
+}

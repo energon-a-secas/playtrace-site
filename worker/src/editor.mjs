@@ -7,13 +7,19 @@ import { enrichGames } from './steam.mjs';
 import { acquire, release } from './lease.mjs';
 import { detailsOf } from './details.mjs';
 import { listCategories } from './categories.mjs';
+import { applyDetails } from './details.mjs';
+import { repostFlags } from './duplicates.mjs';
 
 export async function editorGame(db, id) {
   const source = await getGame(db, id);
   const [game] = await enrichGames(db, [source]);
   const override = await query(db, 'SELECT approved_by,updated_at FROM preview_overrides WHERE game_id=?', id).first();
   const details = await query(db, 'SELECT details_json,updated_at,revision FROM project_overrides WHERE game_id=?', id).first();
+  const nearby = await query(db,"SELECT payload_json FROM games WHERE author_key=? AND status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id) ORDER BY updated_at DESC LIMIT 100",source.author.name.toLowerCase()).all();
+  const duplicateFlags = repostFlags(await applyDetails(db,nearby.results.map(row=>JSON.parse(row.payload_json))))
+    .filter(flag=>flag.gameId===id||flag.otherId===id);
   return { game, categories: await listCategories(db), sourcePreview: source.preview, override: override ? { updatedAt: override.updated_at } : null,
+    duplicateFlags,
     sourceDetails: detailsOf(source), detailsRevision: details?.revision || 0,
     detailsOverride: details && Object.keys(JSON.parse(details.details_json)).length ? { updatedAt: details.updated_at } : null };
 }

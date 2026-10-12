@@ -15,13 +15,20 @@ export function storeLabel(steam) {
 function renderStore(game) {
   const steam=game.steam;
   const facts=steam?[steam.platforms?.join(', '),steam.releaseDateLabel?`${steam.state==='coming-soon'?'Expected':'Store date'}: ${steam.releaseDateLabel}`:null].filter(Boolean).join(' · '):'';
-  $('itemDialogStore').innerHTML = steam ? `<div class="store-summary">${storeLabel(steam)}${steam.fullGame?`<a class="text-link" href="${e(steam.fullGame.url)}" target="_blank" rel="noopener noreferrer">Full game: ${e(steam.fullGame.title)} ↗</a>`:''}${facts?`<small>${e(facts)}</small>`:''}<small>${fresh(steam) ? 'US store' : 'Price needs a refresh'} · checked ${e(dateLabel(steam.checkedAt))}</small></div>` : '';
+  const itch=game.availability?.provider==='itch'&&game.availability.metadataVersion===2?game.availability:null;
+  const itchFacts=itch?Object.entries({Genre:itch.genres,'Made with':itch.engines,Inputs:itch.inputs,Languages:itch.languages,'AI disclosure':itch.aiDisclosure}).filter(([,values])=>values?.length):[];
+  const itchBuild=itch?.browser?'Browser build on itch.io':itch?.downloadable?'Download on itch.io':itch?.purchaseOffered?'Purchase offered on itch.io':'Listed on itch.io';
+  const itchLabel=itch&&(itch.status==='broken'||Date.now()-Date.parse(itch.storeCheckedAt)>=7*86400000)?`Last seen: ${itchBuild}`:itchBuild;
+  $('itemDialogStore').innerHTML = steam ? `<div class="store-summary">${storeLabel(steam)}${steam.fullGame?`<a class="text-link" href="${e(steam.fullGame.url)}" target="_blank" rel="noopener noreferrer">Full game: ${e(steam.fullGame.title)} ↗</a>`:''}${facts?`<small>${e(facts)}</small>`:''}<small>${fresh(steam) ? 'US store' : 'Price needs a refresh'} · checked ${e(dateLabel(steam.checkedAt))}</small></div>`
+    : itch?`<div class="store-summary"><span class="store-badge">${e(itchLabel)}</span>${itch.platforms.length?`<small>${e(itch.platforms.join(', '))}</small>`:''}<small>${itch.releaseStatus?`Creator status: ${e(itch.releaseStatus)} · `:''}Listing checked ${e(dateLabel(itch.storeCheckedAt))}</small>${itchFacts.length?`<details class="store-details"><summary>From the itch.io listing</summary><dl>${itchFacts.map(([label,values])=>`<div><dt>${e(label)}</dt><dd>${e(values.join(', '))}</dd></div>`).join('')}</dl><a class="text-link" href="${e(safeUrl(itch.sourceUrl))}" target="_blank" rel="noopener noreferrer">View source ↗</a></details>`:''}</div>`:'';
 }
 function mediaFor(game) {
   const seen = new Set();
   const sourceAssets=game.posts.flatMap(post => (post.assets || []).map(asset => ({ ...asset, post })));
   const storeAssets=(game.steam?.screenshots||[]).map(url=>({kind:'image',url,post:{url:game.steam.url,title:game.steam.title,createdAt:game.steam.checkedAt},sourceLabel:'Steam store'}));
-  return [...sourceAssets,...storeAssets].filter(asset => {
+  const itchAssets=(game.availability?.provider==='itch'&&game.availability.metadataVersion===2?game.availability.screenshots:[])
+    .map(url=>({kind:'image',url,post:{url:game.availability.sourceUrl,title:game.availability.title,createdAt:game.availability.storeCheckedAt},sourceLabel:'itch.io listing'}));
+  return [...sourceAssets,...storeAssets,...itchAssets].filter(asset => {
     if (seen.has(asset.url)) return false; seen.add(asset.url); return true;
   }).slice(0, 12);
 }

@@ -65,12 +65,8 @@ export function render() {
   $('collectionShown').textContent = `Showing ${visible.length} of ${games.length} matching projects`;
   $('showMoreGames').textContent = `Show ${Math.min(60, games.length - visible.length)} more projects`;
   $('collectionEmpty').hidden = !state.loaded || Boolean(games.length);
-  $('emptyTitle').textContent = state.following ? state.signedIn ? 'Your next find is waiting' : 'Your following list lives with your account' : 'No projects match this view';
-  $('emptyDescription').textContent = state.following ? state.signedIn ? 'Follow a game to collect its progress here. New source posts stay together on its timeline.' : 'Sign in with the account you use to follow games, or explore the public collection.' : 'Try another genre, maker or search. The whole collection is one reset away.';
-  if (state.following && CONFIG.accountsReady !== true) {
-    $('emptyTitle').textContent = 'Following is not available yet';
-    $('emptyDescription').textContent = 'Reset this filter to explore the public collection.';
-  }
+  $('emptyTitle').textContent = state.following ? 'Your next find is waiting' : 'No projects match this view';
+  $('emptyDescription').textContent = state.following ? 'Tap the star on a game to save it here.' : 'Try another genre, maker or search. The whole collection is one reset away.';
   if (state.catalogPartial && !state.following) {
     $('emptyTitle').textContent = 'No matches in the projects loaded so far';
     $('emptyDescription').textContent = loading ? 'Older projects are still loading. Results will update as they arrive.' : 'Retry loading the archive to search all projects.';
@@ -79,9 +75,9 @@ export function render() {
   $('authorContext').hidden = !state.author;
   $('authorContext').textContent = state.author ? `Following the work of u/${state.author}. Each project keeps its own source timeline.` : '';
   $('followingFilter').setAttribute('aria-pressed', String(state.following));
-  $('followingCount').hidden = !state.signedIn || !state.follows.length; $('followingCount').textContent = String(state.follows.length);
+  $('followingCount').hidden = !state.follows.length; $('followingCount').textContent = String(state.follows.length);
   if (state.loaded) renderOverview();
-  if ($('profileSignIn')) { $('profileSignIn').hidden = state.signedIn; $('profileStatus').textContent = state.accountError || (state.signedIn ? `${state.follows.length} favorites saved` : ''); }
+  if ($('profileSignIn')) { $('profileSignIn').hidden = state.signedIn || CONFIG.accountsReady !== true; $('profileStatus').textContent = state.accountError || `${state.follows.length} favorites saved${state.signedIn ? '' : ' on this device'}`; }
   renderAccount();
 }
 
@@ -144,15 +140,15 @@ export function renderDetail(game) {
 
 export function renderAccount() {
   const accountsReady = CONFIG.accountsReady === true;
-  const following = accountsReady && state.follows.includes(state.detail?.id);
+  const following = state.follows.includes(state.detail?.id);
   $('followGame').setAttribute('aria-label', following ? 'Remove from favorites' : 'Save to favorites');
   $('followGame').querySelector('.project-icon__label').textContent = following ? 'Saved' : 'Favorite';
   $('editThumbnail').hidden = !state.isAdmin; $('editProject').hidden = !state.isAdmin; if (!state.isAdmin) $('inlineProjectEditor').hidden = true;
-  $('followGame').disabled = !accountsReady || state.accountBusy || !state.service?.capabilities?.following;
+  $('followGame').disabled = false;
   $('followGame').setAttribute('aria-pressed', String(following));
-  $('followGame').hidden = !accountsReady;
-  $('followingFilter').disabled = !accountsReady || !state.service?.capabilities?.following;
-  $('followingFilter').title = accountsReady ? 'Show followed games' : 'Following is not available yet.';
+  $('followGame').hidden = false;
+  $('followingFilter').disabled = false;
+  $('followingFilter').title = 'Show favorite games';
   $('deleteMyData').disabled = !accountsReady || state.accountBusy || !state.service?.capabilities?.following;
   $('confirmDelete').disabled = !accountsReady || state.accountBusy;
   if (!accountsReady) { $('deleteConfirm').hidden = true; $('privacyMessage').textContent = 'Account features are not available yet.'; }

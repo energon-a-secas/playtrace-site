@@ -5,18 +5,24 @@ import { safeUrl, dateLabel } from './collection.js';
 let api, games, getEditing, forms=[], jobs=[],cursor=null, version=0;
 const kinds={links:'Link check',store:'Store enrichment',feedback:'Reddit feedback review',references:'Shared links',research:'Questionnaire analysis'};
 function status(text){$('queueMessage').textContent=text;}
-function evidence(result){
+export function evidence(result){
   if(result.error)return `<p class="job-error">${e(result.error)}</p>`;
   let html='';
   if(result.status)html+=`<p class="job-result"><strong>${e(result.status)}</strong>${result.httpStatus?` · HTTP ${result.httpStatus}`:''}${result.playable?' · Playable build found':''}${result.provider?` · ${e(result.provider)}`:''}</p>`;
   if(result.note)html+=`<p>${e(result.note)}</p>`;
+  if(typeof result.evidence==='string')html+=`<p>${e(result.evidence)}</p>`;
   if(result.finalUrl)html+=`<a class="text-link" href="${e(safeUrl(result.finalUrl))}" target="_blank" rel="noopener noreferrer">Checked destination ↗</a>`;
   if(result.image)html+=`<img class="job-artwork" src="${e(safeUrl(result.image))}" alt="Store artwork candidate" loading="lazy">`;
   if(result.summary)html+=`<p class="job-review">${e(result.summary)}</p>`;
   if(result.citations?.length)html+=`<details><summary>Read ${result.citations.length} cited comments</summary><ul class="job-evidence">${result.citations.map(source=>`<li><a href="${e(safeUrl(source.url))}" target="_blank" rel="noopener noreferrer">[${source.number}] u/${e(source.author)} ↗</a><p>${e(source.body)}</p></li>`).join('')}</ul></details>`;
   if(result.classifiedComments!==undefined)html+=`<p class="field__hint">${result.classifiedComments} comments classified · ${result.checkedPosts} of ${result.totalPosts} posts checked${result.sampled?' · Bounded sample':''}. ${e(result.model||'No model call needed')}.</p>`;
-  const sources=result.evidence||result.entries;
-  if(sources?.length)html+=`<details><summary>Inspect ${sources.length} source ${sources.length===1?'contribution':'contributions'}</summary><ul class="job-evidence">${sources.map(source=>`<li>${source.url?`<a href="${e(safeUrl(source.url))}" target="_blank" rel="noopener noreferrer">u/${e(source.author)} ↗</a>`:`<strong>Questionnaire ${e(source.questionnaireId)}</strong>`}<p>${e(source.body)}</p>${source.theme?`<small>${e(source.theme.value)} · ${e(source.tone.value)} · ${Math.round(Math.min(source.theme.probability,source.tone.probability)*100)}% selected probability</small>`:''}</li>`).join('')}</ul></details>`;
+  const sources=Array.isArray(result.evidence)?result.evidence:result.entries;
+  if(Array.isArray(sources)&&sources.length)html+=`<details><summary>Inspect ${sources.length} source ${sources.length===1?'contribution':'contributions'}</summary><ul class="job-evidence">${sources.map(source=>`<li>${source.url?`<a href="${e(safeUrl(source.url))}" target="_blank" rel="noopener noreferrer">u/${e(source.author)} ↗</a>`:`<strong>Questionnaire ${e(source.questionnaireId)}</strong>`}<p>${e(source.body)}</p>${source.theme?`<small>${e(source.theme.value)} · ${e(source.tone.value)} · ${Math.round(Math.min(source.theme.probability,source.tone.probability)*100)}% selected probability</small>`:''}</li>`).join('')}</ul></details>`;
+  if(result.metadataVersion===2&&result.provenance){
+    const labels={title:'Game name',description:'Description',image:'Cover image',platforms:'Platforms',genres:'Genres',tags:'Tags',engines:'Made with',inputs:'Inputs',languages:'Languages',aiDisclosure:'AI disclosure',releaseStatus:'Creator status',browser:'Browser player',downloadable:'Download',purchaseOffered:'Purchase offer',playable:'Build available',screenshots:'Screenshots'};
+    const facts=Object.entries(result.provenance).filter(([field])=>Object.hasOwn(labels,field));
+    html+=`<details class="store-details"><summary>Inspect ${facts.length} store observations</summary><p class="field__hint">Observed ${e(dateLabel(result.storeCheckedAt||result.checkedAt))}. Manual project edits stay in place.</p><dl>${facts.map(([field,source])=>`<div><dt>${e(labels[field])}</dt><dd>${e(field==='screenshots'?`${result[field].length} images`:field==='image'?'Store cover':Array.isArray(result[field])?result[field].join(', '):typeof result[field]==='boolean'?'Yes':result[field]||'')}<small>${e(source)}</small></dd></div>`).join('')}</dl></details>`;
+  }
   if(result.sourceChecks?.length)html+=`<details><summary>Original post health (archive evidence)</summary><ul>${result.sourceChecks.map(source=>`<li><a href="${e(safeUrl(source.url))}" target="_blank" rel="noopener noreferrer">${e(source.id)} ↗</a> · ${e(source.state)}</li>`).join('')}</ul><p class="field__hint">Archive observations may lag behind Reddit. Open the original before removing anything.</p></details>`;
   if(result.references?.length)html+=`<details><summary>${result.references.length} shared links</summary><ul>${result.references.map(ref=>`<li><a href="${e(safeUrl(ref.url))}" target="_blank" rel="noopener noreferrer">${e(ref.title)} ↗</a></li>`).join('')}</ul></details>`;
   return html;
@@ -53,7 +59,14 @@ export function initCampaign(options){
   $('runNextJob').addEventListener('click',async event=>{const button=event.currentTarget;button.disabled=true;status('Processing the next queued project…');try{const result=await api('/admin/jobs/run',{method:'POST',body:{kind:$('queueType').value}});status(result.busy?'The queue is already processing a project.':result.limited?`Today's processing budget is used. Queued work resumes after ${new Date(result.retryAt).toLocaleString()}.`:result.retryAt?`Waiting for the source to allow another request. Retry after ${new Date(result.retryAt).toLocaleString()}.`:`${result.processed} job processed.`);await loadQueue();}catch(error){status(error.message);}finally{button.disabled=false;}});
   $('refreshQueue').addEventListener('click',()=>loadQueue());$('queueStatus').addEventListener('change',()=>loadQueue());$('queueType').addEventListener('change',()=>loadQueue());$('moreJobs').addEventListener('click',()=>loadQueue(true));
   $('queueEntries').addEventListener('click',async event=>{const button=event.target.closest('[data-job-action]');if(!button)return;button.disabled=true;try{await api(`/admin/jobs/${button.closest('[data-job]').dataset.job}`,{method:'PUT',body:{action:button.dataset.jobAction}});status(button.dataset.jobAction==='publish'?'Reviewed summary published on the project page.':'Job updated.');await loadQueue();}catch(error){status(error.message);button.disabled=false;}});
-  $('checkReposts').addEventListener('click',async event=>{event.currentTarget.disabled=true;try{const result=await api('/admin/reposts');$('repostResults').textContent=result.groups.length?result.groups.map(group=>`${group.title}: keep ${group.keep}; consolidate ${group.aliases.join(', ')}`).join('\n'):'No close reposts found.';$('mergeReposts').hidden=!result.groups.length;}catch(error){status(error.message);}finally{$('checkReposts').disabled=false;}});
+  $('checkReposts').addEventListener('click',async event=>{
+    event.currentTarget.disabled=true;
+    try{
+      const result=await api('/admin/reposts'),flags=result.flags||[];
+      $('repostResults').innerHTML=`<p>${result.groups.length} strong ${result.groups.length===1?'match':'matches'} for consolidation. ${flags.length} possible duplicates to review.</p>${flags.length?`<ul class="job-evidence">${flags.map(flag=>`<li><strong>${e(flag.reason)}</strong><p><a class="text-link" href="browse.html?game=${flag.gameId}" target="_blank" rel="noopener noreferrer">${e(flag.title)} ↗</a><br><a class="text-link" href="browse.html?game=${flag.otherId}" target="_blank" rel="noopener noreferrer">${e(flag.otherTitle)} ↗</a></p><small>u/${e(flag.author)} · ${flag.automaticMatch?'Strong repost match':'Needs review; these may be different games'}</small></li>`).join('')}</ul>`:''}`;
+      $('mergeReposts').hidden=!result.groups.length;
+    }catch(error){status(error.message);}finally{$('checkReposts').disabled=false;}
+  });
   $('mergeReposts').addEventListener('click',async event=>{event.currentTarget.disabled=true;try{const result=await api('/admin/reposts',{method:'POST',body:{}});$('repostResults').textContent=`${result.merged||0} duplicate entries consolidated. ${result.remaining||0} groups remain.`;$('mergeReposts').hidden=!result.remaining;}catch(error){status(error.message);}finally{$('mergeReposts').disabled=false;}});
   $('questionnaireSelect').addEventListener('change',chooseForm);
   $('questionBuilder').addEventListener('change',event=>{if(event.target.matches('[data-q-type]'))event.target.closest('fieldset').querySelector('textarea').disabled=event.target.value==='text';});

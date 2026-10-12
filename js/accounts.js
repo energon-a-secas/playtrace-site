@@ -6,24 +6,34 @@ import { parsePrice } from './collection.js';
 import { priceChallenge, clearChallenge } from './challenge.js';
 import { renderAccount, renderSignals } from './render.js';
 import { $, showToast } from './utils.js';
+import { favorites } from './favorites.js';
 
 let rerender = () => {};
 let accountRequest = 0;
 let signalRequest = 0;
 let deletingData = false;
+let favoritesSync = null, favoritesUser = null;
 const accountsReady = CONFIG.accountsReady === true;
 export function startAccounts(render) {
   rerender = render;
+  state.follows = favorites.ids(state.userId);
+  globalThis.addEventListener?.('online', () => { if (state.signedIn) refreshMe(); });
+  globalThis.addEventListener?.('storage', event => {
+    if (!event.key?.startsWith('playtrace.favorites.v1:')) return;
+    state.follows = favorites.ids(state.userId); rerender(); renderAccount();
+    if (state.signedIn) syncLocalFavorites();
+  });
   if (!accountsReady) {
-    accountRequest++; state.signedIn = false; state.userId = null; state.follows = []; state.prices = [];
+    accountRequest++; state.signedIn = false; state.userId = null; state.follows = favorites.ids(null); state.prices = [];
     state.accountLoaded = false; state.accountBusy = false; $('deleteConfirm').hidden = true;
     clearChallenge(); render(); renderAccount(); return;
   }
   NeoAuth.onChange(auth => {
     const changed = state.userId !== auth.userId;
-    state.signedIn = auth.signedIn; state.userId = auth.userId;
+    state.signedIn = auth.signedIn; state.userId = auth.signedIn ? auth.userId : null;
     if (changed || !auth.signedIn) {
-      accountRequest++; state.follows = []; state.prices = []; state.accountLoaded = false; state.accountError = ''; state.isAdmin = false;
+      accountRequest++; if (auth.signedIn) favorites.adoptGuest(auth.userId);
+      state.follows = favorites.ids(state.userId); state.prices = []; state.accountLoaded = false; state.accountError = ''; state.isAdmin = false;
       if ($('priceAmount')) $('priceAmount').value = '';
       $('deleteConfirm').hidden = true; $('privacyMessage').textContent = '';
       if ($('priceMessage')) $('priceMessage').textContent = '';
@@ -53,10 +63,33 @@ export async function refreshMe() {
     const me = await request('/me', { token: await freshToken(user) });
     if (number !== accountRequest || state.userId !== user) return;
     if (!Array.isArray(me.follows) || !Array.isArray(me.prices)) throw new Error('Your account data could not be read.');
-    state.follows = me.follows.filter(id => typeof id === 'string');
+    state.follows = favorites.reconcile(user, me.follows);
     state.prices = me.prices; state.accountLoaded = true; state.accountError = '';
   } catch (error) { if (number === accountRequest) state.accountError = error.message; }
   if (number === accountRequest) { rerender(); renderAccount(); }
+  if (number === accountRequest && state.accountLoaded) await syncLocalFavorites();
+}
+
+export async function syncLocalFavorites() {
+  const user = state.userId;
+  if (!accountsReady || !state.signedIn || !user || deletingData || !apiConfigured) return;
+  if (favoritesSync && favoritesUser === user) return favoritesSync;
+  const task = (async () => {
+    try {
+      for (let batch = 0; batch < 10 && state.userId === user && !deletingData; batch++) {
+        const sent = favorites.pending(user).slice(0, 200); if (!sent.length) break;
+        const value = await request('/me/favorites', { method: 'PUT', token: await freshToken(user),
+          body: { changes: sent.map(({gameId,saved}) => ({gameId,saved})) } });
+        if (!Array.isArray(value.follows)) throw new Error('Favorites could not be synced.');
+        const ids = favorites.acknowledge(user, sent, value.follows);
+        if (state.userId !== user) return;
+        accountRequest++; state.follows = ids; state.accountLoaded = true; state.accountError = '';
+        rerender(); renderAccount();
+      }
+    } catch { if (state.userId === user) { state.accountError = 'Favorites saved on this device. Sync will retry when you reconnect.'; rerender(); renderAccount(); } }
+  })();
+  favoritesSync = task; favoritesUser = user;
+  try { await task; } finally { if (favoritesSync === task) { favoritesSync = null; favoritesUser = null; } }
 }
 
 async function requireAccount(invoker, reason, feature) {
@@ -67,27 +100,20 @@ async function requireAccount(invoker, reason, feature) {
 }
 
 export async function prepareFollowing(invoker) {
-  if (!await requireAccount(invoker, 'Sign in to follow games and keep up with their progress.', 'following')) return false;
-  await refreshMe();
-  if (!state.accountLoaded) { showToast(state.accountError || 'Your following list could not be loaded.'); return false; }
   return true;
 }
 
 export async function followGame(invoker, gameId = state.detail?.id) {
-  if (!gameId || state.accountBusy || !await requireAccount(invoker, 'Sign in to follow this game.', 'following')) return;
-  if (state.accountBusy) return;
-  const user = state.userId;
-  state.accountBusy = true; renderAccount();
-  try {
-    if (!state.accountLoaded) await refreshMe();
-    if (state.userId !== user || !state.accountLoaded) throw new Error('Your following list could not be loaded. Please try again.');
-    const following = state.follows.includes(gameId);
-    await request(`/games/${gameId}/follow`, { method: following ? 'DELETE' : 'PUT', ...(following ? {} : { body: {} }), token: await freshToken(user) });
-    if (state.userId !== user) return;
-    await refreshMe();
-    showToast(following ? 'Removed from your favorites.' : 'Saved to your favorites.');
-  } catch (error) { showToast(error.message); }
-  finally { state.accountBusy = false; renderAccount(); }
+  if (!gameId || deletingData) return;
+  const restoreFocus=globalThis.document?.activeElement===invoker;
+  const value = favorites.toggle(state.signedIn ? state.userId : null, gameId);
+  if (!value) { showToast('Your favorites list is full. Remove a game before adding another.'); return; }
+  accountRequest++; state.follows = value.ids; rerender(); renderAccount();
+  showToast(value.persisted ? value.saved ? 'Saved to favorites.' : 'Removed from favorites.' : 'Saved for this visit. Browser storage is unavailable.');
+  // Re-rendering a card replaces its button. Restore keyboard focus only when
+  // that button was the active control, without scrolling the collection.
+  if (restoreFocus && invoker?.dataset?.favorite) document.querySelector(`[data-favorite="${gameId}"]`)?.focus({preventScroll:true});
+  await syncLocalFavorites();
 }
 
 export function clearSignals() {
@@ -155,10 +181,11 @@ export async function confirmDelete() {
   let deleted = false;
   state.accountBusy = true; deletingData = true; accountRequest++; clearSignals(); renderAccount();
   try {
+    if (favoritesUser === user) await favoritesSync;
     await request('/me', { method: 'DELETE', body: { confirm: 'delete-my-data' }, token: await freshToken(user) });
     if (state.userId !== user) return;
     accountRequest++; clearSignals();
-    state.follows = []; state.prices = []; state.accountLoaded = true; state.accountError = '';
+    favorites.clear(user); state.follows = []; state.prices = []; state.accountLoaded = true; state.accountError = '';
     if ($('priceAmount')) $('priceAmount').value = '';
     if ($('priceMessage')) $('priceMessage').textContent = '';
     state.detailSignalError = 'Refresh to see the latest price signals.'; renderSignals(); rerender();

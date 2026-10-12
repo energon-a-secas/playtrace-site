@@ -66,13 +66,29 @@
 .reference-link img { width: 88px; height: 60px; object-fit: cover; border-radius: 4px; }
 .reference-link strong { display: block; color: var(--pt-ink); }
 .reference-link small { color: var(--pt-muted); overflow-wrap: anywhere; }
-.rating-control { padding: 12px 0 20px; }
-.rating-stars { display: flex; gap: 2px; border: 0; padding: 0; margin: 8px 0; }
+.rating-control { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 2px 8px; padding: 0; }
+.rating-stars { display: flex; gap: 2px; border: 0; padding: 0; margin: 0; }
 .rating-stars button { display: grid; place-items: center; width: 36px; height: 36px; background: transparent; border: 0; color: var(--pt-muted); cursor: pointer; border-radius: 5px; }
 .rating-stars button[aria-checked="true"], .rating-stars button.is-filled { color: var(--pt-gold); }
 .rating-stars button.is-filled svg { fill: var(--pt-amber); }
 .rating-stars button:hover { background: var(--pt-amber-soft); }
 .rating-control p { margin: 4px 0; font-size: 13px; color: var(--pt-muted); }
+.rating-control p:empty { display: none; }
+.rating-control #ratingMessage { flex-basis: 100%; text-align: end; }
+.rating-average { color: var(--pt-ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.rating-average span { color: var(--pt-muted); }
+.inline-moderation { margin-top: 24px; border-top: 1px solid var(--pt-line); padding-top: 16px; }
+.inline-moderation summary { cursor: pointer; font-weight: 600; }
+.inline-source-posts { list-style: none; padding: 0; }
+.inline-source-posts li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; margin-block: 16px; }
+.inline-source-posts li > a { flex: 1 1 260px; }
+.inline-source-posts small { color: var(--pt-muted); }
+.inline-removal-confirm { margin-top: 16px; padding: 16px; border: 1px solid var(--pt-control-line); border-radius: 8px; }
+.inline-removal-confirm .admin-inline { margin-top: 16px; }
+@media (max-width: 700px) {
+  .project-actions .rating-control { justify-content: flex-start; }
+  .project-actions #ratingMessage { text-align: start; }
+}
 @media (prefers-color-scheme: dark) {
   .brand-action[data-brand="reddit"] { --brand-color: oklch(.77 .14 35); }
   .brand-action[data-brand="steam"] { --brand-color: oklch(.78 .1 242); }

@@ -119,6 +119,31 @@ export function validateAssets(assets) {
     }
   }
 }
+export function validateAvailability(value, projectUrl) {
+  // Older snapshots contain the v1 link-check fields only.
+  if (value?.metadataVersion !== 2) return value;
+  if (value.projectUrl !== projectUrl || !['itch','website'].includes(value.provider)) throw new Error('Mismatched store evidence');
+  safeUrl(value.sourceUrl); date(value.checkedAt); date(value.storeCheckedAt);
+  if (value.provider === 'itch') {
+    const source = new URL(value.sourceUrl);
+    if (source.port || !source.hostname.endsWith('.itch.io') || source.hostname.split('.').length !== 3) throw new Error('Invalid itch.io source');
+  }
+  text(value.title, 300); text(value.description, 600, true);
+  for (const key of ['playable','browser','downloadable','purchaseOffered']) if (typeof value[key] !== 'boolean') throw new Error('Invalid build evidence');
+  for (const key of ['platforms','genres','tags','engines','inputs','languages','aiDisclosure']) {
+    if (!Array.isArray(value[key]) || value[key].length > 12) throw new Error('Invalid store labels');
+    value[key].forEach(label => text(label, 120));
+  }
+  if (value.releaseStatus !== null && !['Released','In development','Prototype','Canceled','On hold'].includes(value.releaseStatus)) throw new Error('Invalid listing status');
+  if (!Array.isArray(value.screenshots) || value.screenshots.length > 6) throw new Error('Invalid store screenshots');
+  for (const shot of value.screenshots) {
+    const image = new URL(safeUrl(shot));
+    if (image.port || image.hostname !== 'img.itch.zone') throw new Error('Invalid itch.io screenshot');
+  }
+  if (!value.provenance || typeof value.provenance !== 'object' || Array.isArray(value.provenance) || Object.keys(value.provenance).length > 20) throw new Error('Invalid store evidence');
+  Object.values(value.provenance).forEach(locator => text(locator, 160));
+  return value;
+}
 export function validateCatalog(value) {
   if (value?.schemaVersion !== 1 || !Array.isArray(value.games) || value.source?.subreddit !== 'aigamedev') throw new Error('Invalid catalogue');
   const source = value.source;
@@ -140,6 +165,7 @@ export function validateCatalog(value) {
     safeUrl(game.projectUrl, true);
     if (game.repositoryUrl != null) { const repo=new URL(safeUrl(game.repositoryUrl)); if(repo.port || !['github.com','gitlab.com','codeberg.org'].includes(repo.hostname) || !/^\/[^/]+\/[^/]+\/?$/.test(repo.pathname)) throw new Error('Invalid repository URL'); } date(game.firstSeenAt); date(game.updatedAt);
     if (game.steam != null) validateSteam(game.steam, game.projectUrl);
+    if (game.availability != null) validateAvailability(game.availability, game.projectUrl);
     const preview = game.preview;
     if (!preview || !['image', 'video', 'link'].includes(preview.kind) || !['external', 'r2'].includes(preview.storage)
       || !['source-linked', 'owner-consent'].includes(preview.rights)) throw new Error('Invalid preview');
