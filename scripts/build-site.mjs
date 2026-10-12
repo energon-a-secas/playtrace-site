@@ -1,6 +1,7 @@
 import { readFile, writeFile, mkdir, rm, cp, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { createHash } from 'node:crypto';
 import { validateCatalog } from '../js/collection.js';
 import { escHtml as e } from '../js/utils.js';
 import { gamePageContent, gameDescription, gameStructuredData, previewUrl } from '../js/game-page-view.js';
@@ -10,6 +11,27 @@ import { highlightPanels } from '../js/highlight-view.js';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const origin='https://playtrace.neorgon.com',api='https://playtrace-api.neorgon.workers.dev/api/v1';
 const jsonScript=value=>JSON.stringify(value).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
+async function versionAssets(out){
+  const hash=createHash('sha256');
+  const files=[];
+  for(const dir of ['js','css'])for(const file of (await readdir(path.join(out,dir))).sort()){
+    if(!/\.(js|css)$/.test(file))continue;
+    const name=path.join(out,dir,file),source=await readFile(name,'utf8');hash.update(dir+'/'+file+'\n'+source);files.push({name,source});
+  }
+  const version=hash.digest('hex').slice(0,12);
+  for(const file of files)if(file.name.endsWith('.js'))await writeFile(file.name,file.source.replace(/((?:from\s*|import\s*)['"])(\.{1,2}\/[^'"?]+\.js)(['"])/g,`$1$2?v=${version}$3`));
+  async function stamp(dir){
+    for(const entry of await readdir(dir,{withFileTypes:true})){
+      const file=path.join(dir,entry.name);
+      if(entry.isDirectory())await stamp(file);
+      else if(entry.name.endsWith('.html')){
+        const html=await readFile(file,'utf8');
+        await writeFile(file,html.replace(/\b(src|href)="((?:\/|\.\/)?(?:js|css)\/[^"?]+\.(?:js|css))"/g,`$1="$2?v=${version}"`));
+      }
+    }
+  }
+  await stamp(out);return version;
+}
 export function indexable(game){
   return game.title.length<=120 && game.summary.length>=40 && Boolean(game.reviewStatus==='reviewed'||game.steam||game.availability?.metadataVersion===2||
     (game.projectUrl&&game.title.length<=80&&game.posts.every(post=>post.title.toLowerCase()!==game.title.toLowerCase())));
@@ -103,7 +125,8 @@ export async function buildSite({catalog,highlights,out=path.join(root,'_site')}
   // lastmod is omitted rather than pretending every fetch changes the content.
   await writeFile(path.join(out,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(url=>`<url><loc>${e(origin+url.path)}</loc></url>`).join('')}</urlset>\n`);
   await writeFile(path.join(out,'data/page-manifest.json'),JSON.stringify({generatedAt:snapshotAt,games:manifest}));
-  return {games:ordered.length,indexableGames:manifest.filter(game=>game.indexable).length,directoryPages:totalPages,sitemapUrls:urls.length,out};
+  const assetVersion=await versionAssets(out);
+  return {games:ordered.length,indexableGames:manifest.filter(game=>game.indexable).length,directoryPages:totalPages,sitemapUrls:urls.length,assetVersion,out};
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
   const arg=process.argv.indexOf('--catalog'),outArg=process.argv.indexOf('--out');

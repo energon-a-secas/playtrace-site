@@ -17,6 +17,8 @@ test('static game pages include their content, unique metadata and safe JSON wit
   assert.match(html,/<h1 id="gameTitle">A puzzle &lt;script&gt;/);assert.match(html,/rel="canonical" href="https:\/\/playtrace.neorgon.com\/games\/g_abc12\/"/);
   assert.doesNotMatch(html,/<script>alert\(1\)/);assert.match(html,/\\u003cscript>/);assert.match(html,/Project history/);assert.match(html,/Player feedback/);
   assert.equal((html.match(/rel="canonical"/g)||[]).length,1);assert.equal((html.match(/<h1\b/g)||[]).length,1);
+  assert.match(html,/src="\/js\/game-page\.js\?v=[a-f0-9]{12}"/);
+  assert.match(await readFile(path.join(out,'js/game-page.js'),'utf8'),/from '\.\/api\.js\?v=[a-f0-9]{12}'/);
   assert.match(await readFile(path.join(out,'sitemap.xml'),'utf8'),/games\/g_abc12/);
   for(const file of ['worker/src/index.mjs','.env','docs/insights','data/historical-review.json'])await assert.rejects(access(path.join(out,file)));
   const schema=gameStructuredData(game,catalog);assert.equal(schema['@graph'][1]['@type'],'VideoGame');assert.equal(schema['@graph'][1].aggregateRating,undefined);

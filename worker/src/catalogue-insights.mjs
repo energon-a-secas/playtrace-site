@@ -1,5 +1,6 @@
 import { catalog, query, meta } from './store.mjs';
 import { extractMentions } from '../../js/insight-evidence.js';
+import { distributionFor } from '../../js/collection.js';
 
 // A public-safe evidence projection behind admin authorization for the pilot.
 // No questionnaire text, identities, guest keys, private jobs or notes are read.
@@ -11,7 +12,7 @@ export async function insightPage(db, cursor, deps) {
   const sources = new Map(rows.results.map(row=>[row.id,{...JSON.parse(row.payload_json),checkedAt:row.checked_at}]));
   const games = page.games.map(game=>({
     id:game.id,title:game.title,author:game.author.name,category:game.category,stage:game.stage,
-    distribution:game.distribution?.label||destination(game.projectUrl),platforms:game.platforms,
+    distribution:distributionFor(game.projectUrl)?.label||'No project link',platforms:game.platforms,
     firstSeenAt:game.firstSeenAt,updatedAt:game.updatedAt,projectUrl:game.projectUrl,
     releaseKind:game.steam?.releaseKind||(game.availability?.demo===true?'demo':null),
     storeProvider:game.steam?'Steam':game.availability?.metadataVersion===2?game.availability.provider:null,
@@ -29,4 +30,3 @@ export async function insightPage(db, cursor, deps) {
   return {version:1,generatedAt:page.generatedAt,observedAt:new Date(deps.now()).toISOString(),source:page.source,
     history:cursor?null:await meta(db,'history'),categories:page.categories,pagination:page.pagination,games};
 }
-function destination(url) {try{const host=new URL(url).hostname;return host==='store.steampowered.com'?'Steam':host.endsWith('.itch.io')?'itch.io':host==='github.com'?'Repository':'Website';}catch{return 'No project link';}}

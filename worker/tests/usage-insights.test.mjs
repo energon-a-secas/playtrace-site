@@ -38,6 +38,8 @@ test('insights require server-verified admin access and exclude private contribu
   for(const path of ['/admin/insights','/admin/usage'])assert.equal((await worker.fetch(request(path),env)).status,401);
   const response=await worker.fetch(request('/admin/insights',{auth:await token()}),env);assert.equal(response.status,200);assert.equal(response.headers.get('Cache-Control'),'no-store');
   const page=await response.json();assert.deepEqual(page.games[0].observations[0].styles,['Pixel art']);assert.deepEqual(page.games[0].observations[0].models,['Claude Sonnet 4.5']);assert.equal(page.games[0].observations[0].coverage,'full-text');
+  db.sql.prepare('INSERT INTO project_overrides(game_id,details_json,revision,updated_at,updated_by) VALUES(?,?,1,?,?)').run('g_abc12',JSON.stringify({projectUrl:'https://play.google.com/store/apps/details?id=example.game'}),new Date(NOW).toISOString(),'owner');
+  assert.equal((await insightPage(db,null,deps)).games[0].distribution,'Google Play');
   assert.ok(!JSON.stringify(page).includes('private_account_123'));assert.equal(page.games[0].observations[0].body,undefined);
   db.sql.prepare('UPDATE source_evidence SET payload_json=?').run(JSON.stringify({state:'removed',body:'Claude Opus 4 pixel art'}));
   const removed=(await insightPage(db,null,deps)).games[0].observations[0];assert.equal(removed.coverage,'removed');assert.deepEqual(removed.models,[]);assert.deepEqual(removed.styles,[]);db.close();
