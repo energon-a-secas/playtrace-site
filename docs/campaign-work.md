@@ -43,3 +43,8 @@ Validation at that point: 161 Node checks, 40 workerd checks, admin and guest br
 ## Catalogue and ranking follow-up, October 12
 
 The [full catalogue refresh](catalogue-refresh-october12.md) covers 1,403 source posts, 51 additional accepted field observations, one corrected mixed-project history and seven recovered game destinations. Six editorial feedback summaries are published with 25 checked citations. Browse gains a muted Reddit score and sort; weekly community ranking uses a minimum rating count and a neutral prior, with admin controls and a separate editor pick. Source gaps and unresolved review flags remain visible. Google Search Console verification/submission is the remaining owner-account step.
+
+
+## Source, feedback and destination follow-up, October 12
+
+Completed the next four priorities: [50-entry metadata review, 20 cited summaries, destination history and hosting insights, and paired expectations](campaign-followup-october12.md). Reviewed facts, published source decisions, queue cadence and dated link counts are recorded there.

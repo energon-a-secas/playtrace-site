@@ -2,6 +2,7 @@ import { catalog, query } from './store.mjs';
 import { extractMentions } from '../../js/insight-evidence.js';
 import { distributionFor } from '../../js/collection.js';
 import { releaseEvidence } from '../../js/release-evidence.js';
+import { linkEvidence } from '../../js/link-health.js';
 
 // An allowlisted public evidence projection, also used by the admin dashboard.
 // No questionnaire text, identities, guest keys, private jobs or notes are read.
@@ -23,7 +24,7 @@ export async function insightPage(db, cursor, deps) {
     storeProvider:game.steam?'Steam':game.availability?.metadataVersion===2?game.availability.provider:null,
     storeCheckedAt:game.steam?.checkedAt||game.availability?.storeCheckedAt||null,
     storeState:game.steam?.state||null,browserBuild:game.availability?.browser===true,downloadableBuild:game.availability?.downloadable===true,storeEngines:game.availability?.engines||[],aiDisclosure:game.availability?.aiDisclosure||[],priceCents:game.steam?.currency==='USD'?game.steam.priceCents:null,
-    linkState:game.availability?.status||'not-checked',linkCheckedAt:game.availability?.checkedAt||null,
+    linkState:game.availability?.status||'not-checked',linkCheckedAt:game.availability?.checkedAt||null,link:linkEvidence(game),
     observations:game.posts.map(post=>{
       const source=sources.get(post.id),removed=source?.state==='removed',review=source?.state==='needs-review';
       const full=source?.state==='available'&&Boolean(source.body);

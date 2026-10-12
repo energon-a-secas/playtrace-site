@@ -26,10 +26,11 @@ const all=process.argv.includes('--all'),dueOnly=process.argv.includes('--due-on
 const savedSelection=selection?JSON.parse(await fs.readFile(selection,'utf8')):null;
 const selected=savedSelection?savedSelection.games.map(item=>before.games.find(game=>game.id===item.id)):all?before.games:selectPilot(before.games);
 if(selected.some(game=>!game)||new Set(selected.map(game=>game.id)).size!==selected.length)throw new Error('Saved selection contains missing or repeated projects; review before continuing.');
-if(!all&&selected.length!==100)throw new Error('Expected a complete 100-project pilot.');
+if(!selected.length||selected.length>2000||!all&&!savedSelection&&selected.length!==100)throw new Error('Expected a complete pilot or an explicit bounded selection.');
 const ids=new Set(selected.map(game=>game.id)),sourceIds=[...new Set(selected.flatMap(game=>game.posts.map(post=>post.id)))];
 const at=new Date().toISOString(),stamp=at.slice(0,10),plan={version:1,asOf:at,method:'Deterministic balanced quality sample across first-shared year and destination, plus four regression sentinels; not a representative market sample.',games:selected.map(game=>({id:game.id,title:game.title,stratum:pilotStratum(game),sourceIds:game.posts.map(post=>post.id)}))};
 if(all)plan.method='All currently published catalogue projects; source and due destination refresh. A community archive, not a representative games market sample.';
+if(savedSelection)plan.method=savedSelection.method||'Explicit operator-selected quality batch; not a representative sample.';
 await save('plan.json',plan);
 if(process.argv.includes('--plan-only')){console.log(JSON.stringify({projects:selected.length,posts:sourceIds.length,strata:[...new Set(selected.map(pilotStratum))]}));db.close();process.exit(0);}
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -55,7 +56,7 @@ const tables={game_categories:['id'],games:['id'],source_posts:['id'],source_evi
 const rowKey=(row,keys)=>JSON.stringify(keys.map(key=>row[key]));
 const originals=Object.fromEntries(Object.entries(tables).map(([table,keys])=>[table,new Map(db.sql.prepare(`SELECT * FROM ${table}`).all().map(row=>[rowKey(row,keys),row]))]));
 const raw=[];let sourceResult={checked:0,changed:0,updatedGames:0};
-const sourceBatch=all?100:10;
+const sourceBatch=all||savedSelection?100:10;
 for(let i=0;i<sourceIds.length;i+=sourceBatch){
   const batch=sourceIds.slice(i,i+sourceBatch),rows=await archiveJson('posts/ids?ids='+batch.join(','),deps);raw.push(...rows.filter(row=>batch.includes(row.id)));
   const result=await refreshSourceRecords(db,rows.filter(row=>batch.includes(row.id)),deps);
@@ -127,7 +128,7 @@ for(const [table,keys]of Object.entries(tables)){
 // Preserve the complete review record in the existing admin queue. It contains
 // public evidence only and cannot publish a generated feedback review.
 for(const project of report.projects){
-  const value={pilot:all?'catalogue-refresh-v2':'evidence-100-v1',checkedAt:report.checkedAt,note:`${selected.length}-project enrichment review. Check the flagged facts before editing; manual details and approved images were preserved.`,flags:project.flags,changes:project.changes,sourceChecks:project.posts.map(post=>({id:post.id,url:post.url,state:post.state})),provenance:project.store?.provenance||{},release:project.release};
+  const value={pilot:all?'catalogue-refresh-v2':savedSelection?'evidence-selection-v1':'evidence-100-v1',checkedAt:report.checkedAt,note:`${selected.length}-project enrichment review. Check the flagged facts before editing; manual details and approved images were preserved.`,flags:project.flags,changes:project.changes,sourceChecks:project.posts.map(post=>({id:post.id,url:post.url,state:post.state})),provenance:project.store?.provenance||{},release:project.release};
   statements.push(`INSERT INTO editorial_jobs(id,game_id,kind,window_start,status,payload_json,created_at,updated_at,requested_by) SELECT ${quote(randomUUID())},id,'references',${quote(stamp+'T00:00:00.000Z')},'ready',${quote(JSON.stringify(value))},${quote(report.checkedAt)},${quote(report.checkedAt)},'operator-pilot' FROM games WHERE id=${quote(project.id)} AND status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id) ON CONFLICT(game_id,kind,window_start) DO NOTHING;`);
 }
 statements.push(`UPDATE app_meta SET value_json=json_set(value_json,'$.generatedAt',${quote(report.checkedAt)}) WHERE key='catalog';`,`DELETE FROM app_meta WHERE key='pilot_apply_guard';`);

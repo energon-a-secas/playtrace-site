@@ -7,16 +7,19 @@ import { icon } from './icons.js';
 import { NeoAuth } from './neorgon-auth.js';
 import { render, renderDetail } from './render.js';
 import { reviewMarkup, revealReviewSource } from './feedback-review.js';
+import { linkCheckMarkup } from './link-check-view.js';
 
 let epoch=0,currentId='',controller,ratings;
 export async function loadExtras(game){
   if(currentId===game.id)return;
   currentId=game.id;const version=++epoch;controller?.abort();controller=new AbortController();ratings.load(game.id);
   $('projectReferences').textContent='Loading shared links…';$('publishedReview').hidden=true;selectHistory('updates');
+  $('projectLinkChecks').innerHTML=linkCheckMarkup(game,[],'dialogLinkChecks');
   const options={signal:controller.signal};
 
   try{
     const context=await request(`/games/${game.id}/context`,options);if(version!==epoch)return;
+    $('projectLinkChecks').innerHTML=linkCheckMarkup({...game,availability:context.availability},context.linkHistory||[],'dialogLinkChecks');
     $('projectReferences').innerHTML=context.references.length?context.references.map(ref=>{
       const source=game.posts.find(post=>post.id===ref.sourcePostId);
       return `<a class="reference-link" href="${e(safeUrl(ref.url))}" target="_blank" rel="noopener noreferrer">${icon(/reddit\.com/.test(new URL(ref.url).hostname)?'reddit':'website')}<span><strong>${e(ref.title)} ↗</strong><small>${e(new URL(ref.url).hostname)}${source?` · shared ${e(dateLabel(source.createdAt))}`:''}</small></span></a>`;

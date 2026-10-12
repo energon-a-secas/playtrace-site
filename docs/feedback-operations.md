@@ -47,3 +47,14 @@ Useful next research asks for a device and failing action when controls are ment
 Apply migrations through `0014_feedback_context.sql` before the Worker, then publish the Pages build. Export D1 into a private directory first. Schema rollback instructions are for explicit recovery only; prefer a forward fix that preserves contributions.
 
 Tests cover bounded Sunday requests, duplicate invocations, stale/missing observations, cooldowns, private-data exclusion, backward-compatible feedback writes, source edits/removals racing Jev, reviewed label validation and report denominators. Browser checks use local fixtures for writes and cover rapid panel reversals, reduced motion, narrow layouts, citation links and editor controls. Never create synthetic visitor contributions in production.
+
+
+## Destination history and returning-player comparisons
+
+Apply migrations `0015_link_observations.sql` and `0016_play_expectations.sql` before this Worker release. The first backfills the stored latest check with its original timestamp and adds bounded insert/update history. The second adds private browser/game comparisons; no visitor answers are fabricated or backfilled.
+
+`GET/PUT/DELETE /api/v1/games/:id/expectations` require the existing guest edit key and return `no-store`. First-look writes carry `phase`, `interest` (1–5), and `revision` (0 for new). After-play writes additionally carry `expectation` (`less`, `matched`, `better`, `unsure`). Optimistic revisions and a later server timestamp protect the baseline. After-play edits retain the original first look. Deletion removes the browser’s comparison, including aliases. Public feedback patterns expose only cohort and paired-value counts.
+
+Link maintenance enqueues at most one non-store destination per hourly queue tick, capped at eight outstanding link jobs. Healthy observations are eligible after 30 days; uncertain ones after seven. Feedback jobs retain priority, and all editorial processing shares the 72-job daily ceiling. Store URLs remain on their existing store workflow. The hosting report counts projects, not unique hosts, and does not estimate uptime. A correction to the game URL starts a separate visible history while preserving prior observations.
+
+For a source-review batch use an explicit saved selection with `scripts/enrichment-pilot.mjs --selection`, inspect its guarded SQL and flags, then rebase onto a fresh backup before applying. `scripts/prepare-reviewed-feedback.mjs` accepts per-citation editorial topic, tone and experience labels and verifies chosen comment bodies against the archive. No automatic model output is published.

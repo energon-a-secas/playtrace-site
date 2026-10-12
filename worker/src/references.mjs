@@ -74,11 +74,12 @@ export async function refreshReferences(db, gameId, deps) {
 }
 export async function projectContext(db, gameId) {
   const [game] = await applyDetails(db, [await getGame(db, gameId)]);
-  const [references, review, enrichment] = await db.batch([
+  const [references, review, enrichment, checks] = await db.batch([
     query(db, 'SELECT url,title,source_post_id AS sourcePostId FROM project_references WHERE game_id=? ORDER BY source_post_id DESC,url', gameId),
     query(db, 'SELECT payload_json,published_at FROM feedback_reviews WHERE game_id=?', gameId),
     query(db, 'SELECT project_url,payload_json FROM project_enrichment WHERE game_id=?', gameId),
+    query(db,'SELECT checked_at AS checkedAt,status,http_status AS httpStatus,reason,redirect_count AS redirects FROM link_observations WHERE game_id=? AND project_url=? ORDER BY checked_at DESC LIMIT 12',gameId,game.projectUrl),
   ]);
-  return { gameId, references: references.results, review: review.results[0] ? { ...JSON.parse(review.results[0].payload_json), publishedAt: review.results[0].published_at } : null,
+  return { gameId, references: references.results, linkHistory:checks.results, review: review.results[0] ? { ...JSON.parse(review.results[0].payload_json), publishedAt: review.results[0].published_at } : null,
     availability: enrichment.results[0]?.project_url === game.projectUrl ? JSON.parse(enrichment.results[0].payload_json) : null };
 }

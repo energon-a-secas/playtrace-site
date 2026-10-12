@@ -1,4 +1,5 @@
 import { feedbackOptions } from './feedback-options.js';
+import { expectationTotals } from './expectation-options.js';
 
 export const feedbackTopics = Object.freeze({ visuals:'Art & atmosphere',controls:'Controls & feel',pacing:'Pacing',challenge:'Difficulty & balance',reliability:'Technical reliability',accessibility:'Accessibility',idea:'Idea & design',general:'Overall impression' });
 export const nextQuestions = Object.freeze({
@@ -24,7 +25,7 @@ export function feedbackReport(records, projects, {category='',platform='',sourc
   const counts={projects:0,siteContributions:0,siteNotes:0,redditCitations:0,siteCitations:0,unclassified:0,preview:0,played:0,unspecified:0};
   const matching=[];
   for(const record of selected){
-    let relevant=false;
+    let relevant=source!=='reddit'&&record.expectations?.started>0;
     if(source!=='reddit')for(const group of record.feedback){
       if(experience&&group.experience!==experience)continue;
       counts.siteContributions+=group.count;counts.siteNotes+=group.notes;relevant ||= group.count>0;
@@ -42,7 +43,7 @@ export function feedbackReport(records, projects, {category='',platform='',sourc
     }
     if(relevant){counts.projects++;matching.push({...record,game:projectsById.get(record.id),cited});}
   }
-  return {counts,choices:[...choices.values()].filter(choice=>choice.count).sort((a,b)=>b.count-a.count),
+  return {counts,expectations:expectationTotals(source==='reddit'?[]:selected.map(record=>record.expectations||{})),choices:[...choices.values()].filter(choice=>choice.count).sort((a,b)=>b.count-a.count),
     themes:[...themes.values()].sort((a,b)=>b.count-a.count||a.id.localeCompare(b.id)).map(theme=>({...theme,projects:theme.projects.size,
       recurring:theme.count>=5&&theme.projects.size>=3})),projects:matching};
 }

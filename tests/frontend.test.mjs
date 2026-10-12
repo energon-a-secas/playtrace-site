@@ -392,6 +392,7 @@ async function feedbackModule(request) {
     location: globalThis.location || {href:'https://playtrace.example/browse.html'},
     document: {querySelector:()=>null,getElementById:()=>null,dispatchEvent(){}},
     guestEditKey: guest.editKey, keyPersists: guest.keyPersists,
+    bindExpectations(){}, loadExpectations(){}, clearExpectations(){},
     money: collection.money, dateLabel: collection.dateLabel, e: value => String(value).replaceAll('<', '&lt;').replaceAll('>', '&gt;') });
   return { api, $, state };
 }

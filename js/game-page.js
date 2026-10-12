@@ -9,6 +9,7 @@ import { favorites } from './favorites.js';
 import { ratingControl } from './rating-control.js';
 import { bindFeedback, resetFeedback, loadFeedback, renderFeedback } from './feedback.js';
 import { reviewMarkup, revealReviewSource } from './feedback-review.js';
+import { linkCheckMarkup } from './link-check-view.js';
 
 let user=null,authVersion=0,syncing=null,reviewVersion=0;
 const initial=validateCatalog(JSON.parse($('gameData').textContent));
@@ -16,7 +17,9 @@ let game=initial.games[0];
 async function loadReview(){
   const node=$('pageReview'),current=++reviewVersion;if(!node)return;
   node.hidden=true;node.replaceChildren();
-  try{const {review}=await request(`/games/${game.id}/context`);if(review&&current===reviewVersion){node.innerHTML=reviewMarkup(review,{heading:'h2'});node.hidden=false;revealReviewSource(node);}}catch{/* A summary is optional; original posts remain available. */}
+  try{const {review,availability,linkHistory}=await request(`/games/${game.id}/context`);if(current!==reviewVersion)return;
+    $('pageLinkChecks').innerHTML=linkCheckMarkup({...game,availability},linkHistory||[]);if(location.hash==='#linkChecks')$('linkChecks')?.scrollIntoView({block:'center'});
+    if(review){node.innerHTML=reviewMarkup(review,{heading:'h2'});node.hidden=false;revealReviewSource(node);}}catch{/* Original posts and the dated link snapshot remain available. */}
 }
 function paintFavorite(){
   const saved=favorites.ids(user).includes(game.id),button=$('pageFavorite');

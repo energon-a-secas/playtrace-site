@@ -22,7 +22,13 @@ const old=maps(before),wanted=maps(target),live=maps(current),changes=[],dirty=n
 for(const [table,fields] of Object.entries(keys))for(const [id,row]of wanted[table]){
   const previous=old[table].get(id),actual=live[table].get(id);if(same(previous,row)||same(actual,row))continue;
   const gameId=table==='games'?row.id:row.game_id||(['source_evidence','reddit_scores'].includes(table)?old.source_posts.get(JSON.stringify([row.post_id]))?.game_id:null);
-  const conflict=!same(previous,actual);
+  // A maintenance touch with identical source content does not invalidate an
+  // editorial review. Preserve its newer check date while retaining full-row
+  // equality guards against any subsequent edit or withdrawal.
+  const checkOnly=table==='source_evidence'&&previous&&actual
+    &&same({...previous,checked_at:null},{...actual,checked_at:null});
+  if(checkOnly&&actual.checked_at>row.checked_at)row.checked_at=actual.checked_at;
+  const conflict=!same(previous,actual)&&!checkOnly;
   if(conflict&&['games','source_posts','source_evidence'].includes(table)&&gameId)dirty.add(gameId);
   changes.push({table,fields,id,row,actual,gameId,conflict});
 }
@@ -41,7 +47,8 @@ current.sql.exec('BEGIN');current.sql.exec(output.join('\n'));current.sql.exec('
 const raw=JSON.parse(await fs.readFile(path.join(plan,'raw-sources.json'),'utf8'));
 const batch=current.batch.bind(current);
 current.batch=async rows=>{const result=await batch(rows);for(const s of rows){let i=0;output.push(s.sql.replace(/\?/g,()=>quote(s.args[i++]))+';');}return result;};
-await splitSource(current,'g_1vppapc',raw.find(row=>row.id==='1vspz2l'),
+const splitCandidate=raw.find(row=>row.id==='1vspz2l');let split=null;
+if(splitCandidate&&!current.sql.prepare('SELECT id FROM games WHERE id=?').get('g_1vspz2l'))split=await splitSource(current,'g_1vppapc',splitCandidate,
   'STARBATTLE explicitly describes Chapel Knights as a separate parallel project. Keep their source histories and model evidence separate.',
   'operator:catalogue-review-2026-10-12',Date.now());
 const report=JSON.parse(await fs.readFile(path.join(plan,'report.json'),'utf8'));
@@ -49,8 +56,8 @@ const report=JSON.parse(await fs.readFile(path.join(plan,'report.json'),'utf8'))
 // independently refreshed review is never reopened by the campaign.
 for(const project of report.projects){
   const flags=project.id==='g_1vppapc'?project.flags.filter(f=>!f.startsWith('Identity review:')):project.flags;
-  const value={pilot:'catalogue-refresh-v2',checkedAt:report.checkedAt,note:dirty.has(project.id)?'A concurrent refresh was retained for this project. These are source observations; no conflicting edits were applied.':'Source and due store pages checked. Unknown fields are retained where evidence is absent; unavailable links are not proof of a deleted game.',flags,changes:project.changes,sourceChecks:project.posts.filter(p=>project.id!=='g_1vppapc'||p.id!=='1vspz2l').map(p=>({id:p.id,url:p.url,state:p.state})),provenance:project.store?.provenance||{}};
-  output.push(`UPDATE editorial_jobs SET payload_json=${quote(JSON.stringify(value))},updated_at=${quote(report.checkedAt)} WHERE game_id=${quote(project.id)} AND kind='references' AND status='ready' AND json_extract(payload_json,'$.pilot') IN('evidence-100-v1','catalogue-refresh-v2');`);
+  const value={pilot:'evidence-selection-v1',checkedAt:report.checkedAt,note:dirty.has(project.id)?'A concurrent refresh was retained for this project. These are source observations; no conflicting edits were applied.':'Source and destination evidence checked. Unknown fields are retained where evidence is absent; unavailable links are not proof of a deleted game.',flags,changes:project.changes,sourceChecks:project.posts.filter(p=>!split||project.id!=='g_1vppapc'||p.id!=='1vspz2l').map(p=>({id:p.id,url:p.url,state:p.state})),provenance:project.store?.provenance||{}};
+  output.push(`UPDATE editorial_jobs SET payload_json=${quote(JSON.stringify(value))},updated_at=${quote(report.checkedAt)} WHERE game_id=${quote(project.id)} AND kind='references' AND status='ready' AND updated_at<=${quote(report.checkedAt)} AND json_extract(payload_json,'$.pilot') IN('evidence-100-v1','catalogue-refresh-v2','evidence-selection-v1');`);
 }
 const at=new Date().toISOString();output.push(`UPDATE app_meta SET value_json=json_set(value_json,'$.generatedAt',${quote(at)}) WHERE key='catalog';`,"DELETE FROM app_meta WHERE key='campaign_guard';");
 // Validate the full combined transaction, its row-size bounds and public DTO.
@@ -59,6 +66,6 @@ const result=await catalog(verification),publication={...result,generatedAt:at,s
 if(output.some(sql=>Buffer.byteLength(sql)>99000))throw new Error('A statement exceeds the remote D1 bound');
 await fs.writeFile(path.join(out,'apply.sql'),output.join('\n'),{mode:0o600});
 await fs.writeFile(path.join(out,'catalogue-after.json'),JSON.stringify(publication),{mode:0o600});
-await fs.writeFile(path.join(out,'rebase.json'),JSON.stringify({at,counts,skipped,concurrentProjects:[...dirty],split:{from:'g_1vppapc',to:'g_1vspz2l'}},null,2),{mode:0o600});
+await fs.writeFile(path.join(out,'rebase.json'),JSON.stringify({at,counts,skipped,concurrentProjects:[...dirty],split},null,2),{mode:0o600});
 console.log(JSON.stringify({projects:result.games.length,changedRows:counts,skippedRows:skipped.length,concurrentProjects:dirty.size,statements:output.length}));
 for(const db of [before,target,current,verification])db.close();

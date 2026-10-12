@@ -1,5 +1,6 @@
 .insights-intro { max-width: 72ch; }
 #insightsPanel, #feedbackPatterns { min-width: 0; }
+.expectation-report { padding-block: 20px; margin-block: 20px; border-block: 1px solid var(--border); }
 #main.insights-page { max-width: 1160px; width: calc(100% - 48px); margin: 0 auto; padding: 48px 0 72px; }
 .insights-page .insights-intro h2 { font: 650 clamp(32px,4.2vw,54px)/1.08 var(--pt-display); letter-spacing: -.035em; margin: 0 0 18px; color: var(--pt-ink); max-width: 23ch; }
 .insights-page .insights-intro > p:last-child { font-size: 19px; max-width: 64ch; }

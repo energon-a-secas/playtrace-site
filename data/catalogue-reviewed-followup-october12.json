@@ -1,0 +1,646 @@
+{
+  "version": 1,
+  "reviewedAt": "2026-10-12",
+  "reviewer": "Source review of 50 newest projects with missing genre/build details or headline titles. Quotes are checked against current archived posts; uncertain fields remain unknown.",
+  "categories": {
+    "sports": "Sports",
+    "racing": "Racing",
+    "card-game": "Card game",
+    "horror": "Horror",
+    "survival": "Survival"
+  },
+  "facts": [
+    {
+      "gameId": "g_1x43tqf",
+      "field": "title",
+      "value": "Another One",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x43tqf/",
+      "evidence": "https://store.steampowered.com/app/4784550/Another"
+    },
+    {
+      "gameId": "g_1x43tqf",
+      "field": "projectUrl",
+      "value": "https://store.steampowered.com/app/4784550/Another_One",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x43tqf/",
+      "evidence": "https://store.steampowered.com/app/4784550/Another"
+    },
+    {
+      "gameId": "g_1x4118p",
+      "field": "platforms",
+      "value": [
+        "Nintendo Wii"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x4118p/",
+      "evidence": "My Nintendo Wii space game"
+    },
+    {
+      "gameId": "g_1x3zu3j",
+      "field": "category",
+      "value": "arcade",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3zu3j/",
+      "evidence": "a free browser grapple-hook time attack"
+    },
+    {
+      "gameId": "g_1x3zu3j",
+      "field": "platforms",
+      "value": [
+        "Browser"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3zu3j/",
+      "evidence": "a free browser grapple-hook time attack"
+    },
+    {
+      "gameId": "g_1x3yir1",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3yir1/",
+      "evidence": "The demo has the first two chapters, a roguelite mode up to the second boss, an arena and co-op. It's free and runs in the browser on PC and mobile."
+    },
+    {
+      "gameId": "g_1x3yir1",
+      "field": "platforms",
+      "value": [
+        "Browser",
+        "Mobile"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3yir1/",
+      "evidence": "The demo has the first two chapters, a roguelite mode up to the second boss, an arena and co-op. It's free and runs in the browser on PC and mobile."
+    },
+    {
+      "gameId": "g_1x3yir1",
+      "field": "summary",
+      "value": "A superhero browser demo with two story chapters, a roguelite mode, an arena and local co-op. Combine powers to build your hero. Currently available in Spanish.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3yir1/",
+      "evidence": "The demo has the first two chapters, a roguelite mode up to the second boss, an arena and co-op. It's free and runs in the browser on PC and mobile."
+    },
+    {
+      "gameId": "g_1x3vh1b",
+      "field": "title",
+      "value": "Stunt Track Racer VR",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3vh1b/",
+      "evidence": "Stunt Track Racer VR"
+    },
+    {
+      "gameId": "g_1x3vh1b",
+      "field": "category",
+      "value": "racing",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3vh1b/",
+      "evidence": "Stunt Track Racer VR"
+    },
+    {
+      "gameId": "g_1x3vh1b",
+      "field": "platforms",
+      "value": [
+        "VR"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3vh1b/",
+      "evidence": "Stunt Track Racer VR"
+    },
+    {
+      "gameId": "g_1x3vbt3",
+      "field": "category",
+      "value": "simulation",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3vbt3/",
+      "evidence": "voxel god game"
+    },
+    {
+      "gameId": "g_1x3v9tv",
+      "field": "category",
+      "value": "rpg",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3v9tv/",
+      "evidence": "dark fantasy RPG"
+    },
+    {
+      "gameId": "g_1x3sava",
+      "field": "title",
+      "value": "Crown of Thatch",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3sava/",
+      "evidence": "Game is called Crown of Thatch"
+    },
+    {
+      "gameId": "g_1x3r6u3",
+      "field": "category",
+      "value": "rpg",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3r6u3/",
+      "evidence": "isometric action RPG"
+    },
+    {
+      "gameId": "g_1x3r6u3",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3r6u3/",
+      "evidence": "test build"
+    },
+    {
+      "gameId": "g_1x3n2x0",
+      "field": "projectUrl",
+      "value": "https://startrail.greyden.games/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3n2x0/",
+      "evidence": "https://startrail.greyden.games/"
+    },
+    {
+      "gameId": "g_1x3n2x0",
+      "field": "title",
+      "value": "Startrail",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3n2x0/",
+      "evidence": "https://startrail.greyden.games/"
+    },
+    {
+      "gameId": "g_1x3modo",
+      "field": "title",
+      "value": "Far Charter",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3modo/",
+      "evidence": "browser game called Far Charter"
+    },
+    {
+      "gameId": "g_1x3modo",
+      "field": "platforms",
+      "value": [
+        "Browser"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3modo/",
+      "evidence": "browser game called Far Charter"
+    },
+    {
+      "gameId": "g_1x3modo",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3modo/",
+      "evidence": "It's free to play in the browser. It's still in testing"
+    },
+    {
+      "gameId": "g_1x3modo",
+      "field": "category",
+      "value": "simulation",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3modo/",
+      "evidence": "Space Industry Logistics Management Game"
+    },
+    {
+      "gameId": "g_1x3modo",
+      "field": "summary",
+      "value": "Run a space industry ship: mine ore, refine materials, print parts and build a station. Manage heat, power, fuel and sponsor deadlines in this browser test build.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3modo/",
+      "evidence": "Space Industry Logistics Management Game"
+    },
+    {
+      "gameId": "g_1x3lvl7",
+      "field": "category",
+      "value": "sports",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3lvl7/",
+      "evidence": "mouse and keyboard ping pong game"
+    },
+    {
+      "gameId": "g_1x3lvl7",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3lvl7/",
+      "evidence": "You can play it here"
+    },
+    {
+      "gameId": "g_1x3fcje",
+      "field": "title",
+      "value": "La Ruzzola",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3fcje/",
+      "evidence": "La Ruzzola is inspired by the traditional Italian sports"
+    },
+    {
+      "gameId": "g_1x3fcje",
+      "field": "category",
+      "value": "sports",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3fcje/",
+      "evidence": "La Ruzzola is inspired by the traditional Italian sports"
+    },
+    {
+      "gameId": "g_1x3ewd8",
+      "field": "title",
+      "value": "Croissant Panic",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3ewd8/",
+      "evidence": "Croissant Panic"
+    },
+    {
+      "gameId": "g_1x3ewd8",
+      "field": "projectUrl",
+      "value": null,
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3ewd8/",
+      "evidence": "https://support.modretro.com/en_us/chromatic-devday-edition-quickstart-guid-By1iOlcMg"
+    },
+    {
+      "gameId": "g_1x3ewd8",
+      "field": "platforms",
+      "value": [
+        "Game Boy Color"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3ewd8/",
+      "evidence": "a native Game Boy Color ROM and testing it in the emulator"
+    },
+    {
+      "gameId": "g_1x3et8h",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3et8h/",
+      "evidence": "far from a finished product"
+    },
+    {
+      "gameId": "g_1x3et8h",
+      "field": "category",
+      "value": "rpg",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3et8h/",
+      "evidence": "rouge like dungeon crawler"
+    },
+    {
+      "gameId": "g_1x3c6h3",
+      "field": "title",
+      "value": "Chapas",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3c6h3/",
+      "evidence": "built the \"Chapas\" game"
+    },
+    {
+      "gameId": "g_1x39v17",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x39v17/",
+      "evidence": "If anyone's interested in giving it a try, here's the game"
+    },
+    {
+      "gameId": "g_1x35qj1",
+      "field": "category",
+      "value": "clicker",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x35qj1/",
+      "evidence": "small browser clicker game called Toilet Plunge"
+    },
+    {
+      "gameId": "g_1x34m4n",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x34m4n/",
+      "evidence": "hack-and-slash mobile game"
+    },
+    {
+      "gameId": "g_1x34m4n",
+      "field": "platforms",
+      "value": [
+        "Mobile"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x34m4n/",
+      "evidence": "hack-and-slash mobile game"
+    },
+    {
+      "gameId": "g_1x32tsp",
+      "field": "title",
+      "value": "Paran",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x32tsp/",
+      "evidence": "Paran is a fantasy strategy game"
+    },
+    {
+      "gameId": "g_1x326cq",
+      "field": "category",
+      "value": "card-game",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x326cq/",
+      "evidence": "collectible card game"
+    },
+    {
+      "gameId": "g_1x326cq",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x326cq/",
+      "evidence": "to play the game"
+    },
+    {
+      "gameId": "g_1x326cq",
+      "field": "platforms",
+      "value": [
+        "Browser"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x326cq/",
+      "evidence": "to play the game"
+    },
+    {
+      "gameId": "g_1x2ziyd",
+      "field": "title",
+      "value": "Neon Echoes",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2ziyd/",
+      "evidence": "vertical slice of a game idea called Neon Echoes"
+    },
+    {
+      "gameId": "g_1x2ziyd",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2ziyd/",
+      "evidence": "vertical slice of a game idea called Neon Echoes"
+    },
+    {
+      "gameId": "g_1x2ziyd",
+      "field": "category",
+      "value": "adventure",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2ziyd/",
+      "evidence": "HD2D Cyberpunk-style detective game"
+    },
+    {
+      "gameId": "g_1x2ziyd",
+      "field": "platforms",
+      "value": [
+        "Browser"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2ziyd/",
+      "evidence": "plays in most web browsers"
+    },
+    {
+      "gameId": "g_1x2fubr",
+      "field": "category",
+      "value": "clicker",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2fubr/",
+      "evidence": "You click to build a community"
+    },
+    {
+      "gameId": "g_1x2fs7h",
+      "field": "category",
+      "value": "strategy",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2fs7h/",
+      "evidence": "castle defense game"
+    },
+    {
+      "gameId": "g_1x2fs7h",
+      "field": "platforms",
+      "value": [
+        "Browser"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2fs7h/",
+      "evidence": "It's a browser game built with three.js"
+    },
+    {
+      "gameId": "g_1x25yi2",
+      "field": "title",
+      "value": "Super Epic Sluggers",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x25yi2/",
+      "evidence": "Super Epic Sluggers, an arcade-style baseball game"
+    },
+    {
+      "gameId": "g_1x25yi2",
+      "field": "category",
+      "value": "sports",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x25yi2/",
+      "evidence": "Super Epic Sluggers, an arcade-style baseball game"
+    },
+    {
+      "gameId": "g_1x213ev",
+      "field": "category",
+      "value": "simulation",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x213ev/",
+      "evidence": "a game about mining, automation and mould"
+    },
+    {
+      "gameId": "g_1x1z0vh",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1z0vh/",
+      "evidence": "horde style 'survive the wave' game"
+    },
+    {
+      "gameId": "g_1x1t0f3",
+      "field": "category",
+      "value": "sports",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1t0f3/",
+      "evidence": "soccer game"
+    },
+    {
+      "gameId": "g_1x1szym",
+      "field": "category",
+      "value": "survival",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1szym/",
+      "evidence": "survival crafter mobile game"
+    },
+    {
+      "gameId": "g_1x1szym",
+      "field": "platforms",
+      "value": [
+        "Android",
+        "Mobile"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1szym/",
+      "evidence": "Android only for now"
+    },
+    {
+      "gameId": "g_1x1pq52",
+      "field": "title",
+      "value": "Wordminos",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1pq52/",
+      "evidence": "http://wordminos.com"
+    },
+    {
+      "gameId": "g_1x1pq52",
+      "field": "projectUrl",
+      "value": "https://wordminos.com/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1pq52/",
+      "evidence": "http://wordminos.com"
+    },
+    {
+      "gameId": "g_1x1pq52",
+      "field": "stage",
+      "value": "released",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1pq52/",
+      "evidence": "release a game where for once I have not looked"
+    },
+    {
+      "gameId": "g_1x0rf7i",
+      "field": "category",
+      "value": "rpg",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1ogct/",
+      "evidence": "cave exploration action rpg"
+    },
+    {
+      "gameId": "g_1x1hk10",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1hk10/",
+      "evidence": "Recently, I've been working on the ocean simulation"
+    },
+    {
+      "gameId": "g_1x16o8c",
+      "field": "title",
+      "value": "Boardwalk Boss",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x16o8c/",
+      "evidence": "browser-based casino/resort sim called Boardwalk Boss"
+    },
+    {
+      "gameId": "g_1x16o8c",
+      "field": "category",
+      "value": "simulation",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x16o8c/",
+      "evidence": "browser-based casino/resort sim called Boardwalk Boss"
+    },
+    {
+      "gameId": "g_1x16o8c",
+      "field": "platforms",
+      "value": [
+        "Browser"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x16o8c/",
+      "evidence": "browser-based casino/resort sim called Boardwalk Boss"
+    },
+    {
+      "gameId": "g_1x16o8c",
+      "field": "projectUrl",
+      "value": "https://boardwalkboss.com/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x16o8c/",
+      "evidence": "It’s playable now at boardwalkboss.com"
+    },
+    {
+      "gameId": "g_1x14ho9",
+      "field": "title",
+      "value": "Frontier Pool",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x14ho9/",
+      "evidence": "My first game release ever: Frontier Pool, 3D hyperrealistic pool in your browser"
+    },
+    {
+      "gameId": "g_1x14ho9",
+      "field": "category",
+      "value": "sports",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x14ho9/",
+      "evidence": "My first game release ever: Frontier Pool, 3D hyperrealistic pool in your browser"
+    },
+    {
+      "gameId": "g_1x14ho9",
+      "field": "stage",
+      "value": "released",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x14ho9/",
+      "evidence": "My first game release ever: Frontier Pool, 3D hyperrealistic pool in your browser"
+    },
+    {
+      "gameId": "g_1x14ho9",
+      "field": "platforms",
+      "value": [
+        "Browser"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x14ho9/",
+      "evidence": "My first game release ever: Frontier Pool, 3D hyperrealistic pool in your browser"
+    },
+    {
+      "gameId": "g_1x14fdp",
+      "field": "title",
+      "value": "Cozy Putt",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x14fdp/",
+      "evidence": "building out Cozy Putt"
+    },
+    {
+      "gameId": "g_1x12wvq",
+      "field": "category",
+      "value": "sports",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x12wvq/",
+      "evidence": "3D Mesoamerican ballgame"
+    },
+    {
+      "gameId": "g_1x12wvq",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x12wvq/",
+      "evidence": "It’s free to try at"
+    },
+    {
+      "gameId": "g_1x12wvq",
+      "field": "platforms",
+      "value": [
+        "Browser"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x12wvq/",
+      "evidence": "It’s free to try at"
+    },
+    {
+      "gameId": "g_1x11niu",
+      "field": "title",
+      "value": "Grand Total Anarchy",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x11niu/",
+      "evidence": "Grand Total Anarchy"
+    },
+    {
+      "gameId": "g_1x11niu",
+      "field": "projectUrl",
+      "value": "https://gta.nitzan.games/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x11niu/",
+      "evidence": "https://gta.nitzan.games/"
+    },
+    {
+      "gameId": "g_1x1186k",
+      "field": "category",
+      "value": "horror",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1186k/",
+      "evidence": "dinosaur survival horror game"
+    },
+    {
+      "gameId": "g_1x1186k",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1186k/",
+      "evidence": "first gameplay footage from the new version. It’s still early"
+    }
+  ],
+  "flags": {
+    "g_1x44rro": [
+      "Identity review: no game name or public destination in the available post."
+    ],
+    "g_1x4446m": [],
+    "g_1x43tqf": [],
+    "g_1x4118p": [],
+    "g_1x3zu3j": [],
+    "g_1x3yir1": [],
+    "g_1x3vh1b": [
+      "Release review: a first release is mentioned, but the post provides no destination or storefront verification."
+    ],
+    "g_1x3vbt3": [],
+    "g_1x3v9tv": [],
+    "g_1x3tt6o": [],
+    "g_1x3sava": [
+      "Working title explicitly supplied by the creator; public build not established."
+    ],
+    "g_1x3r6u3": [],
+    "g_1x3n2x0": [
+      "Replaced a third-party art tool with the creator’s explicit game link."
+    ],
+    "g_1x3modo": [],
+    "g_1x3lvl7": [],
+    "g_1x3fcje": [],
+    "g_1x3ewd8": [
+      "Removed a hardware support article from the game action; no public ROM/download supplied."
+    ],
+    "g_1x3et8h": [],
+    "g_1x3c6h3": [],
+    "g_1x39v17": [],
+    "g_1x39hce": [],
+    "g_1x36yaf": [
+      "Identity review: the headline describes an inspiration, not an established game name."
+    ],
+    "g_1x35qj1": [],
+    "g_1x34m4n": [
+      "Closed test: creator asks prospective players to request access; no public build URL is supplied."
+    ],
+    "g_1x34hb6": [
+      "Scope review: the title describes a warehouse application. The archive has no body to establish a playable game."
+    ],
+    "g_1x32tsp": [],
+    "g_1x326cq": [],
+    "g_1x2ziyd": [],
+    "g_1x2vs3v": [],
+    "g_1x2nj2q": [],
+    "g_1x2fubr": [],
+    "g_1x2fs7h": [],
+    "g_1x29kqy": [
+      "Demo discrepancy: the source mentions a demo but the linked Steam app is marked coming soon. Verify a separate demo before marking playable."
+    ],
+    "g_1x28743": [],
+    "g_1x25yi2": [],
+    "g_1x213ev": [],
+    "g_1x1z0vh": [],
+    "g_1x1t0f3": [],
+    "g_1x1szym": [],
+    "g_1x1qc8i": [],
+    "g_1x1pq52": [],
+    "g_1x0rf7i": [],
+    "g_1x1muip": [],
+    "g_1x1hk10": [],
+    "g_1x16o8c": [],
+    "g_1x14ho9": [],
+    "g_1x14fdp": [],
+    "g_1x12wvq": [],
+    "g_1x11niu": [],
+    "g_1x1186k": []
+  }
+}

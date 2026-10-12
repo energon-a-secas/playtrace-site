@@ -397,6 +397,23 @@ dialog.dialog { background: var(--pt-paper); color: var(--pt-text); border: 1px 
 .feedback-compose h4 { font-size: 1.0625rem; font-weight: 650; line-height: 1.4; margin-bottom: 4px; }
 .project-feedback .field__hint { font-size: .8125rem; line-height: 1.55; color: var(--text-muted); }
 #feedbackForm { display: grid; gap: 8px; margin-top: 18px; }
+.expectation-followup { border-top: 1px solid var(--border); margin-top: 24px; padding-top: 20px; }
+.expectation-followup summary { cursor: pointer; font-weight: 650; line-height: 1.4; padding-block: 8px; }
+.expectation-question { border: 0; padding: 0; margin: 16px 0; min-width: 0; }
+.expectation-question legend { font-weight: 600; padding: 0 0 10px; }
+.expectation-options { display: grid; grid-template-columns: repeat(auto-fit,minmax(92px,1fr)); gap: 8px; }
+.expectation-options label { position: relative; cursor: pointer; }
+.expectation-options input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.expectation-options span { display: flex; flex-direction: column; gap: 4px; height: 100%; min-height: 44px; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; color: var(--pt-text); }
+.expectation-options strong { font-size: 18px; }
+.expectation-options input:checked + span { border-color: var(--pt-gold); background: var(--pt-amber-soft); color: var(--pt-ink); }
+.project-link-checks { border-top: 1px solid var(--border); padding-block: 16px; }
+.project-link-checks summary { cursor: pointer; font-weight: 600; padding-block: 6px; }
+.link-check-history { padding-left: 20px; color: var(--pt-muted); font-size: 14px; line-height: 1.7; }
+.expectation-options input:focus-visible + span { outline: 2px solid var(--pt-gold); outline-offset: 3px; }
+.expectation-question:disabled { opacity: .6; }
+.expectation-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.expectation-remove { display: block; margin-top: 16px; }
 #feedbackForm label { color: var(--text-primary); font-size: .875rem; font-weight: 600; }
 .field-optional { color: var(--text-muted); font-size: .8125rem; font-weight: 400; }
 #feedbackForm .input { width: 100%; min-width: 0; margin-bottom: 8px; font: inherit; font-size: .9375rem; }

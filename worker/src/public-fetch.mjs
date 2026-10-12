@@ -32,8 +32,8 @@ export async function publicPage(value, deps, limit = 1024 * 1024) {
       if (!location) throw new Error('Redirect has no destination.'); url = publicUrl(new URL(location, url).href); continue;
     }
     const type = response.headers.get('Content-Type') || '';
-    if (!response.ok || !/text\/html|application\/xhtml/.test(type)) { await response.body?.cancel(); return { url: url.href, status: response.status, html: '' }; }
-    return { url: url.href, status: response.status, html: new TextDecoder().decode(await readBytes(response.body, limit)) };
+    if (!response.ok || !/text\/html|application\/xhtml/.test(type)) { await response.body?.cancel(); return { url: url.href, status: response.status, redirectCount: hop, html: '' }; }
+    return { url: url.href, status: response.status, redirectCount: hop, html: new TextDecoder().decode(await readBytes(response.body, limit)) };
   }
   throw new Error('Too many redirects.');
 }

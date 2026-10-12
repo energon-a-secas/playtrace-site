@@ -44,6 +44,14 @@ test('incremental development and idle program states are not clicker genres',()
   assert.equal(classifySource('My physics game','AI tracks active vs. idle game states. I made incremental improvements.').category,'other');
   assert.equal(classifySource('My incremental game','A clicker about restoring a lake.').category,'clicker');
 });
+test('project destinations exclude art tools and documentation and clean markdown URLs',()=>{
+  const body='Third Party tools used:\nPlanets: https://deep-fold.itch.io/pixel-planet-generator\nBackdrops: https://deep-fold.itch.io/space-background-generator\n\nYou can check it out here: https://startrail.greyden.games/';
+  assert.equal(projectLinks({selftext:body}).projectUrl,'https://startrail.greyden.games/');
+  assert.equal(projectLinks({selftext:'My game uses Codex to build: https://support.modretro.com/en_us/guide'}).projectUrl,null);
+  assert.equal(projectLinks({selftext:'Try it on [wordminos.com](http://wordminos.com).\n\nDevelopment timeline: https://wordminos.com/making-of/timeline.html'}).projectUrl,'https://wordminos.com/');
+  assert.equal(projectLinks({selftext:'**Play it here:** [**https://gta.nitzan.games**](https://gta.nitzan.games/)'}).projectUrl,'https://gta.nitzan.games/');
+  assert.equal(projectLinks({selftext:'Free demo: https://store.steampowered.com/app/4784550/Another\\_One/'}).projectUrl,'https://store.steampowered.com/app/4784550/Another_One');
+});
 test('Steam demos provide verified names without masquerading as full releases; explicit admin names always win',async()=>{
   const data={steam_appid:4610750,type:'demo',name:'Wayward Crown Demo',is_free:true,release_date:{coming_soon:false}};
   const steam=normalizeSteam({'4610750':{success:true,data}},'4610750',NOW);

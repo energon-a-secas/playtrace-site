@@ -1,0 +1,433 @@
+{
+  "version": 1,
+  "reviewedAt": "2026-10-12",
+  "method": "Editorially selected public comments, checked against current archive bodies before publication. Context is unspecified unless the source establishes preview or play.",
+  "reviews": [
+    {
+      "gameId": "g_1wg3w54",
+      "summary": "u/Embarrassed_Text_347 warned that horizontal scrolling on a Mac laptop can navigate away from the page, potentially interrupting a game [1]. This is a control-compatibility concern; the comment does not establish a completed playtest.",
+      "commentIds": [
+        "p9s14ud"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "controls",
+          "tone": "concern",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1vtivsm",
+      "summary": "u/TechnicalZucchini698 liked the theme [1], while u/Lodarich found the visible ChatGPT watermark distracting [2]. These are presentation reactions, rather than reports about the gameplay.",
+      "commentIds": [
+        "p505v08",
+        "p4x4i2v"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "visuals",
+          "tone": "praise",
+          "experience": "preview"
+        },
+        {
+          "number": 2,
+          "theme": "visuals",
+          "tone": "concern",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1w8ryqn",
+      "summary": "The energy-system premise appealed to u/Qinistral [1]. u/Striking_Procedure40 suggested real-world disruptions, resource shortages and tax events to make planning more engaging, and expressed interest in a more developed version [2]. Neither comment establishes hands-on play.",
+      "commentIds": [
+        "p9hyujx",
+        "p85h2li"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "idea",
+          "tone": "praise",
+          "experience": "unspecified"
+        },
+        {
+          "number": 2,
+          "theme": "idea",
+          "tone": "suggestion",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1w8yjks",
+      "summary": "u/HighDefinist liked the concept [1]. u/Striking_Procedure40 suggested stronger art and escalating audio or visual cues as the automation theme develops [2]. These comments offer ideas, without a stated play session.",
+      "commentIds": [
+        "p87qxpe",
+        "p86w4xo"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "idea",
+          "tone": "praise",
+          "experience": "unspecified"
+        },
+        {
+          "number": 2,
+          "theme": "idea",
+          "tone": "suggestion",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1w2jt3y",
+      "summary": "u/Dear-Quarter-6818 saw a potential fit for a child in third grade and intended to try the game [1]. In a separate visual reaction, u/nalaf77 felt the character resembled Duolingo too closely [2]. Neither comment reports a child’s learning results.",
+      "commentIds": [
+        "p6tuop0",
+        "p6sz0zr"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "idea",
+          "tone": "praise",
+          "experience": "preview"
+        },
+        {
+          "number": 2,
+          "theme": "visuals",
+          "tone": "concern",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1x1u7g1",
+      "summary": "The preview drew praise for its art direction from u/SummeryMiko [1] and for its distinctive visual personality from u/EspectroHue, who also asked how the 3D models were made [2]. These reactions do not establish how the game feels to play.",
+      "commentIds": [
+        "pexvgx5",
+        "pewrl1e"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "visuals",
+          "tone": "praise",
+          "experience": "preview"
+        },
+        {
+          "number": 2,
+          "theme": "visuals",
+          "tone": "praise",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1vywhyh",
+      "summary": "Early feedback from u/witmann_pl asked for a hosted browser build and a short video so people could assess and try the game without downloading source code [1]. u/EconomySerious later acknowledged the live version and README and encouraged further development [2]. The earlier access friction may therefore have changed.",
+      "commentIds": [
+        "p61cvzc",
+        "p6gmyza"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "accessibility",
+          "tone": "suggestion",
+          "experience": "unspecified"
+        },
+        {
+          "number": 2,
+          "theme": "general",
+          "tone": "mixed",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wuqi09",
+      "summary": "u/AChillBear liked the preview’s appearance [1]. u/Short_Stable2397 also reacted positively, but noticed a close resemblance to an interface generated for their own game and suggested watching for visual similarity [2]. This is one commenter’s comparison, not evidence of a wider trend.",
+      "commentIds": [
+        "pd60czm",
+        "pd5qtst"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "visuals",
+          "tone": "praise",
+          "experience": "preview"
+        },
+        {
+          "number": 2,
+          "theme": "visuals",
+          "tone": "mixed",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1x2oye3",
+      "summary": "u/tokewithnick liked the project’s atmosphere and encouraged its progress [1]. u/Fluid_Equal_4942 asked for more detail about the art pipeline [2]. The available comments focus on presentation and development, with no stated hands-on play.",
+      "commentIds": [
+        "pf53dqv",
+        "pf6rijx"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "visuals",
+          "tone": "praise",
+          "experience": "preview"
+        },
+        {
+          "number": 2,
+          "theme": null,
+          "tone": null,
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1x1hk10",
+      "summary": "u/Raccoon_personality praised the realism of the very dark ocean scene [1]. u/Manager-Games145 was interested in the full game and asked what strategy elements it would include [2]. These are reactions to the preview and premise, rather than a released build.",
+      "commentIds": [
+        "peuithw",
+        "petholl"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "visuals",
+          "tone": "praise",
+          "experience": "preview"
+        },
+        {
+          "number": 2,
+          "theme": "idea",
+          "tone": null,
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wmz6w0",
+      "summary": "u/Useful_Use_6170 praised the smooth art and animation [1]. u/Kiko_Production liked the consistent style and HUD, while suggesting denser scenery and more polished projectile effects [2]. Both comments respond to the presentation.",
+      "commentIds": [
+        "pbekara",
+        "pbb5vsz"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "visuals",
+          "tone": "praise",
+          "experience": "preview"
+        },
+        {
+          "number": 2,
+          "theme": "visuals",
+          "tone": "mixed",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1x14ho9",
+      "summary": "u/alext_777 reported that the game hung their browser on a capable machine [1], including during asset loading [2]. Both reports come from the same commenter; they identify a loading issue to investigate, not a measured failure rate.",
+      "commentIds": [
+        "peqfz52",
+        "peqj54d"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "reliability",
+          "tone": "concern",
+          "experience": "played"
+        },
+        {
+          "number": 2,
+          "theme": "reliability",
+          "tone": "concern",
+          "experience": "played"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wlu5sj",
+      "summary": "u/Romeowns requested an option to invert the vertical axis for arrow-key flight controls [1]. u/TriggerHydrant reacted positively to the preview [2]. The controls suggestion does not specify a device or a completed play session.",
+      "commentIds": [
+        "pb4jj6g",
+        "pb7kusy"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "controls",
+          "tone": "suggestion",
+          "experience": "unspecified"
+        },
+        {
+          "number": 2,
+          "theme": "visuals",
+          "tone": "praise",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wz7nzc",
+      "summary": "u/Significant_Treat_87 liked the rock-paper-scissors concept, but felt the plain yellow font clashed with the pixel art and that the frequently repeated hand animations needed more polish [1]. This is a specific visual-design critique from one commenter.",
+      "commentIds": [
+        "pe9jusz"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "visuals",
+          "tone": "mixed",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wik50b",
+      "summary": "u/Livid_Shallot5701 liked the concept but wanted a more consistent interface [1]. The same commenter suggested heating the pan from the centre outward as an alternative elimination mechanic [2]. These are design suggestions, with play experience unstated.",
+      "commentIds": [
+        "padh0f4",
+        "padh5la"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "visuals",
+          "tone": "mixed",
+          "experience": "unspecified"
+        },
+        {
+          "number": 2,
+          "theme": "idea",
+          "tone": "suggestion",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1vta5jl",
+      "summary": "u/non__local felt the old-school dungeon-crawler aesthetic suited horror [1]. u/0xCx also responded positively to the retro presentation, comparing it with older Elder Scrolls Travels games [2]. The comments describe visual impressions rather than play outcomes.",
+      "commentIds": [
+        "p4ua8ek",
+        "p4tmszy"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "visuals",
+          "tone": "praise",
+          "experience": "preview"
+        },
+        {
+          "number": 2,
+          "theme": "visuals",
+          "tone": "praise",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1x1uef5",
+      "summary": "u/ClashAtNightfall found the barks amusing, but said they would still prefer playing N [1]. This is one commenter’s comparison with the inspiration; the comment does not establish a hands-on session.",
+      "commentIds": [
+        "pewsf10"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "idea",
+          "tone": "mixed",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1x2n554",
+      "summary": "u/TranqyPoo praised it as a free browser game [1], while u/UnboundedMan liked its style [2]. The first comment does not explicitly state how much was played; the second is a visual impression.",
+      "commentIds": [
+        "pf4jb8m",
+        "pf45lvo"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "general",
+          "tone": "praise",
+          "experience": "unspecified"
+        },
+        {
+          "number": 2,
+          "theme": "visuals",
+          "tone": "praise",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wt45me",
+      "summary": "u/barret232hxc felt the ant theme added a fresh identity to familiar mechanics [1]. u/OneDay_OneLife liked the preview and wanted to know how its video was produced [2]. These comments support interest in the theme and presentation, without establishing play experience.",
+      "commentIds": [
+        "pd7yks9",
+        "pcr3t62"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "idea",
+          "tone": "praise",
+          "experience": "unspecified"
+        },
+        {
+          "number": 2,
+          "theme": "visuals",
+          "tone": "praise",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wu3sii",
+      "summary": "After driving off-road, u/Imnotanad praised the experience but wanted a clearer purpose and a lower gear for a slower ride [1]. u/Tiny_Flatworm4726 liked the atmosphere but found it became boring quickly [2]. u/Ill_Mechanic_3300 suggested mountain roads, hairpin turns and traffic pressures to add challenge [3].",
+      "commentIds": [
+        "pczwg76",
+        "pczyur3",
+        "pdaewf2"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "controls",
+          "tone": "mixed",
+          "experience": "played"
+        },
+        {
+          "number": 2,
+          "theme": "pacing",
+          "tone": "mixed",
+          "experience": "unspecified"
+        },
+        {
+          "number": 3,
+          "theme": "challenge",
+          "tone": "suggestion",
+          "experience": "unspecified"
+        }
+      ]
+    }
+  ]
+}

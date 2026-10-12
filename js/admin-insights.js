@@ -6,6 +6,7 @@ import { trend, breakdown, valuesFor, mentionDimensions, compareRelease, csv, mi
 import { feedbackOptions } from './feedback-options.js';
 import { releaseTimeline } from './release-evidence.js';
 import { loadFeedbackPatterns } from './feedback-pattern-view.js';
+import { renderHosting } from './hosting-view.js';
 
 const $=id=>document.getElementById(id),n=value=>Number(value).toLocaleString(),pct=(a,b)=>b?`${(a/b*100).toFixed(1)}%`:'No sample';
 let api,run=0,busy=false,data=null,usage=null,exportRows=[],evidenceLimit=20,publicView=false;
@@ -43,6 +44,7 @@ export async function loadInsights(refresh=false){
     $('insightsContent').hidden=false;$('insightStatus').textContent=`${n(games.length)} projects · evidence read ${dateLabel(data.observedAt)}${publicView?' · Public catalogue evidence':' · Admin view'}`;
     setValues('trend');setValues('comparison');$('releaseEvent').innerHTML=modelReleases.map((item,i)=>`<option value="${i}">${e(item.name)} · ${item.date}</option>`).join('');$('releaseEvent').value=String(modelReleases.length-1);
     paintOverview();paintTrend();paintComparison();paintUsage();paintReleases();
+    renderHosting($('hostingInsights'),data.games);
     loadFeedbackPatterns($('feedbackPatterns'),api,data.games,data.categories);
   }catch(error){if(current===run)$('insightStatus').textContent=error.message;}
   finally{if(current===run){busy=false;$('refreshInsights').disabled=false;}}
@@ -66,8 +68,8 @@ function paintOverview(){
   $('genreBreakdown').innerHTML=distribution(breakdown(games,'category'),games.length);
   $('platformBreakdown').innerHTML=distribution(breakdown(games,'distribution'),games.length);
   $('stageBreakdown').innerHTML=distribution(breakdown(games,'stage'),games.length);
-  const stores=games.filter(g=>g.storeProvider),demos=stores.filter(g=>g.releaseKind==='demo'),health=new Map();for(const g of games)health.set(g.linkState,(health.get(g.linkState)||0)+1);
-  $('storeCoverage').innerHTML=`<p>${n(stores.length)} projects have store evidence; ${n(demos.length)} are identified as demos. ${n(stores.filter(g=>g.browserBuild).length)} store pages offer browser builds and ${n(stores.filter(g=>g.downloadableBuild).length)} offer downloads; these may overlap and checks do not test gameplay. Current stages above combine creator descriptions, editorial choices and recent store checks. They are not verified launch counts or a release timeline.</p><p>Link checks: ${[...health].map(([key,count])=>`${n(count)} ${e(key.replaceAll('-',' '))}`).join(' · ')}. A reachable page does not prove the build works.</p>`;
+  const stores=games.filter(g=>g.storeProvider),demos=stores.filter(g=>g.releaseKind==='demo'),health=new Map();for(const g of games.filter(g=>g.projectUrl))health.set(g.linkState,(health.get(g.linkState)||0)+1);
+  $('storeCoverage').innerHTML=`<p>${n(stores.length)} projects have store evidence; ${n(demos.length)} are identified as demos. ${n(stores.filter(g=>g.browserBuild).length)} store pages offer browser builds and ${n(stores.filter(g=>g.downloadableBuild).length)} offer downloads; these may overlap and checks do not test gameplay. Current stages above combine creator descriptions, editorial choices and recent store checks. They are not verified launch counts or a release timeline.</p><p>Listed game links: ${[...health].map(([key,count])=>`${n(count)} ${e(key.replaceAll('-',' '))}`).join(' · ')}. A reachable page does not prove the build works.</p>`;
 }
 function paintTrend(){
   if(!data)return;const dimension=$('trendDimension').value,value=$('trendValue').value,from=$('trendFrom').value,to=$('trendTo').value;

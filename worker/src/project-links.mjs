@@ -10,11 +10,11 @@ export function repositoryUrl(value) {
 }
 export function projectLinks(raw) {
   const body = typeof raw.selftext === 'string' ? raw.selftext.slice(0, 12000) : '';
-  const links = [raw.url, ...(body.match(/https:\/\/[^\s<>"\[\]()]+/g) || []).slice(0, 30)];
+  const links = [raw.url, ...(body.match(/https?:\/\/[^\s<>"\[\]()*`]+/g) || []).slice(0, 30)];
   let repo = null;
   const playable = [];
   for (const [index, link] of links.entries()) {
-    const candidate = canonicalProjectUrl(typeof link === 'string' ? link.replace(/&amp;/g,'&').replace(/[.,*`]+$/, '') : null);
+    const candidate = canonicalProjectUrl(typeof link === 'string' ? link.replace(/^http:/,'https:').replace(/\\([_~])/g,'$1').replace(/&amp;/g,'&').replace(/[.,*`]+$/, '') : null);
     if (!candidate) continue;
     const position = body.indexOf(link), context = position >= 0 ? body.slice(Math.max(0, position - 160), position) : '';
     const paragraph = position >= 0 ? body.slice(Math.max(0, body.lastIndexOf('\n\n',position)),position) : '';
@@ -28,12 +28,19 @@ export function projectLinks(raw) {
       continue;
     }
     const url = new URL(candidate);
+    // Store pages can also be asset tools. Keep development references out of
+    // the play action, even when they precede the actual game destination.
+    if (/^(?:support|docs|developers)\./i.test(url.hostname)
+      || /\/(?:making-of|docs|documentation|support)(?:\/|$)/i.test(url.pathname)
+      || /\b(?:third.party tools?|assets? used|resources? used)\b/i.test(paragraph)
+      || /\b(?:pixel-planet-generator|space-background-generator)\b/i.test(url.pathname)) continue;
     if (/(?:^|\.)(?:google\.com|wikipedia\.org|skool\.com|github\.com|gitlab\.com|codeberg\.org)$/.test(url.hostname) && url.hostname !== 'play.google.com') continue;
     const store = (url.hostname === 'store.steampowered.com' && /^\/app\/\d+(?:\/|$)/.test(url.pathname))
       || (url.hostname.endsWith('.itch.io') && url.pathname.length > 1) || ['play.google.com','apps.apple.com'].includes(url.hostname);
     const pages = url.hostname.endsWith('.github.io') || url.hostname.endsWith('.gitlab.io');
     const after = position >= 0 ? body.slice(position + link.length, position + link.length + 160) : '';
     const playContext = /\b(play|playable|try|demo|download)\b/i.test(context)
+      || /\bcheck (?:it|the game) out here\b/i.test(context)
       || /\b(?:runs? in (?:the|your) browser|free to play)\b/i.test(after);
     if (store || pages || playContext || /\bgame\b/i.test(context)) playable.push({url:candidate,score:(store?30:pages?25:playContext?20:10)-index/100});
   }

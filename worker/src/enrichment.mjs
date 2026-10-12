@@ -26,13 +26,14 @@ export async function checkProject(db, env, gameId, deps, store = false) {
   let result;
   if (store && appId) {
     const steam = await refreshSteam(db, appId, deps);
-    result = steam ? { status: 'reachable', provider: 'steam', title: steam.title, image: steam.headerUrl, playable: steam.state === 'released', browser: false, steamState: steam.state, steamType: steam.type, finalUrl: steam.url, storeCheckedAt: steam.checkedAt }
-      : { status: 'unverified', note: 'Steam did not return current game metadata.' };
+    result = steam ? { status: 'reachable', provider: 'steam', title: steam.title, image: steam.headerUrl, playable: steam.state === 'released', browser: false, steamState: steam.state, steamType: steam.type, finalUrl: steam.url, storeCheckedAt: steam.checkedAt, evidenceCheckedAt:steam.checkedAt }
+      : { status: 'unverified', failureReason:'store-api', note: 'Steam did not return current game metadata.' };
   } else {
     try {
       const page = await publicPage(game.projectUrl, deps);
       const status = [404,410].includes(page.status) ? 'broken' : [401,403,429].includes(page.status) ? 'blocked' : page.status >= 200 && page.status < 300 ? 'reachable' : 'unverified';
-      result = { status, httpStatus: page.status, finalUrl: page.url };
+      result = { status, httpStatus: page.status, finalUrl: page.url, redirectCount:page.redirectCount,
+        failureReason:status==='broken'?'missing':status==='blocked'?'restricted':page.status>=500?'server':null };
       if (store && status === 'reachable' && page.html) {
         const metadata = pageMetadata(page.html, page.url);
         if (metadata.title && !/^(?:just a moment|access denied|attention required|error|page not found|404)\b/i.test(metadata.title)) result = { ...result, ...metadata };
@@ -49,14 +50,19 @@ export async function checkProject(db, env, gameId, deps, store = false) {
         } catch { /* Keep the public page evidence, without caching private API data. */ }
       }
       if (result.playable) result.evidence = result.browser ? 'Store page includes an embedded browser game; gameplay has not been tested.' : 'Store page offers a download; installation and gameplay have not been tested.';
-    } catch { result = { status: 'unverified', note: 'This check could not verify the destination. A timeout or access restriction is not proof of a dead game.' }; }
+    } catch(error) { result = { status: 'unverified', failureReason:/timeout|abort/i.test(error.name+' '+error.message)?'timeout':/DNS|public\.$/.test(error.message)?'dns':/Redirect|redirect/.test(error.message)?'redirect':/public HTTPS/.test(error.message)?'policy':'network', note: 'This check could not verify the destination. A timeout or access restriction is not proof of a dead game.' }; }
   }
   const previous = await query(db, 'SELECT project_url,payload_json FROM project_enrichment WHERE game_id=?', gameId).first();
   const old = previous?.project_url === game.projectUrl ? JSON.parse(previous.payload_json) : {};
   const successfulStore=store&&result.status==='reachable'&&Boolean(result.provider);
   // A blocked page check cannot erase a recently verified build or its artwork.
   // Keep the last successful store evidence separate from general link health.
-  const value = { ...(!successfulStore ? old : {}), ...result, checkedAt, projectUrl: game.projectUrl,
+  const value = { ...(!successfulStore ? old : {}), httpStatus:null,finalUrl:null,redirectCount:null,failureReason:null, ...result, checkedAt, projectUrl: game.projectUrl,
+    checkMethod:store&&appId?'store-api':'http',evidenceCheckedAt:result.evidenceCheckedAt||checkedAt,
+    previousStatus:old.status&&old.status!==result.status?old.status:old.previousStatus||null,
+    previousCheckedAt:old.status&&old.status!==result.status?old.checkedAt:old.previousCheckedAt||null,
+    failureSince:result.status==='broken'?(old.status==='broken'?old.failureSince||old.checkedAt:checkedAt):null,
+    recoveredAt:result.status==='broken'?null:result.status==='reachable'&&old.status==='broken'?checkedAt:old.recoveredAt||null,
     ...(successfulStore ? {storeCheckedAt:result.storeCheckedAt||checkedAt,storeStatus:result.status} : old.provider ? {storeCheckedAt:old.storeCheckedAt||old.checkedAt,storeStatus:old.storeStatus||old.status} : {}) };
   await query(db, `INSERT INTO project_enrichment(game_id,project_url,payload_json,checked_at) VALUES(?,?,?,?)
     ON CONFLICT(game_id) DO UPDATE SET project_url=excluded.project_url,payload_json=excluded.payload_json,checked_at=excluded.checked_at`, gameId, game.projectUrl, JSON.stringify(value), checkedAt).run();

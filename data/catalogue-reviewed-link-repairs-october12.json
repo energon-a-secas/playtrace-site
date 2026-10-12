@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "reviewedAt": "2026-10-12",
+  "reviewer": "Source-backed destination corrections found during the 72-link recheck. Shared facts also appear in the newest-project review; unknown fields remain unknown.",
+  "categories": {
+    "sports": "Sports",
+    "racing": "Racing",
+    "card-game": "Card game",
+    "horror": "Horror",
+    "survival": "Survival"
+  },
+  "facts": [
+    {
+      "gameId": "g_1x3yir1",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3yir1/",
+      "evidence": "The demo has the first two chapters, a roguelite mode up to the second boss, an arena and co-op. It's free and runs in the browser on PC and mobile."
+    },
+    {
+      "gameId": "g_1x3yir1",
+      "field": "platforms",
+      "value": [
+        "Browser",
+        "Mobile"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3yir1/",
+      "evidence": "The demo has the first two chapters, a roguelite mode up to the second boss, an arena and co-op. It's free and runs in the browser on PC and mobile."
+    },
+    {
+      "gameId": "g_1x3yir1",
+      "field": "summary",
+      "value": "A superhero browser demo with two story chapters, a roguelite mode, an arena and local co-op. Combine powers to build your hero. Currently available in Spanish.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3yir1/",
+      "evidence": "The demo has the first two chapters, a roguelite mode up to the second boss, an arena and co-op. It's free and runs in the browser on PC and mobile."
+    },
+    {
+      "gameId": "g_1x3ewd8",
+      "field": "title",
+      "value": "Croissant Panic",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3ewd8/",
+      "evidence": "Croissant Panic"
+    },
+    {
+      "gameId": "g_1x3ewd8",
+      "field": "projectUrl",
+      "value": null,
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3ewd8/",
+      "evidence": "https://support.modretro.com/en_us/chromatic-devday-edition-quickstart-guid-By1iOlcMg"
+    },
+    {
+      "gameId": "g_1x3ewd8",
+      "field": "platforms",
+      "value": [
+        "Game Boy Color"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x3ewd8/",
+      "evidence": "a native Game Boy Color ROM and testing it in the emulator"
+    },
+    {
+      "gameId": "g_1x11niu",
+      "field": "title",
+      "value": "Grand Total Anarchy",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x11niu/",
+      "evidence": "Grand Total Anarchy"
+    },
+    {
+      "gameId": "g_1x11niu",
+      "field": "projectUrl",
+      "value": "https://gta.nitzan.games/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x11niu/",
+      "evidence": "https://gta.nitzan.games/"
+    },
+    {
+      "gameId": "g_1vmd9qv",
+      "field": "projectUrl",
+      "value": "https://freedom-wars.vercel.app/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vmd9qv/",
+      "evidence": "https://freedom-wars.vercel.app/"
+    },
+    {
+      "gameId": "g_1syt5fp",
+      "field": "projectUrl",
+      "value": "https://kaviox.com/ridge-run",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1syt5fp/",
+      "evidence": "https://kaviox.com/ridge-run"
+    }
+  ],
+  "flags": {
+    "g_1x3yir1": [],
+    "g_1x3ewd8": [
+      "Removed a hardware support article from the game action; no public ROM/download supplied."
+    ],
+    "g_1x11niu": [],
+    "g_1vmd9qv": [
+      "Corrected Markdown or sentence punctuation accidentally included in the game URL; original source retained."
+    ],
+    "g_1syt5fp": [
+      "Corrected Markdown or sentence punctuation accidentally included in the game URL; original source retained."
+    ]
+  }
+}

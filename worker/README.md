@@ -115,3 +115,6 @@ Apply `0011_usage_metrics.sql` before this Worker release. The :50 maintenance i
 Apply `0012_reviewed_project_facts.sql` before publishing the evidence pilot Worker. Accepted field observations retain their source, quote and check time separately from source imports. Administrator edits take precedence. Source removal clears facts citing that post; merges preserve the receiving project's accepted facts. Rollback `0012` only after deploying a Worker that no longer reads `project_facts`. The [100-project pilot](../docs/enrichment-pilot100.md) describes preparation, conflict guards and preservation checks.
 
 Built-in review studies are seeded with conflict-safe inserts. Difficulty, Controls, Accessibility and Link Health are included; administrator edits and inactive states survive reseeding. Public topic options reflect active forms only.
+
+
+Latest schema: apply all migration files through `0016_play_expectations.sql` in filename order. `0015` preserves dated destination checks; `0016` adds optional browser-owned before/after-play comparisons. Deploy migrations, then Worker, then the static frontend. See [feedback operations](../docs/feedback-operations.md) for cadence, validation and publication policy.

@@ -11,6 +11,21 @@ import { feedbackTopics } from '../../js/feedback-patterns.js';
 
 export const jobKinds = ['links','store','feedback','references','research'];
 const projectUrl = effectiveProjectUrl;
+export async function queueLinkMaintenance(db,deps) {
+  const pending=await query(db,"SELECT count(*) AS count FROM editorial_jobs WHERE kind='links' AND status IN('pending','running')").first();
+  if(pending.count>=8)return {queued:0};
+  const at=new Date(deps.now()).toISOString(),week=new Date(deps.now()-7*86400000).toISOString(),month=new Date(deps.now()-30*86400000).toISOString();
+  const row=await query(db,`SELECT g.id FROM games g LEFT JOIN project_overrides o ON o.game_id=g.id LEFT JOIN project_enrichment e ON e.game_id=g.id
+    WHERE g.status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id)
+    AND (${projectUrl()}) IS NOT NULL AND (${projectUrl()}) NOT LIKE 'https://%.itch.io/%' AND (${projectUrl()}) NOT LIKE 'https://store.steampowered.com/app/%'
+    AND NOT EXISTS(SELECT 1 FROM editorial_jobs j WHERE j.game_id=g.id AND j.kind='links' AND (j.status IN('pending','running') OR j.updated_at>?))
+    AND (e.game_id IS NULL OR e.project_url!=(${projectUrl()}) OR e.checked_at<CASE WHEN json_extract(e.payload_json,'$.status')='reachable' THEN ? ELSE ? END)
+    ORDER BY CASE WHEN json_extract(e.payload_json,'$.status')='broken' THEN 0 WHEN e.game_id IS NULL THEN 1 ELSE 2 END,e.checked_at,g.updated_at DESC LIMIT 1`,week,month,week).first();
+  if(!row)return {queued:0};
+  const added=await query(db,`INSERT INTO editorial_jobs(id,game_id,kind,window_start,created_at,updated_at,requested_by)
+    VALUES(?,?,'links',?,?,?,'link-maintenance') ON CONFLICT(game_id,kind,window_start) DO NOTHING RETURNING id`,crypto.randomUUID(),row.id,at.slice(0,10)+'T00:00:00.000Z',at,at).first();
+  return {queued:added?1:0};
+}
 export async function queueFeedbackMaintenance(db,deps,{weekly=false}={}) {
   const at=new Date(deps.now()).toISOString(),since=new Date(deps.now()-60*86400000).toISOString();
   const key='weekly_feedback_queue',week=at.slice(0,10);
@@ -100,7 +115,7 @@ export async function runJobs(db, env, deps, limit = 1, kind = 'all') {
     const rows=await query(db,`SELECT * FROM editorial_jobs WHERE status='pending'
       ${kind==='all'?'':'AND kind=?'}
       AND (kind NOT IN('feedback','references') OR ?<=? OR (kind='feedback' AND json_type(payload_json,'$.archiveBatch')='object')) AND (kind NOT IN('feedback','research') OR ?<=?)
-      ORDER BY CASE WHEN kind='feedback' AND requested_by='feedback-maintenance' THEN 0 ELSE 1 END,created_at,id LIMIT ?`,...(kind==='all'?[]:[kind]),cooldown.archive||0,deps.now(),cooldown.jev||0,deps.now(),limit).all();
+      ORDER BY CASE WHEN kind='feedback' AND requested_by='feedback-maintenance' THEN 0 WHEN requested_by='link-maintenance' THEN 1 ELSE 2 END,created_at,id LIMIT ?`,...(kind==='all'?[]:[kind]),cooldown.archive||0,deps.now(),cooldown.jev||0,deps.now(),limit).all();
     if(!rows.results.length){
       const pending=await query(db,`SELECT count(*) AS count FROM editorial_jobs WHERE status='pending' ${kind==='all'?'':'AND kind=?'}`,...(kind==='all'?[]:[kind])).first();
       const retryAt=Math.min(...Object.values(cooldown).filter(at=>at>deps.now()));

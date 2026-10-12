@@ -2,6 +2,7 @@ import { escHtml as e } from './utils.js';
 import { categoryLabel, dateLabel, label, sourceHeadline, sourceOnlySummary, money } from './collection.js';
 import { icon, playLink } from './icons.js';
 import { projectPath } from './project-url.js';
+import { linkCheckMarkup } from './link-check-view.js';
 
 export const previewUrl = game => game.preview.posterUrl || (game.preview.kind === 'image' ? game.preview.url : null);
 export function gameDescription(game) {
@@ -46,6 +47,7 @@ export function gamePageContent(game,catalog) {
       ${game.summary&&!sourceOnlySummary(game)?`<p class="game-page-description">${e(game.summary)}</p>`:''}
       ${game.availability?.status==='broken'?'<p class="link-health-note">The project link needs attention. Its source history is still available below.</p>':''}
       ${storeFacts(game,catalog)}
+      <div id="pageLinkChecks">${linkCheckMarkup(game)}</div>
       ${game.repositoryUrl?`<p><a class="text-link" href="${e(game.repositoryUrl)}" target="_blank" rel="noopener noreferrer">${icon('github')} Source code ↗</a></p>`:''}
       ${shots.length?`<details class="game-page-gallery"><summary>Screenshots <span>${shots.length}</span></summary><ul class="media-gallery">${shots.map(shot=>`<li><a href="${e(shot.url)}" target="_blank" rel="noopener noreferrer"><img src="${e(shot.url)}" alt="Screenshot of ${e(game.title)}" loading="lazy" decoding="async" width="640" height="360" referrerpolicy="no-referrer"></a><a class="text-link" href="${e(shot.source)}" target="_blank" rel="noopener noreferrer">${e(shot.label)} ↗</a></li>`).join('')}</ul></details>`:''}
       <section class="game-page-history" aria-labelledby="gameHistoryTitle"><div class="feedback-heading"><h2 id="gameHistoryTitle">Project history</h2><span>${game.posts.length} source ${game.posts.length===1?'post':'posts'}</span></div><ol class="timeline">${game.posts.map(post=>`<li><div class="timeline__date"><time datetime="${post.createdAt}">${e(dateLabel(post.createdAt))}</time><span>${e(label(post.kind))}</span></div><h3><a href="${e(post.url)}" target="_blank" rel="noopener noreferrer">${e(post.title)} ↗</a></h3>${post.excerpt?`<p>${e(post.excerpt)}</p>`:''}</li>`).join('')}</ol></section>

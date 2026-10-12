@@ -4,6 +4,7 @@ import { parsePrice, money, dateLabel } from './collection.js';
 import { $, escHtml as e } from './utils.js';
 import { feedbackQuestions, feedbackOptions, feedbackExperiences, validChoices } from './feedback-options.js';
 import { editKey as guestEditKey, keyPersists } from './guest-key.js';
+import { bindExpectations, loadExpectations, clearExpectations } from './expectation-followup.js';
 
 let session = 0, readNumber = 0, controller;
 const empty = () => ({ gameId: '', entries: [], count: 0, prices: null, nextCursor: null, mine: null,
@@ -41,11 +42,13 @@ function fillOwn() {
   for (const option of Object.keys(feedbackExperiences)) $(`feedbackExperience-${option}`).checked = (feedback.mine?.experience || 'unspecified') === option;
 }
 export function clearFeedback() {
+  clearExpectations();
   session++; readNumber++; controller?.abort(); feedback = empty();
 }
 export function resetFeedback(gameId) {
   if (feedback.gameId === gameId) return;
   clearFeedback(); feedback.gameId = gameId; fillOwn();
+  loadExpectations(gameId);
   for (const id of ['feedbackBody', 'feedbackPrice']) $(id).removeAttribute('aria-invalid');
   renderFeedback();
 }
@@ -181,6 +184,7 @@ export async function removeFeedback() {
   finally { if (current === session) { feedback.busy = false; renderFeedback(); } }
 }
 export function bindFeedback() {
+  bindExpectations($('expectationFollowup'));
   $('feedbackExperience').innerHTML = `<fieldset class="feedback-question"><legend>Your perspective <span class="field-optional">(optional)</span></legend><div class="feedback-chips">${Object.entries(feedbackExperiences).map(([id,label])=>`<label class="feedback-chip"><input type="radio" name="experience" id="feedbackExperience-${id}" value="${id}" ${id==='unspecified'?'checked':''}><span>${e(id==='unspecified'?'Skip':label)}</span></label>`).join('')}</div></fieldset>`;
   $('feedbackQuestions').innerHTML = feedbackQuestions.map((question, index) => `<fieldset class="feedback-question"><legend><span aria-hidden="true">0${index+1}</span> ${e(question.title)}</legend><div class="feedback-chips">${question.options.map(option => `<label class="feedback-chip"><input type="checkbox" id="feedbackChoice-${option.id}" name="choices" value="${option.id}"><span><span class="feedback-chip__check" aria-hidden="true">+</span>${e(option.label)}</span></label>`).join('')}</div></fieldset>`).join('');
   $('feedbackForm').addEventListener('submit', event => { event.preventDefault(); saveFeedback(); });
