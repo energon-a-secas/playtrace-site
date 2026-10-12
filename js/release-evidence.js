@@ -21,9 +21,11 @@ export function releaseEvidence(steam){
 }
 export function releaseTimeline(games){
   const apps=new Map();
-  for(const game of games){const release=game.storeRelease;if(!release?.date||release.state!=='released')continue;
+  for(const game of games){for(const release of [game.storeRelease,game.demoRelease]){
+    if(!release?.date||release.state!=='released')continue;
     const key=release.provider+':'+release.appId,old=apps.get(key);
-    if(!old||game.firstSeenAt<old.firstSeenAt)apps.set(key,game);
+    if(!old||game.firstSeenAt<old.firstSeenAt)apps.set(key,{...game,storeRelease:release});
+    }
   }
   const entries=[...apps.values()].sort((a,b)=>b.storeRelease.date.localeCompare(a.storeRelease.date)||a.id.localeCompare(b.id)),buckets=new Map();
   for(const game of entries){const release=game.storeRelease,month=release.date.slice(0,7),row=buckets.get(month)||{month,game:0,demo:0,'early-access':0};if(Object.hasOwn(row,release.kind))row[release.kind]++;buckets.set(month,row);}

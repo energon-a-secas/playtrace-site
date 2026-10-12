@@ -97,6 +97,14 @@ export function validateSteam(steam, projectUrl) {
     if(steam.type!=='demo'||!/^[1-9]\d{0,9}$/.test(steam.fullGame.appId)||steam.fullGame.appId===steam.appId||steam.fullGame.url!==`https://store.steampowered.com/app/${steam.fullGame.appId}/`)throw new Error('Invalid demo parent');
     text(steam.fullGame.title,300);
   }
+  if(steam.demoAppIds!==undefined&&(!Array.isArray(steam.demoAppIds)||steam.demoAppIds.length>3||new Set(steam.demoAppIds).size!==steam.demoAppIds.length||steam.demoAppIds.some(id=>typeof id!=='string'||!/^[1-9]\d{0,9}$/.test(id)||id===steam.appId)))throw new Error('Invalid related demo IDs');
+  if(steam.demo!=null){
+    const demo=steam.demo;
+    if(steam.type!=='game'||!steam.demoAppIds?.includes(demo.appId)||demo.url!==`https://store.steampowered.com/app/${demo.appId}/`)throw new Error('Invalid related demo');
+    text(demo.title,300);date(demo.checkedAt);
+    if(demo.releaseDateLabel!=null)text(demo.releaseDateLabel,100,true);
+    if(!Array.isArray(demo.platforms)||demo.platforms.length>3||demo.platforms.some(p=>!['Windows','macOS','Linux'].includes(p)))throw new Error('Invalid demo platforms');
+  }
   if(steam.screenshots!==undefined){
     if(!Array.isArray(steam.screenshots)||steam.screenshots.length>6)throw new Error('Invalid store screenshots');
     for(const value of steam.screenshots){

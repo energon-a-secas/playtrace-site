@@ -3,12 +3,14 @@ import { state } from './state.js';
 import { editKey } from './guest-key.js';
 import { money, dateLabel, safeUrl, validateSteam } from './collection.js';
 import { $, escHtml as e } from './utils.js';
+import { playLink, relatedSteamLink } from './icons.js';
+import { verifiedSteamDemo } from './steam-demo.js';
 
 let generation = 0, controller, pending = false, projectId = '', mediaVersion = '';
 const fresh = steam => Date.now() - Date.parse(steam.checkedAt) < 36 * 3600000;
 export function storeLabel(steam) {
   if (!steam) return '';
-  const stateLabel = steam.type === 'demo' ? (steam.state === 'released' ? '' : 'Upcoming demo') : steam.releaseKind==='early-access' ? 'Early Access' : steam.state === 'coming-soon' ? 'Coming soon' : '';
+  const stateLabel = steam.type === 'demo' ? (steam.state === 'released' ? '' : 'Upcoming demo') : steam.releaseKind==='early-access' ? 'Early Access' : steam.state === 'coming-soon' ? verifiedSteamDemo(steam)?'Full game coming soon':'Coming soon' : '';
   const price = steam.type !== 'demo' && fresh(steam) && steam.priceCents !== null ? steam.isFree ? 'Free to play' : `${money(steam.priceCents)} USD` : '';
   return `${stateLabel ? `<span class="store-badge">${e(stateLabel)}</span>` : ''}${price ? `<span class="store-price">${e(price)}</span>` : ''}`;
 }
@@ -19,7 +21,7 @@ function renderStore(game) {
   const itchFacts=itch?Object.entries({Genre:itch.genres,'Made with':itch.engines,Inputs:itch.inputs,Languages:itch.languages,'AI disclosure':itch.aiDisclosure}).filter(([,values])=>values?.length):[];
   const itchBuild=itch?.browser?'Browser build on itch.io':itch?.downloadable?'Download on itch.io':itch?.purchaseOffered?'Purchase offered on itch.io':'Listed on itch.io';
   const itchLabel=itch&&(itch.status==='broken'||Date.now()-Date.parse(itch.storeCheckedAt)>=7*86400000)?`Last seen: ${itchBuild}`:itchBuild;
-  $('itemDialogStore').innerHTML = steam ? `<div class="store-summary">${storeLabel(steam)}${steam.fullGame?`<a class="text-link" href="${e(steam.fullGame.url)}" target="_blank" rel="noopener noreferrer">Full game: ${e(steam.fullGame.title)} ↗</a>`:''}${facts?`<small>${e(facts)}</small>`:''}<small>${fresh(steam) ? 'US store' : 'Price needs a refresh'} · checked ${e(dateLabel(steam.checkedAt))}</small></div>`
+  $('itemDialogStore').innerHTML = steam ? `<div class="store-summary">${storeLabel(steam)}${relatedSteamLink(steam)}${facts?`<small>${e(facts)}</small>`:''}<small>${fresh(steam) ? 'US store' : 'Store details need a refresh'} · checked ${e(dateLabel(steam.checkedAt))}</small></div>`
     : itch?`<div class="store-summary"><span class="store-badge">${e(itchLabel)}</span>${itch.platforms.length?`<small>${e(itch.platforms.join(', '))}</small>`:''}<small>${itch.releaseStatus?`Creator status: ${e(itch.releaseStatus)} · `:''}Listing checked ${e(dateLabel(itch.storeCheckedAt))}</small>${itchFacts.length?`<details class="store-details"><summary>From the itch.io listing</summary><dl>${itchFacts.map(([label,values])=>`<div><dt>${e(label)}</dt><dd>${e(values.join(', '))}</dd></div>`).join('')}</dl><a class="text-link" href="${e(safeUrl(itch.sourceUrl))}" target="_blank" rel="noopener noreferrer">View source ↗</a></details>`:''}</div>`:'';
 }
 function mediaFor(game) {
@@ -56,11 +58,16 @@ export function prepareProject(game) {
   const current = generation;
   renderStore(game); renderMedia(game);
   if (!changed) return;
-  if (!state.service?.capabilities?.steam || !/^https:\/\/store\.steampowered\.com\/app\//.test(game.projectUrl || '')) return;
+  // A deep link may open before the service-status request finishes. Query a
+  // known Steam destination once regardless; failure keeps the saved details.
+  if (!/^https:\/\/store\.steampowered\.com\/app\//.test(game.projectUrl || '')) return;
   request(`/games/${game.id}/store`, { signal: controller.signal }).then(value => {
     if (current !== generation || state.detail?.id !== game.id || value.gameId !== game.id) return;
     if (value.steam) validateSteam(value.steam, game.projectUrl);
     game.steam = value.steam;
+    // Store hydration can discover a demo after the catalogue was rendered.
+    const links=$('itemDialogLinks'),focused=links.contains(document.activeElement);
+    links.innerHTML=playLink(game);if(focused)links.querySelector('a')?.focus({preventScroll:true});
     renderStore(game); renderMedia(game);
   }).catch(() => { /* A source link remains usable when store metadata is unavailable. */ });
 }

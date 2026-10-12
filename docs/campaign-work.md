@@ -48,3 +48,7 @@ The [full catalogue refresh](catalogue-refresh-october12.md) covers 1,403 source
 ## Source, feedback and destination follow-up, October 12
 
 Completed the next four priorities: [50-entry metadata review, 20 cited summaries, destination history and hosting insights, and paired expectations](campaign-followup-october12.md). Reviewed facts, published source decisions, queue cadence and dated link counts are recorded there.
+
+## Historical metadata and related Steam demos, October 12
+
+The [next bounded continuation](campaign-continuation-october12.md) reviews 31 earlier projects, verifies released demos linked from full-game Steam listings, and prepares 13 further source-checked feedback summaries. Demo evidence stays separate from full-game release metrics, and scheduled store requests retain their existing cap.

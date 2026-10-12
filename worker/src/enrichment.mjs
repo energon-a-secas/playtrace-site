@@ -4,6 +4,7 @@ import { refreshSteam, steamAppId } from './steam.mjs';
 import { publicPage } from './public-fetch.mjs';
 import { readBytes } from './http.mjs';
 import { pageMetadata, storeImage } from './page-metadata.mjs';
+import { verifiedSteamDemo } from '../../js/steam-demo.js';
 export { pageMetadata, storeImage } from './page-metadata.mjs';
 
 async function ownedItchGames(db, env, deps) {
@@ -26,7 +27,7 @@ export async function checkProject(db, env, gameId, deps, store = false) {
   let result;
   if (store && appId) {
     const steam = await refreshSteam(db, appId, deps);
-    result = steam ? { status: 'reachable', provider: 'steam', title: steam.title, image: steam.headerUrl, playable: steam.state === 'released', browser: false, steamState: steam.state, steamType: steam.type, finalUrl: steam.url, storeCheckedAt: steam.checkedAt, evidenceCheckedAt:steam.checkedAt }
+    result = steam ? { status: 'reachable', provider: 'steam', title: steam.title, image: steam.headerUrl, playable: steam.state === 'released' || Boolean(verifiedSteamDemo(steam,deps.now())), browser: false, steamState: steam.state, steamType: steam.type, finalUrl: steam.url, storeCheckedAt: steam.checkedAt, evidenceCheckedAt:steam.checkedAt }
       : { status: 'unverified', failureReason:'store-api', note: 'Steam did not return current game metadata.' };
   } else {
     try {

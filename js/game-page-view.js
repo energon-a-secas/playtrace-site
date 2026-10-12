@@ -1,6 +1,7 @@
 import { escHtml as e } from './utils.js';
 import { categoryLabel, dateLabel, label, sourceHeadline, sourceOnlySummary, money } from './collection.js';
-import { icon, playLink } from './icons.js';
+import { icon, playLink, relatedSteamLink } from './icons.js';
+import { verifiedSteamDemo } from './steam-demo.js';
 import { projectPath } from './project-url.js';
 import { linkCheckMarkup } from './link-check-view.js';
 
@@ -23,7 +24,7 @@ function storeFacts(game,catalog) {
   const steam=game.steam,itch=game.availability?.provider==='itch'&&game.availability.metadataVersion===2?game.availability:null;
   const facts=[['Genre',game.category==='other'?(steam?.genres||itch?.genres||[]).join(', '):categoryLabel(game.category,catalog)],['Runs on',game.platforms.join(', ')]];
   if(steam){
-    facts.push(['Build',steam.type==='demo'?'Demo':steam.releaseKind==='early-access'?'Early Access':steam.state==='coming-soon'?'Coming soon':'Full game']);
+    facts.push(['Build',steam.type==='demo'?'Demo':steam.releaseKind==='early-access'?'Early Access':steam.state==='coming-soon'?verifiedSteamDemo(steam)?'Demo available · full game coming soon':'Coming soon':'Full game']);
     if(steam.type!=='demo'&&Date.now()-Date.parse(steam.checkedAt)<36*3600000&&steam.priceCents!==null)facts.push(['US store price',steam.isFree?'Free to play':`${money(steam.priceCents)} USD`]);
     if(steam.releaseDateLabel)facts.push([steam.state==='coming-soon'?'Expected release':'Store release',steam.releaseDateLabel]);
     facts.push(['Store checked',dateLabel(steam.checkedAt)]);
@@ -32,7 +33,7 @@ function storeFacts(game,catalog) {
     for(const [name,key]of [['Made with','engines'],['Inputs','inputs'],['Languages','languages'],['AI disclosure','aiDisclosure']])facts.push([name,itch[key]?.join(', ')]);
     facts.push(['Creator status',itch.releaseStatus],['Listing checked',dateLabel(itch.storeCheckedAt)]);
   }
-  return `<dl class="game-page-facts">${facts.filter(([,value])=>value).map(([name,value])=>`<div><dt>${e(name)}</dt><dd>${e(value)}</dd></div>`).join('')}</dl>${steam?.fullGame?`<a class="text-link" href="${e(steam.fullGame.url)}" target="_blank" rel="noopener noreferrer">Full game: ${e(steam.fullGame.title)} ↗</a>`:''}`;
+  return `<dl class="game-page-facts">${facts.filter(([,value])=>value).map(([name,value])=>`<div><dt>${e(name)}</dt><dd>${e(value)}</dd></div>`).join('')}</dl>${relatedSteamLink(steam)}`;
 }
 export function gamePageContent(game,catalog) {
   const image=previewUrl(game),latest=[...game.posts].sort((a,b)=>b.createdAt.localeCompare(a.createdAt))[0],headline=sourceHeadline(game);

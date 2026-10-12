@@ -3,6 +3,7 @@ import { extractMentions } from '../../js/insight-evidence.js';
 import { distributionFor } from '../../js/collection.js';
 import { releaseEvidence } from '../../js/release-evidence.js';
 import { linkEvidence } from '../../js/link-health.js';
+import { verifiedSteamDemo } from '../../js/steam-demo.js';
 
 // An allowlisted public evidence projection, also used by the admin dashboard.
 // No questionnaire text, identities, guest keys, private jobs or notes are read.
@@ -19,6 +20,8 @@ export async function insightPage(db, cursor, deps) {
     distribution:distributionFor(game.projectUrl)?.label||'No project link',platforms:game.platforms,
     firstSeenAt:game.firstSeenAt,updatedAt:game.updatedAt,projectUrl:game.projectUrl,
     storeRelease:releaseEvidence(game.steam),
+    demoAvailable:Boolean(verifiedSteamDemo(game.steam,deps.now())),
+    demoRelease:releaseEvidence(verifiedSteamDemo(game.steam,deps.now())?{...game.steam.demo,type:'demo',state:'released'}:null),
     storeGenres:game.steam?.genres||game.availability?.genres||[],
     releaseKind:game.steam?.releaseKind||(game.availability?.demo===true?'demo':null),
     storeProvider:game.steam?'Steam':game.availability?.metadataVersion===2?game.availability.provider:null,

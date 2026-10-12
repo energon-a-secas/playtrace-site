@@ -60,7 +60,7 @@ html:not([data-theme]) .header-bar[data-header-skin="custom"] {
 
 
 /* Scope the report palette to site-owned content, preserving the fleet tokens. */
-.collection, .dialog {
+.collection, .dialog, .game-page {
   --bg: var(--pt-paper); --surface-1: var(--pt-paper); --surface-2: var(--pt-soft);
   --text-primary: var(--pt-ink); --text-secondary: var(--pt-text); --text-muted: var(--pt-muted);
   --border: var(--pt-line); --border-strong: var(--pt-control-line);

@@ -1,0 +1,443 @@
+{
+  "categories": {},
+  "facts": [
+    {
+      "gameId": "g_1nttkb7",
+      "field": "category",
+      "value": "racing",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1nttkb7/",
+      "evidence": "it is a racing game made with ai studio"
+    },
+    {
+      "gameId": "g_1otps06",
+      "field": "category",
+      "value": "puzzle",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1otps06/",
+      "evidence": "our upcoming puzzle game Cosmic Egg"
+    },
+    {
+      "gameId": "g_1pbipau",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1pbipau/",
+      "evidence": "high-octane, retro-styled bullet hell survival game"
+    },
+    {
+      "gameId": "g_1pp1vno",
+      "field": "category",
+      "value": "racing",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1pp1vno/",
+      "evidence": "Initial-D inspired car racing game prototype"
+    },
+    {
+      "gameId": "g_1prk2cl",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1prk2cl/",
+      "evidence": "You don't just build towers; you control a character, aim, shoot, and use active abilities."
+    },
+    {
+      "gameId": "g_1qcks2l",
+      "field": "category",
+      "value": "arcade",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1qcks2l/",
+      "evidence": "a simple browser endless runner"
+    },
+    {
+      "gameId": "g_1qjv0h4",
+      "field": "category",
+      "value": "racing",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1qjv0h4/",
+      "evidence": "my racing game"
+    },
+    {
+      "gameId": "g_1qlmtws",
+      "field": "category",
+      "value": "horror",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1qlmtws/",
+      "evidence": "DEBTHOLE - Absurdist Horror Game"
+    },
+    {
+      "gameId": "g_1qpe9dn",
+      "field": "category",
+      "value": "card-game",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1qpe9dn/",
+      "evidence": "full Roguelike Deckbuilder from scratch"
+    },
+    {
+      "gameId": "g_1qut77h",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1qut77h/",
+      "evidence": "It’s a short 3D top-down action game."
+    },
+    {
+      "gameId": "g_1req9ws",
+      "field": "category",
+      "value": "rpg",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1req9ws/",
+      "evidence": "character progression in an Action-RPG"
+    },
+    {
+      "gameId": "g_1rqqghq",
+      "field": "category",
+      "value": "strategy",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1rro9gb/",
+      "evidence": "Turn-Based MMO Space Narrative Strategy"
+    },
+    {
+      "gameId": "g_1rufh4n",
+      "field": "category",
+      "value": "survival",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1rufh4n/",
+      "evidence": "our 1920s survival game"
+    },
+    {
+      "gameId": "g_1s4c4ll",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w6grki/",
+      "evidence": "my space shooter NOVA"
+    },
+    {
+      "gameId": "g_1sd9b4y",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1sd9b4y/",
+      "evidence": "Cleft is a roguelite platformer with destructible environments"
+    },
+    {
+      "gameId": "g_1sgf4ls",
+      "field": "category",
+      "value": "puzzle",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1sgf4ls/",
+      "evidence": "a mobile-first number puzzle game"
+    },
+    {
+      "gameId": "g_1t1wsgy",
+      "field": "category",
+      "value": "rhythm",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1t1wsgy/",
+      "evidence": "It's a browser rhythm game"
+    },
+    {
+      "gameId": "g_1tmtrie",
+      "field": "category",
+      "value": "card-game",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tmtrie/",
+      "evidence": "this is the current state of my card game"
+    },
+    {
+      "gameId": "g_1tonsz1",
+      "field": "category",
+      "value": "racing",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tonsz1/",
+      "evidence": "my vibe coded flight racing game"
+    },
+    {
+      "gameId": "g_1tvmhah",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tvmhah/",
+      "evidence": "Going From Tower Defense To 3D Platformer"
+    },
+    {
+      "gameId": "g_1uaskmd",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1uaskmd/",
+      "evidence": "Playable 3D Roguelike Shooter"
+    },
+    {
+      "gameId": "g_1uf87b2",
+      "field": "category",
+      "value": "survival",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1uf87b2/",
+      "evidence": "It's a third-person airplane crash survival game"
+    },
+    {
+      "gameId": "g_1uot3v3",
+      "field": "category",
+      "value": "survival",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1uot3v3/",
+      "evidence": "3D wilderness survival game"
+    },
+    {
+      "gameId": "g_1uqjp6h",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1uqjp6h/",
+      "evidence": "I made a top-down roguelike shooter"
+    },
+    {
+      "gameId": "g_1urj7j5",
+      "field": "category",
+      "value": "survival",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1urj7j5/",
+      "evidence": "a 2D post-apocalyptic shelter survival / colony builder"
+    },
+    {
+      "gameId": "g_1urtqu1",
+      "field": "category",
+      "value": "survival",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1urtqu1/",
+      "evidence": "my survival crafter game"
+    },
+    {
+      "gameId": "g_1uyv6pi",
+      "field": "category",
+      "value": "puzzle",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1uyv6pi/",
+      "evidence": "Puzzle platformer."
+    },
+    {
+      "gameId": "g_1uzbose",
+      "field": "category",
+      "value": "arcade",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1uzbose/",
+      "evidence": "a free browser game inspired by mixing shuffleboard scoring with mechanics from other games like bumper pool, pinball, and Frogger"
+    },
+    {
+      "gameId": "g_1v3evul",
+      "field": "category",
+      "value": "horror",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1v3evul/",
+      "evidence": "It's an observation horror game"
+    },
+    {
+      "gameId": "g_1v94fyc",
+      "field": "category",
+      "value": "horror",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1v94fyc/",
+      "evidence": "my protection horror game"
+    },
+    {
+      "gameId": "g_1v978w3",
+      "field": "category",
+      "value": "horror",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1v978w3/",
+      "evidence": "Short survival horror game"
+    },
+    {
+      "gameId": "g_1otps06",
+      "field": "title",
+      "value": "Cosmic Egg",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1otps06/",
+      "evidence": "our upcoming puzzle game Cosmic Egg"
+    },
+    {
+      "gameId": "g_1qut77h",
+      "field": "title",
+      "value": "Pomofox: Shadow Break",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1qut77h/",
+      "evidence": "The game is called **Pomofox: Shadow Break**"
+    },
+    {
+      "gameId": "g_1t1wsgy",
+      "field": "title",
+      "value": "Sounds Smashing!",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1t1wsgy/",
+      "evidence": "[Sounds Smashing!](http://soundssmashing.com/)"
+    },
+    {
+      "gameId": "g_1urtqu1",
+      "field": "title",
+      "value": "Wyrmwood",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1urtqu1/",
+      "evidence": "This is an update to the Wyrmwood game"
+    },
+    {
+      "gameId": "g_1uzbose",
+      "field": "title",
+      "value": "ShuffleBall Arena",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1uzbose/",
+      "evidence": "[ShuffleBall Arena](http://play.shuffleballarena.com/)"
+    },
+    {
+      "gameId": "g_1pp1vno",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1pp1vno/",
+      "evidence": "I think I'll probably open this up when we get multiplayer going"
+    },
+    {
+      "gameId": "g_1qcks2l",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1qcks2l/",
+      "evidence": "For anyone who wants to give it a try, here's the link: [Flash Run]"
+    },
+    {
+      "gameId": "g_1qut77h",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1qut77h/",
+      "evidence": "Here is the link to try:"
+    },
+    {
+      "gameId": "g_1req9ws",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1req9ws/",
+      "evidence": "the Action-RPG part only exists as custom engine with a demo arena"
+    },
+    {
+      "gameId": "g_1s4c4ll",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w6grki/",
+      "evidence": "You can play it completely for free here:"
+    },
+    {
+      "gameId": "g_1sgf4ls",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1sgf4ls/",
+      "evidence": "Play it here: [https://tavela-tiles.pages.dev/]"
+    },
+    {
+      "gameId": "g_1t1wsgy",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1t1wsgy/",
+      "evidence": "It’s first-person, runs in browsers and I made 10 levels so far."
+    },
+    {
+      "gameId": "g_1tmtrie",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tmtrie/",
+      "evidence": "a lot of work will be necessary to get into a build I can open to the public"
+    },
+    {
+      "gameId": "g_1uf87b2",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1uf87b2/",
+      "evidence": "looking forward to the first playable version!"
+    },
+    {
+      "gameId": "g_1uzbose",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1uzbose/",
+      "evidence": "a free browser game inspired by mixing shuffleboard scoring"
+    },
+    {
+      "gameId": "g_1t1wsgy",
+      "field": "projectUrl",
+      "value": "https://soundssmashing.com/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1t1wsgy/",
+      "evidence": "http://soundssmashing.com/"
+    },
+    {
+      "gameId": "g_1uzbose",
+      "field": "projectUrl",
+      "value": "https://play.shuffleballarena.com/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1uzbose/",
+      "evidence": "http://play.shuffleballarena.com/"
+    },
+    {
+      "gameId": "g_1t1wsgy",
+      "field": "platforms",
+      "value": [
+        "Browser"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1t1wsgy/",
+      "evidence": "It's a browser rhythm game"
+    },
+    {
+      "gameId": "g_1uzbose",
+      "field": "platforms",
+      "value": [
+        "Browser"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1uzbose/",
+      "evidence": "a free browser game inspired by mixing shuffleboard scoring"
+    },
+    {
+      "gameId": "g_1otps06",
+      "field": "summary",
+      "value": "An upcoming puzzle sandbox where players propose actions in natural language. The creator describes a shared, deterministic action pool, with inventory and sprite generation still in development.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1otps06/",
+      "evidence": "We’re using LLMs to generate actions in our upcoming puzzle game Cosmic Egg"
+    },
+    {
+      "gameId": "g_1qut77h",
+      "field": "summary",
+      "value": "A short 3D action game for a work break: play as a hooded fox and fight magical skeletons. The creator built it with Three.js and describes one- to two-minute sessions.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1qut77h/",
+      "evidence": "You play as a hooded fox and fight magical skeletons. The idea is to play for 1–2 minutes, then go back to work."
+    },
+    {
+      "gameId": "g_1t1wsgy",
+      "field": "summary",
+      "value": "Smash blocks on the beat to earn coins, then fire them as musical projectiles. This first-person browser rhythm game layers synthesized music with each action; the source describes ten levels.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1t1wsgy/",
+      "evidence": "It's a browser rhythm game where you smash blocks on beat to earn coins, then fire those coins as musical projectiles"
+    },
+    {
+      "gameId": "g_1urtqu1",
+      "field": "summary",
+      "value": "A work-in-progress survival crafting game. This update demonstrates new shaders and motion blur, with the creator asking for feedback on atmosphere and blur intensity.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1urtqu1/",
+      "evidence": "Using new motion blur and shader capabilities for my survival crafter game"
+    },
+    {
+      "gameId": "g_1uzbose",
+      "field": "summary",
+      "value": "A free browser arcade game combining shuffleboard scoring with ideas from bumper pool, pinball and Frogger. This development update closes the first fourteen days of the build series.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1uzbose/",
+      "evidence": "a free browser game inspired by mixing shuffleboard scoring with mechanics from other games like bumper pool, pinball, and Frogger"
+    }
+  ],
+  "flags": {
+    "g_1pp1vno": [
+      "The headline says playable, but the body describes a private prototype awaiting multiplayer before opening access. No public build URL supplied.",
+      "No public game destination verified by this review."
+    ],
+    "g_1req9ws": [
+      "The quest system works; the action RPG remains a prototype demo arena. No public Android download supplied.",
+      "No public game destination verified by this review."
+    ],
+    "g_1uf87b2": [
+      "Source anticipates a first playable version; do not infer public availability from that future statement.",
+      "No public game destination verified by this review."
+    ],
+    "g_1urtqu1": [
+      "Source links an earlier Wyrmwood post. Review project identity before merging this history.",
+      "No public game destination verified by this review."
+    ],
+    "g_1uyv6pi": [
+      "A puzzle platformer is described, but its game name and Steam URL are absent from the source.",
+      "No public game destination verified by this review."
+    ],
+    "g_1nttkb7": [
+      "No public game destination verified by this review."
+    ],
+    "g_1otps06": [
+      "No public game destination verified by this review."
+    ],
+    "g_1qjv0h4": [
+      "No public game destination verified by this review."
+    ],
+    "g_1rufh4n": [
+      "No public game destination verified by this review."
+    ],
+    "g_1tmtrie": [
+      "No public game destination verified by this review."
+    ],
+    "g_1tonsz1": [
+      "No public game destination verified by this review."
+    ],
+    "g_1uaskmd": [
+      "No public game destination verified by this review."
+    ],
+    "g_1urj7j5": [
+      "No public game destination verified by this review."
+    ],
+    "g_1v94fyc": [
+      "No public game destination verified by this review."
+    ]
+  }
+}

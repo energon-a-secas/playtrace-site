@@ -54,6 +54,8 @@ Home opens directly on six adjacent clickable game-art panels spanning the viewp
 
 Browse owns collection search and filters, including a star toggle for Favorites. The old profile route redirects to this filter. Favorites save without login and reconcile with the account after sign-in. The Maker field supports typing and keyboard selection. A guest rating is one editable one-to-five-star contribution per browser/game. Branded Steam, itch.io and Reddit actions open independently of the card. A verified released Steam demo has one Play demo action. Hover glints are brief and disabled for reduced motion.
 
+A full-game Steam listing can also have a separately verified released demo. Check the related app’s type, release state and parent identity before offering Play demo; retain the main store link and its own release status. Demo and full-game release dates count separately, with each Steam app counted once. Related lookups use the existing cache and scheduled six-request budget; stale or unavailable evidence falls back to the main listing.
+
 Quick reviews (`research.html`) is a standalone, embeddable surface. Start with one searchable game combobox and an obvious link to try it; keep optional questionnaire topics in a disclosure. Disable loading forms and replace unavailable ones with a retry and a Browse route. Present one question at a time, with back/skip controls and a final save. Admins can create reusable or project-specific forms with one to five questions and research topics. Preserve revision-specific metrics. Research answers are private and may be analyzed by Jev, with that use disclosed before submission. Public project comments retain their existing visible consent and removal controls.
 
 ## Evidence queue

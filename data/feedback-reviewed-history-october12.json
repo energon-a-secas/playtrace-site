@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "reviews": [
+    {
+      "gameId": "g_1vzy2hs",
+      "summary": "The driving concept received an encouraging response [1]. One commenter suggested adding flying vehicles or animals [2], and also proposed alternate routes that change the other cars’ paths [3]. Those two feature suggestions come from the same person.",
+      "commentIds": ["p6d4gt9", "p6adloz", "p6accbm"],
+      "labels": [
+        {"number": 1, "theme": "idea", "tone": "praise", "experience": "unspecified"},
+        {"number": 2, "theme": "idea", "tone": "suggestion", "experience": "unspecified"},
+        {"number": 3, "theme": "idea", "tone": "suggestion", "experience": "unspecified"}
+      ]
+    },
+    {
+      "gameId": "g_1wgw7wo",
+      "summary": "Readers welcomed the idea of making habit formation part of a game [1]. A concern was whether the game can encourage honest reporting of real-world tasks [2]. Another commenter proposed comparing habit outcomes between groups with and without the game [3]; that is a research suggestion, not evidence that the game changes habits.",
+      "commentIds": ["p9y7vlp", "pa6sh7c", "p9xv936"],
+      "labels": [
+        {"number": 1, "theme": "idea", "tone": "praise", "experience": "unspecified"},
+        {"number": 2, "theme": "idea", "tone": "concern", "experience": "unspecified"},
+        {"number": 3, "theme": "idea", "tone": "suggestion", "experience": "unspecified"}
+      ]
+    },
+    {
+      "gameId": "g_1wbhp91",
+      "summary": "A commenter requested an option to invert vertical controls [1]. Another questioned whether the displayed airspeed and turning behaviour match the plane’s motion [2]. A third expressed interest in playing [3]. The physics criticism is a source opinion, not a verified simulation test.",
+      "commentIds": ["p8s9lpg", "p8yvhkk", "p8pza5k"],
+      "labels": [
+        {"number": 1, "theme": "controls", "tone": "suggestion", "experience": "unspecified"},
+        {"number": 2, "theme": "controls", "tone": "concern", "experience": "unspecified"},
+        {"number": 3, "theme": "general", "tone": "praise", "experience": "preview"}
+      ]
+    },
+    {
+      "gameId": "g_1wzly3u",
+      "summary": "Two commenters thought the demonstration looked laggy [1][2]. One also questioned whether simulated players predict performance with real network connections [1]. The comments suggest a useful follow-up test with real clients; they do not establish a measured player limit.",
+      "commentIds": ["pf4uj6w", "pesmt1a"],
+      "labels": [
+        {"number": 1, "theme": "reliability", "tone": "concern", "experience": "preview"},
+        {"number": 2, "theme": "reliability", "tone": "concern", "experience": "preview"}
+      ]
+    },
+    {
+      "gameId": "g_1wyid5o",
+      "summary": "One visitor reported being unable to start the game and then mentioned a Cloudflare error in a second comment [1][2]. These are two messages from one person, describing an access problem on October 6 rather than evidence that the game is currently unavailable.",
+      "commentIds": ["pe8tr54", "pe8tz0w"],
+      "labels": [
+        {"number": 1, "theme": "reliability", "tone": "concern", "experience": "unspecified"},
+        {"number": 2, "theme": "reliability", "tone": "concern", "experience": "unspecified"}
+      ]
+    },
+    {
+      "gameId": "g_1wj0vuv",
+      "summary": "One commenter liked the ticking sound effect [1] and suggested retaining an option to choose older sound effects [2]. The same person proposed wall-mounted armour recharge stations or small supply rooms [3]. These are specific sound and level-design suggestions, without an explicit report of having played.",
+      "commentIds": ["paib3cj", "paj63f9", "paibrux"],
+      "labels": [
+        {"number": 1, "theme": "visuals", "tone": "praise", "experience": "unspecified"},
+        {"number": 2, "theme": "visuals", "tone": "suggestion", "experience": "unspecified"},
+        {"number": 3, "theme": "idea", "tone": "suggestion", "experience": "unspecified"}
+      ]
+    },
+    {
+      "gameId": "g_1wopakm",
+      "summary": "The cat-racing premise prompted playful suggestions: yarn balls and hairball hazards [1], plus a mode where robot vacuums ignore their riders [2]. A separate presentation suggestion was to remove the black header box [3]. These are proposed additions, not confirmed features.",
+      "commentIds": ["pbsdvh3", "pbscxh3", "pbru6mm"],
+      "labels": [
+        {"number": 1, "theme": "idea", "tone": "suggestion", "experience": "unspecified"},
+        {"number": 2, "theme": "idea", "tone": "suggestion", "experience": "unspecified"},
+        {"number": 3, "theme": "visuals", "tone": "suggestion", "experience": "unspecified"}
+      ]
+    },
+    {
+      "gameId": "g_1w1quz1",
+      "summary": "One player reported a softlock within the first thirty seconds after destroying a rock before a tree [1]. That sequence is a concrete reproduction lead for the opening tutorial. Another commenter encouraged continued development [2]. The report has not been independently reproduced here.",
+      "commentIds": ["p6owzn1", "p6taus4"],
+      "labels": [
+        {"number": 1, "theme": "reliability", "tone": "concern", "experience": "played"},
+        {"number": 2, "theme": "general", "tone": "praise", "experience": "unspecified"}
+      ]
+    },
+    {
+      "gameId": "g_1w770n4",
+      "summary": "The eyes-closed concept drew praise [1]. Suggestions included blacking out the display instead of dimming it [2] and penalising repeated eye opening to discourage progress through constant blinking [3]. Another commenter worried that parallax makes movement distance harder to judge [4].",
+      "commentIds": ["p7uh9xh", "p7wn93h", "p7snbr7", "p7ssvc8"],
+      "labels": [
+        {"number": 1, "theme": "idea", "tone": "praise", "experience": "unspecified"},
+        {"number": 2, "theme": "visuals", "tone": "suggestion", "experience": "preview"},
+        {"number": 3, "theme": "challenge", "tone": "suggestion", "experience": "unspecified"},
+        {"number": 4, "theme": "visuals", "tone": "concern", "experience": "unspecified"}
+      ]
+    },
+    {
+      "gameId": "g_1wznj1v",
+      "summary": "Two commenters suggested building the trailer from actual gameplay footage [1][2]. Another felt the store capsule promised a cosy experience that did not match the gameplay screenshots [3]. The actionable theme is consistency between the marketing preview and what players can expect to see in the game.",
+      "commentIds": ["pedvvze", "pedxpks", "pedthae"],
+      "labels": [
+        {"number": 1, "theme": "visuals", "tone": "suggestion", "experience": "preview"},
+        {"number": 2, "theme": "visuals", "tone": "suggestion", "experience": "preview"},
+        {"number": 3, "theme": "visuals", "tone": "concern", "experience": "preview"}
+      ]
+    },
+    {
+      "gameId": "g_1x1w50s",
+      "summary": "A commenter found the game interesting but suggested choosing between running and boarding, and criticised the camera’s angles [1]. Another left a brief positive reaction [2]. The first response is mixed feedback with concrete control and camera concerns.",
+      "commentIds": ["pf0h2d6", "peytced"],
+      "labels": [
+        {"number": 1, "theme": "controls", "tone": "mixed", "experience": "unspecified"},
+        {"number": 2, "theme": "general", "tone": "praise", "experience": "unspecified"}
+      ]
+    },
+    {
+      "gameId": "g_1x2dvtp",
+      "summary": "One commenter wanted clearer visual and sound feedback for hits, stronger gun effects, and changes to the dash and perceived damage [1]. Another suggested making elemental impacts more visible through effects such as shattering or exploding enemies [2]. Neither comment explicitly confirms hands-on play.",
+      "commentIds": ["pf1gm69", "pf1v5s8"],
+      "labels": [
+        {"number": 1, "theme": "visuals", "tone": "concern", "experience": "unspecified"},
+        {"number": 2, "theme": "visuals", "tone": "suggestion", "experience": "unspecified"}
+      ]
+    },
+    {
+      "gameId": "g_1vqpih8",
+      "summary": "The tank-game preview received praise for its explosions [1] and lighting [2]. Another commenter liked the sound and animations [3], while a fourth said the game looked appealing enough to try [4]. These reactions describe presentation and interest, not measured gameplay satisfaction.",
+      "commentIds": ["p48y13y", "p48oxwq", "p48ictu", "p48cenr"],
+      "labels": [
+        {"number": 1, "theme": "visuals", "tone": "praise", "experience": "preview"},
+        {"number": 2, "theme": "visuals", "tone": "praise", "experience": "preview"},
+        {"number": 3, "theme": "visuals", "tone": "praise", "experience": "unspecified"},
+        {"number": 4, "theme": "general", "tone": "praise", "experience": "preview"}
+      ]
+    }
+  ]
+}

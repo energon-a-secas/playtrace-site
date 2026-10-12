@@ -7,6 +7,7 @@ import { applyDetails, effectiveProjectUrl } from './details.mjs';
 import { projectScoresQuery, publicScore } from './reddit-scores.mjs';
 import { storeCategory } from './taxonomy.mjs';
 import { plainExcerpt } from './source-evidence.mjs';
+import { verifiedSteamDemo } from '../../js/steam-demo.js';
 
 export const STEAM_IMAGE_HOSTS = ['shared.akamai.steamstatic.com', 'shared.fastly.steamstatic.com', 'cdn.akamai.steamstatic.com', 'cdn.cloudflare.steamstatic.com'];
 function steamImage(value) {
@@ -30,31 +31,42 @@ export function normalizeSteam(payload, appId, now) {
   const fullGame=data.type==='demo'&&/^[1-9]\d{0,9}$/.test(parentId)&&parentId!==appId&&typeof data.fullgame.name==='string'&&data.fullgame.name.trim()&&data.fullgame.name.length<=300
     ?{appId:parentId,title:data.fullgame.name,url:`https://store.steampowered.com/app/${parentId}/`}:null;
   const screenshots=[...new Set((Array.isArray(data.screenshots)?data.screenshots:[]).map(shot=>steamImage(shot?.path_full)).filter(Boolean))].slice(0,6);
+  const demoAppIds=data.type==='game'?[...new Set((Array.isArray(data.demos)?data.demos:[]).map(demo=>String(demo?.appid||'')).filter(id=>/^[1-9]\d{0,9}$/.test(id)&&id!==appId))].slice(0,3):[];
   return { appId, type: data.type, title: data.name, url: `https://store.steampowered.com/app/${appId}/`, state,
     metadataVersion:2, releaseKind:data.type==='demo'?'demo':earlyAccess?'early-access':'game',
     description:plainExcerpt(data.short_description||'',600),
     platforms:['windows','mac','linux'].filter(key=>data.platforms?.[key]===true).map(key=>({windows:'Windows',mac:'macOS',linux:'Linux'})[key]),
     genres,features,developers:labels(data.developers,10),publishers:labels(data.publishers,10),
     releaseDateLabel:typeof data.release_date?.date==='string'?plainExcerpt(data.release_date.date,100):null,
-    fullGame,screenshots,
+    fullGame,screenshots,demoAppIds,
     isFree: free, priceCents: cents, originalPriceCents: validPrice && Number.isInteger(p.initial) && p.initial > cents && p.initial <= 1000000 ? p.initial : null,
     currency: cents === null ? null : 'USD', headerUrl: steamImage(data.header_image), checkedAt: new Date(now).toISOString() };
 }
-export async function refreshSteam(db, appId, deps) {
+export async function refreshSteam(db, appId, deps, options = {}) {
   const cached = await query(db, 'SELECT payload_json,retry_at FROM steam_cache WHERE app_id=?', appId).first();
   if (cached && cached.retry_at > deps.now()) return cached.payload_json ? JSON.parse(cached.payload_json) : null;
+  if (options.budget && options.budget.remaining <= 0) return cached?.payload_json ? JSON.parse(cached.payload_json) : null;
   const owner = await acquire(db, `steam:${appId}`, deps.now(), 20000);
   if (!owner) return cached?.payload_json ? JSON.parse(cached.payload_json) : null;
   try {
     // This public endpoint is best effort. Normalize an allowlist from the full
     // response; "basic" filters omit demo parent, OS and screenshot evidence.
     const url = `https://store.steampowered.com/api/appdetails?appids=${appId}&cc=us&l=english`;
+    if(options.budget)options.budget.remaining--;
     const response = await deps.fetch(url, { redirect: 'manual', signal: AbortSignal.timeout(8000), headers: { Accept: 'application/json' } });
     if (!response.ok) { await response.body?.cancel(); throw new Error('Store unavailable'); }
     const payload = JSON.parse(new TextDecoder().decode(await readBytes(response.body, 1024 * 1024)));
     if (typeof payload?.[appId]?.success !== 'boolean') throw new Error('Malformed store response');
     const steam = normalizeSteam(payload, appId, deps.now());
     if(payload[appId].success===true&&!steam)throw new Error('Malformed store details');
+    // One related lookup at most; never follow chains or assume a listed demo
+    // is released. Both apps retain their own dated, daily cache records.
+    if(steam?.demoAppIds.length && options.related!==false){
+      const demo=await refreshSteam(db,steam.demoAppIds[0],deps,{...options,related:false});
+      if(demo?.type==='demo'&&demo.state==='released'&&demo.isFree&&demo.fullGame?.appId===appId){
+        steam.demo=Object.fromEntries(['appId','url','title','checkedAt','platforms','releaseDateLabel'].map(key=>[key,demo[key]]));
+      }
+    }
     await query(db, `INSERT INTO steam_cache(app_id,payload_json,checked_at,retry_at) VALUES(?,?,?,?)
       ON CONFLICT(app_id) DO UPDATE SET payload_json=excluded.payload_json,checked_at=excluded.checked_at,retry_at=excluded.retry_at`,
     appId, steam ? JSON.stringify(steam) : null, new Date(deps.now()).toISOString(), deps.now() + 86400000).run();
@@ -78,11 +90,12 @@ export async function refreshSteamBatch(db, deps) {
     FROM games g LEFT JOIN project_overrides o ON o.game_id=g.id WHERE g.status='published'
     AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id)`).all();
   const ids = [...new Set(rows.results.map(row => steamAppId(row.project_url)).filter(Boolean))];
-  const checked = await query(db, 'SELECT app_id,retry_at FROM steam_cache').all();
-  const retry = new Map(checked.results.map(row => [row.app_id, row.retry_at]));
+  const cachedRows = await query(db, 'SELECT app_id,retry_at FROM steam_cache').all();
+  const retry = new Map(cachedRows.results.map(row => [row.app_id, row.retry_at]));
   const due = ids.filter(id => (retry.get(id) || 0) <= deps.now()).sort((a,b) => (retry.get(a) || 0) - (retry.get(b) || 0)).slice(0, 6);
-  for (const id of due) { await refreshSteam(db, id, deps); if (id !== due.at(-1)) await deps.sleep(250); }
-  return { checked: due.length, remaining: ids.filter(id => (retry.get(id) || 0) <= deps.now()).length - due.length };
+  const budget={remaining:6};let checked=0;
+  for (const id of due) { if(!budget.remaining)break;await refreshSteam(db, id, deps,{budget});checked++;if (id !== due.at(-1)) await deps.sleep(250); }
+  return { checked, requests:6-budget.remaining, remaining: ids.filter(id => (retry.get(id) || 0) <= deps.now()).length - checked };
 }
 export async function enrichGames(db, games) {
   const originals = new Map(games.map(game => [game.id, game]));
@@ -116,8 +129,10 @@ export async function enrichGames(db, games) {
         : { ...game.preview, kind: 'image', url: steam?.headerUrl || storeArt, posterUrl: null, alt: `${steam?.title || availability?.title || game.title} · Store artwork` };
     const source = originals.get(game.id);
     const name = !editedTitles.has(game.id) && game.projectUrl === source.projectUrl ? nameForGame(source, {steamTitle: steam?.title, pageTitle: availability?.provider==='itch'?availability.title:null}) : null;
-    const verifiedPlayable = availability?.playable === true && (availability.storeStatus||availability.status) === 'reachable' && availability.status !== 'broken'
-      && ['itch','steam'].includes(availability.provider) && Date.now()-Date.parse(availability.storeCheckedAt||availability.checkedAt)<7*86400000;
+    const verifiedPlayable = availability?.status!=='broken' && (steam
+      ? Boolean(verifiedSteamDemo(steam)) || steam.state==='released' && Date.now()-Date.parse(steam.checkedAt)<7*86400000
+      : availability?.playable===true && (availability.storeStatus||availability.status)==='reachable'
+        && availability.provider==='itch' && Date.now()-Date.parse(availability.storeCheckedAt||availability.checkedAt)<7*86400000);
     const stage = !editedStages.has(game.id) && !['released','playable'].includes(game.stage) && verifiedPlayable ? 'playable' : game.stage;
     const storePlatforms=steam?.platforms?.length?steam.platforms:availability?.provider==='itch'&&availability.metadataVersion===2?availability.platforms:[];
     const storeDescription=steam?.description||(availability?.provider==='itch'&&availability.metadataVersion===2?availability.description:null);

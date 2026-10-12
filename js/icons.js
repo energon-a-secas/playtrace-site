@@ -1,4 +1,5 @@
 import { escHtml as e } from './utils.js';
+import { demoPlayUrl, verifiedSteamDemo } from './steam-demo.js';
 
 const paths = {
   star: '<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9Z"/>',
@@ -15,7 +16,7 @@ export function icon(name) {
 export function playLabel(game) {
   if (game.availability?.status === 'broken') return 'View game page';
   const platform = game.distribution?.id;
-  if (platform === 'steam') return game.steam?.type === 'demo' && game.steam.state === 'released' ? 'Play demo' : 'View on Steam';
+  if (platform === 'steam') return demoPlayUrl(game) || game.steam?.type === 'demo' && game.steam.state === 'released' ? 'Play demo' : 'View on Steam';
   if (platform === 'itch') return ['released', 'playable'].includes(game.stage) || game.availability?.playable ? 'Play on itch.io' : 'View on itch.io';
   if (game.distribution?.kind === 'repository') return 'Source code';
   return game.platforms.includes('Browser') && (['released', 'playable'].includes(game.stage) || game.availability?.playable) ? 'Play it' : 'View game';
@@ -23,5 +24,12 @@ export function playLabel(game) {
 export function playLink(game, compact = false) {
   if (!game.projectUrl) return '';
   const brand = game.distribution?.id || 'website', label = playLabel(game);
-  return `<a class="${compact ? 'card-shortcut' : 'play-link'} brand-action" data-brand="${e(brand)}" data-game-outbound="${e(game.id)}" href="${e(game.projectUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${e(label)}: ${e(game.title)} (opens in a new tab)" title="${e(label)}">${icon(brand === 'website' ? 'gamepad' : brand)}${compact ? '' : `<span>${e(label)}</span><span aria-hidden="true">↗</span>`}</a>`;
+  return `<a class="${compact ? 'card-shortcut' : 'play-link'} brand-action" data-brand="${e(brand)}" data-game-outbound="${e(game.id)}" href="${e(demoPlayUrl(game)||game.projectUrl)}" target="_blank" rel="noopener noreferrer" aria-label="${e(label)}: ${e(game.title)} (opens in a new tab)" title="${e(label)}">${icon(brand === 'website' ? 'gamepad' : brand)}${compact ? '' : `<span>${e(label)}</span><span aria-hidden="true">↗</span>`}</a>`;
+}
+
+export function relatedSteamLink(steam) {
+  const demo=verifiedSteamDemo(steam);
+  const link=steam?.fullGame ? {url:steam.fullGame.url,label:`Full game: ${steam.fullGame.title}`}
+    :demo?{url:steam.state==='released'?demo.url:steam.url,label:steam.state==='released'?'Try the demo':'Full game on Steam'}:null;
+  return link?`<a class="text-link" href="${e(link.url)}" target="_blank" rel="noopener noreferrer">${e(link.label)} ↗</a>`:'';
 }
