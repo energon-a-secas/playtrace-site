@@ -179,6 +179,13 @@ export function validateCatalog(value) {
       if (post.assets !== undefined) validateAssets(post.assets);
     });
     const dates = game.posts.map(post => post.createdAt).sort();
+    if (game.redditScore != null) {
+      const score = game.redditScore, post = game.posts.find(post => post.id === score.postId);
+      if (!post || post.url !== score.url || !Number.isSafeInteger(score.score) || Math.abs(score.score) > 1e9
+        || !Number.isInteger(score.coveredPosts) || score.coveredPosts < 1 || score.coveredPosts > game.posts.length
+        || score.totalPosts !== game.posts.length) throw new Error('Invalid Reddit score');
+      date(score.observedAt, true); date(score.checkedAt);
+    }
     if (Date.parse(game.firstSeenAt) !== Date.parse(dates[0]) || Date.parse(game.updatedAt) !== Date.parse(dates.at(-1))) throw new Error('Mismatched project dates');
     if (!game.posts.some(post => post.url === preview.sourceUrl)) throw new Error('Preview source is outside the project timeline');
     if (game.reviewStatus != null && !['reviewed', 'source-described'].includes(game.reviewStatus)) throw new Error('Invalid review status');
@@ -191,7 +198,7 @@ export function readLocation(url, preferredView = 'grid') {
   return { query: (p.get('q') || '').slice(0, 200), category: validCategoryId(p.get('cat')) ? p.get('cat') : 'all',
     platform: projectPlatforms.some(entry => entry.id === p.get('platform')) ? p.get('platform') : 'all',
     stage: stages.includes(p.get('stage')) ? p.get('stage') : 'all', author: (p.get('author') || '').slice(0, 80),
-    following: p.get('following') === '1', sort: ['newest', 'oldest', 'name', 'updates'].includes(p.get('sort')) ? p.get('sort') : 'newest',
+    following: p.get('following') === '1', sort: ['newest', 'oldest', 'name', 'updates', 'reddit'].includes(p.get('sort')) ? p.get('sort') : 'newest',
     view: ['grid', 'list'].includes(p.get('view')) ? p.get('view') : preferredView,
     game: /^g_[a-z0-9]{5,12}$/.test(p.get('game') || '') ? p.get('game') : '' };
 }
@@ -210,6 +217,8 @@ export function selectGames(games, state) {
     && (!state.following || state.follows.includes(game.id))
     && [game.title, game.summary, game.author.name, game.category, categoryLabel(game.category, state.catalog), game.distribution?.label || '', ...game.tags, ...game.platforms].join(' ').toLocaleLowerCase().includes(query));
   if (state.sort === 'name') result.sort((a, b) => a.title.localeCompare(b.title));
+  else if (state.sort === 'reddit') result.sort((a, b) => Number(b.redditScore != null) - Number(a.redditScore != null)
+    || (b.redditScore?.score ?? 0) - (a.redditScore?.score ?? 0) || b.updatedAt.localeCompare(a.updatedAt) || a.id.localeCompare(b.id));
   else if (state.sort === 'updates') result.sort((a, b) => b.posts.length - a.posts.length || b.updatedAt.localeCompare(a.updatedAt));
   else result.sort((a, b) => state.sort === 'oldest' ? a.firstSeenAt.localeCompare(b.firstSeenAt) : b.updatedAt.localeCompare(a.updatedAt));
   return result;

@@ -3,8 +3,20 @@ import assert from 'node:assert/strict';
 import { chooseHighlights, highlightWeek, rotateHighlights, getHighlights, saveHighlights } from '../src/highlights.mjs';
 import { importCatalog, removal } from '../src/store.mjs';
 import { fixtureEnv, fixtureGame, fixtureCatalog, fixtureWorker, request, NOW } from './helpers.mjs';
+import { weightedRating } from '../src/community-ranking.mjs';
 const admin={subject:'owner'},deps={now:()=>NOW};
 const games=()=>Array.from({length:12},(_,i)=>({...fixtureGame('game'+String(i).padStart(2,'0'),'Maker'+i),title:'Game '+i,stage:'playable',projectUrl:`https://maker${i}.itch.io/game`}));
+test('community selection discounts small samples, preserves editorial control and fills unrated slots',async()=>{
+ assert.equal(weightedRating(1,5),null);assert.ok(weightedRating(10,48)>weightedRating(3,15));
+ const env=fixtureEnv(),pool=games();await importCatalog(env.DB,fixtureCatalog(pool));
+ for(const [index,count,stars] of [[10,10,5],[11,3,5],[0,1,5]])for(let i=0;i<count;i++)env.DB.sql.prepare('INSERT INTO ratings VALUES(?,?,?,?)').run(pool[index].id,'fixture-browser-'+i,stars,new Date(NOW).toISOString());
+ await rotateHighlights(env.DB,deps);let saved=await getHighlights(env.DB,true);
+ assert.equal(saved.qualifiedProjects,2);assert.equal(saved.items[0].gameId,pool[10].id);assert.equal(saved.items[1].basis,'community');
+ assert.equal(saved.items.filter(i=>i.basis==='community').length,2);assert.equal(saved.items.length,5);
+ await saveHighlights(env.DB,{revision:saved.revision,mode:'recent',items:saved.items.map(({gameId,pinned})=>({gameId,pinned})),excluded:[],editorPickId:pool[9].id},admin,deps);
+ await rotateHighlights(env.DB,{now:()=>NOW+7*86400000});saved=await getHighlights(env.DB);
+ assert.equal(saved.mode,'recent');assert.ok(saved.items.every(i=>!i.basis));assert.equal(saved.editorPick.gameId,pool[9].id);env.DB.close();
+});
 test('weekly period changes at Saturday midnight in Santiago, including both UTC offsets',()=>{
  assert.equal(highlightWeek(Date.parse('2026-10-10T02:59:59Z')),'2026-10-03');
  assert.equal(highlightWeek(Date.parse('2026-10-10T03:00:00Z')),'2026-10-10');

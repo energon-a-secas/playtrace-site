@@ -33,7 +33,8 @@ if (['game','q','cat','platform','stage','maker','author','following','view','so
     }
     const items = picks.items;
     if (!Array.isArray(items) || !items.length || items.length > 5) throw new Error('No highlights yet');
-    document.getElementById('highlightWeek').textContent = `Week of ${dateLabel(picks.week + 'T12:00:00Z')}${saved ? ' · Saved picks' : ''}`;
+    const communityPicks = items.filter(item => item.basis === 'community').length;
+    document.getElementById('highlightWeek').textContent = `Week of ${dateLabel(picks.week + 'T12:00:00Z')}${communityPicks ? ` · ${communityPicks} community ${communityPicks === 1 ? 'pick' : 'picks'}` : ''}${saved ? ' · Saved picks' : ''}`;
     document.getElementById('weeklyHighlights').innerHTML = highlightPanels(items, picks.editorPick);
     document.getElementById('weeklyHighlights').setAttribute('aria-busy', 'false');
     refreshShowcase();

@@ -13,6 +13,7 @@ import { prepareFollowing, followGame, deleteMyData, confirmDelete, clearSignals
 import { clearChallenge } from './challenge.js';
 import { bindFeedback, resetFeedback, loadFeedback, clearFeedback, renderFeedback } from './feedback.js';
 import { bindProject, prepareProject, closeProject } from './project.js';
+import { bindRedditScoreTooltips } from './reddit-score.js';
 
 export const navigation = createQueryHistory(href => locationForState(href, state));
 function clearFilters() {
@@ -54,6 +55,7 @@ export function syncDetail() {
 export function catalogueReady() { render(); syncDetail(); }
 
 export function bindEvents() {
+  bindRedditScoreTooltips($('itemList'));
   document.addEventListener('playtrace:admin-ready',()=>{if(new URL(location.href).searchParams.get('edit')==='1'&&state.detail)openInlineEditor();});
   bindInlineEditor(); bindFeedback(); bindProject(); bindExtras(); bindMaker(value => applyFilter('author', value));
   const dialog = $('itemDialog');

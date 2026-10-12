@@ -1,0 +1,529 @@
+{
+  "version": 1,
+  "reviewedAt": "2026-10-12",
+  "reviewer": "Codex source review; accepted facts cite the exact post or store observation. Unknown fields remain unknown.",
+  "categories": {
+    "board-game": "Board game",
+    "educational": "Educational",
+    "sports": "Sports",
+    "horror": "Horror",
+    "rhythm": "Rhythm",
+    "racing": "Racing",
+    "creature-collector": "Creature collector",
+    "card-game": "Card game",
+    "party-game": "Party game",
+    "social-deduction": "Social deduction"
+  },
+  "facts": [
+    {
+      "gameId": "g_1x36ues",
+      "field": "category",
+      "value": "rpg",
+      "sourceUrl": "https://motawe3.itch.io/underbloom",
+      "evidence": "A top-down survival RPG where you are the colony invader."
+    },
+    {
+      "gameId": "g_1wfb9lk",
+      "field": "category",
+      "value": "board-game",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wfb9lk/",
+      "evidence": "Every backgammon app I downloaded was outdated, buggy, or shoving coin purchases down my throat."
+    },
+    {
+      "gameId": "g_1wopai1",
+      "field": "title",
+      "value": "Robo Mania",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wopai1/",
+      "evidence": "I developed and published a small 1v1 robot arena game named Robo Mania"
+    },
+    {
+      "gameId": "g_1wopai1",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wopai1/",
+      "evidence": "1v1 robot arena game"
+    },
+    {
+      "gameId": "g_1wbf5oe",
+      "field": "category",
+      "value": "arcade",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wbf5oe/",
+      "evidence": "This is a hyper-casual game, easy to play, hard to master"
+    },
+    {
+      "gameId": "g_1vppapc",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://wbk.itch.io/chapel-knights",
+      "evidence": "Action"
+    },
+    {
+      "gameId": "g_1wd9wdy",
+      "field": "title",
+      "value": "The 8th Day",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wd9wdy/",
+      "evidence": "I’m prototyping a small browser narrative game for The 8th Day."
+    },
+    {
+      "gameId": "g_1wd9wdy",
+      "field": "category",
+      "value": "adventure",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wd9wdy/",
+      "evidence": "small browser narrative game"
+    },
+    {
+      "gameId": "g_1x2vair",
+      "field": "category",
+      "value": "adventure",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2vair/",
+      "evidence": "make a story game about the meaning of life"
+    },
+    {
+      "gameId": "g_1wy53mp",
+      "field": "category",
+      "value": "simulation",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wbmues/",
+      "evidence": "Train Tycoon"
+    },
+    {
+      "gameId": "g_1pj8j87",
+      "field": "category",
+      "value": "rpg",
+      "sourceUrl": "https://jaydenandressen.itch.io/spritesvsuniverse",
+      "evidence": "Role Playing"
+    },
+    {
+      "gameId": "g_1w2jt3y",
+      "field": "title",
+      "value": "Numblop",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w2jt3y/",
+      "evidence": "Numblop is an adaptive multiplication game for Android"
+    },
+    {
+      "gameId": "g_1w2jt3y",
+      "field": "category",
+      "value": "educational",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w2jt3y/",
+      "evidence": "adaptive multiplication game for Android"
+    },
+    {
+      "gameId": "g_1wj8b3j",
+      "field": "title",
+      "value": "Ward Putt",
+      "sourceUrl": "https://pocket-putt.wheelz.chatgpt.site/",
+      "evidence": "Ward Putt · Hospital Mini Golf"
+    },
+    {
+      "gameId": "g_1wj8b3j",
+      "field": "category",
+      "value": "sports",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wj8b3j/",
+      "evidence": "This is a hospital themed putt putt course."
+    },
+    {
+      "gameId": "g_1wwjpti",
+      "field": "category",
+      "value": "horror",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wwjpti/",
+      "evidence": "You get a dark house, a flashlight, and a few things walking around that you learn to tell apart by sound."
+    },
+    {
+      "gameId": "g_1pzhdwm",
+      "field": "category",
+      "value": "puzzle",
+      "sourceUrl": "https://splarg.itch.io/word-quest",
+      "evidence": "Puzzle"
+    },
+    {
+      "gameId": "g_1wekrx6",
+      "field": "title",
+      "value": "iaReveal",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wekrx6/",
+      "evidence": "I just released my first iOS game, iaReveal."
+    },
+    {
+      "gameId": "g_1wekrx6",
+      "field": "category",
+      "value": "puzzle",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wekrx6/",
+      "evidence": "Players begin with a scrambled image, gradually discover what they’re looking at through gameplay, and finally reveal the complete picture."
+    },
+    {
+      "gameId": "g_1tnrxln",
+      "field": "title",
+      "value": "Bamboo Slicers",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tnrxln/",
+      "evidence": "first casual android game - Bamboo Slicers"
+    },
+    {
+      "gameId": "g_1tnrxln",
+      "field": "category",
+      "value": "arcade",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tnrxln/",
+      "evidence": "you just cut bamboo, your sword grows, and you smash opponents with it"
+    },
+    {
+      "gameId": "g_1p8mojp",
+      "field": "category",
+      "value": "rhythm",
+      "sourceUrl": "https://gargantuai.itch.io/tamas-cheer-squad-rhythm-routines",
+      "evidence": "Rhythm"
+    },
+    {
+      "gameId": "g_1wjzjvc",
+      "field": "category",
+      "value": "racing",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wjzjvc/",
+      "evidence": "a simple 2D top-down traffic racer"
+    },
+    {
+      "gameId": "g_1rm2sp8",
+      "field": "category",
+      "value": "adventure",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1rm2sp8/",
+      "evidence": "Ghost Shift is an interactive adventure game set in a museum basement during a night shift."
+    },
+    {
+      "gameId": "g_1umaf0l",
+      "field": "category",
+      "value": "adventure",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1umaf0l/",
+      "evidence": "a slow, chill space exploration mystery closer to Outer Wilds"
+    },
+    {
+      "gameId": "g_1u0ei1l",
+      "field": "category",
+      "value": "simulation",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1u0ei1l/",
+      "evidence": "it's a stock market simulation played on a terminal screen"
+    },
+    {
+      "gameId": "g_1pclux8",
+      "field": "title",
+      "value": "Rogue Shifters",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1pclux8/",
+      "evidence": "Project Rogue Shifters is now my main focus and targeted for mid-2026 release."
+    },
+    {
+      "gameId": "g_1pclux8",
+      "field": "projectUrl",
+      "value": null,
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1pclux8/",
+      "evidence": "similar to my most recently released game"
+    },
+    {
+      "gameId": "g_1nnee32",
+      "field": "projectUrl",
+      "value": "https://battleborg.ai/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1nnee32/",
+      "evidence": "https://battleborg.ai"
+    },
+    {
+      "gameId": "g_1x2vair",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2vair/",
+      "evidence": "it’s called the blank ticket, it’s short, heres the link., give it a try!"
+    },
+    {
+      "gameId": "g_1x21qj3",
+      "field": "category",
+      "value": "creature-collector",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x21qj3/",
+      "evidence": "walk around, encounter Digimon, battle, catch them, and work toward Digivolutions"
+    },
+    {
+      "gameId": "g_1wzucpn",
+      "field": "category",
+      "value": "clicker",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wzucpn/",
+      "evidence": "https://www.crazygames.com/game/farm-idle-cut-crop"
+    },
+    {
+      "gameId": "g_1wzucpn",
+      "field": "stage",
+      "value": "released",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wzucpn/",
+      "evidence": "this game made with free AI made me more than 150$ in just 2-3 day"
+    },
+    {
+      "gameId": "g_1wy53mp",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wbmues/",
+      "evidence": "I was finally able to release a demo."
+    },
+    {
+      "gameId": "g_1wu3sii",
+      "field": "projectUrl",
+      "value": "https://easy-roads.pages.dev/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wu3sii/",
+      "evidence": "https://easy-roads.pages.dev/"
+    },
+    {
+      "gameId": "g_1wu3sii",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wu3sii/",
+      "evidence": "Runs in the browser (free to play) with raw JS and webgl2."
+    },
+    {
+      "gameId": "g_1wrud8e",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wrud8e/",
+      "evidence": "It's a Windows demo right now"
+    },
+    {
+      "gameId": "g_1wpsmlh",
+      "field": "title",
+      "value": "Island Keeper",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wpsmlh/",
+      "evidence": "https://www.crazygames.com/game/island-keeper"
+    },
+    {
+      "gameId": "g_1wpsmlh",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wpsmlh/",
+      "evidence": "Play the demo:"
+    },
+    {
+      "gameId": "g_1wjzjvc",
+      "field": "title",
+      "value": "Traffic Racer",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wjzjvc/",
+      "evidence": "id=com.racer2d.trafficracer"
+    },
+    {
+      "gameId": "g_1wjzjvc",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wjzjvc/",
+      "evidence": "Play Store link :- https://play.google.com/store/apps/details?id=com.racer2d.trafficracer"
+    },
+    {
+      "gameId": "g_1wfb9lk",
+      "field": "stage",
+      "value": "released",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wfb9lk/",
+      "evidence": "One month after release:"
+    },
+    {
+      "gameId": "g_1wd9wdy",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wd9wdy/",
+      "evidence": "I’m prototyping a small browser narrative game"
+    },
+    {
+      "gameId": "g_1vp3wm5",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vp3wm5/",
+      "evidence": "I released the demo for my game on steam this week"
+    },
+    {
+      "gameId": "g_1vp3wm5",
+      "field": "category",
+      "value": "rpg",
+      "sourceUrl": "https://store.steampowered.com/app/5049920/Guns__Gargoyles",
+      "evidence": "A gothic dark fantasy action RPG"
+    },
+    {
+      "gameId": "g_1wbf5oe",
+      "field": "title",
+      "value": "Crazy Dog",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wbf5oe/",
+      "evidence": "https://apps.apple.com/app/crazy-dog/id6762199758"
+    },
+    {
+      "gameId": "g_1wbf5oe",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wbf5oe/",
+      "evidence": "Please try it out and let me know if it’s okay now"
+    },
+    {
+      "gameId": "g_1w2jt3y",
+      "field": "stage",
+      "value": "released",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w2jt3y/",
+      "evidence": "It started as a simple family project and somehow ended up on Google Play."
+    },
+    {
+      "gameId": "g_1uvbajh",
+      "field": "title",
+      "value": "RePoG",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1uvbajh/",
+      "evidence": "I have been building **RePoG**, an open-source experiment"
+    },
+    {
+      "gameId": "g_1uvbajh",
+      "field": "category",
+      "value": "rpg",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1uvbajh/",
+      "evidence": "Most AI RPG experiments do not fall apart because the model cannot write an interesting scene."
+    },
+    {
+      "gameId": "g_1uvbajh",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1uvbajh/",
+      "evidence": "I have been building **RePoG**, an open-source experiment"
+    },
+    {
+      "gameId": "g_1tnrxln",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tnrxln/",
+      "evidence": "already in Open Testing"
+    },
+    {
+      "gameId": "g_1stiv1e",
+      "field": "category",
+      "value": "card-game",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1stiv1e/",
+      "evidence": "a game where every card is generated by an LLM and you can fight your friends in semantic battles!"
+    },
+    {
+      "gameId": "g_1stiv1e",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1stiv1e/",
+      "evidence": "Play for free in your browser"
+    },
+    {
+      "gameId": "g_1syede3",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1syede3/",
+      "evidence": "You can play against CPU and or play against a friend online."
+    },
+    {
+      "gameId": "g_1rwdlwm",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1rwdlwm/",
+      "evidence": "Play it here: https://www.crazygames.com/game/traffic-architect-tic"
+    },
+    {
+      "gameId": "g_1rclkpe",
+      "field": "title",
+      "value": "ODOO SUPPORT: THE FINAL TICKET",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1rclkpe/",
+      "evidence": "My latest game is a 3D zombie shooter called ODOO SUPPORT: THE FINAL TICKET"
+    },
+    {
+      "gameId": "g_1rclkpe",
+      "field": "projectUrl",
+      "value": "https://codemarchant.com/zombie-shooter",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1rclkpe/",
+      "evidence": "https://codemarchant.com/zombie-shooter"
+    },
+    {
+      "gameId": "g_1rclkpe",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1rclkpe/",
+      "evidence": "My latest game is a 3D zombie shooter"
+    },
+    {
+      "gameId": "g_1rclkpe",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1rclkpe/",
+      "evidence": "Over the past month i vibecoded 17 browser games"
+    },
+    {
+      "gameId": "g_1pmg33p",
+      "field": "category",
+      "value": "party-game",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1pmg33p/",
+      "evidence": "an AI powered online party-game idea and you can now play it too!"
+    },
+    {
+      "gameId": "g_1pmg33p",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1pmg33p/",
+      "evidence": "an AI powered online party-game idea and you can now play it too!"
+    },
+    {
+      "gameId": "g_1pbg866",
+      "field": "title",
+      "value": "Pixel Forest Hunter",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1pbg866/",
+      "evidence": "Pixel Forest Hunter Web Demo Game using Gemini 3"
+    },
+    {
+      "gameId": "g_1pbg866",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1pbg866/",
+      "evidence": "You can access the game here (hosted by google)"
+    },
+    {
+      "gameId": "g_1oobf0b",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1oobf0b/",
+      "evidence": "We’re currently in open beta (Android) and looking for testers"
+    },
+    {
+      "gameId": "g_1nnee32",
+      "field": "category",
+      "value": "simulation",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1nnee32/",
+      "evidence": "battles that are simulated by AI, complete with live commentary"
+    },
+    {
+      "gameId": "g_1nnee32",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1nnee32/",
+      "evidence": "Appreciate if you try it out."
+    },
+    {
+      "gameId": "g_1khdw5i",
+      "field": "category",
+      "value": "social-deduction",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1khdw5i/",
+      "evidence": "It's a social deception game where YOU infiltrate a group of specialists"
+    },
+    {
+      "gameId": "g_1g6ccq5",
+      "field": "projectUrl",
+      "value": "https://fantasticostudio.itch.io/mind-bender-simulator",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1g6ccq5/",
+      "evidence": "https://fantasticostudio.itch.io/mind-bender-simulator"
+    },
+    {
+      "gameId": "g_15an9o3",
+      "field": "category",
+      "value": "social-deduction",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/15an9o3/",
+      "evidence": "The main goal is to figure out who the AI is, but players can also score by convincingly impersonating the AI."
+    }
+  ],
+  "flags": {
+    "g_1vppapc": [
+      "Identity review: STARBATTLE links Chapel Knights as a different project; do not treat all model mentions as one game."
+    ],
+    "g_1pclux8": [
+      "Roadmap discusses several projects. The Cook or Be Cooked Steam link is an example, not the featured Rogue Shifters build."
+    ],
+    "g_1qo6suw": [
+      "Game modification / AI agent showcase, not a standalone original game."
+    ],
+    "g_1qb3qjv": [
+      "Development tool with example builds; review catalogue scope separately from game genre."
+    ],
+    "g_1vmh0lj": [
+      "Development workflow / third-party tool showcase; game genre remains unclassified."
+    ],
+    "g_1td3u20": [
+      "Development tool / IDE showcase; game genre remains unclassified."
+    ]
+  }
+}

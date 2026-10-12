@@ -23,6 +23,8 @@ Production verification confirmed 1,310 projects, 1,399 source posts, 172 retain
 
 ## What this supports
 
+Follow-up: the [October 12 full-catalogue campaign](catalogue-refresh-october12.md) resolved the Chapel Knights/STARBATTLE identity issue, recovered additional creator-linked destinations and expanded source recovery beyond this pilot. The original pilot counts above remain the dated record of that first pass.
+
 The strongest immediate improvement is discovery: visitors get useful descriptions, real game names, device labels and more meaningful genre filters. Full-text recovery substantially increases model mentions, but explicit art-style coverage remains sparse. Public model-announcement comparisons therefore show source coverage, unknowns and window sizes, and never claim that a model caused a creative trend.
 
 Release dates have their own timeline. Only a distinct Steam app with released status and a valid past day enters it. Demo and Early Access builds are separate from full games. A store date can precede the AI work discussed in a later Reddit post. Itch listing status alone supplies no exact release date. First shared always means the earliest retained source post, never an inferred launch.

@@ -2,6 +2,7 @@ import { query, meta, putMeta } from './store.mjs';
 import { enrichGames } from './steam.mjs';
 import { acquire, release } from './lease.mjs';
 import { ApiError, exactKeys, invalid, unavailable } from './http.mjs';
+import { communityRanks, RANKING_POLICY } from './community-ranking.mjs';
 
 const KEY = 'weekly_highlights';
 export const HIGHLIGHT_ZONE = 'America/Santiago';
@@ -20,7 +21,7 @@ async function selectedGames(db, ids) {
     AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id)`, JSON.stringify(ids)).all();
   return enrichGames(db, rows.results.map(row => JSON.parse(row.payload_json)));
 }
-export function chooseHighlights(games, { items = [], excluded = [], recent = [], editorPickId = null } = {}) {
+export function chooseHighlights(games, { items = [], excluded = [], recent = [], editorPickId = null, mode = 'community', ranking = [] } = {}) {
   const byId = new Map(games.map(game => [game.id, game]));
   const picked = items.filter(item => item.pinned && item.gameId !== editorPickId && byId.has(item.gameId) && !excluded.includes(item.gameId)).slice(0, 5);
   const blocked = new Set([...excluded, editorPickId, ...picked.map(item => item.gameId)]);
@@ -28,6 +29,15 @@ export function chooseHighlights(games, { items = [], excluded = [], recent = []
     && (game.preview.posterUrl || (game.preview.kind === 'image' && game.preview.url))
     && game.availability?.status !== 'broken');
   const used = new Set(picked.map(item => byId.get(item.gameId).author.name.toLowerCase()));
+  if (mode === 'community') for (const rank of ranking) {
+    const index = candidates.findIndex(game => game.id === rank.gameId && !used.has(game.author.name.toLowerCase()));
+    if (picked.length === 5) break;
+    if (index < 0) continue;
+    const [game] = candidates.splice(index, 1);
+    picked.push({ gameId: game.id, pinned: false, basis: 'community', ratingCount: rank.count,
+      ratingAverage: Math.round(rank.average * 100) / 100 });
+    used.add(game.author.name.toLowerCase());
+  }
   while (picked.length < 5 && candidates.length) {
     candidates.sort((a, b) => Number(used.has(a.author.name.toLowerCase())) - Number(used.has(b.author.name.toLowerCase()))
       || Number(recent.includes(a.id)) - Number(recent.includes(b.id))
@@ -44,11 +54,14 @@ export async function getHighlights(db, admin = false) {
   const items = saved.items.filter(item => byId.has(item.gameId) && item.gameId !== saved.editorPickId).map(item => ({ ...item, game: byId.get(item.gameId) }));
   const editorPick = byId.has(saved.editorPickId) ? { gameId: saved.editorPickId, game: byId.get(saved.editorPickId) } : null;
   return { revision: saved.revision, week: saved.week, updatedAt: saved.updatedAt, timezone: HIGHLIGHT_ZONE, items, editorPick,
-    ...(admin ? { excluded: saved.excluded || [] } : {}) };
+    mode: saved.mode || 'community', rankingPolicy: RANKING_POLICY,
+    ...(admin ? { excluded: saved.excluded || [], qualifiedProjects: (await communityRanks(db)).length } : {}) };
 }
 export async function saveHighlights(db, body, admin, deps) {
   const editsEditor = body && Object.hasOwn(body, 'editorPickId');
-  exactKeys(body, ['revision', 'items', 'excluded', ...(editsEditor ? ['editorPickId'] : [])]);
+  const editsMode = body && Object.hasOwn(body, 'mode');
+  exactKeys(body, ['revision', 'items', 'excluded', ...(editsEditor ? ['editorPickId'] : []), ...(editsMode ? ['mode'] : [])]);
+  if (editsMode && !['community', 'recent'].includes(body.mode)) throw invalid('Choose a weekly selection method.');
   if (editsEditor && body.editorPickId !== null && (typeof body.editorPickId !== 'string' || !/^g_[a-z0-9]{5,12}$/.test(body.editorPickId))) throw invalid('Choose a published project for the editor’s pick.');
   if (!Number.isSafeInteger(body.revision) || body.revision < 0 || !Array.isArray(body.items) || body.items.length !== 5
     || !Array.isArray(body.excluded) || body.excluded.length > 100) throw invalid('Choose five different projects for this week.');
@@ -66,7 +79,7 @@ export async function saveHighlights(db, body, admin, deps) {
     if (editorPickId && (body.items.some(item => item.gameId === editorPickId) || body.excluded.includes(editorPickId))) throw invalid('The editor’s pick needs its own project, separate from weekly picks and exclusions.');
     const ids = [...body.items.map(item => item.gameId), ...(editorPickId ? [editorPickId] : [])];
     if ((await selectedGames(db, ids)).length !== ids.length) throw invalid('One of these projects is no longer published. Choose another.');
-    await putMeta(db, KEY, { ...saved, ...body, editorPickId, revision: saved.revision + 1, week: highlightWeek(deps.now()), updatedAt: new Date(deps.now()).toISOString(), updatedBy: admin.subject }).run();
+    await putMeta(db, KEY, { ...saved, ...body, mode: editsMode ? body.mode : saved.mode || 'community', editorPickId, revision: saved.revision + 1, week: highlightWeek(deps.now()), updatedAt: new Date(deps.now()).toISOString(), updatedBy: admin.subject }).run();
     return getHighlights(db, true);
   } finally { await release(db, KEY + '_lock', lock); }
 }
@@ -79,10 +92,14 @@ export async function rotateHighlights(db, deps) {
     // fetched separately so older admin choices are never silently dropped.
     const rows = await query(db, `SELECT payload_json FROM games WHERE status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id) ORDER BY updated_at DESC,id DESC LIMIT 200`).all();
     const games = await enrichGames(db, rows.results.map(row => JSON.parse(row.payload_json)));
+    const ranking = saved.mode === 'recent' ? [] : await communityRanks(db);
+    // Rated older projects participate too; the recent-page cap is only for
+    // fallback picks. Browser identifiers never leave the ratings table.
+    const ranked = await selectedGames(db, ranking.map(item => item.gameId));
     const pinned = await selectedGames(db, saved.items.filter(item => item.pinned).map(item => item.gameId));
-    const pool = [...new Map([...games, ...pinned].map(game => [game.id, game])).values()];
+    const pool = [...new Map([...games, ...ranked, ...pinned].map(game => [game.id, game])).values()];
     const recent = [...new Set([...saved.items.map(item => item.gameId), ...(saved.recent || [])])].slice(0, 20);
-    const items = chooseHighlights(pool, { ...saved, recent });
+    const items = chooseHighlights(pool, { ...saved, recent, ranking });
     if (items.length !== 5) return { rotated: false, reason: 'Not enough eligible projects' };
     await putMeta(db, KEY, { ...saved, revision: saved.revision + 1, week, items, recent, updatedAt: new Date(deps.now()).toISOString(), updatedBy: 'scheduled' }).run();
     return { rotated: true, week };

@@ -13,7 +13,7 @@ Requested October 11, 2026. Preserve source attribution, manual overrides, publi
 - [x] Steam/itch artwork and availability enrichment; preserve admin choices.
 - [x] Jev classification of evidence, with inspectable citations and drafts requiring admin publication.
 - [x] Finish the latest-two-month review batch and verify the deployed interface.
-- [ ] Restore the live API after the D1 daily allowance resets or the owner approves a paid plan.
+- [x] Restore the live API after the D1 daily allowance reset; verified operational on October 12.
 
 Questionnaires will live at `research.html` with an embed mode. This keeps them independently reusable without adding another hosting dependency. URL checks distinguish unavailable, blocked and reachable; a working HTTP page alone does not establish a playable game. Store artwork is source-linked, not silently uploaded as creator-authorized artwork.
 
@@ -38,4 +38,8 @@ The campaign reached Cloudflare D1's free daily row-read allowance. Stored data 
 - Fixed approved uploads disappearing during D1 outages by authorizing image delivery through R2 publication/withdrawal records. Reconciled all seven existing uploads and verified HTTP 200 for each, including The Manor. Original assets and consent records are preserved.
 - Refreshed the dated public snapshot: 1,296 games, 1,384 source posts and seven effective uploaded previews.
 
-Validation: 161 Node checks, 40 workerd checks, admin and guest browser checks, desktop/mobile layouts from 320–1440px, light/dark accessibility and outage behavior. Fixtures use disposable storage; no synthetic visitor contributions were written to production. The D1 quota outage still prevents production review submissions and admin saves until the allowance resets; uploaded images now work independently.
+Validation at that point: 161 Node checks, 40 workerd checks, admin and guest browser checks, desktop/mobile layouts from 320–1440px, light/dark accessibility and outage behavior. Fixtures use disposable storage; no synthetic visitor contributions were written to production. The quota interruption described above was resolved after the allowance reset.
+
+## Catalogue and ranking follow-up, October 12
+
+The [full catalogue refresh](catalogue-refresh-october12.md) covers 1,403 source posts, 51 additional accepted field observations, one corrected mixed-project history and seven recovered game destinations. Six editorial feedback summaries are published with 25 checked citations. Browse gains a muted Reddit score and sort; weekly community ranking uses a minimum rating count and a neutral prior, with admin controls and a separate editor pick. Source gaps and unresolved review flags remain visible. Google Search Console verification/submission is the remaining owner-account step.

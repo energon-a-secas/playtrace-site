@@ -241,7 +241,7 @@ export function createWorker(overrides = {}) {
         if (event?.cron === '0 3,4 * * 6') return (await rotateHighlights(database(env), deps)).rotated;
         if (event?.cron === '20 * * * *') { const db=database(env); await queueStoreMaintenance(db,deps); return (await runJobs(db,env,deps,2)).processed>0; }
         if (event?.cron === '50 * * * *') { await pruneUsage(database(env),deps); return (await consolidateReposts(database(env),deps,true,env.PREVIEWS)).merged>0; }
-        if (sourceTick) { if(!ingestionConfigured(env))return false;const refreshed=await refreshSourceBatch(database(env),deps);return refreshed.changed>0||refreshed.updatedGames>0; }
+        if (sourceTick) { if(!ingestionConfigured(env))return false;const refreshed=await refreshSourceBatch(database(env),deps);return refreshed.changed>0||refreshed.updatedGames>0||refreshed.scoreObservations>0; }
         if (event?.cron === '5 * * * *'||maintenance) {
           const db = database(env);
           const steam=await refreshSteamBatch(db, deps);

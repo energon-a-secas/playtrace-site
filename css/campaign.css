@@ -47,7 +47,7 @@
 .card-store { gap: 8px; align-items: center; }
 .card-shortcuts { display: flex; gap: 6px; }
 .card-shortcut { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 1px solid var(--pt-line); border-radius: 8px; color: var(--pt-muted); }
-.collection-item .card-shortcut, .collection-item .play-link, .card-favorite, .card-edit { position: relative; z-index: 2; }
+.collection-item .card-shortcut, .collection-item .play-link, .collection-item .reddit-score, .card-favorite, .card-edit { position: relative; z-index: 2; }
 .collection-item__preview { position: relative; }
 .card-favorite, .card-edit { position: absolute; top: 12px; right: 12px; display: inline-grid; place-items: center; width: 40px; height: 40px; border: 1px solid var(--pt-line); border-radius: 50%; background: var(--pt-paper); color: var(--pt-ink); cursor: pointer; }
 .card-edit { right: auto; left: 12px; border-radius: 8px; }
@@ -224,7 +224,14 @@
 .card-byline { width: 100%; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0 12px; color: var(--pt-muted); font-size: 12px; margin-block: 7px 4px; }
 .card-byline .maker-link { margin: 0; min-width: 0; overflow-wrap: anywhere; text-align: left; }
 .card-byline time { white-space: nowrap; }
-.card-update { margin: auto 0 0; padding-block: 16px 8px; color: var(--pt-muted); font-size: 12px; }
+.card-update { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; width: 100%; margin: auto 0 0; padding-block: 16px 8px; color: var(--pt-muted); font-size: 12px; }
+.reddit-score { display: inline-flex; align-items: center; gap: 4px; margin-inline-start: auto; color: var(--pt-muted); font-size: 12px; font-variant-numeric: tabular-nums; text-decoration: none; border-radius: 3px; padding: 5px 0; }
+.reddit-score:hover, .reddit-score:focus-visible { color: var(--pt-ink); text-decoration: underline; text-underline-offset: 3px; }
+.reddit-score__source { margin-inline-start: 2px; }
+.reddit-score::after { content: ''; position: absolute; bottom: 100%; left: 0; right: 0; height: 6px; }
+.reddit-score__tooltip { display: none; position: absolute; right: 0; bottom: 100%; width: 260px; max-width: calc(100vw - 88px); margin-bottom: 6px; padding: 10px 12px; border: 1px solid var(--pt-control-line); border-radius: 6px; background: var(--pt-paper); color: var(--pt-ink); box-shadow: 0 4px 18px #0003; font: 12px/1.5 var(--pt-body); text-align: start; }
+.reddit-score:not([data-tooltip-dismissed]):focus-visible .reddit-score__tooltip { display: block; }
+@media (hover: hover) { .reddit-score:not([data-tooltip-dismissed]):hover .reddit-score__tooltip { display: block; } }
 .collection-item__foot { display: grid; grid-template-columns: 40px minmax(0, 1fr) 40px; gap: 10px; align-items: center; margin-top: 0; border-top: 1px solid var(--pt-line); }
 .collection-item__foot .card-store { grid-column: 2; justify-content: center; margin: 0; padding: 0; width: auto; }
 .collection-item__foot > .card-shortcut { grid-column: 3; }

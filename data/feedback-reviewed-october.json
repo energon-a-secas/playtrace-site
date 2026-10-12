@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "reviewedAt": "2026-10-12",
+  "reviewer": "Codex editorial review under the site owner's instruction; each claim checked against cited comments",
+  "reviews": [
+    {
+      "gameId": "g_1udm6q7",
+      "commentIds": ["pb8ycwr", "p8j5aso", "p8i345z", "p8hxq1s"],
+      "summary": "Commenters praised the art style [1][3][4], with one singling out the dancing animation [2]. Another liked the Malta setting and historical theme [3]. These are reactions to the showcase: two commenters said they still needed time to play [3][4]."
+    },
+    {
+      "gameId": "g_1vo6hl0",
+      "commentIds": ["p3spti8", "p3q9qe7", "p3p48oa", "p3naw49", "p3n9dme"],
+      "summary": "The tornado received praise [1], and a commenter suggested more outlandish settings such as underwater or volcanic levels [4]. A returning player found the controls worse and the game too easy [2]; another reported loading lag on their machine [3]. The HUD was also suggested as an area for visual improvement [5]. These reports describe that version, not a current performance test."
+    },
+    {
+      "gameId": "g_1ww214m",
+      "commentIds": ["pdk1bjv", "pdjiu9z", "pdhbfwz", "pdgx4az"],
+      "summary": "Several reactions favored the move to 3D: commenters liked the added detail [1] and how the destruction looked [2]. One preferred the earlier presentation [3]. Camera navigation was a concern, with a fixed camera suggested as an alternative to a third-person view [4]. These are showcase reactions, not a measured playtest result."
+    },
+    {
+      "gameId": "g_1wmotbq",
+      "commentIds": ["pbejkyi", "pbcuwi9", "pb9z09f", "pb8w9ym"],
+      "summary": "Commenters praised the landscape view [1] and consistency of the art [2]. One suggested cleaning up blurry sprite outlines while continuing to build the game [3]. Another proposed a first-person view for exploring the settlement and entering houses [4]."
+    },
+    {
+      "gameId": "g_1wy1n20",
+      "commentIds": ["pebawby", "pe23yvd", "pdyx9j4", "pdyves5"],
+      "summary": "Commenters appreciated the site’s polish [1] and the browser format and breadth of missions [3]. One wanted more original art and mechanics to distinguish the game from Advance Wars [2]. A small animation detail—the sergeant’s whistle—also drew a suggestion [4]. One commenter explicitly had not assessed the gameplay [1], so these reactions should not be read as completed playtests."
+    },
+    {
+      "gameId": "g_1w2pieq",
+      "commentIds": ["p6x02f5", "p6xpriz", "p6ug3f8", "p6uqzvq"],
+      "summary": "Reactions to the retro visuals varied: one commenter liked their early-nineties feel [1], while another wanted pixelation fixed and gameplay improved [2]. A visitor reported a distorted display and no way to mute the music [3]. A detailed suggestion was to check canvas resolution and device scaling, then make asset palettes and lighting more consistent [4]. That suggestion is advice from a commenter, not a verified diagnosis."
+    }
+  ]
+}

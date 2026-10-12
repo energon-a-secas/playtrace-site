@@ -4,6 +4,8 @@ import { readBytes } from './http.mjs';
 import { query, getGame } from './store.mjs';
 import { acquire, release } from './lease.mjs';
 import { applyDetails, effectiveProjectUrl } from './details.mjs';
+import { projectScoresQuery, publicScore } from './reddit-scores.mjs';
+import { storeCategory } from './taxonomy.mjs';
 import { plainExcerpt } from './source-evidence.mjs';
 
 export const STEAM_IMAGE_HOSTS = ['shared.akamai.steamstatic.com', 'shared.fastly.steamstatic.com', 'cdn.akamai.steamstatic.com', 'cdn.cloudflare.steamstatic.com'];
@@ -84,21 +86,24 @@ export async function refreshSteamBatch(db, deps) {
 }
 export async function enrichGames(db, games) {
   const originals = new Map(games.map(game => [game.id, game]));
-  const editedTitles = new Set(), editedStages = new Set(), editedPlatforms = new Set(), editedSummaries = new Set();
+  const editedTitles = new Set(), editedStages = new Set(), editedPlatforms = new Set(), editedSummaries = new Set(), editedCategories = new Set();
   games = await applyDetails(db, games, (id, details) => {
     if (Object.hasOwn(details, 'title')) editedTitles.add(id);
     if (Object.hasOwn(details,'stage')) editedStages.add(id);
     if (Object.hasOwn(details,'platforms')) editedPlatforms.add(id);
     if (Object.hasOwn(details,'summary')) editedSummaries.add(id);
+    if (Object.hasOwn(details,'category')) editedCategories.add(id);
   });
-  const [extra, overrides, cache] = await db.batch([
+  const [extra, overrides, cache, scores] = await db.batch([
     query(db, 'SELECT game_id,project_url,payload_json FROM project_enrichment WHERE game_id IN(SELECT value FROM json_each(?))', JSON.stringify(games.map(game=>game.id))),
     query(db, 'SELECT game_id,preview_json FROM preview_overrides WHERE game_id IN(SELECT value FROM json_each(?))', JSON.stringify(games.map(game => game.id))),
     query(db, 'SELECT app_id,payload_json FROM steam_cache WHERE app_id IN(SELECT value FROM json_each(?))', JSON.stringify([...new Set(games.map(game => steamAppId(game.projectUrl)).filter(Boolean))])),
+    projectScoresQuery(db, games.map(game => game.id)),
   ]);
   const previews = new Map(overrides.results.map(row => [row.game_id, JSON.parse(row.preview_json)]));
   const stores = new Map(cache.results.filter(row => row.payload_json).map(row => [row.app_id, JSON.parse(row.payload_json)]));
   const enriched = new Map(extra.results.map(row=>[row.game_id,row]));
+  const reddit = new Map(scores.results.map(row=>[row.game_id,row]));
   return games.map(game => {
     const record = enriched.get(game.id);
     const availability = record?.project_url === game.projectUrl ? JSON.parse(record.payload_json) : null;
@@ -120,6 +125,7 @@ export async function enrichGames(db, games) {
     const automaticSummary=/^Source post by u\/[^:]+:/.test(game.summary)
       || (source.reviewStatus==='source-described'&&source.posts.some(post=>post.excerpt===source.summary));
     const summary=!editedSummaries.has(game.id)&&automaticSummary&&storeDescription?storeDescription:game.summary;
-    return { ...game, stage, platforms, summary, ...(availability ? {availability} : {}), ...(name ? {title: name.title} : {}), preview, ...(steam ? { steam } : {}) };
+    const category=game.category==='other'&&!editedCategories.has(game.id)?storeCategory(steam?.genres||availability?.genres)||game.category:game.category;
+    return { ...game, redditScore: publicScore(reddit.get(game.id),game.posts), category, stage, platforms, summary, ...(availability ? {availability} : {}), ...(name ? {title: name.title} : {}), preview, ...(steam ? { steam } : {}) };
   });
 }

@@ -6,6 +6,14 @@ const GENRES = [
   ['rpg', /\b(rpg|role[ -]playing|roguelike|roguelite)\b/gi],
   ['simulation', /\b(simulation|simulator|city[ -]builder)\b/gi], ['arcade', /\barcade\b/gi],
 ];
+// Use only an unambiguous store genre; "Indie" and "Casual" do not select a
+// gameplay category. Mixed genres remain available as the store's own labels.
+export function storeCategory(genres = []) {
+  const names = { action:'action', adventure:'adventure', puzzle:'puzzle', strategy:'strategy',
+    rpg:'rpg', 'role playing':'rpg', simulation:'simulation', arcade:'arcade', clicker:'clicker', incremental:'clicker' };
+  const found = [...new Set(genres.map(value => names[String(value).toLowerCase().replaceAll('-', ' ')]).filter(Boolean))];
+  return found.length === 1 ? found[0] : null;
+}
 function affirmative(value, pattern, future = false, historical = false) {
   return value.split(/[.!?;\n]+/).some(sentence => {
     if (future && /\b(soon|coming|will|planned|planning|hope|want|next week|next month)\b/i.test(sentence)) return false;
@@ -22,10 +30,10 @@ export function classifySource(title, body = '') {
   const titleGenres = GENRES.filter(([, pattern]) => affirmative(title, pattern)).map(([name]) => name);
   const genres = titleGenres.length ? titleGenres : GENRES.filter(([, pattern]) => affirmative(combined, pattern)).map(([name]) => name);
   const category = genres.includes('clicker') ? 'clicker' : genres.length === 1 ? genres[0] : 'other';
-  const demo = /\b(?:demo|playtest)\b[^.!?\n]{0,50}\b(?:out|available|live|released|playable)\b|\bplayable\b|\b(?:play|try) (?:it|the game|my game) now\b/gi;
+  const demo = /\b(?:demo|playtest)\b[^.!?\n]{0,50}\b(?:out|available|live|released|playable)\b|\b(?:released|launched|published)(?:\s+\w+){0,4}\s+(?:demo|playtest)\b|\bplayable\b|\b(?:play|try) (?:it|the game|my game) now\b|\bplay for free in (?:your|the) browser\b/gi;
   const release = /\b(released|launched|available now)\b|\bfull (?:game|version) is out\b/gi;
   const stage = affirmative(combined, demo, true) ? 'playable' : affirmative(combined, release, true, true) ? 'released' :
-    affirmative(combined, /\bprototype\b/gi) ? 'prototype' : affirmative(combined, /\bconcept\b/gi) ? 'concept' : 'unknown';
+    affirmative(combined, /\bprototyp(?:e|ing)\b/gi) ? 'prototype' : affirmative(combined, /\bconcept\b/gi) ? 'concept' : 'unknown';
   const platforms = [
     ['Browser', /\b(browser|webgl|html5|web game)\b/gi], ['PC', /\bpc\b/gi], ['Windows', /\bwindows\b/gi],
     ['macOS', /\b(macos|mac os)\b/gi], ['Linux', /\blinux\b/gi], ['Android', /\bandroid\b/gi],

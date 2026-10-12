@@ -2,13 +2,22 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createWorker} from '../src/index.mjs';
 import {importCatalog} from '../src/store.mjs';
-import {fixtureEnv,fixtureCatalog,request,ORIGIN,OPERATOR} from './helpers.mjs';
+import {fixtureEnv,fixtureCatalog,request,ORIGIN,OPERATOR,rawPost,NOW} from './helpers.mjs';
+import { refreshSourceRecords } from '../src/source-evidence.mjs';
 import {publicCacheKey,REVISION_KEY} from '../src/public-cache.mjs';
 
 function memoryCache(){
   const entries=new Map();
   return {entries,async match(key){return entries.get(key.url)?.clone();},async put(key,response){entries.set(key.url,response.clone());}};
 }
+test('a score-only archive refresh invalidates a warm catalogue cache',async()=>{
+  const env=fixtureEnv(),cache=memoryCache(),row=rawPost('abc12',{author:'MakerName',score:4,retrieved_on:NOW/1000});
+  await importCatalog(env.DB,fixtureCatalog());await refreshSourceRecords(env.DB,[row],{now:()=>NOW});
+  const worker=createWorker({cache,now:()=>NOW+8*86400000,sleep:async()=>{},fetch:async()=>Response.json({data:[{...row,score:9,retrieved_on:NOW/1000+8*86400}]})});
+  assert.equal((await(await worker.fetch(request('/catalog'),env)).json()).games[0].redditScore.score,4);
+  await worker.scheduled({cron:'45 * * * *'},env);
+  assert.equal((await(await worker.fetch(request('/catalog'),env)).json()).games[0].redditScore.score,9);env.DB.close();
+});
 test('public discovery cache uses one revision read and reapplies CORS per request',async()=>{
   const env=fixtureEnv(),cache=memoryCache(),worker=createWorker({cache});
   await importCatalog(env.DB,fixtureCatalog());

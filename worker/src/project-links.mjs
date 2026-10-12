@@ -17,6 +17,8 @@ export function projectLinks(raw) {
     const candidate = canonicalProjectUrl(typeof link === 'string' ? link.replace(/&amp;/g,'&').replace(/[.,*`]+$/, '') : null);
     if (!candidate) continue;
     const position = body.indexOf(link), context = position >= 0 ? body.slice(Math.max(0, position - 160), position) : '';
+    const paragraph = position >= 0 ? body.slice(Math.max(0, body.lastIndexOf('\n\n',position)),position) : '';
+    if (/\b\d+ years? ago\b/i.test(paragraph) && /\b(?:first|old|previous)\b/i.test(paragraph)) continue;
     if(/\b(?:similar to my|including my|my (?:previous|other|older) game|my most recently released game)\b/i.test(context)
       && !/\b(?:play|try|download) (?:this|the new|my new) (?:game|build|demo)\b/i.test(context.slice(-70)))continue;
     if (repositoryUrl(candidate)) {
@@ -30,7 +32,9 @@ export function projectLinks(raw) {
     const store = (url.hostname === 'store.steampowered.com' && /^\/app\/\d+(?:\/|$)/.test(url.pathname))
       || (url.hostname.endsWith('.itch.io') && url.pathname.length > 1) || ['play.google.com','apps.apple.com'].includes(url.hostname);
     const pages = url.hostname.endsWith('.github.io') || url.hostname.endsWith('.gitlab.io');
-    const playContext = /\b(play|playable|try|demo|download)\b/i.test(context);
+    const after = position >= 0 ? body.slice(position + link.length, position + link.length + 160) : '';
+    const playContext = /\b(play|playable|try|demo|download)\b/i.test(context)
+      || /\b(?:runs? in (?:the|your) browser|free to play)\b/i.test(after);
     if (store || pages || playContext || /\bgame\b/i.test(context)) playable.push({url:candidate,score:(store?30:pages?25:playContext?20:10)-index/100});
   }
   playable.sort((a,b)=>b.score-a.score);

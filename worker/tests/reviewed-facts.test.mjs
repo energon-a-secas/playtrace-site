@@ -8,6 +8,16 @@ import { refreshSourceRecords } from '../src/source-evidence.mjs';
 import { publicCacheKey } from '../src/public-cache.mjs';
 import { ingest } from '../src/ingestion.mjs';
 import { projectLinks } from '../src/project-links.mjs';
+import { classifySource, storeCategory } from '../src/taxonomy.mjs';
+
+test('demo announcements stay playable rather than a full release, and mixed store genres stay uncertain',()=>{
+  assert.equal(classifySource('I released the demo for my game on Steam').stage,'playable');
+  assert.equal(classifySource('I will release the demo next week').stage,'unknown');
+  assert.equal(classifySource('I am prototyping a narrative game').stage,'prototype');
+  assert.equal(storeCategory(['Indie','Puzzle']),'puzzle');
+  assert.equal(storeCategory(['Action','RPG']),null);
+  assert.equal(storeCategory(['Indie','Casual']),null);
+});
 const deps={now:()=>NOW};
 function fact(db,field,value,url='https://www.reddit.com/r/aigamedev/comments/abc12/'){db.sql.prepare('INSERT INTO project_facts VALUES(?,?,?,?,?,?)').run('g_abc12',field,JSON.stringify(value),url,'Reviewed public source excerpt',new Date(NOW).toISOString());}
 test('reviewed facts survive imports while explicit admin edits remain authoritative',async()=>{
@@ -54,4 +64,6 @@ test('comparison links to another game do not become the featured project destin
   assert.equal(projectLinks({selftext:'I am making Rogue Shifters, similar to my most recently released game [Cook or Be Cooked](https://store.steampowered.com/app/3360990/).'}).projectUrl,null);
   assert.equal(projectLinks({selftext:'STARBATTLE is new. While working on other projects, including my free Souls-like (https://wbk.itch.io/chapel-knights).'}).projectUrl,null);
   assert.equal(projectLinks({selftext:'I have other projects. Play this game here: https://maker.itch.io/starbattle'}).projectUrl,'https://maker.itch.io/starbattle');
+  assert.equal(projectLinks({selftext:'12 years ago I released my first game, still here: https://maker.itch.io/old\n\nMy new game is here: https://maker.itch.io/new'}).projectUrl,'https://maker.itch.io/new');
+  assert.equal(projectLinks({selftext:'PS1 art inspired by another game.\nhttps://easy-roads.pages.dev/\nRuns in the browser (free to play).'}).projectUrl,'https://easy-roads.pages.dev/');
 });

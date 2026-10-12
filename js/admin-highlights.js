@@ -28,6 +28,8 @@ export async function loadHighlightsAdmin() {
     const result = await api.request('/admin/highlights'); if (version !== epoch) return;
     saved = result; items = result.items.map(({ gameId, pinned }) => ({ gameId, pinned })); excluded = [...result.excluded];
     editorPickId = result.editorPick?.gameId || null;
+    $('highlightMode').value = result.mode || 'community';
+    $('highlightRankingStatus').textContent = `${result.qualifiedProjects || 0} projects meet the rating minimum. Reddit scores do not affect weekly picks.`;
     $('highlightEdition').textContent = result.week ? `Week of ${dateLabel(result.week + 'T12:00:00Z')} · Santiago time` : 'Create the first weekly selection';
     $('highlightMessage').textContent = ''; $('highlightReload').hidden = true;
   } catch (error) { if (version === epoch) { $('highlightMessage').textContent = error.message; $('highlightReload').hidden = false; } }
@@ -53,7 +55,7 @@ export function initHighlights(hooks) {
     event.preventDefault(); if (loading || items.length !== 5 || !saved) return;
     const version = epoch; loading = true; $('highlightSave').disabled = true; $('highlightSlots').querySelectorAll('input').forEach(input => { input.disabled = true; }); $('highlightMessage').textContent = 'Saving weekly highlights…';
     try {
-      const value = await api.request('/admin/highlights', { method: 'PUT', body: { revision: saved.revision, items, excluded, editorPickId } }); if (version !== epoch) return;
+      const value = await api.request('/admin/highlights', { method: 'PUT', body: { revision: saved.revision, items, excluded, editorPickId, mode: $('highlightMode').value } }); if (version !== epoch) return;
       saved = value; items = value.items.map(({ gameId, pinned }) => ({ gameId, pinned })); excluded = [...value.excluded]; editorPickId = value.editorPick?.gameId || null; $('highlightMessage').textContent = 'Saved. Your selections are now on the home page.'; $('highlightReload').hidden = true;
     } catch (error) { if (version === epoch) { $('highlightMessage').textContent = error.message; $('highlightReload').hidden = false; } }
     finally { if (version === epoch) { loading = false; paint(); } }

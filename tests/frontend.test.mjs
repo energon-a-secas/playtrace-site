@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { validateCatalog, selectGames, defaults, locationForState, readLocation, parsePrice, distributionFor } from '../js/collection.js';
 import * as collection from '../js/collection.js';
+import { redditScoreBadge } from '../js/reddit-score.js';
 import { feedbackQuestions, feedbackOptions, validChoices } from '../js/feedback-options.js';
 import { createFavoritesStore } from '../js/favorites.js';
 
@@ -167,7 +168,7 @@ test('same-timestamp catalogue refresh removes missing cards and updates searcha
   globalThis.location = { href: 'https://playtrace.example/' };
   try {
     let makers=[];
-    const renderer = await isolatedModule('render.js', { state, $, ...collection, CONFIG: { removalContact: 'https://balise.neorgon.com/report/' }, e: String, syncMakers:games=>makers=games.map(g=>g.author.name), icon:()=>'', playLink:()=>'', projectPath:g=>'/games/'+g.id+'/' });
+    const renderer = await isolatedModule('render.js', { state, $, ...collection, CONFIG: { removalContact: 'https://balise.neorgon.com/report/' }, e: String, redditScoreBadge, syncMakers:games=>makers=games.map(g=>g.author.name), icon:()=>'', playLink:()=>'', projectPath:g=>'/games/'+g.id+'/' });
     renderer.render();
     const removed = state.games[0].id;
     state.games = state.games.filter(game => game.id !== removed);
@@ -195,7 +196,7 @@ test('background catalogue pages preserve visible card nodes while same-timestam
   let replacements = 0, html = '';
   Object.defineProperty($('itemList'), 'innerHTML', { get: () => html, set: value => { replacements++; html = value; } });
   try {
-    const renderer = await isolatedModule('render.js', { state, $, ...collection, CONFIG: {}, e: String, syncMakers:()=>{}, icon:()=>'', playLink:()=>'', projectPath:g=>'/games/'+g.id+'/' });
+    const renderer = await isolatedModule('render.js', { state, $, ...collection, CONFIG: {}, e: String, redditScoreBadge, syncMakers:()=>{}, icon:()=>'', playLink:()=>'', projectPath:g=>'/games/'+g.id+'/' });
     renderer.render(); assert.equal(replacements, 1);
     state.games = all; state.catalogPartial = false; state.status = 'ready'; renderer.render();
     assert.equal(replacements, 1, 'Unchanged visible cards retain their existing DOM and focus');

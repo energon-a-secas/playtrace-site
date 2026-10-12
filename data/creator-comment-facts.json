@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "reviewedAt": "2026-10-12",
+  "reviewer": "Codex source review: exact creator comments, not other commenters or inferred endorsements",
+  "facts": [
+    {
+      "gameId": "g_1psdrh8",
+      "field": "projectUrl",
+      "value": "https://infinite-card.net/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1psdrh8/_/nv8n0te/",
+      "evidence": "Game Link - [https://infinite-card.net/]"
+    },
+    {
+      "gameId": "g_1psdrh8",
+      "field": "title",
+      "value": "Infinite Card",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1psdrh8/_/nv8n0te/",
+      "evidence": "https://infinite-card.net/"
+    },
+    {
+      "gameId": "g_1psdrh8",
+      "field": "category",
+      "value": "card-game",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1psdrh8/_/nv8n0te/",
+      "evidence": "You have a limited pool of cards, so make sure your combinations are strategically used to beat the current enemy."
+    },
+    {
+      "gameId": "g_1psdrh8",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1psdrh8/_/nv8n0te/",
+      "evidence": "Game Link - [https://infinite-card.net/]"
+    },
+    {
+      "gameId": "g_1h374hb",
+      "field": "projectUrl",
+      "value": "https://promptgolf.app/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1h374hb/_/lzok6xo/",
+      "evidence": "You can play the game at"
+    },
+    {
+      "gameId": "g_1d7h482",
+      "field": "projectUrl",
+      "value": "https://ada-eden.itch.io/1001-nights-official",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1d7h482/_/l6z88lq/",
+      "evidence": "https://ada-eden.itch.io/1001-nights-official"
+    },
+    {
+      "gameId": "g_1d4p5k3",
+      "field": "projectUrl",
+      "value": "https://beta.frvr.ai/@octo/play/8mLAuma8v8",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1d4p5k3/_/l6fweh6/",
+      "evidence": "https://beta.frvr.ai/@octo/play/8mLAuma8v8"
+    },
+    {
+      "gameId": "g_198a2z2",
+      "field": "projectUrl",
+      "value": "https://store.steampowered.com/app/2424330/Quest_Machina/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/198a2z2/_/ki5rniz/",
+      "evidence": "https://store.steampowered.com/app/2424330/Quest_Machina/"
+    },
+    {
+      "gameId": "g_18p37gb",
+      "field": "projectUrl",
+      "value": "https://jussukka.itch.io/echoes-of-somewhere",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/18p37gb/_/kela1po/",
+      "evidence": "https://jussukka.itch.io/echoes-of-somewhere"
+    },
+    {
+      "gameId": "g_18om8td",
+      "field": "projectUrl",
+      "value": "https://laby.ai/ai-odyssey",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/18om8td/_/kehzfbt/",
+      "evidence": "You can try it out as a web app here: https://laby.ai/ai-odyssey"
+    }
+  ]
+}

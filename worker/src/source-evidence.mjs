@@ -7,6 +7,7 @@ import { unavailable } from './http.mjs';
 import { archiveJson } from './references.mjs';
 import { acquire, release } from './lease.mjs';
 import { reviewedSource } from './source-reviews.mjs';
+import { scoreObservation, saveScoreObservations } from './reddit-scores.mjs';
 
 // Store public prose as evidence, never arbitrary archive fields or rendered HTML.
 export function sourceBody(raw) {
@@ -44,7 +45,7 @@ export async function refreshSourceRecords(db, rawRows, deps) {
     FROM source_posts p LEFT JOIN games g ON g.id=p.game_id LEFT JOIN source_evidence e ON e.post_id=p.id
     WHERE p.id IN(SELECT value FROM json_each(?)) AND p.status<>'rejected'
       AND (p.game_id IS NULL OR (g.status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id)))`,JSON.stringify([...rawById.keys()])).all();
-  const records=[],games=new Map(),posts=[];
+  const records=[],games=new Map(),posts=[],scores=[];
   const at=new Date(deps.now()).toISOString();
   let changed=0;
   for(const row of rows.results) {
@@ -53,6 +54,8 @@ export async function refreshSourceRecords(db, rawRows, deps) {
     const observed=sourceObservation(raw,candidate,deps.now());
     if(review)observed.currentReview={url:review.url,checkedAt:review.checkedAt,flair:review.flair,reason:review.reason,archived:review.archived};
     if(observed.state!=='removed'&&raw.author?.toLowerCase()!==row.author_key)continue;
+    const score=observed.state==='available'?scoreObservation(archived,deps.now()):null;
+    if(score)scores.push(score);
     const previous=row.evidence_json?JSON.parse(row.evidence_json):null;
     if(previous?.archiveRetrievedAt&&observed.archiveRetrievedAt&&previous.archiveRetrievedAt>observed.archiveRetrievedAt){
       records.push({id:row.id,payload:previous,hash:row.content_hash});
@@ -108,10 +111,11 @@ export async function refreshSourceRecords(db, rawRows, deps) {
   if(updates.length)statements.push(query(db,`UPDATE games SET payload_json=(SELECT json_extract(value,'$.game') FROM json_each(?) WHERE json_extract(value,'$.id')=games.id),
     project_url=(SELECT json_extract(value,'$.url') FROM json_each(?) WHERE json_extract(value,'$.id')=games.id)
     WHERE id IN(SELECT json_extract(value,'$.id') FROM json_each(?))`,JSON.stringify(updates),JSON.stringify(updates),JSON.stringify(updates)));
-  if(updates.length||changed)statements.push(query(db,"UPDATE app_meta SET value_json=json_set(value_json,'$.generatedAt',?) WHERE key='catalog'",at));
+  if(scores.length)statements.push(saveScoreObservations(db,scores));
+  if(updates.length||changed||scores.length)statements.push(query(db,"UPDATE app_meta SET value_json=json_set(value_json,'$.generatedAt',?) WHERE key='catalog'",at));
   statements.push(query(db,"DELETE FROM app_meta WHERE key='source_refresh_guard'"));
   try{await db.batch(statements);}catch(error){if(/NOT NULL.*app_meta\.value_json/.test(error.message))throw unavailable();throw error;}
-  return {checked:records.length,changed,updatedGames:updates.length};
+  return {checked:records.length,changed,updatedGames:updates.length,scoreObservations:scores.length};
 }
 
 export async function refreshSourceBatch(db,deps) {
