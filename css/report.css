@@ -48,6 +48,15 @@ html:not([data-theme]) .header-bar[data-header-skin="custom"] {
   .header-quiz-short { display: inline; }
 }
 .neo-footer a:hover { color: var(--pt-ink); }
+.neo-footer.site-footer { align-items: center; justify-content: space-between; gap: 12px 24px; padding-inline: clamp(20px, 2.4vw, 48px); text-align: left; }
+.site-footer > .neo-footer-inner { display: flex; align-items: center; gap: 12px; max-width: none; min-width: 0; }
+.site-footer .neo-beacon-link { position: static; inset: auto; z-index: auto; flex: 0 0 36px; width: 36px; height: 36px; border-radius: 50%; background: transparent; color: var(--pt-muted); border-color: var(--pt-line); opacity: 1; }
+.site-footer .neo-beacon-link:hover, .site-footer .neo-beacon-link:focus-visible { color: var(--pt-gold); border-color: var(--pt-gold); box-shadow: none; }
+.site-footer .neo-beacon-link:focus-visible { outline-color: var(--pt-gold); }
+@media (max-width: 700px) {
+  .neo-footer.site-footer { flex-direction: column; align-items: stretch; }
+  .site-footer > .neo-footer-bar { justify-content: flex-start; padding-left: 48px; }
+}
 
 
 /* Scope the report palette to site-owned content, preserving the fleet tokens. */

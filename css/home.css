@@ -8,28 +8,36 @@
 .showcase-heading #editHighlights { pointer-events: auto; background: var(--pt-night); border-color: oklch(.65 .02 260); color: var(--pt-night-text); }
 .showcase-panels { --slant: clamp(52px, 7vw, 140px); display: flex; position: relative; isolation: isolate; list-style: none; padding: 0; margin: 0; height: clamp(490px, calc(100svh - 210px), 920px); overflow: clip; background: var(--pt-night); }
 .showcase-panels > li { position: relative; flex: 0 0 calc(100% / var(--panels, 6) + var(--slant)); margin-inline: calc(var(--slant) / -2); min-width: 0; pointer-events: none; }
-.showcase-game { position: absolute; inset: 0; clip-path: polygon(var(--slant) 0, 100% 0, calc(100% - var(--slant)) 100%, 0 100%); color: var(--pt-night-text); background: var(--pt-night); display: block; text-decoration: none; isolation: isolate; pointer-events: auto; }
+.showcase-game { position: absolute; inset: 0; clip-path: polygon(var(--slant) 0, 100% 0, calc(100% - var(--slant)) 100%, 0 100%); color: var(--pt-night-text); background: var(--pt-night); display: flex; flex-direction: column; align-items: flex-start; isolation: isolate; pointer-events: auto; }
 .showcase-panels > li:first-child .showcase-game { clip-path: polygon(0 0, 100% 0, calc(100% - var(--slant)) 100%, 0 100%); }
 .showcase-panels > li:last-child .showcase-game { clip-path: polygon(var(--slant) 0, 100% 0, 100% 100%, 0 100%); }
 .showcase-art, .showcase-art img { position: absolute; inset: 0; width: 100%; height: 100%; }
 .showcase-art { z-index: -2; }
 .showcase-art img { object-fit: cover; filter: saturate(.65) brightness(.86); transition: filter 350ms ease-out; }
 .showcase-game::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, oklch(.16 .02 260 / .1), transparent 30%, oklch(.13 .025 260 / .46) 65%, oklch(.13 .025 260 / .98)); z-index: -1; }
-.showcase-caption { position: absolute; bottom: clamp(28px, 4vw, 64px); left: calc(var(--slant) * .5 + 32px); width: calc((100% - var(--slant)) * .64); }
+.showcase-caption { margin: auto 0 clamp(28px, 4vw, 64px) calc(var(--slant) * .5 + 24px); width: calc((100% - var(--slant)) * .64); }
 .showcase-maker { display: block; color: oklch(.88 .008 260); font: 13px/1.45 var(--pt-body); overflow-wrap: anywhere; }
 .showcase-caption h3 { color: inherit; font: 650 clamp(18px, 1.65vw, 32px)/1.15 var(--pt-display); letter-spacing: -.025em; margin: 12px 0 26px; overflow-wrap: anywhere; text-wrap: balance; }
-.showcase-explore { display: flex; gap: 8px; align-items: center; font: 13px/1.4 var(--pt-body); }
-.showcase-explore > span { color: var(--pt-amber); font-size: 23px; }
+.showcase-actions { display: flex; align-items: center; gap: 12px; width: max-content; }
+.showcase-actions a { color: var(--pt-night-text); text-decoration: none; outline: none; }
+/* The Check Project link covers the artwork too, without nesting the Play link. */
+.showcase-project::before { content: ''; position: absolute; inset: 0; z-index: 0; }
+.showcase-action-face { position: relative; z-index: 1; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 9px 14px; font: 600 13px/1.4 var(--pt-body); white-space: nowrap; }
+.showcase-action-face::before { content: ''; position: absolute; inset: 0; z-index: -1; transform: skewX(-12deg); border: 1px solid oklch(.98 .005 260 / .6); background: oklch(.98 .005 260 / .025); transition: background-color 180ms ease-out, border-color 180ms ease-out, box-shadow 180ms ease-out; }
+.showcase-actions a:hover .showcase-action-face::before { background: oklch(.98 .005 260 / .12); border-color: var(--pt-night-text); }
+.showcase-actions a:focus-visible .showcase-action-face::before { border-color: var(--pt-amber); box-shadow: 0 0 0 2px var(--pt-amber); }
+.showcase-play { position: relative; z-index: 1; }
+.showcase-play .ui-icon { width: 13px; height: 13px; fill: currentColor; stroke: none; }
 .showcase-editor-label { display: block; width: fit-content; margin-bottom: 15px; color: var(--pt-amber); font: 600 12px/1.4 var(--pt-body); }
-.showcase-game:hover .showcase-art img, .showcase-game:focus-visible .showcase-art img, .is-expanded .showcase-art img { filter: saturate(1) brightness(1); }
-.showcase-game:focus-visible { outline: none; }
-.showcase-game:focus-visible .showcase-caption { outline: 2px solid var(--pt-amber); outline-offset: 8px; }
+.showcase-game:hover .showcase-art img, .showcase-game:focus-within .showcase-art img, .is-expanded .showcase-art img { filter: saturate(1) brightness(1); }
 .showcase--motion > li { position: absolute; inset: 0 auto 0 0; margin: 0; width: var(--canvas-width); transform: translateX(var(--panel-x)); }
 .showcase-panels.showcase--motion > li .showcase-game { clip-path: polygon(var(--cut-start) 0, var(--cut-top) 0, var(--cut-bottom) 100%, 0 100%); }
 .showcase--motion .showcase-art { transform: translateX(var(--art-x)); }
 .showcase--animate > li, .showcase--animate .showcase-art { transition: transform 580ms cubic-bezier(.22,1,.36,1); }
 .showcase--animate .showcase-game { transition: clip-path 580ms cubic-bezier(.22,1,.36,1); }
 .showcase--motion .showcase-caption { width: calc(var(--base-width) * .64); }
+.showcase--motion .showcase-play { opacity: 0; transform: translateX(-6px); pointer-events: none; transition: opacity 160ms ease-out, transform 220ms ease-out; }
+.showcase--motion .is-expanded .showcase-play, .showcase--motion .showcase-play:focus-visible { opacity: 1; transform: none; pointer-events: auto; }
 .home-invitation { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 22px 40px; padding: 24px clamp(20px, 2.4vw, 48px) 28px; }
 .home-invitation-action { display: flex; flex-wrap: wrap; align-items: center; gap: 22px 32px; }
 .home-invitation p { color: var(--pt-text); font: 18px/1.5 var(--pt-body); margin: 0; }
@@ -42,6 +50,8 @@
 .home-review-link { display: inline-block; margin-left: 14px; }
 .showcase-panels .highlights-empty { flex: 1; padding: 150px 32px 64px; margin: 0; color: var(--pt-night-text); pointer-events: auto; }
 .highlights-empty a { color: var(--pt-amber); }
+/* Without expansion, every destination remains visible and reachable. */
+.showcase-panels:not(.showcase--motion) .showcase-actions { flex-direction: column; align-items: flex-start; }
 @media (max-width: 1100px) { .home-invitation { gap: 14px; } .home-invitation-action { margin-left: auto; } .home-invitation p { font-size: 16px; } }
 @media (max-width: 900px) {
   .showcase-heading { inset: 18px auto auto 18px; gap: 10px; }
@@ -49,16 +59,18 @@
   .showcase-panels { height: auto; display: block; overflow: visible; }
   .showcase-panels > li { margin: 0; min-height: 255px; }
   .showcase-panels > li:first-child { min-height: 420px; }
-  .showcase-panels .showcase-game { clip-path: none; }
+  .home-showcase .showcase-panels > li .showcase-game { clip-path: none; }
   .showcase-art img { filter: none; }
   .showcase-game::after { background: linear-gradient(0deg, oklch(.13 .025 260 / .97), oklch(.13 .025 260 / .16) 80%); }
-  .showcase-caption { left: 24px; bottom: 24px; width: calc(100% - 48px); }
+  .showcase-caption { margin: auto 24px 24px; width: calc(100% - 48px); }
   .showcase-caption h3 { font-size: 29px; max-width: 24ch; margin: 6px 0 14px; }
-  .showcase-explore { font-size: 14px; }
+  .showcase-panels:not(.showcase--motion) .showcase-actions { flex-direction: row; }
+  .showcase-action-face { font-size: 14px; padding-inline: 18px; }
   .showcase-editor-label { margin-bottom: 10px; }
   .home-invitation { padding: 20px 24px 28px; gap: 20px; }
   .home-invitation-action { margin: 0; gap: 20px; }
   .home-invitation p { font-size: 17px; }
   .home-review-link { margin-left: 6px; }
 }
-@media (prefers-reduced-motion: reduce) { .showcase-art, .showcase-art img, .showcase--motion > li, .showcase--motion > li .showcase-game { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .showcase-art, .showcase-art img, .showcase--motion > li, .showcase--motion > li .showcase-game, .showcase-play, .showcase-action-face::before { transition: none; } }
+@media (forced-colors: active) { .showcase-actions a:focus-visible .showcase-action-face::before { outline: 2px solid Highlight; outline-offset: 3px; } }

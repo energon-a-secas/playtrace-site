@@ -7,11 +7,16 @@ export function bindShowcase(wall) {
   function paint() {
     const panels = [...wall.querySelectorAll(':scope > li:has(.showcase-game)')];
     const enabled = desktop.matches && !reduced.matches && panels.length > 1;
-    if (!enabled) { wall.classList.remove('showcase--motion', 'showcase--animate'); previousWidth = 0; return; }
+    if (!enabled) {
+      wall.classList.remove('showcase--motion', 'showcase--animate');
+      panels.forEach(panel => panel.classList.remove('is-expanded'));
+      previousWidth = 0;
+      return;
+    }
     const width = wall.clientWidth, base = width / panels.length, slant = Math.min(140, Math.max(52, width * .07));
     const reset = width !== previousWidth || panels.some((panel, i) => panel !== previousPanels[i]) || panels.length !== previousPanels.length;
     if (reset) wall.classList.remove('showcase--animate');
-    const active = panels.includes(hovered) ? hovered : panels.includes(focused) ? focused : null;
+    const active = panels.includes(focused) ? focused : panels.includes(hovered) ? hovered : null;
     const expanded = base * 1.65, remaining = (width - expanded) / (panels.length - 1);
     let left = -slant / 2;
     panels.forEach((panel, index) => {
@@ -31,7 +36,10 @@ export function bindShowcase(wall) {
   wall.addEventListener('pointerover', event => { const panel = panelFor(event.target); if (panel !== hovered) { hovered = panel; paint(); } });
   wall.addEventListener('pointerleave', () => { hovered = null; paint(); });
   wall.addEventListener('focusin', event => { focused = event.target.matches(':focus-visible') ? panelFor(event.target) : null; paint(); });
-  wall.addEventListener('focusout', () => { focused = null; paint(); });
+  wall.addEventListener('focusout', event => {
+    // Moving between Check Project and Play must keep this panel open.
+    if (panelFor(event.relatedTarget) !== focused) { focused = null; paint(); }
+  });
   desktop.addEventListener('change', paint); reduced.addEventListener('change', paint);
   new ResizeObserver(paint).observe(wall);
   paint();
