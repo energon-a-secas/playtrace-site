@@ -52,7 +52,8 @@ export async function listJobs(db, status, cursor = '', kind = '') {
   const filtered=kind&&kind!=='all';
   const offset = Number(cursor || 0); if (!Number.isInteger(offset) || offset < 0 || offset > 100000) throw invalid();
   const [rows, counts] = await db.batch([
-    query(db, `SELECT j.*,COALESCE(json_extract(o.details_json,'$.title'),json_extract(g.payload_json,'$.title')) AS title
+    query(db, `SELECT j.*,COALESCE(json_extract(o.details_json,'$.title'),
+      (SELECT json_extract(f.value_json,'$') FROM project_facts f WHERE f.game_id=g.id AND f.field='title'),json_extract(g.payload_json,'$.title')) AS title
       FROM editorial_jobs j JOIN games g ON g.id=j.game_id LEFT JOIN project_overrides o ON o.game_id=g.id
       WHERE g.status='published' ${status && status!=='all'?'AND j.status=?':''} ${filtered?'AND j.kind=?':''} ORDER BY j.created_at DESC,j.id LIMIT 21 OFFSET ?`, ...(status&&status!=='all'?[status]:[]), ...(filtered?[kind]:[]), offset),
     query(db, `SELECT status,count(*) AS count FROM editorial_jobs ${filtered?'WHERE kind=?':''} GROUP BY status`,...(filtered?[kind]:[])),

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { fixtureEnv,fixtureCatalog,fixtureGame,fixtureWorker,request,NOW,rawPost } from './helpers.mjs';
 import { importCatalog,catalog,removal } from '../src/store.mjs';
 import { applyDetails,editDetails,detailsOf } from '../src/details.mjs';
-import { enqueueJobs } from '../src/jobs.mjs';
+import { enqueueJobs,listJobs } from '../src/jobs.mjs';
 import { refreshSourceRecords } from '../src/source-evidence.mjs';
 import { publicCacheKey } from '../src/public-cache.mjs';
 import { ingest } from '../src/ingestion.mjs';
@@ -13,9 +13,12 @@ function fact(db,field,value,url='https://www.reddit.com/r/aigamedev/comments/ab
 test('reviewed facts survive imports while explicit admin edits remain authoritative',async()=>{
   const {DB:db}=fixtureEnv(),seed=fixtureCatalog();await importCatalog(db,seed);fact(db,'category','adventure');fact(db,'title','Pattern Garden');
   let game=(await catalog(db)).games[0];assert.equal(game.title,'Pattern Garden');assert.equal(game.category,'adventure');
+  await enqueueJobs(db,{kind:'references',scope:'game',gameId:game.id},{subject:'operator'},deps);
+  assert.equal((await listJobs(db,'all')).jobs[0].title,'Pattern Garden');
   await importCatalog(db,seed);assert.equal((await catalog(db)).games[0].title,'Pattern Garden');
   await editDetails(db,game.id,{mode:'edit',revision:0,details:{...detailsOf(game),title:'Owner title',category:'puzzle'}},{subject:'owner'},deps);
   game=(await catalog(db)).games[0];assert.equal(game.title,'Owner title');assert.equal(game.category,'puzzle');
+  assert.equal((await listJobs(db,'all')).jobs[0].title,'Owner title');
   const page=await fixtureWorker().fetch(request('/insights'),{DB:db,ALLOWED_ORIGINS:'https://playtrace.example'});const data=await page.json();assert.equal(data.games[0].fieldEvidence.length,0);db.close();
 });
 test('explicitly clearing a wrong destination hides its store data and stops its maintenance jobs',async()=>{

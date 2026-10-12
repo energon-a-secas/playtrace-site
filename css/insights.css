@@ -1,5 +1,5 @@
 .insights-intro { max-width: 72ch; }
-.insights-page { max-width: 1160px; width: calc(100% - 48px); margin: 0 auto; padding: 48px 0 72px; }
+#main.insights-page { max-width: 1160px; width: calc(100% - 48px); margin: 0 auto; padding: 48px 0 72px; }
 .insights-page .insights-intro h2 { font: 650 clamp(32px,4.2vw,54px)/1.08 var(--pt-display); letter-spacing: -.035em; margin: 0 0 18px; color: var(--pt-ink); max-width: 23ch; }
 .insights-page .insights-intro > p:last-child { font-size: 19px; max-width: 64ch; }
 .insight-jumps { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-top: 28px; padding-bottom: 22px; border-bottom: 1px solid var(--pt-line); }
@@ -11,7 +11,7 @@
 .insights-page .insight-section a { color: var(--pt-gold); text-underline-offset: 4px; }
 .pilot-changes dd { margin: 6px 0 18px; max-width: 75ch; overflow-wrap: anywhere; }
 .pilot-changes span { color: var(--pt-muted); }
-@media (max-width: 560px) { .insights-page { width: calc(100% - 32px); padding-top: 32px; } .insight-jumps { gap: 16px 22px; } }
+@media (max-width: 560px) { #main.insights-page { width: calc(100% - 32px); padding-top: 32px; } .insight-jumps { gap: 16px 22px; } }
 .insights-intro h3 { font: 650 32px/1.2 var(--pt-display); letter-spacing: -.035em; margin: 0 0 12px; }
 .insights-intro p { color: var(--pt-text); line-height: 1.6; }
 .insights-toolbar, .insight-controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: end; }
