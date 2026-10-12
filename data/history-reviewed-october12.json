@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "groups": [
+    {
+      "keep": "g_1x3tqvw",
+      "aliases": [
+        "g_1ws5zlf",
+        "g_1wm4z9u",
+        "g_1wea7eq",
+        "g_1w9zwa5",
+        "g_1vrj2cl"
+      ],
+      "reason": "Reviewed the same creator\u2019s numbered fishing-game devlogs, recurring Godot workflow and linked earlier progress reports. The week 11 update supplies the Nightshoal itch.io build. These are one development history, not separate games.",
+      "adoptFacts": {
+        "category": "g_1wm4z9u"
+      },
+      "evidence": [
+        {
+          "postId": "1x3tqvw",
+          "quote": "https://profactor.itch.io/nightshoal"
+        },
+        {
+          "postId": "1ws5zlf",
+          "quote": "Week 9 of making my fishing game with the help of AI"
+        },
+        {
+          "postId": "1wm4z9u",
+          "quote": "Week 8 of making my fishing game (almost) entirely with AI"
+        },
+        {
+          "postId": "1wea7eq",
+          "quote": "Week 7 of making my fishing game (almost) entirely with AI"
+        },
+        {
+          "postId": "1w9zwa5",
+          "quote": "Week 6 of making my fishing game entirely with AI"
+        },
+        {
+          "postId": "1vrj2cl",
+          "quote": "Week 3 of making my fishing game entirely with AI"
+        }
+      ]
+    },
+    {
+      "keep": "g_1umaf0l",
+      "aliases": [
+        "g_1tz7zc3"
+      ],
+      "addPosts": [
+        "1tu325t"
+      ],
+      "reason": "The later Spascii post links the June update, which links the original May showcase. All three identify the same browser ASCII exploration game by the same creator; the later post supplies the current domain.",
+      "evidence": [
+        {
+          "postId": "1umaf0l",
+          "quote": "Spascii is a 3D space exploration game that runs in the browser"
+        },
+        {
+          "postId": "1tz7zc3",
+          "quote": "Spascii is a 3D space exploration game running entirely in the browser"
+        },
+        {
+          "postId": "1tu325t",
+          "quote": "Started a space exploration game rendered in ASCII - still just a tech demo"
+        }
+      ]
+    },
+    {
+      "keep": "g_1tkmbnx",
+      "aliases": [
+        "g_1tki04e"
+      ],
+      "reason": "The same creator posted two versions of the UNDER TRAINING introduction within three hours. Both name the same Decker browser game and vertical slice. Keep the later post as the project identity while retaining the earlier verified build link.",
+      "adoptFacts": {
+        "title": "g_1tki04e",
+        "stage": "g_1tki04e",
+        "platforms": "g_1tki04e",
+        "projectUrl": "g_1tki04e"
+      },
+      "evidence": [
+        {
+          "postId": "1tkmbnx",
+          "quote": "I'm making UNDER TRAINING"
+        },
+        {
+          "postId": "1tki04e",
+          "quote": "I made UNDER TRAINING"
+        }
+      ]
+    }
+  ],
+  "retainedSeparately": [
+    {
+      "gameId": "g_1urtqu1",
+      "reason": "The linked original Wyrmwood post (1uozuvs) has Tools or Resource flair, so it remains excluded. Other games by this author lack a verified identity link and are not merged."
+    }
+  ],
+  "facts": [
+    {
+      "gameId": "g_1wrqqkm",
+      "field": "title",
+      "value": "Gloamreach",
+      "quote": "The game is called Gloamreach"
+    },
+    {
+      "gameId": "g_1wrqqkm",
+      "field": "category",
+      "value": "platformer",
+      "quote": "a 2D platformer set in a lost underground kingdom"
+    },
+    {
+      "gameId": "g_1wrqqkm",
+      "field": "stage",
+      "value": "playable",
+      "quote": "You can play it here:"
+    }
+  ],
+  "categories": [
+    "Platformer"
+  ]
+}

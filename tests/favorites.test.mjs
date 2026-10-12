@@ -50,3 +50,23 @@ test('corrupt or oversized local data is bounded before use',()=>{
   const store=createFavoritesStore(()=>({ids:[null,'g_valid1','g_valid1','bad'],changes:{bad:{saved:true,revision:'x'}}}),()=>true);
   assert.deepEqual(store.ids(null),['g_valid1']);assert.deepEqual(store.pending(null),[]);
 });
+test('merged project favorites survive offline, deduplicate and retain the latest removal',()=>{
+  const saved=storage(),store=createFavoritesStore(saved.read,saved.write);
+  store.toggle(null,'g_older1');store.toggle(null,'g_latest');
+  store.setAliases([{id:'g_latest',aliases:['g_older1']}]);
+  assert.deepEqual(store.ids(null),['g_latest']);
+  assert.equal(store.pending(null).length,1);
+  store.toggle(null,'g_older1');assert.deepEqual(store.ids(null),[]);
+  assert.equal(store.pending(null)[0].gameId,'g_latest');assert.equal(store.pending(null)[0].saved,false);
+  const reload=createFavoritesStore(saved.read,saved.write);assert.deepEqual(reload.ids(null),[]);
+  store.adoptGuest('user_a');assert.deepEqual(store.ids('user_a'),[]);
+});
+test('alias normalization preserves newer canonical intent and in-flight acknowledgements',()=>{
+  const saved=storage(),store=createFavoritesStore(saved.read,saved.write);
+  saved.values.set('playtrace.favorites.v1:user_a',{ids:['g_older1'],changes:{g_older1:{saved:true,revision:'older',updatedAt:1},g_latest:{saved:false,revision:'newer',updatedAt:2}}});
+  store.setAliases([{id:'g_latest',aliases:['g_older1']}]);
+  assert.deepEqual(store.reconcile('user_a',['g_older1']),[]);
+  store.acknowledge('user_a',[{gameId:'g_older1',revision:'older'}],['g_latest']);assert.deepEqual(store.ids('user_a'),[]);
+  assert.equal(store.pending('user_a')[0].revision,'newer');
+  assert.deepEqual(store.ids('user_b'),[]);
+});

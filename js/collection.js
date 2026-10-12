@@ -199,6 +199,14 @@ export function validateCatalog(value) {
     if (game.reviewStatus != null && !['reviewed', 'source-described'].includes(game.reviewStatus)) throw new Error('Invalid review status');
     return { ...game, distribution: distributionFor(game.projectUrl), reviewStatus: game.reviewStatus || 'reviewed', posts: [...game.posts].sort((a, b) => b.createdAt.localeCompare(a.createdAt)) };
   });
+  const aliases=new Set();
+  for(const game of games)if(game.aliases!==undefined){
+    if(!Array.isArray(game.aliases)||game.aliases.length>2000)throw new Error('Invalid project aliases');
+    for(const id of game.aliases){
+      if(typeof id!=='string'||!/^g_[a-z0-9]{5,12}$/.test(id)||gameIds.has(id)||aliases.has(id))throw new Error('Invalid project alias');
+      aliases.add(id);
+    }
+  }
   return { ...value, categories: categoryOptions, games };
 }
 export function readLocation(url, preferredView = 'grid') {

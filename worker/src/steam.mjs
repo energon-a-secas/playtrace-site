@@ -107,11 +107,12 @@ export async function enrichGames(db, games) {
     if (Object.hasOwn(details,'summary')) editedSummaries.add(id);
     if (Object.hasOwn(details,'category')) editedCategories.add(id);
   });
-  const [extra, overrides, cache, scores] = await db.batch([
+  const [extra, overrides, cache, scores, aliases] = await db.batch([
     query(db, 'SELECT game_id,project_url,payload_json FROM project_enrichment WHERE game_id IN(SELECT value FROM json_each(?))', JSON.stringify(games.map(game=>game.id))),
     query(db, 'SELECT game_id,preview_json FROM preview_overrides WHERE game_id IN(SELECT value FROM json_each(?))', JSON.stringify(games.map(game => game.id))),
     query(db, 'SELECT app_id,payload_json FROM steam_cache WHERE app_id IN(SELECT value FROM json_each(?))', JSON.stringify([...new Set(games.map(game => steamAppId(game.projectUrl)).filter(Boolean))])),
     projectScoresQuery(db, games.map(game => game.id)),
+    query(db, 'SELECT alias_id,game_id FROM game_aliases WHERE game_id IN(SELECT value FROM json_each(?)) AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=alias_id) ORDER BY alias_id', JSON.stringify(games.map(game=>game.id))),
   ]);
   const previews = new Map(overrides.results.map(row => [row.game_id, JSON.parse(row.preview_json)]));
   const stores = new Map(cache.results.filter(row => row.payload_json).map(row => [row.app_id, JSON.parse(row.payload_json)]));
@@ -141,6 +142,7 @@ export async function enrichGames(db, games) {
       || (source.reviewStatus==='source-described'&&source.posts.some(post=>post.excerpt===source.summary));
     const summary=!editedSummaries.has(game.id)&&automaticSummary&&storeDescription?storeDescription:game.summary;
     const category=game.category==='other'&&!editedCategories.has(game.id)?storeCategory(steam?.genres||availability?.genres)||game.category:game.category;
-    return { ...game, redditScore: publicScore(reddit.get(game.id),game.posts), category, stage, platforms, summary, ...(availability ? {availability} : {}), ...(name ? {title: name.title} : {}), preview, ...(steam ? { steam } : {}) };
+    const previousIds=aliases.results.filter(row=>row.game_id===game.id).map(row=>row.alias_id);
+    return { ...game, ...(previousIds.length?{aliases:previousIds}:{}), redditScore: publicScore(reddit.get(game.id),game.posts), category, stage, platforms, summary, ...(availability ? {availability} : {}), ...(name ? {title: name.title} : {}), preview, ...(steam ? { steam } : {}) };
   });
 }

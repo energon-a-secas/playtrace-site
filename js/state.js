@@ -2,6 +2,7 @@ import { createStore } from './neorgon-persist.js';
 import { defaults, readLocation, validateCatalog } from './collection.js';
 import { apiConfigured, request } from './api.js';
 import { loadPublicSnapshot } from './catalog-snapshot.js';
+import { favorites } from './favorites.js';
 const preferences = createStore({ key: 'playtrace-site:collection', version: 1 });
 export const state = { ...defaults, games: [], catalog: null, status: 'loading', loaded: false, error: '', visibleLimit: 60, catalogPartial: false, catalogTotal: null, catalogSnapshot: false,
   isAdmin: false, service: null, serviceError: '', signedIn: false, userId: null, follows: [], prices: [], accountLoaded: false,
@@ -49,6 +50,7 @@ export async function loadCatalog(render) {
         if (cursor) seen.add(cursor);
         if (progressive) {
           state.catalog = value; state.games = value.games; state.loaded = true;
+          favorites.setAliases(state.games);state.follows=favorites.ids(state.userId);
           if (state.category !== 'all' && !value.categories.some(category=>category.id===state.category)) state.category='all';
           state.catalogTotal = total; state.catalogPartial = Boolean(cursor); render();
         }
@@ -76,7 +78,7 @@ export async function loadCatalog(render) {
       } catch { /* Keep the live-service error if a recent export is unavailable. */ }
     }
     state.status = 'error'; state.error = error.name === 'AbortError' ? 'The collection took too long to load. Please try again.' : error.message;
-  } finally { clearTimeout(timer); if (number === requestNumber) render(); }
+  } finally { clearTimeout(timer); if (number === requestNumber) { favorites.setAliases(state.games);state.follows=favorites.ids(state.userId);render(); } }
 }
 export async function loadService(render) {
   if (!apiConfigured) { state.serviceError = 'Account features are coming soon.'; render(); return; }

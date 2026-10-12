@@ -56,3 +56,7 @@ The [next bounded continuation](campaign-continuation-october12.md) reviews 31 e
 ## Game destinations and playability feedback, October 12
 
 The [destination review](campaign-destinations-october12.md) corrects 13 game links, separates successful large-page responses from metadata limitations, and reviews another 11 feedback summaries with 30 checked Reddit citations. Missing destinations retain dated flags, and source extraction prefers explicit play links over asset-store references.
+
+## Reviewed histories and retained favorites, October 12
+
+The [history consolidation](history-consolidation-october12.md) joins the reviewed Nightshoal, Spascii and UNDER TRAINING timelines, restores Spascii's original showcase, and preserves former URLs and offline favorites. It also reconciles the remaining store queue from existing evidence without new upstream store requests.

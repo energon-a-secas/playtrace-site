@@ -291,7 +291,8 @@ test('favorites remain available when account services are not configured', asyn
 
 async function catalogueModule(request, loadPublicSnapshot = async () => { throw new Error('No snapshot'); }) {
   return isolatedModule('state.js', { createStore: () => ({ load: () => ({}), save: () => true }),
-    defaults, readLocation, validateCatalog, apiConfigured: true, request, loadPublicSnapshot });
+    defaults, readLocation, validateCatalog, apiConfigured: true, request, loadPublicSnapshot,
+    favorites:createFavoritesStore(()=>null,()=>false) });
 }
 const pageOf = (games, nextCursor = null, total = seed.games.length) => ({ ...copy(), games, pagination: { total, nextCursor } });
 

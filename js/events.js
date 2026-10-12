@@ -29,6 +29,8 @@ export function syncDetail() {
   if (!state.game) { if ($('itemDialog').open) $('itemDialog').close(); return; }
   if (!game) {
     if (state.catalogPartial || state.status === 'loading') return;
+    const canonical=state.games.find(entry=>entry.aliases?.includes(state.game));
+    if(canonical){state.game=canonical.id;navigation.replace();syncDetail();return;}
     if (resolvingGame !== state.game) {
       const missing = state.game; resolvingGame = missing;
       request(`/games/${missing}/resolve`).then(result => {

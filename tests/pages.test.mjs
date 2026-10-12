@@ -7,6 +7,7 @@ import { buildSite,fetchCatalog,indexable } from '../scripts/build-site.mjs';
 import { fixtureGame,fixtureCatalog } from '../worker/tests/helpers.mjs';
 import { gameStructuredData } from '../js/game-page-view.js';
 import { playLabel } from '../js/icons.js';
+import { validateCatalog } from '../js/collection.js';
 
 test('static game pages include their content, unique metadata and safe JSON without publishing private files',async()=>{
  const out=await mkdtemp(path.join(os.tmpdir(),'playtrace-build-'));
@@ -41,4 +42,16 @@ test('play actions distinguish confirmed demos, stores, playable browsers and re
  assert.equal(playLabel(game),'Play demo');game.steam.state='coming-soon';assert.equal(playLabel(game),'View on Steam');
  game.distribution={id:'website'};assert.equal(playLabel(game),'View game');game.platforms=['Browser'];game.stage='playable';assert.equal(playLabel(game),'Play it');
  game.distribution={id:'github',kind:'repository'};assert.equal(playLabel(game),'Source code');
+});
+test('merged histories publish canonical redirect pages without duplicating search results',async()=>{
+ const out=await mkdtemp(path.join(os.tmpdir(),'playtrace-alias-'));
+ try{
+  const game={...fixtureGame(),aliases:['g_older1'],reviewStatus:'reviewed',summary:'A source-linked game with a complete development history and playable browser build.'};
+  await buildSite({catalog:fixtureCatalog([game]),out});
+  const html=await readFile(path.join(out,'games/g_older1/index.html'),'utf8');
+  assert.match(html,/id="canonicalProject" href="\/games\/g_abc12\/"/);assert.match(html,/noindex, follow/);
+  assert.match(html,/src="\/js\/alias-redirect.js\?v=/);assert.doesNotMatch(await readFile(path.join(out,'sitemap.xml'),'utf8'),/g_older1/);
+  for(const aliases of [['../bad'],['g_abc12'],['g_older1','g_older1']])assert.throws(()=>validateCatalog(fixtureCatalog([{...game,aliases}])));
+  assert.throws(()=>validateCatalog(fixtureCatalog([game,{...fixtureGame('other1'),aliases:['g_older1']}])));
+ }finally{await rm(out,{recursive:true,force:true});}
 });

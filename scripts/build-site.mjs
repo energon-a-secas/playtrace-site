@@ -112,6 +112,11 @@ export async function buildSite({catalog,highlights,insights,out=path.join(root,
     await mkdir(path.join(out,route),{recursive:true});await writeFile(path.join(out,route,'index.html'),html);
     if(indexable(game))urls.push({path:route});
     manifest.push({id:game.id,path:route,title:game.title,indexable:indexable(game)});
+    for(const alias of game.aliases||[]){
+      const oldRoute=projectPath(alias);
+      const redirect=metaPage(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Project moved</title><meta http-equiv="refresh" content="5;url=${route}"><script type="module" src="/js/alias-redirect.js"></script></head><body><main><h1>Project history combined</h1><p>This showcase is part of <a id="canonicalProject" href="${route}">${e(game.title)}</a>. Opening the complete project history…</p></main></body></html>`,{title:`${game.title} | Playtrace`,description:'This showcase is now part of the complete project history.',url:origin+route,noindex:true});
+      await mkdir(path.join(out,oldRoute),{recursive:true});await writeFile(path.join(out,oldRoute,'index.html'),redirect);
+    }
   }
   const pageSize=75,totalPages=Math.ceil(ordered.length/pageSize);
   for(let page=0;page<totalPages;page++){
