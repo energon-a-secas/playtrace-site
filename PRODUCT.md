@@ -62,6 +62,8 @@ Quick reviews (`research.html`) is a standalone, embeddable surface. Start with 
 
 Editors can inspect link health, store metadata, linked source posts and cited feedback drafts. Distinguish a broken link from blocked access or a timeout. HTTP success alone never implies a playable build. Steam/itch evidence can improve automatic artwork or playable labels, while manual editorial choices win. Do not delete entries or publish AI reviews automatically after checks. Every review statement must link to real original comments and show sampling limits. Model probabilities are not guarantees.
 
+Keep HTTP reachability separate from metadata extraction. Oversized or interrupted HTML may prevent reading game details without invalidating the received HTTP status. Discard incomplete metadata and keep the previous store evidence's date. Prefer creator-labeled play links over asset-store references; an expired download does not establish that development stopped.
+
 Near-identical reposts by the same author within 48 hours keep the latest entry and combine source history, with redirects and preserved contributions. Different known project links prevent consolidation. The source timeline and original attribution remain readable.
 
 Administrators see Edit buttons directly on cards and in project notes. Edit details in the existing project dialog with revision conflict protection; keep thumbnail uploads beside that editor. Approved uploaded images are served from R2 without catalogue database reads. Source and privacy controls belong in the single site footer.

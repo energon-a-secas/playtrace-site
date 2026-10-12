@@ -62,6 +62,14 @@ test('Steam demos provide verified names without masquerading as full releases; 
   await editDetails(env.DB,game.id,{mode:'edit',revision:0,details:detailsOf(game)},{subject:'admin'},{now:()=>NOW});
   assert.equal((await catalog(env.DB)).games[0].title,game.title,'even a manual choice identical to the source headline wins');env.DB.close();
 });
+test('explicit game builds outrank later asset stores and preserve the creator’s latest-build preference',()=>{
+  const play='https://www.pixelfork.ai/publish/0cdc7e1a-a957-4b76-9e61-b3e7ac2c6f1d';
+  const body=`The game is called Pomofox: Shadow Break.\n\nHere is the link to try: [${play}](${play})\n\nI created the game using Three.js.\n\nI found 3D assets from itch.io:\n\n* Trees: https://venturon.itch.io/fir-trees-textured\n* Fox character: https://gtibo.itch.io/hooded-fox`;
+  assert.equal(projectLinks({selftext:body}).projectUrl,play);
+  assert.equal(projectLinks({selftext:'The latest version of the game is here: https://miculpionier.ro/projects/selk-terminal/\n\nYou can also try the game in itch: https://vb2020.itch.io/selk'}).projectUrl,'https://miculpionier.ro/projects/selk-terminal');
+  assert.equal(projectLinks({selftext:'[Play Llama Legends](https://llamalegends.com/)\n\n[Itch.io page](https://lamaz.itch.io/llama-legends)'}).projectUrl,'https://llamalegends.com/');
+  assert.equal(projectLinks({selftext:"If you want to break it: https://justdying.itch.io/just-dying — runs in the tab, no download. There's a Steam demo too if you'd rather have a native build: https://store.steampowered.com/app/4646190/Just_Dying/"}).projectUrl,'https://justdying.itch.io/just-dying');
+});
 test('catalogue repair preserves timelines and newer field edits and is safe to run twice',async()=>{
   const env=fixtureEnv(), game={...fixtureGame(),reviewStatus:'source-described',title:'My small puzzle game'};
   game.projectUrl='https://maker.itch.io/underbloom';await importCatalog(env.DB,fixtureCatalog([game]));

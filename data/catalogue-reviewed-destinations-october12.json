@@ -1,0 +1,249 @@
+{
+  "categories": {},
+  "facts": [
+    {
+      "gameId": "g_1x0urpf",
+      "field": "projectUrl",
+      "value": "https://thing-77.itch.io/ash-reapers",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x0urpf/",
+      "evidence": "https://thing-77.itch.io/ash-reapers"
+    },
+    {
+      "gameId": "g_1wypr0f",
+      "field": "projectUrl",
+      "value": "https://project-crossroads.com/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wypr0f/",
+      "evidence": "https://project-crossroads.com"
+    },
+    {
+      "gameId": "g_1wmotbq",
+      "field": "projectUrl",
+      "value": "https://v0-pilgrimage-two.vercel.app/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wmotbq/",
+      "evidence": "https://v0-pilgrimage-two.vercel.app"
+    },
+    {
+      "gameId": "g_1w8mm0x",
+      "field": "projectUrl",
+      "value": "https://packet-loss.vercel.app/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w8mm0x/",
+      "evidence": "https://packet-loss.vercel.app"
+    },
+    {
+      "gameId": "g_1w5rtz5",
+      "field": "projectUrl",
+      "value": "https://steven-moss-notebook.github.io/FieldNoteCrossword",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w5rtz5/",
+      "evidence": "https://steven-moss-notebook.github.io/FieldNoteCrossword"
+    },
+    {
+      "gameId": "g_1vhe7qs",
+      "field": "projectUrl",
+      "value": "https://leonbzt.itch.io/emberwood",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vhe7qs/",
+      "evidence": "https://leonbzt.itch.io/emberwood"
+    },
+    {
+      "gameId": "g_1u5klnz",
+      "field": "projectUrl",
+      "value": "https://mrcanela.itch.io/familiar-frenzy",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1u5klnz/",
+      "evidence": "https://mrcanela.itch.io/familiar-frenzy"
+    },
+    {
+      "gameId": "g_1tnynr0",
+      "field": "projectUrl",
+      "value": "https://drift-sim-production.up.railway.app/flying",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tnynr0/",
+      "evidence": "https://drift-sim-production.up.railway.app/flying"
+    },
+    {
+      "gameId": "g_1tnm5pv",
+      "field": "projectUrl",
+      "value": "https://mrcanela.itch.io/key-pong",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tnm5pv/",
+      "evidence": "https://mrcanela.itch.io/key-pong"
+    },
+    {
+      "gameId": "g_1tki04e",
+      "field": "projectUrl",
+      "value": "https://under-training.vercel.app/BUILD/training-soundtrack.html",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tki04e/",
+      "evidence": "https://under-training.vercel.app/BUILD/training-soundtrack.html"
+    },
+    {
+      "gameId": "g_1s1mw98",
+      "field": "projectUrl",
+      "value": "https://www.pixelfork.ai/publish/35167c97-998d-4ba8-9808-fbe4ce17df77",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1s1mw98/",
+      "evidence": "https://www.pixelfork.ai/publish/35167c97-998d-4ba8-9808-fbe4ce17df77"
+    },
+    {
+      "gameId": "g_1q99a1w",
+      "field": "projectUrl",
+      "value": "https://rickretro.itch.io/alien-marines",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1q99a1w/",
+      "evidence": "https://rickretro.itch.io/alien-marines"
+    },
+    {
+      "gameId": "g_1pk7oz4",
+      "field": "projectUrl",
+      "value": "https://apps.apple.com/us/app/blocktrader-live-market-game/id6755619910",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1pk7oz4/",
+      "evidence": "https://apps.apple.com/us/app/blocktrader-live-market-game/id6755619910"
+    },
+    {
+      "gameId": "g_1wmotbq",
+      "field": "title",
+      "value": "Pilgrimage",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wmotbq/",
+      "evidence": "I’m working on **Pilgrimage**, a browser-based medieval settlement builder"
+    },
+    {
+      "gameId": "g_1wmotbq",
+      "field": "category",
+      "value": "simulation",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wmotbq/",
+      "evidence": "browser-based medieval settlement builder"
+    },
+    {
+      "gameId": "g_1tki04e",
+      "field": "title",
+      "value": "UNDER TRAINING",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tki04e/",
+      "evidence": "I made UNDER TRAINING, a short browser game"
+    },
+    {
+      "gameId": "g_1tki04e",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tki04e/",
+      "evidence": "This is a working vertical slice and my first ever game. One run takes about 10–15 minutes"
+    },
+    {
+      "gameId": "g_1tki04e",
+      "field": "platforms",
+      "value": [
+        "Browser"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tki04e/",
+      "evidence": "a short browser game"
+    },
+    {
+      "gameId": "g_1u5klnz",
+      "field": "category",
+      "value": "survival",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1u5klnz/",
+      "evidence": "It's a Survivor-like game similar to Vampire Survivors"
+    },
+    {
+      "gameId": "g_1tnm5pv",
+      "field": "category",
+      "value": "arcade",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tnm5pv/",
+      "evidence": "Pong is my first published game"
+    },
+    {
+      "gameId": "g_1tnynr0",
+      "field": "summary",
+      "value": "A playable neural simulation trained on footage from Tiny Skies. The creator describes a model predicting the next frame in the browser; this is a separate experiment, not the original Tiny Skies game.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tnynr0/",
+      "evidence": "Not the creator of Tiny Skies"
+    },
+    {
+      "gameId": "g_1w5rtz5",
+      "field": "category",
+      "value": "puzzle",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w5rtz5/",
+      "evidence": "Field Notes is a crossword puzzle game"
+    },
+    {
+      "gameId": "g_1uzsee7",
+      "field": "title",
+      "value": "Angled Watch",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1uzsee7/",
+      "evidence": "**Angled Watch** is a single-player 3D isometric detective game"
+    },
+    {
+      "gameId": "g_1uzsee7",
+      "field": "category",
+      "value": "puzzle",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1uzsee7/",
+      "evidence": "Every case procedurally generates a fresh murder, a cast of look-alike suspects, and one killer who lies in every statement."
+    },
+    {
+      "gameId": "g_1p11p7k",
+      "field": "title",
+      "value": "The Greywake",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1p11p7k/",
+      "evidence": "**The Greywake** is a browser-based narrative game"
+    },
+    {
+      "gameId": "g_1p11p7k",
+      "field": "category",
+      "value": "adventure",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1p11p7k/",
+      "evidence": "browser-based narrative game"
+    },
+    {
+      "gameId": "g_1ta282h",
+      "field": "category",
+      "value": "clicker",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1ta282h/",
+      "evidence": "a mix of Idle + Clicker + TD + Roguelike"
+    },
+    {
+      "gameId": "g_1wm4z9u",
+      "field": "category",
+      "value": "simulation",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wm4z9u/",
+      "evidence": "Week 8 of making my fishing game"
+    },
+    {
+      "gameId": "g_1w9zwa5",
+      "field": "category",
+      "value": "simulation",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w9zwa5/",
+      "evidence": "Week 6 of making my fishing game"
+    },
+    {
+      "gameId": "g_1vyf2j5",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vyf2j5/",
+      "evidence": "It's still early and not playable yet"
+    }
+  ],
+  "flags": {
+    "g_1wmotbq": [
+      "The creator-linked browser build returned HTTP 404. It replaces an asset-pipeline article in the play action; no working replacement has been established."
+    ],
+    "g_1tnynr0": [
+      "This project is a neural simulation made by a different creator from Tiny Skies. Keep the original game as a reference, not its primary destination."
+    ],
+    "g_1s1mw98": [
+      "Source says Play Store-ready, not published on Google Play. The linked browser build is provided; no store release is established."
+    ],
+    "g_1wm4z9u": [
+      "Creator explicitly limited the download to seven days; HTTP 404 may mean an expired transfer, not an abandoned game. Later Nightshoal updates by RUSuper require a reviewed history consolidation."
+    ],
+    "g_1w9zwa5": [
+      "Expired or missing transfer link. Later Nightshoal updates by RUSuper describe the same fishing project; review the full history before consolidation."
+    ],
+    "g_1p11p7k": [
+      "Creator says an Anthropic API key is required. The itch.io address redirects to emergentstudios and returns HTTP 404; no replacement build verified."
+    ],
+    "g_1u5klnz": [
+      "Corrected a game-jam page to the creator-linked game. The old creator handle redirects to cocolitocollective, but the current HTTP check returns 404. Cached search pages are not proof of current availability."
+    ],
+    "g_1tnm5pv": [
+      "Removed a sentence-ending period from the game URL. The creator handle redirects to cocolitocollective, but the current HTTP check returns 404."
+    ],
+    "g_1uzsee7": [
+      "Latest destination returned HTTP 404 or 410. Retain source history; a missing page alone does not establish project abandonment."
+    ],
+    "g_1ta282h": [
+      "Latest destination returned HTTP 404 or 410. Retain source history; a missing page alone does not establish project abandonment."
+    ]
+  }
+}

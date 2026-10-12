@@ -33,7 +33,7 @@ export async function checkProject(db, env, gameId, deps, store = false) {
     try {
       const page = await publicPage(game.projectUrl, deps);
       const status = [404,410].includes(page.status) ? 'broken' : [401,403,429].includes(page.status) ? 'blocked' : page.status >= 200 && page.status < 300 ? 'reachable' : 'unverified';
-      result = { status, httpStatus: page.status, finalUrl: page.url, redirectCount:page.redirectCount,
+      result = { status, httpStatus: page.status, finalUrl: page.url, redirectCount:page.redirectCount, metadataStatus:page.bodyStatus,
         failureReason:status==='broken'?'missing':status==='blocked'?'restricted':page.status>=500?'server':null };
       if (store && status === 'reachable' && page.html) {
         const metadata = pageMetadata(page.html, page.url);
@@ -58,7 +58,7 @@ export async function checkProject(db, env, gameId, deps, store = false) {
   const successfulStore=store&&result.status==='reachable'&&Boolean(result.provider);
   // A blocked page check cannot erase a recently verified build or its artwork.
   // Keep the last successful store evidence separate from general link health.
-  const value = { ...(!successfulStore ? old : {}), httpStatus:null,finalUrl:null,redirectCount:null,failureReason:null, ...result, checkedAt, projectUrl: game.projectUrl,
+  const value = { ...(!successfulStore ? old : {}), httpStatus:null,finalUrl:null,redirectCount:null,failureReason:null,metadataStatus:null, ...result, checkedAt, projectUrl: game.projectUrl,
     checkMethod:store&&appId?'store-api':'http',evidenceCheckedAt:result.evidenceCheckedAt||checkedAt,
     previousStatus:old.status&&old.status!==result.status?old.status:old.previousStatus||null,
     previousCheckedAt:old.status&&old.status!==result.status?old.checkedAt:old.previousCheckedAt||null,

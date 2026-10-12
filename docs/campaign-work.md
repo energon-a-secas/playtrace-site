@@ -52,3 +52,7 @@ Completed the next four priorities: [50-entry metadata review, 20 cited summarie
 ## Historical metadata and related Steam demos, October 12
 
 The [next bounded continuation](campaign-continuation-october12.md) reviews 31 earlier projects, verifies released demos linked from full-game Steam listings, and prepares 13 further source-checked feedback summaries. Demo evidence stays separate from full-game release metrics, and scheduled store requests retain their existing cap.
+
+## Game destinations and playability feedback, October 12
+
+The [destination review](campaign-destinations-october12.md) corrects 13 game links, separates successful large-page responses from metadata limitations, and reviews another 11 feedback summaries with 30 checked Reddit citations. Missing destinations retain dated flags, and source extraction prefers explicit play links over asset-store references.

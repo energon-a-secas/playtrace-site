@@ -6,6 +6,38 @@ import { checkProject } from '../src/enrichment.mjs';
 import { projectContext } from '../src/references.mjs';
 import { queueLinkMaintenance } from '../src/jobs.mjs';
 import { destinationHost,linkEvidence,hostingReport } from '../../js/link-health.js';
+import { publicPage } from '../src/public-fetch.mjs';
+
+const publicFetcher=response=>async url=>String(url).includes('dns-query')?Response.json({Answer:[{type:1,data:'8.8.8.8'}]}):response;
+test('an oversized page retains HTTP reachability without parsing a partial metadata document',async()=>{
+  for(const declared of [false,true]){
+    let cancelled=false;
+    const stream=new ReadableStream({start(controller){controller.enqueue(new TextEncoder().encode('<title>Partial</title>'.repeat(8)));},cancel(){cancelled=true;}});
+    const response=new Response(stream,{headers:{'Content-Type':'text/html',...(declared?{'Content-Length':'9999'}:{})}});
+    const page=await publicPage('https://game.example/',{fetch:publicFetcher(response)},64);
+    assert.equal(page.status,200);assert.equal(page.bodyStatus,'too-large');assert.equal(page.html,'');assert.equal(cancelled,true);
+  }
+});
+test('body stream failures and binary downloads stay separate from HTTP failures',async()=>{
+  const stream=new ReadableStream({pull(controller){controller.error(new Error('stream interrupted'));}});
+  const interrupted=await publicPage('https://game.example/',{fetch:publicFetcher(new Response(stream,{headers:{'Content-Type':'text/html'}}))});
+  assert.equal(interrupted.status,200);assert.equal(interrupted.bodyStatus,'unavailable');assert.equal(interrupted.html,'');
+  const binary=await publicPage('https://game.example/build.zip',{fetch:publicFetcher(new Response('binary',{headers:{'Content-Type':'application/zip'}}))});
+  assert.equal(binary.status,200);assert.equal(binary.bodyStatus,'not-html');assert.equal(binary.html,'');
+  const missing=await publicPage('https://game.example/',{fetch:publicFetcher(new Response('',{status:404}))});
+  assert.equal(missing.status,404);assert.equal(missing.bodyStatus,'not-read');
+});
+test('large HTML records a successful link check without inventing a playable build or refreshing prior store evidence',async()=>{
+  const env=fixtureEnv(),game=fixtureGame();await importCatalog(env.DB,fixtureCatalog([game]));
+  const response=()=>new Response('<div class="html_embed_widget">'+'x'.repeat(1024*1024),{headers:{'Content-Type':'text/html'}});
+  let result=await checkProject(env.DB,env,game.id,{now:()=>NOW,fetch:publicFetcher(response())},true);
+  assert.equal(result.status,'reachable');assert.equal(result.httpStatus,200);assert.equal(result.metadataStatus,'too-large');assert.equal(result.provider,undefined);assert.equal(result.playable,undefined);
+  const at=new Date(NOW-86400000).toISOString();
+  await query(env.DB,'UPDATE project_enrichment SET payload_json=? WHERE game_id=?',JSON.stringify({...result,provider:'itch',playable:true,storeCheckedAt:at,storeStatus:'reachable'}),game.id).run();
+  result=await checkProject(env.DB,env,game.id,{now:()=>NOW+60000,fetch:publicFetcher(response())},true);
+  assert.equal(result.storeCheckedAt,at);assert.equal(result.playable,true);
+  const history=await projectContext(env.DB,game.id);assert.equal(history.linkHistory[0].status,'reachable');assert.equal(history.linkHistory[0].httpStatus,200);env.DB.close();
+});
 
 test('URL hosting labels respect domain boundaries and do not invent infrastructure for custom domains',()=>{
   assert.equal(destinationHost('https://maker.github.io/demo/').provider,'github-pages');

@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "reviews": [
+    {
+      "gameId": "g_1w9jqem",
+      "summary": "One visitor left at the registration screen without trying the game [1]. Another asked for on-screen instructions or a tutorial [2]. Control suggestions included mouse input, clearer in-game help and changes to flight and missile handling [3]. A separate player reported difficulty hitting targets [4]. These comments point to access, onboarding and aiming as distinct follow-up questions.",
+      "commentIds": ["p8byiln", "p8azuo3", "p8azl7r", "p8axiq5"],
+      "labels": [
+        {"number": 1, "theme": "accessibility", "tone": "concern", "experience": "unspecified"},
+        {"number": 2, "theme": "accessibility", "tone": "suggestion", "experience": "unspecified"},
+        {"number": 3, "theme": "controls", "tone": "suggestion", "experience": "unspecified"},
+        {"number": 4, "theme": "controls", "tone": "concern", "experience": "played"}
+      ]
+    },
+    {
+      "gameId": "g_1wkxxd6",
+      "summary": "Several players had trouble discovering inventory actions: opening it to eat or drink [1], finding ammunition after running out [2], and freeing a full backpack to pick up health [3]. Two of those comments also praised the appearance or flashlight effects [1][2]. Another player suggested bullet knockback after a short attempt [4]. Making essential survival actions visible during play is a concrete follow-up to test.",
+      "commentIds": ["pav0ptz", "paufelj", "pawymwo", "pawuqpm"],
+      "labels": [
+        {"number": 1, "theme": "accessibility", "tone": "mixed", "experience": "played"},
+        {"number": 2, "theme": "accessibility", "tone": "mixed", "experience": "played"},
+        {"number": 3, "theme": "accessibility", "tone": "concern", "experience": "played"},
+        {"number": 4, "theme": "controls", "tone": "suggestion", "experience": "played"}
+      ]
+    },
+    {
+      "gameId": "g_1w5luhb",
+      "summary": "A player who reported an hour of play said era banners hid the character while damage remained possible, and that acquired weapons or pickups were hard to track [1]. In a second message, the same person enjoyed the game but struggled to distinguish enemies and projectiles from the background, especially in the neon fourth level [2]. Another commenter described it as enjoyable and absorbing [3]. The two detailed reports come from one player.",
+      "commentIds": ["p7h6ni0", "p7hekui", "p7g5od5"],
+      "labels": [
+        {"number": 1, "theme": "accessibility", "tone": "concern", "experience": "played"},
+        {"number": 2, "theme": "visuals", "tone": "mixed", "experience": "played"},
+        {"number": 3, "theme": "general", "tone": "praise", "experience": "unspecified"}
+      ]
+    },
+    {
+      "gameId": "g_1wmzmez",
+      "summary": "One visitor found the menus overwhelming on mobile and said they planned to try again later [1]. Another tried to play but could not work out what to press or what the actions meant, and asked for onboarding [2]. These are concrete leads for a mobile first-run check; neither comment establishes sustained gameplay experience.",
+      "commentIds": ["pbrwgz4", "pbdbx96"],
+      "labels": [
+        {"number": 1, "theme": "accessibility", "tone": "mixed", "experience": "preview"},
+        {"number": 2, "theme": "accessibility", "tone": "concern", "experience": "unspecified"}
+      ]
+    },
+    {
+      "gameId": "g_1wlcv9z",
+      "summary": "One player reported that a Sapling card returned to their hand during the second fight, after which hovering and playing some cards stopped working; restarting the browser did not resolve it [1]. Another completed a run and saw potential, but found it too easy and asked for more consistent art and varied sound effects [2]. The first report is a reproduction lead, not a bug independently reproduced here.",
+      "commentIds": ["pb86crh", "pay7nmd"],
+      "labels": [
+        {"number": 1, "theme": "reliability", "tone": "concern", "experience": "played"},
+        {"number": 2, "theme": "challenge", "tone": "mixed", "experience": "played"}
+      ]
+    },
+    {
+      "gameId": "g_1wuf9gi",
+      "summary": "A commenter praised the art style [1], while another liked the style but criticised character movement and animation [2]. A specific suggestion was to make the kick more visible through arm movement and a clearer wind-up so it communicates more force [3]. These are reactions to presentation, without an explicit report of playing.",
+      "commentIds": ["pd3q1qf", "pd36fof", "pd2vowx"],
+      "labels": [
+        {"number": 1, "theme": "visuals", "tone": "praise", "experience": "preview"},
+        {"number": 2, "theme": "visuals", "tone": "mixed", "experience": "preview"},
+        {"number": 3, "theme": "controls", "tone": "suggestion", "experience": "preview"}
+      ]
+    },
+    {
+      "gameId": "g_1wxkhi3",
+      "summary": "One player liked the concept and biome transitions but found the opening slow, the pale grainy artwork too washed out, and tumbleweeds too easy to ignore until later. They also proposed limiting continuous sliding [1]. A separate preview response suggested wind effects, screen shake to suggest running, and denser obstacle sections [2]. The detailed pacing observations come from one player.",
+      "commentIds": ["pdz6x2v", "pdupz1x"],
+      "labels": [
+        {"number": 1, "theme": "pacing", "tone": "mixed", "experience": "played"},
+        {"number": 2, "theme": "idea", "tone": "suggestion", "experience": "preview"}
+      ]
+    },
+    {
+      "gameId": "g_1x0e13w",
+      "summary": "Suggestions for keeping excavation interesting included tool upgrades and precision rewards [1], surprising non-bone discoveries and hazards [2], and choosing a clear direction between relaxed assembly and progression-driven digging [3]. The third commenter also proposed a casual random-bones mode and a shared gallery. These are design ideas, not evidence that any of those features has been tested or added.",
+      "commentIds": ["pelbgr8", "pemclfe", "pekxszt"],
+      "labels": [
+        {"number": 1, "theme": "idea", "tone": "suggestion", "experience": "preview"},
+        {"number": 2, "theme": "idea", "tone": "suggestion", "experience": "unspecified"},
+        {"number": 3, "theme": "idea", "tone": "suggestion", "experience": "unspecified"}
+      ]
+    },
+    {
+      "gameId": "g_1x36ues",
+      "summary": "A visitor liked the presentation but reported that the game hung in the menu on their phone [1]. Another commenter praised its appearance [2]. The mobile launch report is useful for a device-and-browser follow-up; it does not establish that every phone is affected or that the game is currently unavailable.",
+      "commentIds": ["pf8iwo9", "pf8p3qf"],
+      "labels": [
+        {"number": 1, "theme": "reliability", "tone": "mixed", "experience": "unspecified"},
+        {"number": 2, "theme": "visuals", "tone": "praise", "experience": "preview"}
+      ]
+    },
+    {
+      "gameId": "g_1wsx4ne",
+      "summary": "One preview response proposed giving the spider a reason to travel and alternating traversal with feeding or resting mechanics [1]. That commenter also described a strong reaction to the spider animations; another said arachnophobia would keep them away despite wishing the project well [2]. This is feedback on the premise and imagery, not a report of tested gameplay.",
+      "commentIds": ["pcpg0b4", "pcpn5p7"],
+      "labels": [
+        {"number": 1, "theme": "idea", "tone": "suggestion", "experience": "preview"},
+        {"number": 2, "theme": "accessibility", "tone": "concern", "experience": "preview"}
+      ]
+    },
+    {
+      "gameId": "g_1wvqkjc",
+      "summary": "A player who reported finishing medium difficulty in 24 minutes without dying praised the smooth performance but found the game too easy, controls sensitive and some bullets hard to see [1]. On returning, the same player liked the second level's new background but thought seeker weapons remained overpowered [2]. A separate commenter suggested improving sound effects and the transition into boss music [3]. The first two reports are from one person, not two independent playthroughs.",
+      "commentIds": ["pdhxf8e", "pdmwxd0", "pdg0fwq"],
+      "labels": [
+        {"number": 1, "theme": "challenge", "tone": "mixed", "experience": "played"},
+        {"number": 2, "theme": "challenge", "tone": "mixed", "experience": "played"},
+        {"number": 3, "theme": "visuals", "tone": "suggestion", "experience": "preview"}
+      ]
+    }
+  ]
+}

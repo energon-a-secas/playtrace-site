@@ -22,18 +22,48 @@ async function checkDns(host, deps) {
   const addresses = (dns.Answer || []).filter(record => [1,28].includes(record.type));
   if (!addresses.length || addresses.some(record => !publicAddress(record.data))) throw new Error('Destination could not be verified as public.');
 }
+async function pageBody(response, limit) {
+  // Reachability is known once headers arrive. A large or interrupted body
+  // limits metadata extraction; it does not turn HTTP 200 into a dead link.
+  if (Number(response.headers.get('Content-Length')) > limit) {
+    await response.body?.cancel().catch(() => {});
+    return { html: '', bodyStatus: 'too-large' };
+  }
+  if (!response.body) return { html: '', bodyStatus: 'complete' };
+  const reader = response.body.getReader(), chunks = [];
+  let size = 0;
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > limit) {
+        await reader.cancel().catch(() => {});
+        return { html: '', bodyStatus: 'too-large' };
+      }
+      chunks.push(value);
+    }
+  } catch {
+    await reader.cancel().catch(() => {});
+    return { html: '', bodyStatus: 'unavailable' };
+  } finally { reader.releaseLock(); }
+  const bytes = new Uint8Array(size);
+  let offset = 0;
+  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+  return { html: new TextDecoder().decode(bytes), bodyStatus: 'complete' };
+}
 export async function publicPage(value, deps, limit = 1024 * 1024) {
   let url = publicUrl(value);
   for (let hop = 0; hop < 4; hop++) {
     await checkDns(url.hostname, deps);
     const response = await deps.fetch(url.href, { redirect: 'manual', signal: AbortSignal.timeout(10000), headers: { Accept: 'text/html,application/xhtml+xml', 'User-Agent': 'Playtrace/1.0 (+https://playtrace.neorgon.com/about.html)' } });
     if ([301,302,303,307,308].includes(response.status)) {
-      const location = response.headers.get('Location'); await response.body?.cancel();
+      const location = response.headers.get('Location'); await response.body?.cancel().catch(() => {});
       if (!location) throw new Error('Redirect has no destination.'); url = publicUrl(new URL(location, url).href); continue;
     }
     const type = response.headers.get('Content-Type') || '';
-    if (!response.ok || !/text\/html|application\/xhtml/.test(type)) { await response.body?.cancel(); return { url: url.href, status: response.status, redirectCount: hop, html: '' }; }
-    return { url: url.href, status: response.status, redirectCount: hop, html: new TextDecoder().decode(await readBytes(response.body, limit)) };
+    if (!response.ok || !/text\/html|application\/xhtml/.test(type)) { await response.body?.cancel().catch(() => {}); return { url: url.href, status: response.status, redirectCount: hop, html: '', bodyStatus: response.ok ? 'not-html' : 'not-read' }; }
+    return { url: url.href, status: response.status, redirectCount: hop, ...await pageBody(response, limit) };
   }
   throw new Error('Too many redirects.');
 }

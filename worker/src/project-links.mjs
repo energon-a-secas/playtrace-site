@@ -38,11 +38,16 @@ export function projectLinks(raw) {
     const store = (url.hostname === 'store.steampowered.com' && /^\/app\/\d+(?:\/|$)/.test(url.pathname))
       || (url.hostname.endsWith('.itch.io') && url.pathname.length > 1) || ['play.google.com','apps.apple.com'].includes(url.hostname);
     const pages = url.hostname.endsWith('.github.io') || url.hostname.endsWith('.gitlab.io');
+    const localContext = paragraph.slice(-160);
     const after = position >= 0 ? body.slice(position + link.length, position + link.length + 160) : '';
     const playContext = /\b(play|playable|try|demo|download)\b/i.test(context)
       || /\bcheck (?:it|the game) out here\b/i.test(context)
       || /\b(?:runs? in (?:the|your) browser|free to play)\b/i.test(after);
-    if (store || pages || playContext || /\bgame\b/i.test(context)) playable.push({url:candidate,score:(store?30:pages?25:playContext?20:10)-index/100});
+    // An explicit play link is stronger than a store-shaped URL elsewhere in
+    // the post: itch.io also hosts assets, tutorials and development tools.
+    const latestBuild = /\b(?:latest|current) (?:version|build) (?:of (?:the|my|our) game )?(?:is )?here\b/i.test(localContext);
+    const directPlay = /\b(?:play|try|download)\b/i.test(localContext.replace(/\bno downloads?\b/gi,'')) || /\b(?:runs? in (?:the|your) browser|free to play)\b/i.test(after.split(/\n\s*\n/)[0]);
+    if (store || pages || playContext || /\bgame\b/i.test(context)) playable.push({url:candidate,score:(latestBuild?80:directPlay?40:0)+(store?30:pages?25:playContext?20:10)-index/100});
   }
   playable.sort((a,b)=>b.score-a.score);
   return {projectUrl:playable[0]?.url || repo, repositoryUrl:repo};
