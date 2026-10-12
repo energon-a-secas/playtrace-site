@@ -1,12 +1,13 @@
 /* Five weekly highlights and a separate editor's pick, in one artwork wall. */
-#main.home-stage { max-width: none; width: 100%; padding: 0; margin: 0; }
+#main.home-stage { max-width: none; width: 100%; padding: 0; margin: 0; flex: 0 0 auto; display: grid; grid-template-rows: minmax(490px, 1fr) auto; min-height: calc(100svh - var(--header-h) + 1px); }
 .home-showcase { position: relative; }
-.showcase-heading { position: absolute; inset: 24px auto auto clamp(20px, 2.4vw, 48px); z-index: 3; display: flex; align-items: center; gap: 16px; pointer-events: none; }
-.showcase-heading > div { background: oklch(.17 .02 260 / .94); padding: 15px 22px; }
+.showcase-heading { position: absolute; inset: 24px auto auto clamp(20px, 2.4vw, 48px); z-index: 3; display: flex; align-items: center; gap: 22px; pointer-events: none; animation: showcase-label-enter 650ms cubic-bezier(.22,1,.36,1) both; }
+.showcase-heading > div { position: relative; isolation: isolate; padding: 15px 24px; }
+.showcase-heading > div::before { content: ''; position: absolute; inset: 0; z-index: -1; transform: skewX(-12deg); background: oklch(.17 .02 260 / .9); border: 1px solid oklch(.98 .005 260 / .45); box-shadow: 0 8px 24px oklch(.1 .02 260 / .18); }
 .showcase-heading h2 { margin: 0; color: var(--pt-night-text); font: 650 clamp(18px, 1.5vw, 25px)/1.2 var(--pt-display); letter-spacing: -.02em; }
 #highlightWeek { display: block; margin-top: 5px; color: oklch(.79 .015 260); font: 12px/1.3 var(--pt-body); }
 .showcase-heading #editHighlights { pointer-events: auto; background: var(--pt-night); border-color: oklch(.65 .02 260); color: var(--pt-night-text); }
-.showcase-panels { --slant: clamp(52px, 7vw, 140px); display: flex; position: relative; isolation: isolate; list-style: none; padding: 0; margin: 0; height: clamp(490px, calc(100svh - 210px), 920px); overflow: clip; background: var(--pt-night); }
+.showcase-panels { --slant: clamp(52px, 7vw, 140px); display: flex; position: relative; isolation: isolate; list-style: none; padding: 0; margin: 0; height: 100%; min-height: 490px; overflow: clip; background: var(--pt-night); }
 .showcase-panels > li { position: relative; flex: 0 0 calc(100% / var(--panels, 6) + var(--slant)); margin-inline: calc(var(--slant) / -2); min-width: 0; pointer-events: none; }
 .showcase-game { position: absolute; inset: 0; clip-path: polygon(var(--slant) 0, 100% 0, calc(100% - var(--slant)) 100%, 0 100%); color: var(--pt-night-text); background: var(--pt-night); display: flex; flex-direction: column; align-items: flex-start; isolation: isolate; pointer-events: auto; }
 .showcase-panels > li:first-child .showcase-game { clip-path: polygon(0 0, 100% 0, calc(100% - var(--slant)) 100%, 0 100%); }
@@ -15,19 +16,19 @@
 .showcase-art { z-index: -2; }
 .showcase-art img { object-fit: cover; filter: saturate(.65) brightness(.86); transition: filter 350ms ease-out; }
 .showcase-game::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, oklch(.16 .02 260 / .1), transparent 30%, oklch(.13 .025 260 / .46) 65%, oklch(.13 .025 260 / .98)); z-index: -1; }
-.showcase-caption { margin: auto 0 clamp(28px, 4vw, 64px) calc(var(--slant) * .5 + 24px); width: calc((100% - var(--slant)) * .64); }
+.showcase-caption { margin: auto 0 clamp(20px, 2.4vh, 32px) calc(var(--slant) * .5 + 24px); width: calc((100% - var(--slant)) * .64); }
 .showcase-maker { display: block; color: oklch(.88 .008 260); font: 13px/1.45 var(--pt-body); overflow-wrap: anywhere; }
 .showcase-caption h3 { color: inherit; font: 650 clamp(18px, 1.65vw, 32px)/1.15 var(--pt-display); letter-spacing: -.025em; margin: 12px 0 26px; overflow-wrap: anywhere; text-wrap: balance; }
-.showcase-actions { display: flex; align-items: center; gap: 12px; width: max-content; }
+.showcase-actions { display: flex; align-items: center; gap: clamp(20px, 1.6vw, 28px); width: max-content; }
 .showcase-actions a { color: var(--pt-night-text); text-decoration: none; outline: none; }
 /* The Check Project link covers the artwork too, without nesting the Play link. */
 .showcase-project::before { content: ''; position: absolute; inset: 0; z-index: 0; }
-.showcase-action-face { position: relative; z-index: 1; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 9px 14px; font: 600 13px/1.4 var(--pt-body); white-space: nowrap; }
-.showcase-action-face::before { content: ''; position: absolute; inset: 0; z-index: -1; transform: skewX(-12deg); border: 1px solid oklch(.98 .005 260 / .6); background: oklch(.98 .005 260 / .025); transition: background-color 180ms ease-out, border-color 180ms ease-out, box-shadow 180ms ease-out; }
-.showcase-actions a:hover .showcase-action-face::before { background: oklch(.98 .005 260 / .12); border-color: var(--pt-night-text); }
-.showcase-actions a:focus-visible .showcase-action-face::before { border-color: var(--pt-amber); box-shadow: 0 0 0 2px var(--pt-amber); }
+.showcase-action-face { position: relative; z-index: 1; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 8px 0; border-radius: 3px; font: 700 clamp(16px, 1vw, 18px)/1.4 var(--pt-body); white-space: nowrap; text-shadow: 0 2px 8px oklch(.1 .02 260 / .9); transition: color 180ms ease-out; }
+.showcase-action-face::before { content: ''; position: absolute; inset: 5px -8px; z-index: -1; border-radius: 8px; background: oklch(.1 .02 260 / .3); filter: blur(8px); pointer-events: none; }
+.showcase-actions a:hover .showcase-action-face { color: var(--pt-amber); }
+.showcase-actions a:focus-visible .showcase-action-face { color: var(--pt-amber); outline: 2px solid var(--pt-amber); outline-offset: 4px; }
 .showcase-play { position: relative; z-index: 1; }
-.showcase-play .ui-icon { width: 13px; height: 13px; fill: currentColor; stroke: none; }
+.showcase-play .ui-icon { width: 16px; height: 16px; flex-basis: 16px; fill: currentColor; stroke: none; color: var(--pt-amber); }
 .showcase-editor-label { display: block; width: fit-content; margin-bottom: 15px; color: var(--pt-amber); font: 600 12px/1.4 var(--pt-body); }
 .showcase-game:hover .showcase-art img, .showcase-game:focus-within .showcase-art img, .is-expanded .showcase-art img { filter: saturate(1) brightness(1); }
 .showcase--motion > li { position: absolute; inset: 0 auto 0 0; margin: 0; width: var(--canvas-width); transform: translateX(var(--panel-x)); }
@@ -54,8 +55,9 @@
 .showcase-panels:not(.showcase--motion) .showcase-actions { flex-direction: column; align-items: flex-start; }
 @media (max-width: 1100px) { .home-invitation { gap: 14px; } .home-invitation-action { margin-left: auto; } .home-invitation p { font-size: 16px; } }
 @media (max-width: 900px) {
-  .showcase-heading { inset: 18px auto auto 18px; gap: 10px; }
-  .showcase-heading > div { padding: 12px 16px; }
+  #main.home-stage { display: block; }
+  .showcase-heading { inset: 18px 18px auto; gap: 12px 16px; flex-wrap: wrap; }
+  .showcase-heading > div { padding: 12px 20px; }
   .showcase-panels { height: auto; display: block; overflow: visible; }
   .showcase-panels > li { margin: 0; min-height: 255px; }
   .showcase-panels > li:first-child { min-height: 420px; }
@@ -65,12 +67,21 @@
   .showcase-caption { margin: auto 24px 24px; width: calc(100% - 48px); }
   .showcase-caption h3 { font-size: 29px; max-width: 24ch; margin: 6px 0 14px; }
   .showcase-panels:not(.showcase--motion) .showcase-actions { flex-direction: row; }
-  .showcase-action-face { font-size: 14px; padding-inline: 18px; }
+  .showcase-action-face { font-size: 16px; }
   .showcase-editor-label { margin-bottom: 10px; }
   .home-invitation { padding: 20px 24px 28px; gap: 20px; }
   .home-invitation-action { margin: 0; gap: 20px; }
   .home-invitation p { font-size: 17px; }
   .home-review-link { margin-left: 6px; }
 }
-@media (prefers-reduced-motion: reduce) { .showcase-art, .showcase-art img, .showcase--motion > li, .showcase--motion > li .showcase-game, .showcase-play, .showcase-action-face::before { transition: none; } }
-@media (forced-colors: active) { .showcase-actions a:focus-visible .showcase-action-face::before { outline: 2px solid Highlight; outline-offset: 3px; } }
+@keyframes showcase-label-enter { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: translateX(0); } }
+@media (prefers-reduced-motion: reduce) {
+  .showcase-heading { animation: none; }
+  .showcase-art, .showcase-art img, .showcase--motion > li, .showcase--motion > li .showcase-game, .showcase-play, .showcase-action-face { transition: none; }
+}
+@media (forced-colors: active) {
+  .showcase-heading > div::before { border-color: CanvasText; }
+  .showcase-action-face { text-shadow: none; }
+  .showcase-action-face::before { display: none; }
+  .showcase-actions a:focus-visible .showcase-action-face { outline-color: Highlight; }
+}
