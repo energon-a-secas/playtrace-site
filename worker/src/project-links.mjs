@@ -17,6 +17,8 @@ export function projectLinks(raw) {
     const candidate = canonicalProjectUrl(typeof link === 'string' ? link.replace(/&amp;/g,'&').replace(/[.,*`]+$/, '') : null);
     if (!candidate) continue;
     const position = body.indexOf(link), context = position >= 0 ? body.slice(Math.max(0, position - 160), position) : '';
+    if(/\b(?:similar to my|including my|my (?:previous|other|older) game|my most recently released game)\b/i.test(context)
+      && !/\b(?:play|try|download) (?:this|the new|my new) (?:game|build|demo)\b/i.test(context.slice(-70)))continue;
     if (repositoryUrl(candidate)) {
       if (!/\b(?:mcp|skills|prompts|framework|engine|game-kit|superpowers|data-oriented-design)\b/i.test(new URL(candidate).pathname)
         && !/\b(?:stumbled upon|heavy use of|used my|music generation|sponsoring)\b/i.test(context)

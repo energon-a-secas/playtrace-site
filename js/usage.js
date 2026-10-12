@@ -1,5 +1,5 @@
 import { CONFIG } from './config.js';
-const key='playtrace.metrics.optout',allowed=['home','browse','game','research','quiz','about','directory'];
+const key='playtrace.metrics.optout',allowed=['home','browse','game','research','quiz','about','directory','insights'];
 const page=document.body.dataset.page,queue=[];let timer,sending=false;
 export function measurementEnabled(){
   try{return navigator.doNotTrack!=='1'&&navigator.globalPrivacyControl!==true&&localStorage.getItem(key)!=='1';}catch{return false;}

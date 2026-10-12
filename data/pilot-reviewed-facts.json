@@ -1,0 +1,238 @@
+{
+  "version": 1,
+  "reviewedAt": "2026-10-12",
+  "reviewer": "Codex source review; not an independent two-reviewer audit",
+  "categories": {
+    "board-game": "Board game",
+    "educational": "Educational",
+    "sports": "Sports",
+    "horror": "Horror",
+    "rhythm": "Rhythm",
+    "racing": "Racing"
+  },
+  "facts": [
+    {
+      "gameId": "g_1x36ues",
+      "field": "category",
+      "value": "rpg",
+      "sourceUrl": "https://motawe3.itch.io/underbloom",
+      "evidence": "A top-down survival RPG where you are the colony invader."
+    },
+    {
+      "gameId": "g_1wfb9lk",
+      "field": "category",
+      "value": "board-game",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wfb9lk/",
+      "evidence": "Every backgammon app I downloaded was outdated, buggy, or shoving coin purchases down my throat."
+    },
+    {
+      "gameId": "g_1wopai1",
+      "field": "title",
+      "value": "Robo Mania",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wopai1/",
+      "evidence": "I developed and published a small 1v1 robot arena game named Robo Mania"
+    },
+    {
+      "gameId": "g_1wopai1",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wopai1/",
+      "evidence": "1v1 robot arena game"
+    },
+    {
+      "gameId": "g_1wbf5oe",
+      "field": "category",
+      "value": "arcade",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wbf5oe/",
+      "evidence": "This is a hyper-casual game, easy to play, hard to master"
+    },
+    {
+      "gameId": "g_1vppapc",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://wbk.itch.io/chapel-knights",
+      "evidence": "Action"
+    },
+    {
+      "gameId": "g_1wd9wdy",
+      "field": "title",
+      "value": "The 8th Day",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wd9wdy/",
+      "evidence": "I’m prototyping a small browser narrative game for The 8th Day."
+    },
+    {
+      "gameId": "g_1wd9wdy",
+      "field": "category",
+      "value": "adventure",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wd9wdy/",
+      "evidence": "small browser narrative game"
+    },
+    {
+      "gameId": "g_1x2vair",
+      "field": "category",
+      "value": "adventure",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2vair/",
+      "evidence": "make a story game about the meaning of life"
+    },
+    {
+      "gameId": "g_1wy53mp",
+      "field": "category",
+      "value": "simulation",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wbmues/",
+      "evidence": "Train Tycoon"
+    },
+    {
+      "gameId": "g_1pj8j87",
+      "field": "category",
+      "value": "rpg",
+      "sourceUrl": "https://jaydenandressen.itch.io/spritesvsuniverse",
+      "evidence": "Role Playing"
+    },
+    {
+      "gameId": "g_1w2jt3y",
+      "field": "title",
+      "value": "Numblop",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w2jt3y/",
+      "evidence": "Numblop is an adaptive multiplication game for Android"
+    },
+    {
+      "gameId": "g_1w2jt3y",
+      "field": "category",
+      "value": "educational",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w2jt3y/",
+      "evidence": "adaptive multiplication game for Android"
+    },
+    {
+      "gameId": "g_1wj8b3j",
+      "field": "title",
+      "value": "Ward Putt",
+      "sourceUrl": "https://pocket-putt.wheelz.chatgpt.site/",
+      "evidence": "Ward Putt · Hospital Mini Golf"
+    },
+    {
+      "gameId": "g_1wj8b3j",
+      "field": "category",
+      "value": "sports",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wj8b3j/",
+      "evidence": "This is a hospital themed putt putt course."
+    },
+    {
+      "gameId": "g_1wwjpti",
+      "field": "category",
+      "value": "horror",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wwjpti/",
+      "evidence": "You get a dark house, a flashlight, and a few things walking around that you learn to tell apart by sound."
+    },
+    {
+      "gameId": "g_1pzhdwm",
+      "field": "category",
+      "value": "puzzle",
+      "sourceUrl": "https://splarg.itch.io/word-quest",
+      "evidence": "Puzzle"
+    },
+    {
+      "gameId": "g_1wekrx6",
+      "field": "title",
+      "value": "iaReveal",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wekrx6/",
+      "evidence": "I just released my first iOS game, iaReveal."
+    },
+    {
+      "gameId": "g_1wekrx6",
+      "field": "category",
+      "value": "puzzle",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wekrx6/",
+      "evidence": "Players begin with a scrambled image, gradually discover what they’re looking at through gameplay, and finally reveal the complete picture."
+    },
+    {
+      "gameId": "g_1tnrxln",
+      "field": "title",
+      "value": "Bamboo Slicers",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tnrxln/",
+      "evidence": "first casual android game - Bamboo Slicers"
+    },
+    {
+      "gameId": "g_1tnrxln",
+      "field": "category",
+      "value": "arcade",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tnrxln/",
+      "evidence": "you just cut bamboo, your sword grows, and you smash opponents with it"
+    },
+    {
+      "gameId": "g_1p8mojp",
+      "field": "category",
+      "value": "rhythm",
+      "sourceUrl": "https://gargantuai.itch.io/tamas-cheer-squad-rhythm-routines",
+      "evidence": "Rhythm"
+    },
+    {
+      "gameId": "g_1wjzjvc",
+      "field": "category",
+      "value": "racing",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wjzjvc/",
+      "evidence": "a simple 2D top-down traffic racer"
+    },
+    {
+      "gameId": "g_1rm2sp8",
+      "field": "category",
+      "value": "adventure",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1rm2sp8/",
+      "evidence": "Ghost Shift is an interactive adventure game set in a museum basement during a night shift."
+    },
+    {
+      "gameId": "g_1umaf0l",
+      "field": "category",
+      "value": "adventure",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1umaf0l/",
+      "evidence": "a slow, chill space exploration mystery closer to Outer Wilds"
+    },
+    {
+      "gameId": "g_1u0ei1l",
+      "field": "category",
+      "value": "simulation",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1u0ei1l/",
+      "evidence": "it's a stock market simulation played on a terminal screen"
+    },
+    {
+      "gameId": "g_1pclux8",
+      "field": "title",
+      "value": "Rogue Shifters",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1pclux8/",
+      "evidence": "Project Rogue Shifters is now my main focus and targeted for mid-2026 release."
+    },
+    {
+      "gameId": "g_1pclux8",
+      "field": "projectUrl",
+      "value": null,
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1pclux8/",
+      "evidence": "similar to my most recently released game"
+    },
+    {
+      "gameId": "g_1nnee32",
+      "field": "projectUrl",
+      "value": "https://battleborg.ai/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1nnee32/",
+      "evidence": "https://battleborg.ai"
+    }
+  ],
+  "flags": {
+    "g_1vppapc": [
+      "Identity review: STARBATTLE links Chapel Knights as a different project; do not treat all model mentions as one game."
+    ],
+    "g_1pclux8": [
+      "Roadmap discusses several projects. The Cook or Be Cooked Steam link is an example, not the featured Rogue Shifters build."
+    ],
+    "g_1qo6suw": [
+      "Game modification / AI agent showcase, not a standalone original game."
+    ],
+    "g_1qb3qjv": [
+      "Development tool with example builds; review catalogue scope separately from game genre."
+    ],
+    "g_1vmh0lj": [
+      "Development workflow / third-party tool showcase; game genre remains unclassified."
+    ],
+    "g_1td3u20": [
+      "Development tool / IDE showcase; game genre remains unclassified."
+    ]
+  }
+}

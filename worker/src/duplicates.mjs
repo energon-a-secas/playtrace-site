@@ -76,6 +76,10 @@ export async function consolidateReposts(db,deps,apply=false,bucket=null){
       query(db,`INSERT INTO project_overrides(game_id,details_json,updated_by,updated_at,revision) SELECT ?,details_json,updated_by,updated_at,revision FROM project_overrides WHERE game_id IN(SELECT value FROM json_each(?)) ORDER BY updated_at DESC LIMIT 1 ON CONFLICT(game_id) DO NOTHING`,winner.id,ids),
       query(db,`INSERT INTO preview_overrides(game_id,preview_json,approved_by,updated_at) SELECT ?,preview_json,approved_by,updated_at FROM preview_overrides WHERE game_id IN(SELECT value FROM json_each(?)) ORDER BY updated_at DESC LIMIT 1 ON CONFLICT(game_id) DO NOTHING`,winner.id,ids),
       query(db,'UPDATE media_assets SET game_id=? WHERE game_id IN(SELECT value FROM json_each(?))',winner.id,ids),
+      query(db,`INSERT INTO project_facts(game_id,field,value_json,source_url,evidence_text,checked_at)
+        SELECT ?,field,value_json,source_url,evidence_text,checked_at FROM project_facts WHERE game_id IN(SELECT value FROM json_each(?))
+        ORDER BY checked_at DESC ON CONFLICT(game_id,field) DO NOTHING`,winner.id,ids),
+      query(db,'DELETE FROM project_facts WHERE game_id IN(SELECT value FROM json_each(?))',ids),
       query(db,'UPDATE questionnaires SET game_id=? WHERE game_id IN(SELECT value FROM json_each(?))',winner.id,ids),
       query(db,`INSERT INTO research_responses(questionnaire_id,game_id,guest_key_hash,revision,questions_json,answers_json,created_at,updated_at)
         SELECT questionnaire_id,?,guest_key_hash,revision,questions_json,answers_json,created_at,updated_at FROM research_responses WHERE game_id IN(SELECT value FROM json_each(?))

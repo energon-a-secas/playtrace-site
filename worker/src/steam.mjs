@@ -3,7 +3,7 @@ export { steamAppId } from './names.mjs';
 import { readBytes } from './http.mjs';
 import { query, getGame } from './store.mjs';
 import { acquire, release } from './lease.mjs';
-import { applyDetails } from './details.mjs';
+import { applyDetails, effectiveProjectUrl } from './details.mjs';
 import { plainExcerpt } from './source-evidence.mjs';
 
 export const STEAM_IMAGE_HOSTS = ['shared.akamai.steamstatic.com', 'shared.fastly.steamstatic.com', 'cdn.akamai.steamstatic.com', 'cdn.cloudflare.steamstatic.com'];
@@ -72,8 +72,7 @@ export async function gameStore(db, gameId, deps) {
   return { gameId, steam: steamAppId(current.projectUrl) === appId ? steam : null };
 }
 export async function refreshSteamBatch(db, deps) {
-  const rows = await query(db, `SELECT DISTINCT CASE WHEN json_type(o.details_json,'$.projectUrl') IS NOT NULL
-      THEN json_extract(o.details_json,'$.projectUrl') ELSE g.project_url END AS project_url
+  const rows = await query(db, `SELECT DISTINCT ${effectiveProjectUrl()} AS project_url
     FROM games g LEFT JOIN project_overrides o ON o.game_id=g.id WHERE g.status='published'
     AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id)`).all();
   const ids = [...new Set(rows.results.map(row => steamAppId(row.project_url)).filter(Boolean))];

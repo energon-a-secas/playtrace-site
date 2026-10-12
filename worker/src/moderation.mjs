@@ -31,6 +31,7 @@ export async function removeSourcePost(db, gameId, postId, body, admin, deps) {
       query(db,"UPDATE source_posts SET status='rejected',payload_json=json_set(payload_json,'$.editorRemoval',json(?)) WHERE id=? AND game_id=?",JSON.stringify({reason:body.reason,at,by:admin.subject}),postId,gameId),
       query(db,'UPDATE games SET payload_json=?,updated_at=? WHERE id=?',JSON.stringify(next),next.updatedAt,gameId),
       query(db,'DELETE FROM project_references WHERE game_id=? AND source_post_id=?',gameId,postId),
+      query(db,'DELETE FROM project_facts WHERE game_id=? AND source_url=?',gameId,post.url),
       query(db,"UPDATE app_meta SET value_json=json_set(value_json,'$.generatedAt',?) WHERE key='catalog'",at),
       query(db,"DELETE FROM app_meta WHERE key='source_removal_guard'"),
     ]);

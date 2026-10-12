@@ -22,6 +22,7 @@ export class TestDB {
     this.sql.exec(readFileSync(new URL('../migrations/0009_discovery_research.sql', import.meta.url), 'utf8'));
     this.sql.exec(readFileSync(new URL('../migrations/0010_source_evidence.sql', import.meta.url), 'utf8'));
     this.sql.exec(readFileSync(new URL('../migrations/0011_usage_metrics.sql', import.meta.url), 'utf8'));
+    this.sql.exec(readFileSync(new URL('../migrations/0012_reviewed_project_facts.sql', import.meta.url), 'utf8'));
   }
   prepare(sql) {
     const db = this;

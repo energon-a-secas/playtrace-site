@@ -10,6 +10,9 @@ export function evidence(result){
   let html='';
   if(result.status)html+=`<p class="job-result"><strong>${e(result.status)}</strong>${result.httpStatus?` · HTTP ${result.httpStatus}`:''}${result.playable?' · Playable build found':''}${result.provider?` · ${e(result.provider)}`:''}</p>`;
   if(result.note)html+=`<p>${e(result.note)}</p>`;
+  if(result.flags?.length)html+=`<ul class="pilot-flags">${result.flags.map(flag=>`<li>${e(flag)}</li>`).join('')}</ul>`;
+  if(result.changes?.length)html+=`<details><summary>${result.changes.length} enriched fields</summary><dl class="pilot-changes">${result.changes.map(change=>`<dt>${e(change.field)}</dt><dd><span>Previous: ${e(Array.isArray(change.before)?change.before.join(', '):change.before||'Unspecified')}</span><br><strong>Current: ${e(Array.isArray(change.after)?change.after.join(', '):change.after||'Unspecified')}</strong></dd>`).join('')}</dl></details>`;
+  if(result.release)html+=`<p class="field__hint">Steam ${e(result.release.kind)} · ${e(result.release.state)} · Store date: ${e(result.release.dateLabel||'Unspecified')}. The source-post date is separate.</p>`;
   if(typeof result.evidence==='string')html+=`<p>${e(result.evidence)}</p>`;
   if(result.finalUrl)html+=`<a class="text-link" href="${e(safeUrl(result.finalUrl))}" target="_blank" rel="noopener noreferrer">Checked destination ↗</a>`;
   if(result.image)html+=`<img class="job-artwork" src="${e(safeUrl(result.image))}" alt="Store artwork candidate" loading="lazy">`;

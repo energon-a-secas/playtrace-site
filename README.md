@@ -34,7 +34,7 @@ Playtrace collects games shared on r/aigamedev so players can discover a project
 
 **Live:** [playtrace.neorgon.com](https://playtrace.neorgon.com/) · **API:** [service status](https://playtrace-api.neorgon.workers.dev/api/v1/status)
 
-Public feedback uses a random browser edit key so visitors can update or remove their contribution. Favorites are an optional account feature. Star a project to save it to your private Favorites page. Existing private account price responses stay private. See [account activation](#account-activation).
+Public feedback uses a random browser edit key so visitors can update or remove their contribution. Favorites save on your device without login. The star filter in Browse shows your saved games, and signing in reconciles them with your private account list. Existing private account price responses stay private. See [account activation](#account-activation).
 
 ## Features
 
@@ -45,14 +45,14 @@ Public feedback uses a random browser edit key so visitors can update or remove 
 - **Historical collection** -- A resumable pass starts at the community's creation on December 11, 2022. An independent recent pass keeps new updates fresh. Newest updates appear first; the interface reports historical progress without claiming the archive is complete.
 - **A growing catalogue** -- Cursor pages replace the old 2,000-project public limit. The first page appears promptly; further pages expand search and filters with visible loaded counts. Cards render in groups of 60.
 - **Public feedback** -- One editable contribution per browser and game, with a note, optional display name, and optional ideal price in USD from $0 to $100. Notes and prices are explicitly public. The median includes only these public suggestions.
-- **Favorites and ratings** -- A top star saves a game to a signed-in visitor’s private Favorites page. Separate one-to-five-star ratings need no login and can be updated or removed from the same browser.
+- **Favorites and ratings** -- A top star saves a game on your device, with optional account sync. Use the star filter in Browse to see saved games. Separate one-to-five-star ratings need no login and can be updated or removed from the same browser.
 - **Reusable playtests** -- One question per step, up to five, with single choice, multiple choice and optional written feedback. Admins can create project-specific studies, view versioned metrics and embed the form elsewhere. Research responses are private, separate from public comments.
 - **Visitor controls** -- Browser and network limits reduce spam. Contributions have report links and operator moderation. Clearing browser storage loses editing access; the correction link remains available for help. A browser key does not prove a unique person.
 - **Private account data** -- Existing account prices, their thresholded aggregates, follows, and account-data deletion remain separate from public feedback. Guest contributions never reveal or import old private responses.
 - **Editorial tools** -- A private change-request inbox, verified admin roles with the requested default owner, persistent project details and image edits, and a video-frame picker. See [activation and endpoint details](docs/editorial-api.md).
 - **Review queue** -- Persistent link checks, Steam/itch enrichment, shared source links, and Jev-assisted reviews of recent Reddit comments or questionnaire responses. Cited Reddit reviews require explicit admin publication. See [the discovery and research runbook](docs/discovery-research-api.md).
 - **Store and media context** -- Branded game/Reddit buttons, confirmed Steam app badges, cached US prices, Steam/itch artwork, source videos/GIFs, shared links beside project history, and an original-post fallback. Admins can edit thumbnails directly from cards or project notes.
-- **Name that game** -- A highlighted header button opens [a dedicated five-screenshot quiz](https://playtrace.neorgon.com/quiz.html). Source-hosted images use smaller variants when available and preload the next clue. Anonymous results contribute recognition counts and remain removable from the same browser. See [the quiz API and delivery notes](docs/name-game-api.md).
+- **Name that game** -- Available by direct link, [a dedicated five-screenshot quiz](https://playtrace.neorgon.com/quiz.html). It is hidden from the main navigation. Source-hosted images use smaller variants when available and preload the next clue. Anonymous results contribute recognition counts and remain removable from the same browser. See [the quiz API and delivery notes](docs/name-game-api.md).
 - **Managed previews** -- R2 can store bounded, validated images with a recorded creator permission. Initial previews remain at their original hosts. Removal hides a game immediately and cleans up its stored data and media.
 
 The bundled snapshot is dated local exploration data; the live catalogue grows separately. No votes, demand figures, or user accounts are seeded.
@@ -126,10 +126,10 @@ The live sign-in form is verified and `accountsReady: true` is published in `js/
 </div>
 
 
-### Search pages and admin insights
+### Search pages and community insights
 
 The Pages workflow in `.github/workflows/pages.yml` builds `_site/` from a complete live catalogue hourly, on pushes to main and on manual dispatch. It publishes permanent `/games/<id>/` pages, a crawlable directory and `sitemap.xml`. Project metadata and JSON-LD are present without JavaScript. The artifact allowlist excludes Worker code, private files and editorial analysis documents. An incomplete fetch fails without replacing the last deployment. The Pages repository must use GitHub Actions as its build source.
 
 For a local snapshot build: `node scripts/build-site.mjs --catalog data/public-catalog.json`. For current production reads: `node scripts/build-site.mjs`. `_site/` is generated and ignored. Search Console ownership and sitemap submission require the property owner; generating a sitemap does not guarantee indexing.
 
-Admin desk → Insights (`admin.html#insights`) provides catalogue trends, model-release comparisons, source inspection, CSV export, community choices and anonymous usage counts. See [the dashboard methodology](docs/dashboard-methodology.md). The pilot endpoints require verified admin authorization; do not publish their response files in Pages. Apply migration `0011_usage_metrics.sql` before deploying the Worker. Existing comments, ratings, favorites and editorial overrides are unaffected by this additive migration.
+[Community Insights](https://playtrace.neorgon.com/insights.html) provides catalogue trends, model announcement comparisons, source inspection, CSV export and a separate Steam release timeline. Its hourly public snapshot is built from the allowlisted `/insights` endpoint. Admin desk → Insights adds community choices and anonymous usage counts through protected endpoints. Private questionnaires, identities and editorial jobs are never exported. See [the dashboard methodology](docs/dashboard-methodology.md) and [100-project enrichment pilot](docs/enrichment-pilot100.md). Apply migration `0012_reviewed_project_facts.sql` before deploying this version. Accepted source-linked facts survive imports; explicit admin edits and approved images take precedence.

@@ -131,6 +131,7 @@ export async function removal(db, bucket, id, reason, now, actor = 'operator') {
     query(db, "UPDATE games SET status='removed',author_key='',project_url=NULL,payload_json='{}' WHERE id=?", id),
     query(db, 'DELETE FROM price_signals WHERE game_id=?', id),
     query(db, 'DELETE FROM follows WHERE game_id=?', id),
+    query(db, 'DELETE FROM project_facts WHERE game_id=?', id),
     query(db, 'DELETE FROM feedback WHERE game_id=?', id),
     query(db, 'DELETE FROM quiz_answers WHERE game_id=? OR choice_id=? OR game_id IN(SELECT alias_id FROM game_aliases WHERE game_id=?) OR choice_id IN(SELECT alias_id FROM game_aliases WHERE game_id=?)', id, id, id, id),
     query(db, 'DELETE FROM change_requests WHERE game_id=?', id),

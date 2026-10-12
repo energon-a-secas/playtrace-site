@@ -1,13 +1,14 @@
 // Cache only anonymous, public discovery reads. Personal and editable data
 // always go through their normal authorization and database paths.
 export function publicCacheKey(request, action) {
-  if (request.method !== 'GET' || !['catalog','status','highlights','game'].includes(action)
+  if (request.method !== 'GET' || !['catalog','status','highlights','game','insights'].includes(action)
     || ['Authorization','X-Feedback-Key','Cookie'].some(header=>request.headers.has(header))) return null;
   const input=new URL(request.url),key=new URL(input.pathname,input.origin);
   if(action==='catalog') {
     key.searchParams.set('pageSize',input.searchParams.get('pageSize')||'200');
     if(input.searchParams.has('cursor'))key.searchParams.set('cursor',input.searchParams.get('cursor'));
   }
+  if(action==='insights'&&input.searchParams.has('cursor'))key.searchParams.set('cursor',input.searchParams.get('cursor'));
   return new Request(key);
 }
 export const REVISION_KEY = 'discovery/revision.json';

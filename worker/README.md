@@ -106,9 +106,12 @@ Verified admins can remove an entry through `POST /api/v1/admin/games/:id/delete
 
 - `GET /games/:id` returns the current public catalogue record and follows a merge alias. Withdrawn records return 404. It uses the same versioned public cache as the catalogue.
 - `GET /admin/insights?cursor=...` returns at most 200 projects per page with public-safe mention evidence. Verified Clerk admin authorization is required; responses are `no-store`. No private feedback, user IDs or jobs are read by this projection.
+- `GET /insights?cursor=...` exposes the same allowlisted source projection publicly, including reviewed field provenance and exact linked Steam release dates where available. Its versioned cache expires after 60 seconds. Pages publishes a complete dated snapshot hourly; the dashboard falls back to this endpoint when that snapshot is missing or stale. Account records, visitor activity and private questionnaire answers are excluded.
 - `POST /usage` accepts up to ten allowlisted anonymous actions, random delivery IDs and a published game ID where needed. Retry receipts expire after 24 hours; rate buckets use an hourly rotating HMAC of the network address. DNT/GPC and obvious bots are ignored. No fingerprint, persistent visitor ID or event stream is retained.
 - `GET /admin/usage` returns daily action totals and aggregate contribution counts. It requires verified admin authorization and does not expose private questionnaire text or account identities.
 
 Apply `0011_usage_metrics.sql` before this Worker release. The :50 maintenance invocation prunes expired anonymous totals/receipts alongside duplicate maintenance. Rollback `0011` only after deploying a Worker that no longer reads those tables. No schema rollback is needed for a code rollback to the prior release.
+
+Apply `0012_reviewed_project_facts.sql` before publishing the evidence pilot Worker. Accepted field observations retain their source, quote and check time separately from source imports. Administrator edits take precedence. Source removal clears facts citing that post; merges preserve the receiving project's accepted facts. Rollback `0012` only after deploying a Worker that no longer reads `project_facts`. The [100-project pilot](../docs/enrichment-pilot100.md) describes preparation, conflict guards and preservation checks.
 
 Built-in review studies are seeded with conflict-safe inserts. Difficulty, Controls, Accessibility and Link Health are included; administrator edits and inactive states survive reseeding. Public topic options reflect active forms only.

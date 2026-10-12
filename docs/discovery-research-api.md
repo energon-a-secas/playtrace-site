@@ -6,8 +6,8 @@ The October 2026 campaign separates the landing page, catalogue and saved games,
 
 - Home: `/`. Existing root links with project/filter parameters redirect to `/browse.html`, preserving their state.
 - Browse: `/browse.html`. Type in the Maker dropdown and select a result. Cards open project notes; independent genre, favorite, Reddit and game controls retain their own actions.
-- Favorites: `/profile.html`. Sign in to save games with the star. This is a private account list.
-- Quick reviews: `/research.html`. Choose a game; optional topics and questionnaires are in a disclosure. Project notes link directly to the default five-question study.
+- Favorites: the star filter in `/browse.html`. Saved games work offline and reconcile after sign-in. `/profile.html` redirects to this filter.
+- Quick reviews: `/research.html`. Type a title or maker into the game picker; optional topics and questionnaires are in a disclosure. Project notes link directly to the default five-question study.
 - Admin: `/admin.html`. The verified owner and enabled editors can edit project details directly from a card/project popup, upload images there, curate **Weekly highlights**, edit all details under **Projects**, create studies under **Questionnaires**, and process evidence under **Review queue**.
 
 The quiz remains at `/quiz.html`. Both the quiz and playtest page support `?embed=1`. A study link can specify `form` and `game`, for example `/research.html?form=playtest&game=g_1x2q29h&embed=1`. The admin builder produces the iframe code. Research can send height updates to an exact HTTPS `parentOrigin`; it never broadcasts to `*`. Embedding depends on the parent site's iframe/CSP policy and browser storage rules. A standalone link remains available.
@@ -18,6 +18,7 @@ All paths below use `/api/v1`. Guest ownership uses the existing random browser 
 
 | Method and route | Behavior |
 | --- | --- |
+| `GET /insights?cursor=...` | At most 200 public project evidence records, accepted field sources and store-reported release dates. No account, questionnaire or editorial data. |
 | `GET /highlights` | The current five weekly picks, with current public project metadata, week and revision. |
 | `GET /games/:id/resolve` | Returns the current published ID for a consolidated repost, with `redirected`. |
 | `GET /games/:id/context` | Shared source links, any explicitly published cited review, and URL-bound enrichment evidence. |

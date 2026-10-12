@@ -3,7 +3,7 @@ import { exactKeys, invalid, ApiError, unavailable, strongSecret } from './http.
 import { hmac, take } from './limits.mjs';
 
 export const events=['page_view','game_view','game_outbound','favorite_save','favorite_remove','feedback_save','rating_save','research_start','research_complete','quiz_start','quiz_complete'];
-const pages=['home','browse','game','research','quiz','about','directory'];
+const pages=['home','browse','game','research','quiz','about','directory','insights'];
 const projectEvents=new Set(['game_view','game_outbound','favorite_save','favorite_remove','feedback_save','rating_save','research_start','research_complete']);
 export async function pruneUsage(db,deps){
   const now=Math.floor(deps.now()/1000);

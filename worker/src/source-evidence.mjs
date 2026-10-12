@@ -103,10 +103,12 @@ export async function refreshSourceRecords(db, rawRows, deps) {
         changed_at=CASE WHEN source_evidence.content_hash<>excluded.content_hash THEN excluded.changed_at ELSE source_evidence.changed_at END`,at,at,JSON.stringify(records))];
   if(posts.length)statements.push(query(db,`UPDATE source_posts SET payload_json=(SELECT json_extract(value,'$.post') FROM json_each(?) WHERE json_extract(value,'$.id')=source_posts.id),retrieved_at=?
     WHERE id IN(SELECT json_extract(value,'$.id') FROM json_each(?)) AND status='published'`,JSON.stringify(posts),at,JSON.stringify(posts)));
+  const removedUrls=records.filter(record=>record.payload.state==='removed').map(record=>record.payload.sourceUrl);
+  if(removedUrls.length)statements.push(query(db,'DELETE FROM project_facts WHERE source_url IN(SELECT value FROM json_each(?))',JSON.stringify(removedUrls)));
   if(updates.length)statements.push(query(db,`UPDATE games SET payload_json=(SELECT json_extract(value,'$.game') FROM json_each(?) WHERE json_extract(value,'$.id')=games.id),
     project_url=(SELECT json_extract(value,'$.url') FROM json_each(?) WHERE json_extract(value,'$.id')=games.id)
     WHERE id IN(SELECT json_extract(value,'$.id') FROM json_each(?))`,JSON.stringify(updates),JSON.stringify(updates),JSON.stringify(updates)));
-  if(updates.length)statements.push(query(db,"UPDATE app_meta SET value_json=json_set(value_json,'$.generatedAt',?) WHERE key='catalog'",at));
+  if(updates.length||changed)statements.push(query(db,"UPDATE app_meta SET value_json=json_set(value_json,'$.generatedAt',?) WHERE key='catalog'",at));
   statements.push(query(db,"DELETE FROM app_meta WHERE key='source_refresh_guard'"));
   try{await db.batch(statements);}catch(error){if(/NOT NULL.*app_meta\.value_json/.test(error.message))throw unavailable();throw error;}
   return {checked:records.length,changed,updatedGames:updates.length};

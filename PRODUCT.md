@@ -71,8 +71,8 @@ Each project has a permanent `/games/<id>/` page with prerendered content, origi
 
 Anonymous usage counts measure actions, never unique people or verified plays. No account IDs, browser IDs, search terms, referrers or written feedback enter this dataset. Respect DNT, GPC and the About-page opt-out. Delivery UUIDs deduplicate retries for one day; hourly network hashes limit spam. Retain daily totals for 180 UTC dates and purge expired records during hourly maintenance. Do not calculate a conversion funnel from unrelated action totals.
 
-## Admin research dashboard
+## Community insights and admin research
 
-The initial Insights view is server-gated to verified admins. Its catalogue projection contains public source evidence only, so it can later support a public edition without exposing accounts, private questionnaire answers or editorial notes.
+The public Community Insights page uses an hourly, dated catalogue evidence snapshot. A separate admin view adds operational usage and contribution counts. Accounts, private questionnaire answers and editorial notes remain server-gated. Accepted source-linked facts are stored separately from imports, and explicit admin edits always take precedence. Exact, past Steam release dates have their own timeline; first community posts never stand in for release dates.
 
 Distinguish original post-date mention trends from first-shared cohorts labeled with current metadata. Show denominators, unknown classifications, text coverage and source excerpts. Art styles, engines and models are explicit text matches, not screenshot analysis or proof of use; preserve unspecified versions. Compare equal 28/56/84-day windows around sourced provider announcements, deduplicate each project per window, show small/partial samples and state that timing does not establish causation. CSV exports and accessible chart tables retain the same definitions.

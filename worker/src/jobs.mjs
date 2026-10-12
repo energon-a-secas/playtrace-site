@@ -1,5 +1,5 @@
 import { query, getGame, meta, putMeta } from './store.mjs';
-import { applyDetails } from './details.mjs';
+import { applyDetails, effectiveProjectUrl } from './details.mjs';
 import { checkProject } from './enrichment.mjs';
 import { refreshReferences } from './references.mjs';
 import { feedbackReview, classifyEvidence } from './insights.mjs';
@@ -8,7 +8,7 @@ import { GAME_ID } from './validation.mjs';
 import { acquire, release } from './lease.mjs';
 
 export const jobKinds = ['links','store','feedback','references','research'];
-const projectUrl = (table='g') => `CASE WHEN json_type(o.details_json,'$.projectUrl') IS NOT NULL THEN json_extract(o.details_json,'$.projectUrl') ELSE ${table}.project_url END`;
+const projectUrl = effectiveProjectUrl;
 export async function queueStoreMaintenance(db, deps) {
   const at=new Date(deps.now()).toISOString(), weekAgo=new Date(deps.now()-7*86400000).toISOString();
   const rows=await query(db,`SELECT g.id FROM games g LEFT JOIN project_overrides o ON o.game_id=g.id

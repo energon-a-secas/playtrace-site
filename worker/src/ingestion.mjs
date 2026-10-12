@@ -3,6 +3,8 @@ import { query, meta, putMeta, importCatalog } from './store.mjs';
 import { normalizePost, sourceGame } from './archive.mjs';
 import { refreshSourceRecords } from './source-evidence.mjs';
 import { acquire, release } from './lease.mjs';
+import { applyDetails } from './details.mjs';
+import { canonicalProjectUrl } from './validation.mjs';
 
 export const ARCHIVE_URL = 'https://arctic-shift.photon-reddit.com/api/posts/search';
 // r/aigamedev creation timestamp, confirmed by the archive's subreddit record
@@ -88,7 +90,9 @@ async function planCandidates(db, candidates) {
     const key = `${author}\n${project}`, list = matches.get(key) || [];
     list.push(game); matches.set(key, list);
   };
-  for (const row of gameRows.results) if (games.has(row.id)) addMatch(row.author_key, row.project_url, games.get(row.id));
+  // Match effective reviewed/edited destinations, while retaining source data
+  // for imports. A corrected example link must not reconnect unrelated games.
+  for (const game of await applyDetails(db,[...games.values()]))addMatch(game.author.name.toLowerCase(),canonicalProjectUrl(game.projectUrl),games.get(game.id));
   const changed = new Map(), pending = [];
   // New games use the oldest source in this batch as their permanent anchor.
   // Older sources found later extend the same timeline without changing its ID.

@@ -29,6 +29,7 @@ import { removeEntry, removeSourcePost } from './moderation.mjs';
 import { quizInfo, startQuiz, finishQuiz, deleteQuizData, quizMetrics } from './quiz.mjs';
 
 const routes = [
+  [/^\/insights$/, ['GET'], 'insights'],
   [/^\/usage$/, ['POST'], 'usage'],
   [/^\/admin\/insights$/, ['GET'], 'editorInsights'],
   [/^\/admin\/usage$/, ['GET'], 'editorUsage'],
@@ -130,6 +131,7 @@ export function createWorker(overrides = {}) {
         else if (action === 'catalog') result = json(await catalog(database(env), { limit: url.searchParams.get('pageSize') || 200,
           cursor: url.searchParams.get('cursor') }), 200, { 'Cache-Control': request.headers.has('Authorization') ? 'no-store' : 'public, max-age=60' });
         else if (action === 'game') result = json(await publicGame(database(env),match[1]),200,{'Cache-Control':'public, max-age=60'});
+        else if (action === 'insights') result = json(await insightPage(database(env),url.searchParams.get('cursor'),deps),200,{'Cache-Control':'public, max-age=60'});
         else if (action === 'highlights') result = json(await getHighlights(database(env)), 200, { 'Cache-Control': 'public, max-age=60' });
         else if (action === 'resolveGame') result = json(await resolveGame(database(env),match[1]));
         else if (action === 'context') result = json(await projectContext(database(env),match[1]));
@@ -239,7 +241,7 @@ export function createWorker(overrides = {}) {
         if (event?.cron === '0 3,4 * * 6') return (await rotateHighlights(database(env), deps)).rotated;
         if (event?.cron === '20 * * * *') { const db=database(env); await queueStoreMaintenance(db,deps); return (await runJobs(db,env,deps,2)).processed>0; }
         if (event?.cron === '50 * * * *') { await pruneUsage(database(env),deps); return (await consolidateReposts(database(env),deps,true,env.PREVIEWS)).merged>0; }
-        if (sourceTick) return ingestionConfigured(env) ? (await refreshSourceBatch(database(env),deps)).updatedGames>0 : false;
+        if (sourceTick) { if(!ingestionConfigured(env))return false;const refreshed=await refreshSourceBatch(database(env),deps);return refreshed.changed>0||refreshed.updatedGames>0; }
         if (event?.cron === '5 * * * *'||maintenance) {
           const db = database(env);
           const steam=await refreshSteamBatch(db, deps);

@@ -5,13 +5,19 @@ import { listCategories } from './categories.mjs';
 
 export const DETAIL_FIELDS = ['title', 'summary', 'category', 'stage', 'projectUrl', 'repositoryUrl', 'tags', 'platforms'];
 export const detailsOf = game => Object.fromEntries(DETAIL_FIELDS.map(key => [key, game[key] ?? null]));
+export const effectiveProjectUrl = (table='g') => `CASE WHEN json_type(o.details_json,'$.projectUrl') IS NOT NULL THEN json_extract(o.details_json,'$.projectUrl')
+  WHEN EXISTS(SELECT 1 FROM project_facts f WHERE f.game_id=${table}.id AND f.field='projectUrl')
+    THEN (SELECT json_extract(f.value_json,'$') FROM project_facts f WHERE f.game_id=${table}.id AND f.field='projectUrl')
+  ELSE ${table}.project_url END`;
 
 export async function applyDetails(db, games, onOverride = () => {}) {
   if (!games.length) return games;
   const rows = await query(db, 'SELECT game_id,details_json FROM project_overrides WHERE game_id IN(SELECT value FROM json_each(?))', JSON.stringify(games.map(game => game.id))).all();
   const overrides = new Map(rows.results.map(row => [row.game_id, JSON.parse(row.details_json)]));
+  const facts=await query(db,'SELECT game_id,field,value_json FROM project_facts WHERE game_id IN(SELECT value FROM json_each(?))',JSON.stringify(games.map(game=>game.id))).all();
+  const accepted=new Map();for(const row of facts.results){if(!accepted.has(row.game_id))accepted.set(row.game_id,{});accepted.get(row.game_id)[row.field]=JSON.parse(row.value_json);}
   return games.map(game => {
-    const details = overrides.get(game.id);
+    const details = {...accepted.get(game.id),...overrides.get(game.id)};
     if (details) onOverride(game.id, details);
     return { ...game, ...details };
   });

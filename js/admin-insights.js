@@ -4,14 +4,16 @@ import { projectPath } from './project-url.js';
 import { modelReleases } from './insight-evidence.js';
 import { trend, breakdown, valuesFor, mentionDimensions, compareRelease, csv, missingLabel } from './insight-analysis.js';
 import { feedbackOptions } from './feedback-options.js';
+import { releaseTimeline } from './release-evidence.js';
 
 const $=id=>document.getElementById(id),n=value=>Number(value).toLocaleString(),pct=(a,b)=>b?`${(a/b*100).toFixed(1)}%`:'No sample';
-let api,run=0,busy=false,data=null,usage=null,exportRows=[],evidenceLimit=20;
+let api,run=0,busy=false,data=null,usage=null,exportRows=[],evidenceLimit=20,publicView=false;
 const dimensionLabels={category:'Game genre',stage:'Current development stage',distribution:'Linked platform',styles:'Art style mentions',formats:'Visual format mentions',models:'AI model mentions',engines:'Engine mentions'};
 const label=value=>data?.categories?.find(item=>item.id===value)?.label||({unknown:'Unspecified',prototype:'Prototype',concept:'Concept',playable:'Playable build',released:'Released'})[value]||value;
-export function resetInsights(){run++;busy=false;data=null;usage=null;exportRows=[];for(const id of ['insightCoverage','trendChart','trendTable','insightSources','releaseComparison','genreBreakdown','platformBreakdown','stageBreakdown','storeCoverage','usageInsights','feedbackInsights'])$(id).replaceChildren();$('insightsContent').hidden=true;$('insightStatus').textContent='';$('refreshInsights').disabled=false;}
-export function initInsights({request}){
+export function resetInsights(){run++;busy=false;data=null;usage=null;exportRows=[];for(const id of ['insightCoverage','trendChart','trendTable','insightSources','releaseComparison','genreBreakdown','platformBreakdown','stageBreakdown','storeCoverage','storeReleaseTimeline','usageInsights','feedbackInsights'])$(id).replaceChildren();$('insightsContent').hidden=true;$('insightStatus').textContent='';$('refreshInsights').disabled=false;}
+export function initInsights({request,publicMode=false}){
   api=request;
+  publicView=publicMode;
   $('refreshInsights').addEventListener('click',()=>loadInsights(true));
   $('trendDimension').addEventListener('change',()=>{setValues('trend');paintTrend();});
   for(const id of ['trendValue','trendGrain','trendMeasure','trendFrom','trendTo'])$(id).addEventListener('change',()=>{evidenceLimit=20;paintTrend();});
@@ -25,7 +27,7 @@ export async function loadInsights(refresh=false){
   try{
     let cursor='',head,total;const games=[],seen=new Set(),ids=new Set();
     do{
-      const page=await api('/admin/insights'+(cursor?`?cursor=${encodeURIComponent(cursor)}`:''));if(current!==run)return;
+      const page=await api((publicView?'/insights':'/admin/insights')+(cursor?`?cursor=${encodeURIComponent(cursor)}`:''));if(current!==run)return;
       if(page.version!==1||!Array.isArray(page.games)||!page.pagination||!Number.isSafeInteger(page.pagination.total)||head&&page.generatedAt!==head.generatedAt||total!==undefined&&page.pagination.total!==total)throw new Error('The archive changed while loading. Refresh for a consistent view.');
       head ||= page;total=page.pagination.total;
       for(const game of page.games){if(ids.has(game.id))throw new Error('Duplicate evidence page. Refresh to retry.');ids.add(game.id);games.push(game);}
@@ -35,13 +37,18 @@ export async function loadInsights(refresh=false){
     }while(cursor);
     if(games.length!==total)throw new Error('Some projects are missing. Refresh to retry.');
     data={...head,games};usage=null;
-    try{usage=await api('/admin/usage');}catch(error){if(current===run)$('usageInsights').textContent=`Usage counts are unavailable: ${error.message}`;}
+    if(!publicView)try{usage=await api('/admin/usage');}catch(error){if(current===run)$('usageInsights').textContent=`Usage counts are unavailable: ${error.message}`;}
     if(current!==run)return;
-    $('insightsContent').hidden=false;$('insightStatus').textContent=`${n(games.length)} projects · evidence read ${dateLabel(data.observedAt)} · Admin preview`;
+    $('insightsContent').hidden=false;$('insightStatus').textContent=`${n(games.length)} projects · evidence read ${dateLabel(data.observedAt)}${publicView?' · Public catalogue evidence':' · Admin view'}`;
     setValues('trend');setValues('comparison');$('releaseEvent').innerHTML=modelReleases.map((item,i)=>`<option value="${i}">${e(item.name)} · ${item.date}</option>`).join('');$('releaseEvent').value=String(modelReleases.length-1);
-    paintOverview();paintTrend();paintComparison();paintUsage();
+    paintOverview();paintTrend();paintComparison();paintUsage();paintReleases();
   }catch(error){if(current===run)$('insightStatus').textContent=error.message;}
   finally{if(current===run){busy=false;$('refreshInsights').disabled=false;}}
+}
+function paintReleases(){
+  if(!$('storeReleaseTimeline'))return;
+  const {entries,periods}=releaseTimeline(data.games),reported=data.games.filter(game=>game.storeRelease).length;
+  $('storeReleaseTimeline').innerHTML=`<p>${n(entries.length)} distinct Steam apps have an exact, past release date and a released store status, from ${n(reported)} projects with a store date label. Each app counts once. Store dates can precede the AI work described in a later post. Demo and Early Access dates describe those builds, not a later full release. Itch.io status labels without exact release evidence stay out of this timeline.</p>${periods.length?`<div class="insight-table-wrap" tabindex="0" role="region" aria-label="Store release months"><table class="insight-table"><caption>Store-reported dates, separate from community post dates</caption><thead><tr><th scope="col">Month</th><th scope="col">Games</th><th scope="col">Demos</th><th scope="col">Early Access</th></tr></thead><tbody>${periods.map(row=>`<tr><th scope="row">${row.month}</th><td>${row.game}</td><td>${row.demo}</td><td>${row['early-access']}</td></tr>`).join('')}</tbody></table></div><details><summary>Compare release and first-shared dates</summary><div class="insight-table-wrap" tabindex="0" role="region" aria-label="Store release evidence"><table class="insight-table"><thead><tr><th scope="col">Game</th><th scope="col">Build</th><th scope="col">Store date</th><th scope="col">First shared</th><th scope="col">Evidence</th></tr></thead><tbody>${entries.map(game=>`<tr><th scope="row"><a href="${projectPath(game)}">${e(game.title)}</a></th><td>${e(game.storeRelease.kind)}</td><td>${game.storeRelease.date}</td><td>${game.firstSeenAt.slice(0,10)}</td><td><a href="${e(game.storeRelease.url)}" target="_blank" rel="noopener noreferrer">Steam ↗</a><br><small>Checked ${e(dateLabel(game.storeRelease.checkedAt))}</small></td></tr>`).join('')}</tbody></table></div></details>`:'<p>No exact store release dates are available yet.</p>'}`;
 }
 function setValues(prefix){
   if(!data)return;const dimension=$(prefix+'Dimension').value,select=$(prefix+'Value'),old=select.value;
@@ -79,11 +86,11 @@ function paintEvidence(){
     if(!mentions&&((from&&game.firstSeenAt.slice(0,10)<from)||(to&&game.firstSeenAt.slice(0,10)>to)||value&&!valuesFor(game,dimension).includes(value)))continue;
     for(const post of game.observations){
       if(mentions&&((from&&post.at.slice(0,10)<from)||(to&&post.at.slice(0,10)>to)||value&&!(post[dimension]||[]).includes(value)))continue;
-      const quote=post.evidence.find(item=>item.kind===dimension&&(!value||item.label===value));rows.push({game,post,quote});if(!mentions)break;
+      const quote=mentions?post.evidence.find(item=>item.kind===dimension&&(!value||item.label===value)):game.fieldEvidence?.find(item=>item.field===dimension);rows.push({game,post,quote});if(!mentions)break;
     }
   }
   rows.sort((a,b)=>b.post.at.localeCompare(a.post.at));
-  $('insightSources').innerHTML=rows.slice(0,evidenceLimit).map(({game,post,quote})=>`<li><h5><a href="${projectPath(game)}" target="_blank" rel="noopener noreferrer">${e(game.title)} ↗</a></h5><small>u/${e(game.author)} · ${e(dateLabel(post.at))} · ${e(post.coverage.replaceAll('-',' '))}${post.editedAt?' · Source edited':''}</small>${quote?`<blockquote>“${e(quote.text)}”</blockquote>`:''}<a class="text-link" href="${e(post.url)}" target="_blank" rel="noopener noreferrer">Original Reddit post ↗</a></li>`).join('')||'<li>No matching sources.</li>';
+  $('insightSources').innerHTML=rows.slice(0,evidenceLimit).map(({game,post,quote})=>`<li><${publicView?'h4':'h5'}><a href="${projectPath(game)}" target="_blank" rel="noopener noreferrer">${e(game.title)} ↗</a></${publicView?'h4':'h5'}><small>u/${e(game.author)} · ${e(dateLabel(post.at))} · ${e(post.coverage.replaceAll('-',' '))}${post.editedAt?' · Source edited':''}</small>${quote?`<blockquote>“${e(quote.text)}”</blockquote>`:''}<a class="text-link" href="${e(quote?.url||post.url)}" target="_blank" rel="noopener noreferrer">${quote?.url?'Classification source':'Original Reddit post'} ↗</a></li>`).join('')||'<li>No matching sources.</li>';
   $('sourceCount').textContent=`${Math.min(evidenceLimit,rows.length)} of ${n(rows.length)} matching source records`;$('moreInsightSources').hidden=rows.length<=evidenceLimit;
 }
 function paintComparison(){

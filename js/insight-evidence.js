@@ -5,23 +5,30 @@ export const artRules = [
   ['Photorealistic', /\bphoto[ -]?real(?:istic|ism)\b/i], ['ASCII', /\bascii\b/i],
   ['Vector art', /\bvector[ -]?(?:art|graphics)\b/i], ['Cartoon', /\bcartoon(?:ish|y)?\b/i],
   ['Watercolor', /\bwatercolou?r\b/i], ['Isometric', /\bisometric\b/i],
+  ['PS1 / retro 3D', /\b(?:ps1|playstation[ -]1)[ -]?(?:style|art(?:style)?|inspired|aesthetic)\b/i],
+  ['Anime', /\banime[ -]?(?:style|art|inspired|aesthetic)\b/i],
 ];
 const engineRules = [['Godot',/\bgodot\b/i],['Unity',/\bunity\b/i],['Unreal Engine',/\bunreal(?:\s+engine)?\b/i],['Phaser',/\bphaser\b/i],['Three.js',/\bthree\.?js\b/i],['GameMaker',/\bgame\s?maker\b/i],['Ren’Py',/\bren['’]?py\b/i],['Pygame',/\bpygame\b/i]];
 const formatRules = [['2D',/\b2[ -]?d\b/i],['3D',/\b3[ -]?d\b/i],['Text based',/\btext[ -](?:based|driven|adventure)\b/i]];
 const snippet = (text, match) => text.slice(Math.max(0, match.index - 65), Math.min(text.length, match.index + match[0].length + 110)).replace(/\s+/g, ' ').trim();
 export function extractMentions(value) {
-  const text = String(value || '').normalize('NFKC').replace(/[‐‑–−]/g, '-');
+  const text = String(value || '').normalize('NFKC').replace(/[‐‑–−]/g, '-')
+    .replace(/!\[[^\]]*\]\([^)]*\)/g,' ').replace(/\[([^\]]+)\]\([^)]*\)/g,'$1')
+    .replace(/https?:\/\/\S+/gi,' ').replace(/<[^>]*>/g,' ');
   const evidence = [], styles = [], formats = [], engines = [], models = new Set();
   for (const [kind,rules,values] of [['styles',artRules,styles],['formats',formatRules,formats],['engines',engineRules,engines]]) for (const [label,rule] of rules) {
     const match = rule.exec(text); if (match) { values.push(label); evidence.push({kind,label,text:snippet(text,match)}); }
   }
   function model(label, match) { if (models.has(label)) return; models.add(label); evidence.push({kind:'models',label,text:snippet(text,match)}); }
-  for (const match of text.matchAll(/\b(?:claude\s+)?(opus|sonnet|haiku)\s*[- ]?(\d+(?:[.-]\d+)?)\b/gi)) model(`Claude ${match[1][0].toUpperCase()+match[1].slice(1).toLowerCase()} ${match[2].replace('-', '.')}`,match);
+  for (const match of text.matchAll(/\b(?:claude\s+)?(opus|sonnet|haiku)\s*[- ]?(\d+(?:[.-]\d+)?)(?!\w|\.\d|[-]\d)/gi)) model(`Claude ${match[1][0].toUpperCase()+match[1].slice(1).toLowerCase()} ${match[2].replace('-', '.')}`,match);
   for (const match of text.matchAll(/\bclaude\s*[- ]?(\d+(?:[.-]\d+)?)\s+(opus|sonnet|haiku)\b/gi)) model(`Claude ${match[2][0].toUpperCase()+match[2].slice(1).toLowerCase()} ${match[1].replace('-', '.')}`,match);
-  for (const match of text.matchAll(/\bgpt\s*[- ]?((?:\d+(?:\.\d+)?)(?:o)?)(?:[- ](mini|codex|astra|sol|luna))?\b/gi)) model(`GPT-${match[1].toLowerCase()}${match[2]?' '+(/astra|sol|luna/i.test(match[2])?match[2][0].toUpperCase()+match[2].slice(1).toLowerCase():match[2].toLowerCase()):''}`,match);
-  for (const match of text.matchAll(/\bgemini\s*[- ]?(\d+(?:\.\d+)?)(?:\s+(pro|flash|image))?\b/gi)) model(`Gemini ${match[1]}${match[2]?' '+match[2][0].toUpperCase()+match[2].slice(1).toLowerCase():''}`,match);
-  for (const [label,rule] of [['Midjourney',/\bmidjourney\b/i],['Stable Diffusion',/\bstable diffusion\b/i],['FLUX',/\bflux[. -](?:1|2|dev|schnell|pro)\b/i],['DALL·E',/\bdall[· -]?e\b/i],['Nano Banana',/\bnano banana\b/i]]) {const match=rule.exec(text);if(match)model(label,match);}
-  for (const [prefix,label,rule] of [['Claude','Claude (version not stated)',/\bclaude\b/i],['GPT-','ChatGPT (version not stated)',/\bchatgpt\b/i],['Gemini','Gemini (version not stated)',/\bgemini\b/i]]) {const match=rule.exec(text);if(match&&![...models].some(name=>name.startsWith(prefix)))model(label,match);}
+  for (const match of text.matchAll(/\bgpt\s*[- ]?((?:\d+(?:\.\d+)?)(?:o)?)(?:[- ](mini|codex|astra|sol|luna))?(?!\w|\.\d|[-]\d)/gi)) model(`GPT-${match[1].toLowerCase()}${match[2]?' '+(/astra|sol|luna/i.test(match[2])?match[2][0].toUpperCase()+match[2].slice(1).toLowerCase():match[2].toLowerCase()):''}`,match);
+  for (const match of text.matchAll(/\bgpt[- ]image[- ](\d+(?:\.\d+)?)(?!\w|\.\d)/gi))model(`GPT-image-${match[1]}`,match);
+  for (const match of text.matchAll(/\bgemini\s*[- ]?(\d+(?:\.\d+)?)(?:\s+(pro|flash|image))?(?!\w|\.\d|[-]\d)/gi)) model(`Gemini ${match[1]}${match[2]?' '+match[2][0].toUpperCase()+match[2].slice(1).toLowerCase():''}`,match);
+  for (const match of text.matchAll(/\bnano banana(?:\s+(2|pro))?\b/gi))model(`Nano Banana${match[1]?' '+match[1][0].toUpperCase()+match[1].slice(1).toLowerCase():''}`,match);
+  for (const match of text.matchAll(/\bdall[· -]?e(?:[ -](2|3))?\b/gi))model(`DALL·E${match[1]?' '+match[1]:''}`,match);
+  for (const [label,rule] of [['Midjourney',/\bmidjourney\b/i],['Stable Diffusion',/\bstable diffusion\b/i],['FLUX',/\bflux[. -](?:1|2|dev|schnell|pro)\b/i],['Codex (version not stated)',/\b(?:openai\s+)?codex\b/i]]) {const match=rule.exec(text);if(match&&(label!=='Codex (version not stated)'||![...models].some(name=>/codex$/i.test(name))))model(label,match);}
+  for (const [prefix,label,rule] of [['Claude','Claude (version not stated)',/\bclaude\b/i],['GPT-','ChatGPT (version not stated)',/\bchat\s?gpt\b/i],['Gemini','Gemini (version not stated)',/\bgemini\b/i]]) {const match=rule.exec(text);if(match&&![...models].some(name=>name.startsWith(prefix)))model(label,match);}
   return {styles,formats,engines,models:[...models],evidence:evidence.slice(0,24)};
 }
 
