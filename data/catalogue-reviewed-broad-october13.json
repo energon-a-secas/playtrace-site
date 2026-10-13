@@ -1,0 +1,608 @@
+{
+  "version": 1,
+  "categories": {},
+  "facts": [
+    {
+      "gameId": "g_1wo0s54",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wo0s54/",
+      "evidence": "Works on phones (landscape is best) and saves your progress in the browser."
+    },
+    {
+      "gameId": "g_1wo0s54",
+      "field": "summary",
+      "value": "Draw missing ramps and mechanisms in crayon to complete physics chain reactions. Seven crayon types behave differently, with timed drawing levels and a boss every ten levels.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wo0s54/",
+      "evidence": "You draw the missing part in crayon and press GO."
+    },
+    {
+      "gameId": "g_1vum27g",
+      "field": "title",
+      "value": "Claude of Tanks",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vum27g/",
+      "evidence": "Claude of Tanks has 100+ playable vehicles across 16 unique maps"
+    },
+    {
+      "gameId": "g_1vum27g",
+      "field": "projectUrl",
+      "value": "https://cot.kevinliu.studio/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vum27g/",
+      "evidence": "Play free:"
+    },
+    {
+      "gameId": "g_1vum27g",
+      "field": "repositoryUrl",
+      "value": "https://github.com/Kevin-Liu-01/Claude-of-Tanks",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vum27g/",
+      "evidence": "https://github.com/Kevin-Liu-01/Claude-of-Tanks"
+    },
+    {
+      "gameId": "g_1w43tc2",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w43tc2/",
+      "evidence": "Scaling My FPS Game"
+    },
+    {
+      "gameId": "g_1w43tc2",
+      "field": "repositoryUrl",
+      "value": "https://github.com/greywatch-game/greywatch",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w43tc2/",
+      "evidence": "https://github.com/greywatch-game/greywatch"
+    },
+    {
+      "gameId": "g_1wbl165",
+      "field": "category",
+      "value": "survival",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wbl165/",
+      "evidence": "the game is a survival 2D shoot them up zombie horde game"
+    },
+    {
+      "gameId": "g_1wbl165",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wbl165/",
+      "evidence": "I added a preview system so you guys could test stuff"
+    },
+    {
+      "gameId": "g_1wbl165",
+      "field": "summary",
+      "value": "Survive waves of zombies in a 2D shooter, unlock weapons through play and compare scores on the leaderboard. The creator describes this as an unfinished preview.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wbl165/",
+      "evidence": "the game is a survival 2D shoot them up zombie horde game where swarms of enemies come at you and you fight with unlockable weapons through gameplay"
+    },
+    {
+      "gameId": "g_1wrkxdr",
+      "field": "category",
+      "value": "strategy",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wrkxdr/",
+      "evidence": "Roguelike Pixel Art Chess Game"
+    },
+    {
+      "gameId": "g_1wygb0h",
+      "field": "projectUrl",
+      "value": "https://fjordfall.fly.dev/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wygb0h/",
+      "evidence": "https://fjordfall.fly.dev/"
+    },
+    {
+      "gameId": "g_1wygb0h",
+      "field": "summary",
+      "value": "An NPC experiment where characters create art and sculptures in a shared world. Players can inspect building timelapses and the decisions behind them; the creator calls it a proof of concept.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wygb0h/",
+      "evidence": "It is still a proof of concept"
+    },
+    {
+      "gameId": "g_1w6hqew",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w6hqew/",
+      "evidence": "please give it a try and tell me if you think it is any good"
+    },
+    {
+      "gameId": "g_1w6hqew",
+      "field": "platforms",
+      "value": [
+        "Browser"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w6hqew/",
+      "evidence": "this was meant to be a browser based game"
+    },
+    {
+      "gameId": "g_1w8mm0x",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w8mm0x/",
+      "evidence": "You can play it here:"
+    },
+    {
+      "gameId": "g_1w8mm0x",
+      "field": "summary",
+      "value": "A text adventure about keeping a dysfunctional company’s IT running. Resolve tickets, navigate management decisions and get to know coworkers while trying to keep your job.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w8mm0x/",
+      "evidence": "a text-based adventure where you try to keep a dysfunctional company’s IT running"
+    },
+    {
+      "gameId": "g_1wjpanc",
+      "field": "category",
+      "value": "simulation",
+      "sourceUrl": "https://alex004-cat.itch.io/subway-tycoon",
+      "evidence": "A simple tycoon about managing your subway.",
+      "observedAt": "2026-10-12T14:37:08.450Z"
+    },
+    {
+      "gameId": "g_1wq462w",
+      "field": "title",
+      "value": "TYPEWALKER",
+      "sourceUrl": "https://albertsola.itch.io/look-up-a-typing-game",
+      "evidence": "TYPEWALKER",
+      "observedAt": "2026-10-12T14:37:21.560Z"
+    },
+    {
+      "gameId": "g_1wq462w",
+      "field": "category",
+      "value": "platformer",
+      "sourceUrl": "https://albertsola.itch.io/look-up-a-typing-game",
+      "evidence": "Platformer",
+      "observedAt": "2026-10-12T14:37:21.560Z"
+    },
+    {
+      "gameId": "g_1w10n2n",
+      "field": "title",
+      "value": "Yum Merge",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w10n2n/",
+      "evidence": "Yum Merge"
+    },
+    {
+      "gameId": "g_1w10n2n",
+      "field": "platforms",
+      "value": [
+        "Android"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w10n2n/",
+      "evidence": "https://play.google.com/store/apps/details?id=com.threezerocompany.foodmerge"
+    },
+    {
+      "gameId": "g_1wfnnwg",
+      "field": "title",
+      "value": "No Name Squish Game",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wfnnwg/",
+      "evidence": "update on No Name Squish Game"
+    },
+    {
+      "gameId": "g_1wfnnwg",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wfnnwg/",
+      "evidence": "I ported a web/mobile version if anyone wants to help playtest"
+    },
+    {
+      "gameId": "g_1wfnnwg",
+      "field": "platforms",
+      "value": [
+        "Browser",
+        "Mobile"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wfnnwg/",
+      "evidence": "I ported a web/mobile version if anyone wants to help playtest"
+    },
+    {
+      "gameId": "g_1wfnnwg",
+      "field": "projectUrl",
+      "value": "https://squishgame.online/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wfnnwg/",
+      "evidence": "http://squishgame.online/"
+    },
+    {
+      "gameId": "g_1vljpcc",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vljpcc/",
+      "evidence": "Game made from those prompts:"
+    },
+    {
+      "gameId": "g_1pvoisx",
+      "field": "stage",
+      "value": "released",
+      "sourceUrl": "https://geese-bumps.itch.io/sleigh-chase",
+      "evidence": "Released",
+      "observedAt": "2026-10-12T14:40:36.383Z"
+    },
+    {
+      "gameId": "g_1pvoisx",
+      "field": "platforms",
+      "value": [
+        "Sega Mega Drive / Genesis"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1pvoisx/",
+      "evidence": "three minigames for the Sega Mega Drive/Genesis: Sleigh Chase."
+    },
+    {
+      "gameId": "g_1pvoisx",
+      "field": "repositoryUrl",
+      "value": "https://github.com/Ganso/Sleigh-Chase",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1pvoisx/",
+      "evidence": "https://github.com/Ganso/Sleigh-Chase"
+    },
+    {
+      "gameId": "g_1po5nc2",
+      "field": "stage",
+      "value": "released",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1po5nc2/",
+      "evidence": "His game is now finished and online on:"
+    },
+    {
+      "gameId": "g_1q63oz3",
+      "field": "stage",
+      "value": "released",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1q63oz3/",
+      "evidence": "I was able to finish my game and deployed it to the app store today!"
+    },
+    {
+      "gameId": "g_1q63oz3",
+      "field": "platforms",
+      "value": [
+        "iOS"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1q63oz3/",
+      "evidence": "I have not deployed it to android yet"
+    },
+    {
+      "gameId": "g_1wtvkzv",
+      "field": "category",
+      "value": "platformer",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wtvkzv/",
+      "evidence": "I built a small platformer/agility game"
+    },
+    {
+      "gameId": "g_1wtvkzv",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wtvkzv/",
+      "evidence": "Give it a try and let me know what you think!"
+    },
+    {
+      "gameId": "g_1q6eiux",
+      "field": "title",
+      "value": "Neon Snake 3D",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1q6eiux/",
+      "evidence": "it's called Neon Snake 3D"
+    },
+    {
+      "gameId": "g_1q6eiux",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1q6eiux/",
+      "evidence": "you can play it on android by downloadin in google playstore"
+    },
+    {
+      "gameId": "g_1v3pf0n",
+      "field": "projectUrl",
+      "value": null,
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1v3pf0n/",
+      "evidence": "Right now, you can play it [itch.io](http://itch.io)"
+    },
+    {
+      "gameId": "g_1v3pf0n",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1v3pf0n/",
+      "evidence": "got online multiplayer working in my weird cat game!!"
+    },
+    {
+      "gameId": "g_1ucp6ja",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1ucp6ja/",
+      "evidence": "You can play it here:"
+    },
+    {
+      "gameId": "g_1x2vs3v",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://store.steampowered.com/app/5389040",
+      "evidence": "Face a swarm of enemies on the first stage, dodge their attacks, and stand against the boss",
+      "observedAt": "2026-10-12T23:27:00.231Z"
+    },
+    {
+      "gameId": "g_1unj6lm",
+      "field": "title",
+      "value": "Marble: Stay Curious",
+      "sourceUrl": "https://testflight.apple.com/join/FjgvHC8Q",
+      "evidence": "Join the Marble: Stay Curious beta",
+      "observedAt": "2026-10-12T14:39:18.727Z"
+    },
+    {
+      "gameId": "g_1unj6lm",
+      "field": "category",
+      "value": "educational",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1unj6lm/",
+      "evidence": "our goal is to build a smart interactive learning world"
+    },
+    {
+      "gameId": "g_1unj6lm",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1unj6lm/",
+      "evidence": "the beta is available on Testflight"
+    },
+    {
+      "gameId": "g_1unj6lm",
+      "field": "platforms",
+      "value": [
+        "iOS"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1unj6lm/",
+      "evidence": "the beta is available on Testflight"
+    },
+    {
+      "gameId": "g_1o5lg5w",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1o5lg5w/",
+      "evidence": "I vibe coded this FPS game"
+    },
+    {
+      "gameId": "g_1o5lg5w",
+      "field": "platforms",
+      "value": [
+        "Browser",
+        "Windows"
+      ],
+      "sourceUrl": "https://nimblefox.itch.io/arctic-warfare",
+      "evidence": "\"platforms\":[\"Browser\",\"Windows\"]",
+      "observedAt": "2026-10-12T14:40:42.263Z"
+    },
+    {
+      "gameId": "g_1op8t2p",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1op8t2p/",
+      "evidence": "Check this out:"
+    },
+    {
+      "gameId": "g_1ufsuad",
+      "field": "category",
+      "value": "card-game",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1ufsuad/",
+      "evidence": "unlock story scenes by winning solitaire hands"
+    },
+    {
+      "gameId": "g_1ufsuad",
+      "field": "stage",
+      "value": "released",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1ufsuad/",
+      "evidence": "Shipped a full iOS game"
+    },
+    {
+      "gameId": "g_1vfn1c8",
+      "field": "projectUrl",
+      "value": null,
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vfn1c8/",
+      "evidence": "I built an MCP that lets your Claude call for playtesters"
+    },
+    {
+      "gameId": "g_1vfn1c8",
+      "field": "summary",
+      "value": "An MCP and command-line tool for requesting human playtesters from a coding agent. This entry documents a development workflow, not a playable game.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vfn1c8/",
+      "evidence": "I built an MCP that lets your Claude call for playtesters"
+    },
+    {
+      "gameId": "g_1vb10zg",
+      "field": "title",
+      "value": "Singularity: AI Tycoon",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vb10zg/",
+      "evidence": "It's called Singularity: AI Tycoon."
+    },
+    {
+      "gameId": "g_1vb10zg",
+      "field": "stage",
+      "value": "released",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vb10zg/",
+      "evidence": "It's now live on the app stores"
+    },
+    {
+      "gameId": "g_1vb10zg",
+      "field": "platforms",
+      "value": [
+        "Android",
+        "iOS"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vb10zg/",
+      "evidence": "Google Play:"
+    },
+    {
+      "gameId": "g_1vwbgbs",
+      "field": "category",
+      "value": "card-game",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vwbgbs/",
+      "evidence": "I am making a card game inspired by YGO FM"
+    },
+    {
+      "gameId": "g_1tbq07g",
+      "field": "category",
+      "value": "strategy",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tbq07g/",
+      "evidence": "you build a factory to resist waves of zombies"
+    },
+    {
+      "gameId": "g_1tbq07g",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1tbq07g/",
+      "evidence": "You can try the game for free here"
+    },
+    {
+      "gameId": "g_1wrgvsh",
+      "field": "category",
+      "value": "rpg",
+      "sourceUrl": "https://store.steampowered.com/app/389810/Rubber_and_Lead",
+      "evidence": "2D Top Down Vehicle Combat RPG",
+      "observedAt": "2026-10-12T19:32:05.869Z"
+    },
+    {
+      "gameId": "g_1wrgvsh",
+      "field": "summary",
+      "value": "A creator-led rebuild of Rubber and Lead, a vehicle-combat game originally released in 2015. The new version is being rebuilt in Godot; the linked Steam page currently offers the original game.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wrgvsh/",
+      "evidence": "Then I'll archive the current build as a legacy branch and release the new version on the same store page."
+    },
+    {
+      "gameId": "g_1nvopfb",
+      "field": "title",
+      "value": "Wildbloom",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1nvopfb/",
+      "evidence": "Wildbloom"
+    },
+    {
+      "gameId": "g_1nvopfb",
+      "field": "category",
+      "value": "adventure",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1nvopfb/",
+      "evidence": "an exploration game about herbs, mushrooms, and the magic of nature"
+    },
+    {
+      "gameId": "g_1nvopfb",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1nvopfb/",
+      "evidence": "Here’s my 2-month progress update"
+    },
+    {
+      "gameId": "g_1oniy3t",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1oniy3t/",
+      "evidence": "It's a combat game."
+    },
+    {
+      "gameId": "g_1oniy3t",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1oniy3t/",
+      "evidence": "You can check out the game from this link:"
+    },
+    {
+      "gameId": "g_1x47azv",
+      "field": "title",
+      "value": "Reference Asset Compiler & Framewright",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x47azv/",
+      "evidence": "reference-asset-compiler (RAC)"
+    },
+    {
+      "gameId": "g_1x47azv",
+      "field": "projectUrl",
+      "value": null,
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x47azv/",
+      "evidence": "Here are the repos. Both are open source:"
+    },
+    {
+      "gameId": "g_1x47azv",
+      "field": "summary",
+      "value": "A workflow for generating, texturing and reviewing 3D assets. Reference Asset Compiler handles the pipeline, while Framewright provides an interface for viewing and planning creative outputs.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x47azv/",
+      "evidence": "I developed a front-end UI that works along with RAC to view outputs, called Framewright."
+    },
+    {
+      "gameId": "g_1wo0psd",
+      "field": "title",
+      "value": "Néon Orbite",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wo0psd/",
+      "evidence": "Néon Orbite is the very first game I've ever made and published."
+    },
+    {
+      "gameId": "g_1wo0psd",
+      "field": "stage",
+      "value": "released",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wo0psd/",
+      "evidence": "Néon Orbite is the very first game I've ever made and published."
+    },
+    {
+      "gameId": "g_1ugcm5m",
+      "field": "category",
+      "value": "racing",
+      "sourceUrl": "https://focaccai.itch.io/snow-bunny",
+      "evidence": "Racing",
+      "observedAt": "2026-10-12T17:20:58.751Z"
+    },
+    {
+      "gameId": "g_1ss1z72",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1ss1z72/",
+      "evidence": "City map, two shops and two small areas completed so far."
+    },
+    {
+      "gameId": "g_1vikbsm",
+      "field": "category",
+      "value": "rpg",
+      "sourceUrl": "https://store.steampowered.com/app/4684610/A_Knights_Fury__The_Vaults_of_Venom",
+      "evidence": "first-person dungeon-crawling adventure inspired by classic RPGs",
+      "observedAt": "2026-10-12T19:32:11.494Z"
+    }
+  ],
+  "flags": {
+    "g_1vurkkl": [
+      "Source post does not establish the game name, genre or public destination. Creator replies are the next source to inspect."
+    ],
+    "g_1wo0s54": [
+      "Public game name and destination are absent from the source post."
+    ],
+    "g_1wrkxdr": [
+      "The pixel-art tool link is not the chess game. Public build destination and name remain unconfirmed."
+    ],
+    "g_1wygb0h": [
+      "Creator said the build would be live soon. A responding page does not by itself confirm the promised NPC experience is playable."
+    ],
+    "g_1x29sie": [
+      "Creator is seeking future testers; no public build is established."
+    ],
+    "g_1vmx29v": [
+      "Source describes a trailer but does not establish a game name or public build."
+    ],
+    "g_1pwe0t3": [
+      "Linked earlier parts describe the same development series. Review the full history before merging. No public Steam listing is supplied."
+    ],
+    "g_1puvhud": [
+      "Linked later parts describe the same development series. Review the full history before merging. Genre and public build remain unclear."
+    ],
+    "g_1po5nc2": [
+      "Creator described a finished online game; latest check remains unverified (HTTP 523). Name and genre need independent evidence."
+    ],
+    "g_1q63oz3": [
+      "Development on Windows/Android is not a published platform. Genre remains unconfirmed."
+    ],
+    "g_1wtvkzv": [
+      "Creator supplied a playable link, but its latest HTTP check is 404. Needs a replacement destination."
+    ],
+    "g_1v67owh": [
+      "Repository is available; a public game build has not been established."
+    ],
+    "g_1x0s2ui": [
+      "Store says in development but cached evidence does not establish a downloadable or browser build."
+    ],
+    "g_1v3pf0n": [
+      "Creator linked the itch.io homepage, not their game. New name appears only in an image and remains unconfirmed."
+    ],
+    "g_1ucp6ja": [
+      "Source describes a movement experiment, not a specific primary genre. Name remains unconfirmed."
+    ],
+    "g_1vfn1c8": [
+      "Development tool/workflow, not a standalone game. Exclude from game-only interpretations pending a dedicated entry-type taxonomy."
+    ],
+    "g_1wkk8ka": [
+      "Creator describes abandoning or indefinitely postponing this project; no public build is supplied."
+    ],
+    "g_1wrgvsh": [
+      "Steam release evidence belongs to the original 2015 build, not the planned AI rebuild."
+    ],
+    "g_1x47azv": [
+      "Asset pipeline/workflow, not a standalone game. Exclude from game-only interpretations pending a dedicated entry-type taxonomy."
+    ],
+    "g_1ss1z72": [
+      "Playable content is described locally; a public destination and game name remain unconfirmed."
+    ]
+  }
+}

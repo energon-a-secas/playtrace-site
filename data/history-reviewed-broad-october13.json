@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "groups": [
+    {
+      "keep": "g_1wfnnwg",
+      "aliases": [
+        "g_1wc79bx"
+      ],
+      "reason": "Both posts are by Gambo7592 and explicitly link the same No Name Squish Game build at squishgame.online. The later update names that game, describes the same browser/mobile playtest and continues its character/story development. Keep the later entry and both source posts.",
+      "evidence": [
+        {
+          "postId": "1wc79bx",
+          "quote": "play here: [No Name Squish Game](https://squishgame.online/)"
+        },
+        {
+          "postId": "1wfnnwg",
+          "quote": "update on No Name Squish Game"
+        }
+      ]
+    }
+  ],
+  "splits": [
+    {
+      "from": "g_1vljpcc",
+      "postId": "1vwnfoa",
+      "reason": "The earlier post links a FarmRise Tycoon source repository and the Glitch game 9a698a9d-1b27-4c78-9256-0f458368737d. The later post explicitly describes War Of the Worlds, a tower-defense/city-builder with a different game ID, ad467bbb-ca91-44e9-8016-5067cdce954c. A shared author and prompt workflow do not make these the same game."
+    }
+  ],
+  "splitFacts": [
+    {
+      "gameId": "g_1vwnfoa",
+      "field": "title",
+      "value": "War Of the Worlds",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vwnfoa/",
+      "evidence": "I created War Of the Worlds"
+    },
+    {
+      "gameId": "g_1vwnfoa",
+      "field": "category",
+      "value": "strategy",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vwnfoa/",
+      "evidence": "So, it's Tower Defense meets City Builder."
+    },
+    {
+      "gameId": "g_1vwnfoa",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vwnfoa/",
+      "evidence": "Play Online or PC Here"
+    },
+    {
+      "gameId": "g_1vwnfoa",
+      "field": "platforms",
+      "value": [
+        "Browser",
+        "PC"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vwnfoa/",
+      "evidence": "Play Online or PC Here"
+    },
+    {
+      "gameId": "g_1vwnfoa",
+      "field": "summary",
+      "value": "Defend a city from waves of alien tripods while managing coal, trade and professions. This tower-defense and city-building game is set in the 1900s.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vwnfoa/",
+      "evidence": "So, it's Tower Defense meets City Builder."
+    }
+  ]
+}

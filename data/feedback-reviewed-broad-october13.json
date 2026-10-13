@@ -1,0 +1,466 @@
+{
+  "version": 1,
+  "reviews": [
+    {
+      "gameId": "g_1vurkkl",
+      "summary": "A player who tried the game briefly enjoyed it [1]. Another praised the audio, scenery and enemies but found turning required excessive mouse movement and reported glitches [2]. A separate visitor suggested adding interaction during the loading scene [3]. Mouse sensitivity and the wait before play are specific follow-ups; these reports have not been independently reproduced.",
+      "commentIds": [
+        "p554b3z",
+        "p54ymnl",
+        "p5812a9"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "general",
+          "tone": "praise",
+          "experience": "played"
+        },
+        {
+          "number": 2,
+          "theme": "controls",
+          "tone": "mixed",
+          "experience": "played"
+        },
+        {
+          "number": 3,
+          "theme": "pacing",
+          "tone": "suggestion",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wo0s54",
+      "summary": "One commenter explicitly reported playing and enjoying the drawing puzzle, comparing its feel to Line Rider [1]. Another liked the result and thought it suited children [2]. This is encouraging early feedback, but neither comment identifies a difficult level or tests the intended audience.",
+      "commentIds": [
+        "pbl3ijz",
+        "pblcq13"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "general",
+          "tone": "praise",
+          "experience": "played"
+        },
+        {
+          "number": 2,
+          "theme": "idea",
+          "tone": "praise",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1x11niu",
+      "summary": "One player liked the city and visual direction but reported weak performance even at lower settings, stuck pedestrians and difficult motorcycle steering [1]. A different player found a brief session amusing while also describing substantial roughness [2]. Another commenter requested controller support [3]. The detailed report was posted twice; it is cited once here.",
+      "commentIds": [
+        "peqkwye",
+        "per566s",
+        "pet5g2b"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "reliability",
+          "tone": "mixed",
+          "experience": "played"
+        },
+        {
+          "number": 2,
+          "theme": "general",
+          "tone": "mixed",
+          "experience": "played"
+        },
+        {
+          "number": 3,
+          "theme": "controls",
+          "tone": "suggestion",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1vum27g",
+      "summary": "A player using Firefox on a phone reported that any tap during a match opened settings, in both portrait and landscape [1]. A separate commenter reported smooth operation on Intel Xe graphics [2]. These contrasting device reports make mobile input a useful targeted check; they do not establish performance across all devices.",
+      "commentIds": [
+        "p545g36",
+        "p55enqm"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "controls",
+          "tone": "concern",
+          "experience": "played"
+        },
+        {
+          "number": 2,
+          "theme": "reliability",
+          "tone": "praise",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wtakg5",
+      "summary": "After about five minutes of play, one player reported repeatedly failing to catch another fish after their first success, while still finding the game appealing [1]. Another commenter asked for a larger Begin Journey control on phones [2]. A preview response praised the cozy atmosphere and art [3]. The fishing report needs reproduction before treating it as a confirmed defect.",
+      "commentIds": [
+        "pcutwpj",
+        "pctjqrt",
+        "pcui3nd"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "reliability",
+          "tone": "mixed",
+          "experience": "played"
+        },
+        {
+          "number": 2,
+          "theme": "accessibility",
+          "tone": "suggestion",
+          "experience": "unspecified"
+        },
+        {
+          "number": 3,
+          "theme": "visuals",
+          "tone": "praise",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1w43tc2",
+      "summary": "One visitor liked the appearance but could not start playing because of an AMD driver error; they acknowledged it might be local to their machine [1]. A separate preview response proposed destructible buildings [2]. The startup report needs the GPU, driver version and browser before its scope can be assessed.",
+      "commentIds": [
+        "p799k4z",
+        "pcjk0jk"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "reliability",
+          "tone": "mixed",
+          "experience": "unspecified"
+        },
+        {
+          "number": 2,
+          "theme": "idea",
+          "tone": "suggestion",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wbl165",
+      "summary": "One player described an easy opening followed by a sudden enemy increase and an enemy spawning directly on them [1]. The same person requested stranger, more entertaining upgrades [2]. Another player became bored by level three and criticised fast progression and inconsistent artwork [3]. These accounts suggest testing the difficulty curve and upgrade variety, rather than assuming the whole game is uniformly easy.",
+      "commentIds": [
+        "p93g55v",
+        "p93gakb",
+        "p8sese9"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "challenge",
+          "tone": "concern",
+          "experience": "played"
+        },
+        {
+          "number": 2,
+          "theme": "idea",
+          "tone": "suggestion",
+          "experience": "unspecified"
+        },
+        {
+          "number": 3,
+          "theme": "pacing",
+          "tone": "concern",
+          "experience": "played"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wrkxdr",
+      "summary": "One commenter explicitly said they had played and found the chess game interesting [1]. A separate preview response liked its compact presentation and wanted to see it developed further [2]. These comments support a follow-up about which chess decisions were engaging; they do not establish replayability or commercial demand.",
+      "commentIds": [
+        "pcellzw",
+        "pcdnsla"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "general",
+          "tone": "praise",
+          "experience": "played"
+        },
+        {
+          "number": 2,
+          "theme": "general",
+          "tone": "praise",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wygb0h",
+      "summary": "One visitor found the NPC idea promising but reported severe lag and keyboard turning that worked only to the left [1]. In a follow-up, the same person identified Linux and Firefox [2]. These two comments describe one attempt and provide a concrete browser-and-input combination to investigate.",
+      "commentIds": [
+        "pe3kuba",
+        "pe3vixn"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "controls",
+          "tone": "mixed",
+          "experience": "played"
+        },
+        {
+          "number": 2,
+          "theme": null,
+          "tone": null,
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1w6hqew",
+      "summary": "A player who tried several levels did not find a mechanic that sustained their interest [1]. Another commenter suggested replacing the logo with imagery drawn from the game's actual objects [2]. The useful follow-ups are what creates an interesting decision during play and whether the first impression accurately represents that experience.",
+      "commentIds": [
+        "p9tevgb",
+        "p7ntezu"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "idea",
+          "tone": "concern",
+          "experience": "played"
+        },
+        {
+          "number": 2,
+          "theme": "visuals",
+          "tone": "suggestion",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1w8mm0x",
+      "summary": "A player who completed the first in-game week praised the jokes and presentation, connecting the humor with their own IT experience, and asked about a downloadable mobile version [1]. This is one detailed positive account; it does not establish that other audiences will respond similarly.",
+      "commentIds": [
+        "p96imyw"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "general",
+          "tone": "praise",
+          "experience": "played"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wjpanc",
+      "summary": "One visitor tried to play but found the text entirely in Russian [1]. This points to language selection or localization as an access barrier to check. The comment does not establish whether the issue remains in the current build.",
+      "commentIds": [
+        "pamq434"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "accessibility",
+          "tone": "concern",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1x208pw",
+      "summary": "One commenter reported being stuck at zero percent [1]. The brief report gives no device, browser or duration, so the next useful question is where that indicator appeared and whether loading ever progressed. It is not evidence of a site-wide outage.",
+      "commentIds": [
+        "peyrel4"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "reliability",
+          "tone": "concern",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wq462w",
+      "summary": "A preview viewer thought the game looked easy and proposed difficulty options [1]. Another commenter asked how obscured words become visible and whether learning a word affects later encounters [2]. These are questions about the presented challenge and rules, without an explicit play report.",
+      "commentIds": [
+        "pc0x5ok",
+        "pc123ub"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "challenge",
+          "tone": "suggestion",
+          "experience": "preview"
+        },
+        {
+          "number": 2,
+          "theme": "idea",
+          "tone": null,
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1w10n2n",
+      "summary": "One player reported ten minutes without ads despite seeing an option to pay for their removal [1]. Another said ads appeared initially and then stopped [2]. These observations suggest checking ad delivery and the wording of the purchase offer; neither establishes whether payments or ads are currently malfunctioning.",
+      "commentIds": [
+        "p81491j",
+        "p81om44"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "reliability",
+          "tone": null,
+          "experience": "played"
+        },
+        {
+          "number": 2,
+          "theme": "reliability",
+          "tone": null,
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1x29sie",
+      "summary": "A preview viewer praised the interface but found the environment's visual quality inconsistent and wanted a clearer explanation of how the proposed systems connect [1]. Another liked the presentation but noticed interaction sounds without a visible result during hoverboard movement [2]. These are observations of the showcase, not reports from an online playtest.",
+      "commentIds": [
+        "pf0fghj",
+        "pf0svyn"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "visuals",
+          "tone": "mixed",
+          "experience": "preview"
+        },
+        {
+          "number": 2,
+          "theme": "controls",
+          "tone": "mixed",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wfnnwg",
+      "summary": "A visitor to the earlier web build encountered a hosting usage-limit message [1]; their follow-up credited a quick fix [2], so this should not be read as a current outage. Another reported overlapping HUD elements after resizing and expected mouse camera control [3]. On a later update, a separate commenter proposed mouse-driven rotation with an option to reverse the orbit [4]. Camera behavior and responsive layout are concrete follow-ups across the retained history.",
+      "commentIds": [
+        "p8z6kk3",
+        "p8zce6n",
+        "p8yk3k7",
+        "p9u5g7o"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "reliability",
+          "tone": "concern",
+          "experience": "unspecified"
+        },
+        {
+          "number": 2,
+          "theme": "reliability",
+          "tone": "praise",
+          "experience": "unspecified"
+        },
+        {
+          "number": 3,
+          "theme": "accessibility",
+          "tone": "concern",
+          "experience": "played"
+        },
+        {
+          "number": 4,
+          "theme": "controls",
+          "tone": "suggestion",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1vljpcc",
+      "summary": "One commenter found the sound effects irritating and the controls awkward [1]. The comment does not explicitly say whether they played or watched the demonstration. A focused follow-up should ask which input and sound caused trouble, and in what context.",
+      "commentIds": [
+        "p31yr4z"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "controls",
+          "tone": "concern",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1vwnfoa",
+      "summary": "Two preview viewers said the cinematic trailer set expectations that the gameplay footage did not meet [1][2]. One specifically recommended showing gameplay from the start [2]. Another asked for further work on animation, shaders and the empty background before they would consider buying [3]. These are reactions to the showcase, not measured purchase demand or verified play reports.",
+      "commentIds": [
+        "p5ii7oh",
+        "p5ii1dn",
+        "p5iiqx5"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "visuals",
+          "tone": "concern",
+          "experience": "preview"
+        },
+        {
+          "number": 2,
+          "theme": "visuals",
+          "tone": "suggestion",
+          "experience": "preview"
+        },
+        {
+          "number": 3,
+          "theme": "visuals",
+          "tone": "concern",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1vmx29v",
+      "summary": "One viewer liked the trailer but felt it showed too little variation in ships, weapons and progression to suggest lasting interest [1]. A separate commenter praised its appearance [2]. The first reaction is a concern about what the trailer communicates; it does not prove that upgrades or a broader game loop are absent.",
+      "commentIds": [
+        "p3mvjtp",
+        "p3dzemt"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "idea",
+          "tone": "mixed",
+          "experience": "preview"
+        },
+        {
+          "number": 2,
+          "theme": "visuals",
+          "tone": "praise",
+          "experience": "preview"
+        }
+      ]
+    }
+  ]
+}
