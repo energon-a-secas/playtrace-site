@@ -10,6 +10,7 @@ export function repositoryUrl(value) {
 }
 export function projectLinks(raw) {
   const body = typeof raw.selftext === 'string' ? raw.selftext.slice(0, 12000) : '';
+  const laterGame = /\bthis is my (?:second|third|\d+(?:nd|rd|th)) game\b/i.test(body);
   const links = [raw.url, ...(body.match(/https?:\/\/[^\s<>"\[\]()*`]+/g) || []).slice(0, 30)];
   let repo = null;
   const playable = [];
@@ -19,6 +20,10 @@ export function projectLinks(raw) {
     const position = body.indexOf(link), context = position >= 0 ? body.slice(Math.max(0, position - 160), position) : '';
     const paragraph = position >= 0 ? body.slice(Math.max(0, body.lastIndexOf('\n\n',position)),position) : '';
     if (/\b\d+ years? ago\b/i.test(paragraph) && /\b(?:first|old|previous)\b/i.test(paragraph)) continue;
+    // A showcase of a later game may also promote the maker's first one.
+    // Read the whole paragraph: the promotion can begin well before the URL.
+    if (laterGame && /\bmy first(?: (?:upcoming|released))? game\b/i.test(paragraph)
+      && !/\b(?:play|try|download) (?:this|the new|my new) (?:game|build|demo)\b/i.test(context.slice(-70))) continue;
     if(/\b(?:similar to my|including my|my (?:previous|other|older) game|my most recently released game)\b/i.test(context)
       && !/\b(?:play|try|download) (?:this|the new|my new) (?:game|build|demo)\b/i.test(context.slice(-70)))continue;
     if (repositoryUrl(candidate)) {

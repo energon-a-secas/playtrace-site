@@ -67,3 +67,13 @@ test('comparison links to another game do not become the featured project destin
   assert.equal(projectLinks({selftext:'12 years ago I released my first game, still here: https://maker.itch.io/old\n\nMy new game is here: https://maker.itch.io/new'}).projectUrl,'https://maker.itch.io/new');
   assert.equal(projectLinks({selftext:'PS1 art inspired by another game.\nhttps://easy-roads.pages.dev/\nRuns in the browser (free to play).'}).projectUrl,'https://easy-roads.pages.dev/');
 });
+
+test('a first-game promotion does not identify a later prototype, even after a long paragraph',()=>{
+  const oldUrl='https://store.steampowered.com/app/5073210/BoneHeads/';
+  const showcase='This is my second game. A first-person swordfighting and parkour prototype.\n\n';
+  const promotion="If you want to check out my first upcoming game, wishlisting would mean a lot. It's basically the same combat system but in 2D. All the work for the sword physics translated really well into 3D, and it would have taken months to build it from scratch.\n"+oldUrl;
+  assert.equal(projectLinks({url:oldUrl,selftext:showcase+promotion}).projectUrl,null);
+  assert.equal(projectLinks({selftext:showcase+promotion+'\n\nPlay this game here: https://maker.itch.io/parkour'}).projectUrl,'https://maker.itch.io/parkour');
+  assert.equal(projectLinks({selftext:showcase+'My first game inspired this one. Play this game here: https://maker.itch.io/parkour'}).projectUrl,'https://maker.itch.io/parkour');
+  assert.equal(projectLinks({selftext:"This is my first game. If you want to check out my first upcoming game: "+oldUrl}).projectUrl,oldUrl.replace(/\/$/,''));
+});

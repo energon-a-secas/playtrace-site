@@ -64,3 +64,7 @@ The [history consolidation](history-consolidation-october12.md) joins the review
 ## Feedback research leads, October 12
 
 The public feedback report now provides experience filters, project-ranked research leads, inline topic/source inspection and filtered CSV exports. It reuses approved evidence; no model requests, new reviews or visitor contributions are created. [Definitions and scope](feedback-operations.md) keep unknown experience, mixed reactions and matched follow-ups separate.
+
+## Metadata behind feedback, October 13
+
+The [34-project metadata review](feedback-metadata-october13.md) accepts 49 source-backed facts across 28 projects, repairs game identities and destinations, and separates demo availability from full releases. Among the same 51 reviewed projects, primary-genre coverage rises from 28 to 40 and known build states from 27 to 44. Admin edits, uploaded previews, existing feedback and dated link observations remain intact.

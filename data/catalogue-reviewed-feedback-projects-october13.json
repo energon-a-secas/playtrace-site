@@ -1,0 +1,428 @@
+{
+  "categories": {},
+  "facts": [
+    {
+      "gameId": "g_1x0e13w",
+      "field": "category",
+      "value": "other",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x0e13w/",
+      "evidence": "If you've built a game around one repeated action, what kept it fun?"
+    },
+    {
+      "gameId": "g_1x0e13w",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x0e13w/",
+      "evidence": "The trailer shows an early build."
+    },
+    {
+      "gameId": "g_1wznj1v",
+      "field": "category",
+      "value": "rpg",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wznj1v/",
+      "evidence": "so i've been working on this RPG called HearthMoon"
+    },
+    {
+      "gameId": "g_1wznj1v",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wznj1v/",
+      "evidence": "i'm still play testing constantly and finding a bunch of stuff that's broken"
+    },
+    {
+      "gameId": "g_1wzly3u",
+      "field": "title",
+      "value": "Mechrachnophobia",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wzly3u/",
+      "evidence": "Pushing my game to the limit to get 1000 players on screen at once. Mechrachnophobia"
+    },
+    {
+      "gameId": "g_1wz7nzc",
+      "field": "category",
+      "value": "card-game",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wz7nzc/",
+      "evidence": "Roguelike deckbuilder with 90s arcade aesthetic."
+    },
+    {
+      "gameId": "g_1wy1n20",
+      "field": "title",
+      "value": "Tiny Tactics",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wy1n20/",
+      "evidence": "I've been building Tiny Tactics, a turn-based tactics game"
+    },
+    {
+      "gameId": "g_1wy1n20",
+      "field": "category",
+      "value": "strategy",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wy1n20/",
+      "evidence": "I've been building Tiny Tactics, a turn-based tactics game"
+    },
+    {
+      "gameId": "g_1wy1n20",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wy1n20/",
+      "evidence": "It's free, runs in your browser, and needs no download or account."
+    },
+    {
+      "gameId": "g_1wxkhi3",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wxkhi3/",
+      "evidence": "Free to play, No Ads:"
+    },
+    {
+      "gameId": "g_1wuf9gi",
+      "field": "title",
+      "value": "3 months into making my dream game - Mirror's Edge/Dying Light meets Dark Messiah of Might and Magic/Dishonored",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wuf9gi/",
+      "evidence": "3 months into making my dream game - Mirror's Edge/Dying Light meets Dark Messiah of Might and Magic/Dishonored"
+    },
+    {
+      "gameId": "g_1wuf9gi",
+      "field": "projectUrl",
+      "value": null,
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wuf9gi/",
+      "evidence": "If you want to check out my first upcoming game, wishlisting would mean a lot."
+    },
+    {
+      "gameId": "g_1wuf9gi",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wuf9gi/",
+      "evidence": "This is my second game. Definitely has a long way to go"
+    },
+    {
+      "gameId": "g_1wt45me",
+      "field": "projectUrl",
+      "value": "https://ja.sperdeboer.nl/antkeeper/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wt45me/",
+      "evidence": "You can try it out [here](http://ja.sperdeboer.nl/antkeeper)."
+    },
+    {
+      "gameId": "g_1wt45me",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wt45me/",
+      "evidence": "You can try it out [here](http://ja.sperdeboer.nl/antkeeper)."
+    },
+    {
+      "gameId": "g_1wt45me",
+      "field": "category",
+      "value": "strategy",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wt45me/",
+      "evidence": "You manage an ant colony and you build your nest, find food and water in the overworld, train your soldier ants and defeat the enemy."
+    },
+    {
+      "gameId": "g_1wsx4ne",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wsx4ne/",
+      "evidence": "If anyone is interested in playing maybe I'll publish it"
+    },
+    {
+      "gameId": "g_1wopakm",
+      "field": "category",
+      "value": "racing",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wopakm/",
+      "evidence": "I made a browser racing game where 22 cats race robot vacuums"
+    },
+    {
+      "gameId": "g_1wopakm",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wopakm/",
+      "evidence": "Play it here: [formulacat.nitzan.games](https://formulacat.nitzan.games/)"
+    },
+    {
+      "gameId": "g_1wmzmez",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wmzmez/",
+      "evidence": "Single HTML file, no install, no account, saves locally or play it online"
+    },
+    {
+      "gameId": "g_1wmzmez",
+      "field": "platforms",
+      "value": [
+        "Browser",
+        "Mobile"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wmzmez/",
+      "evidence": "Single HTML file, no install, no account, saves locally or play it online (try your phone too...I made it responsive first)"
+    },
+    {
+      "gameId": "g_1wmz6w0",
+      "field": "title",
+      "value": "Ninefir: The Black Book",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wmz6w0/",
+      "evidence": "Ninefir: The Black Book is an action RPG"
+    },
+    {
+      "gameId": "g_1wmz6w0",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wmz6w0/",
+      "evidence": "I'm creating a monster tamer RPG, and this is how it's coming along so far!"
+    },
+    {
+      "gameId": "g_1wmotbq",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wmotbq/",
+      "evidence": "Try Pilgrimage in your browser"
+    },
+    {
+      "gameId": "g_1wlu5sj",
+      "field": "category",
+      "value": "arcade",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wlu5sj/",
+      "evidence": "I wanted to see what classic Snake would feel like if you could fly in any direction"
+    },
+    {
+      "gameId": "g_1wlcv9z",
+      "field": "category",
+      "value": "card-game",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wlcv9z/",
+      "evidence": "This is Clanbound, a roguelike deckbuilder in the vein of Monster Train and Wildfrost."
+    },
+    {
+      "gameId": "g_1wkxxd6",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wkxxd6/",
+      "evidence": "Please test out this free game I made with ai"
+    },
+    {
+      "gameId": "g_1wj0vuv",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wj0vuv/",
+      "evidence": "I'm planning on open sourcing the game and the level editor once it's done"
+    },
+    {
+      "gameId": "g_1wik50b",
+      "field": "title",
+      "value": "Yolk Sumo",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wik50b/",
+      "evidence": "it's called Yolk Sumo."
+    },
+    {
+      "gameId": "g_1wik50b",
+      "field": "category",
+      "value": "party-game",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wik50b/",
+      "evidence": "it's called Yolk Sumo. 60 seconds, one buttery pan, up to 8 friends."
+    },
+    {
+      "gameId": "g_1wgw7wo",
+      "field": "projectUrl",
+      "value": "https://90to90.com/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wgw7wo/",
+      "evidence": "Check it here: [90to90.com](http://90to90.com)"
+    },
+    {
+      "gameId": "g_1wgw7wo",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wgw7wo/",
+      "evidence": "No registration to start, and all 90 levels are free now."
+    },
+    {
+      "gameId": "g_1wg3w54",
+      "field": "category",
+      "value": "sports",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wg3w54/",
+      "evidence": "Scroll FC, a browser-based football game"
+    },
+    {
+      "gameId": "g_1wg3w54",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wg3w54/",
+      "evidence": "Play it here: [https://scrollfc.vercel.app/](https://scrollfc.vercel.app/)"
+    },
+    {
+      "gameId": "g_1wbhp91",
+      "field": "title",
+      "value": "WINDWARD",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wbhp91/",
+      "evidence": "I used Codex to build WINDWARD: a little browser game about flying medicine and mail between islands."
+    },
+    {
+      "gameId": "g_1wbhp91",
+      "field": "projectUrl",
+      "value": "https://windward-liart.vercel.app/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wbhp91/",
+      "evidence": "Free prototype: [https://windward-liart.vercel.app](https://windward-liart.vercel.app)"
+    },
+    {
+      "gameId": "g_1w9jqem",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w9jqem/",
+      "evidence": "a browser-based fighter jet combat game."
+    },
+    {
+      "gameId": "g_1w9jqem",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w9jqem/",
+      "evidence": "Play it here: [https://www.warlightning.com/](https://www.warlightning.com/)"
+    },
+    {
+      "gameId": "g_1w8ryqn",
+      "field": "title",
+      "value": "Powerstate",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w8ryqn/",
+      "evidence": "I shared Powerstate here a few weeks ago"
+    },
+    {
+      "gameId": "g_1w8ryqn",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w8ryqn/",
+      "evidence": "You can play it directly in the browser (100% free):"
+    },
+    {
+      "gameId": "g_1w770n4",
+      "field": "category",
+      "value": "platformer",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w770n4/",
+      "evidence": "I made a platformer you have to play with your eyes closed"
+    },
+    {
+      "gameId": "g_1w1quz1",
+      "field": "title",
+      "value": "RaidMade",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w1quz1/",
+      "evidence": "RaidMade — a smaller, simpler game focused almost entirely on the fun part: preparing a raid"
+    },
+    {
+      "gameId": "g_1w1quz1",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w1quz1/",
+      "evidence": "preparing a raid, figuring out the best way in, blowing through walls and doors, grabbing the loot, and preparing for the next target."
+    },
+    {
+      "gameId": "g_1vtivsm",
+      "field": "category",
+      "value": "card-game",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vtivsm/",
+      "evidence": "As you climb the tower, you earn spell cards as rewards and combine them to remember new spells."
+    },
+    {
+      "gameId": "g_1vtivsm",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vtivsm/",
+      "evidence": "I’ve just released the Steam demo for my turn-based roguelite, Grimoire of Hecate: Tower of Starlight!"
+    },
+    {
+      "gameId": "g_1vta5jl",
+      "field": "projectUrl",
+      "value": "https://rosebud.ai/play/1-bit-terror",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vta5jl/",
+      "evidence": "https://rosebud.ai/play/1-bit-terror"
+    },
+    {
+      "gameId": "g_1vta5jl",
+      "field": "category",
+      "value": "horror",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vta5jl/",
+      "evidence": "1-Bit Terror: My dream horror maze game after 2 months of development"
+    },
+    {
+      "gameId": "g_1vta5jl",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vta5jl/",
+      "evidence": "1-Bit Terror is Desktop AND mobile friendly! [https://rosebud.ai/play/1-bit-terror](https://rosebud.ai/play/1-bit-terror)"
+    },
+    {
+      "gameId": "g_1vqpih8",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vqpih8/",
+      "evidence": "Finished my first 3D tank shooting game"
+    }
+  ],
+  "flags": {
+    "g_1x1hk10": [
+      "Unnamed sailing prototype; Uncharted Waters Online is an inspiration, not this game’s name. No public build link in the source."
+    ],
+    "g_1x0e13w": [
+      "Wrongosaurus is explicitly a working title. Primary genre remains unspecified. The word action describes a repeated digging task, not an Action genre; the inherited classification is cleared."
+    ],
+    "g_1wznj1v": [
+      "Early access is a future plan in this post, not a verified release date."
+    ],
+    "g_1wzly3u": [
+      "Name is explicit in the source title; the video-only post does not establish a genre or public build."
+    ],
+    "g_1wxkhi3": [
+      "A free build is offered, but the post requests visual feedback without describing the core gameplay genre."
+    ],
+    "g_1wvqkjc": [
+      "The creator offers to share the link in comments; source post alone does not name the game or provide its destination. Review creator replies."
+    ],
+    "g_1wuf9gi": [
+      "Identity corrected: this is the creator’s unnamed second game, a 3D swordfighting and parkour prototype. BoneHeads is explicitly the earlier 2D game promoted at the end. Retain the original headline until a name is confirmed. No build URL or target OS is established for this prototype."
+    ],
+    "g_1wu3sii": [
+      "Easy Delivery Co and Slowroads are inspirations. Do not adopt either title or infer competitive racing from driving alone. Confirm the game’s name and primary genre."
+    ],
+    "g_1wt45me": [
+      "The Wikipedia link describes Dungeon Keeper, an inspiration. Use the creator’s Antkeeper link with its trailing slash: the path without it redirects to HTTP; the HTTPS slash variant returns the Antkeeper page without a downgrade. Strategy is a reviewed primary category based on colony construction, resources and combat; gameplay has not been tested."
+    ],
+    "g_1wsx4ne": [
+      "The creator has not offered a public build. Procedural exploration alone does not establish a finished adventure-game loop."
+    ],
+    "g_1wmzmez": [
+      "The URL suggests AI Ascendancy; confirm that name in page metadata or a creator reply before replacing the source headline."
+    ],
+    "g_1wmz6w0": [
+      "Name is explicit in the post; there is no public build link or release announcement."
+    ],
+    "g_1wmotbq": [
+      "Playable records the creator’s offered browser build. The stored Vercel link returned 404 in the prior dated check; it is not proof of current availability. Review a replacement on the creator’s own domain."
+    ],
+    "g_1wlu5sj": [
+      "Arcade is a reviewed primary category for the creator-described flying Snake loop. No project title or direct Playgama destination is provided in this source."
+    ],
+    "g_1wkxxd6": [
+      "The source offers a public beta; its request for feedback on the concept is not a concept-only build. Primary genre remains unconfirmed."
+    ],
+    "g_1wj0vuv": [
+      "Quank? is presented tentatively. Confirm the name and public build in a creator reply; a WebGL implementation alone is not public availability."
+    ],
+    "g_1wik50b": [
+      "Party game is a reviewed primary category for short sumo rounds with up to eight friends. Public build availability remains unconfirmed."
+    ],
+    "g_1wgw7wo": [
+      "The creator explicitly offers the 90to90.com build. The linked page’s og:site_name and navigation corroborate 90to90 as the name. Core genre remains unconfirmed."
+    ],
+    "g_1w1quz1": [
+      "Action is a reviewed primary category based on the described raids, explosives and destructible structures; Rust is the inspiration, not the project title."
+    ],
+    "g_1vzy2hs": [
+      "A driving demo is shown, but no public destination or confirmed project name is provided. Do not infer a downloadable release from a video."
+    ],
+    "g_1vywhyh": [
+      "The source shares a GitHub repository, not a hosted browser build. Build and release status remain unconfirmed."
+    ],
+    "g_1vtivsm": [
+      "The source released a demo. Full-game Steam listing remains coming soon; preserve the independently verified demo and separate release dates. Card game is the reviewed primary category for the described spell-card crafting loop."
+    ],
+    "g_1vta5jl": [
+      "The creator offers a Rosebud build for desktop and mobile; this review does not establish a full commercial release."
+    ],
+    "g_1vqpih8": [
+      "The creator describes finishing a tank shooting game but gives no title or public build link. Finished footage does not establish public release."
+    ],
+    "g_1vo6hl0": [
+      "The source offers a browser build but not its project name. Driving, jumps and story progression do not establish competitive racing; review page metadata or creator replies."
+    ]
+  }
+}
