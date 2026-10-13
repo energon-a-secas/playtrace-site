@@ -1,0 +1,397 @@
+{
+  "version": 1,
+  "reviewedAt": "2026-10-13",
+  "scope": "Verified creator replies, current linked public pages, and explicitly reviewed development histories.",
+  "groups": [
+    {
+      "keep": "g_1wvqkjc",
+      "aliases": [
+        "g_1wszjg7",
+        "g_1wr30mq"
+      ],
+      "reason": "The same creator names Nova Defender in the original showcase, follows it with visual updates and then supplies the current NOVA DEFENDER build in the latest thread. The consecutive space-game updates describe this same project.",
+      "evidence": [
+        {
+          "postId": "1wr30mq",
+          "quote": "Nova defender is a fast paced game"
+        },
+        {
+          "postId": "1wszjg7",
+          "quote": "Did some visual updates to my game"
+        },
+        {
+          "postId": "1wvqkjc",
+          "quote": "So I updated my space game"
+        }
+      ],
+      "identitySource": "https://www.reddit.com/r/aigamedev/comments/1wvqkjc/_/pdhmvuh/"
+    },
+    {
+      "keep": "g_1vo6hl0",
+      "aliases": [
+        "g_1vf84kn"
+      ],
+      "reason": "The later bicycle-game showcase explicitly follows up on the earlier endless-road prototype, and both posts from Bottle_777 link the identical playable build.",
+      "evidence": [
+        {
+          "postId": "1vo6hl0",
+          "quote": "A few days ago I posted my little browser bike game here"
+        },
+        {
+          "postId": "1vf84kn",
+          "quote": "https://royal-waterfall-a15e.quietforge.workers.dev/"
+        }
+      ]
+    },
+    {
+      "keep": "g_1wtrvz1",
+      "aliases": [
+        "g_1wmzmez"
+      ],
+      "reason": "The same creator links the identical AI Ascendancy GitHub Pages build in both posts and describes the later post as its final overhaul based on earlier feedback. Retain the prior summary unchanged with its original dated citations.",
+      "adoptFacts": {
+        "platforms": "g_1wmzmez",
+        "stage": "g_1wmzmez"
+      },
+      "adoptPublishedReview": "g_1wmzmez",
+      "evidence": [
+        {
+          "postId": "1wtrvz1",
+          "quote": "AI Ascendancy is complete E2E (based on feedback from here)"
+        },
+        {
+          "postId": "1wmzmez",
+          "quote": "https://franktudor.github.io/ai-ascendancy/"
+        }
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "gameId": "g_1wvqkjc",
+      "field": "projectUrl",
+      "value": "https://nova-defender.expo.app/game/index.html",
+      "source": {
+        "type": "comment",
+        "postId": "1wvqkjc",
+        "commentId": "pdhmvuh",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wvqkjc/_/pdhmvuh/",
+        "evidence": "https://nova-defender.expo.app/game/index.html"
+      }
+    },
+    {
+      "gameId": "g_1wvqkjc",
+      "field": "title",
+      "value": "NOVA DEFENDER — Last Signal",
+      "source": {
+        "type": "page",
+        "key": "nova",
+        "evidence": "NOVA DEFENDER — Last Signal"
+      },
+      "support": [
+        {
+          "type": "comment",
+          "postId": "1wvqkjc",
+          "commentId": "pdhmvuh",
+          "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wvqkjc/_/pdhmvuh/",
+          "evidence": "https://nova-defender.expo.app/game/index.html"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wvqkjc",
+      "field": "category",
+      "value": "arcade",
+      "source": {
+        "type": "page",
+        "key": "nova",
+        "evidence": "Eight sectors of 3D arcade space combat"
+      },
+      "support": [
+        {
+          "type": "comment",
+          "postId": "1wvqkjc",
+          "commentId": "pdhmvuh",
+          "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wvqkjc/_/pdhmvuh/",
+          "evidence": "https://nova-defender.expo.app/game/index.html"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wvqkjc",
+      "field": "stage",
+      "value": "playable",
+      "source": {
+        "type": "comment",
+        "postId": "1wvqkjc",
+        "commentId": "pdhmvuh",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wvqkjc/_/pdhmvuh/",
+        "evidence": "You can play it here"
+      }
+    },
+    {
+      "gameId": "g_1wlu5sj",
+      "field": "projectUrl",
+      "value": "https://playgama.ai/play/oe2sf2dae7",
+      "source": {
+        "type": "comment",
+        "postId": "1wlu5sj",
+        "commentId": "pb1r5p6",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wlu5sj/_/pb1r5p6/",
+        "evidence": "https://playgama.ai/play/oe2sf2dae7"
+      }
+    },
+    {
+      "gameId": "g_1wlu5sj",
+      "field": "title",
+      "value": "Snake Orbit 3D",
+      "source": {
+        "type": "page",
+        "key": "snake",
+        "evidence": "Snake Orbit 3D"
+      },
+      "support": [
+        {
+          "type": "comment",
+          "postId": "1wlu5sj",
+          "commentId": "pb1r5p6",
+          "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wlu5sj/_/pb1r5p6/",
+          "evidence": "https://playgama.ai/play/oe2sf2dae7"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wlu5sj",
+      "field": "platforms",
+      "value": [
+        "Browser",
+        "Android"
+      ],
+      "source": {
+        "type": "page",
+        "key": "snake",
+        "evidence": "Play free in your browser:"
+      },
+      "support": [
+        {
+          "type": "comment",
+          "postId": "1wlu5sj",
+          "commentId": "pb1r5p6",
+          "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wlu5sj/_/pb1r5p6/",
+          "evidence": "https://playgama.ai/play/oe2sf2dae7"
+        },
+        {
+          "type": "post",
+          "postId": "1wlu5sj",
+          "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wlu5sj/",
+          "evidence": "Android: 14m 49s"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1w770n4",
+      "field": "projectUrl",
+      "value": "https://play.fifthdoor.com/play/shut-eye-summit",
+      "source": {
+        "type": "comment",
+        "postId": "1w770n4",
+        "commentId": "p7skcga",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w770n4/_/p7skcga/",
+        "evidence": "https://play.fifthdoor.com/play/shut-eye-summit"
+      }
+    },
+    {
+      "gameId": "g_1w770n4",
+      "field": "title",
+      "value": "Shut-Eye Summit",
+      "source": {
+        "type": "page",
+        "key": "shuteye",
+        "evidence": "Shut-Eye Summit"
+      },
+      "support": [
+        {
+          "type": "comment",
+          "postId": "1w770n4",
+          "commentId": "p7skcga",
+          "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w770n4/_/p7skcga/",
+          "evidence": "https://play.fifthdoor.com/play/shut-eye-summit"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1w770n4",
+      "field": "stage",
+      "value": "playable",
+      "source": {
+        "type": "comment",
+        "postId": "1w770n4",
+        "commentId": "p7skcga",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w770n4/_/p7skcga/",
+        "evidence": "Play it here:"
+      }
+    },
+    {
+      "gameId": "g_1vzy2hs",
+      "field": "projectUrl",
+      "value": "https://rom838.itch.io/fourway",
+      "source": {
+        "type": "comment",
+        "postId": "1vzy2hs",
+        "commentId": "p68q6i2",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vzy2hs/_/p68q6i2/",
+        "evidence": "https://rom838.itch.io/fourway"
+      }
+    },
+    {
+      "gameId": "g_1vzy2hs",
+      "field": "title",
+      "value": "Ictus",
+      "source": {
+        "type": "page",
+        "key": "fourway",
+        "evidence": "Ictus"
+      },
+      "support": [
+        {
+          "type": "comment",
+          "postId": "1vzy2hs",
+          "commentId": "p68q6i2",
+          "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vzy2hs/_/p68q6i2/",
+          "evidence": "https://rom838.itch.io/fourway"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1vzy2hs",
+      "field": "stage",
+      "value": "playable",
+      "source": {
+        "type": "page",
+        "key": "fourway",
+        "evidence": "Run game"
+      },
+      "support": [
+        {
+          "type": "comment",
+          "postId": "1vzy2hs",
+          "commentId": "p68q6i2",
+          "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vzy2hs/_/p68q6i2/",
+          "evidence": "https://rom838.itch.io/fourway"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1vzy2hs",
+      "field": "platforms",
+      "value": [
+        "Browser"
+      ],
+      "source": {
+        "type": "page",
+        "key": "fourway",
+        "evidence": "Platforms HTML5"
+      },
+      "support": [
+        {
+          "type": "comment",
+          "postId": "1vzy2hs",
+          "commentId": "p68q6i2",
+          "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vzy2hs/_/p68q6i2/",
+          "evidence": "https://rom838.itch.io/fourway"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wmotbq",
+      "field": "projectUrl",
+      "value": "https://www.pilgrimagegame.com/",
+      "source": {
+        "type": "page",
+        "key": "pilgrimage",
+        "evidence": "Pilgrimage"
+      },
+      "support": [
+        {
+          "type": "post",
+          "postId": "1wmotbq",
+          "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wmotbq/",
+          "evidence": "https://www.pilgrimagegame.com/assets?asset=pipeline"
+        },
+        {
+          "type": "comment",
+          "postId": "1wmotbq",
+          "commentId": "pb8zqhc",
+          "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wmotbq/_/pb8zqhc/",
+          "evidence": "https://github.com/tomjohndesign/pilgrimage"
+        }
+      ],
+      "replaceValue": "https://v0-pilgrimage-two.vercel.app/"
+    },
+    {
+      "gameId": "g_1wmotbq",
+      "field": "repositoryUrl",
+      "value": "https://github.com/tomjohndesign/pilgrimage",
+      "source": {
+        "type": "comment",
+        "postId": "1wmotbq",
+        "commentId": "pb8zqhc",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wmotbq/_/pb8zqhc/",
+        "evidence": "https://github.com/tomjohndesign/pilgrimage"
+      }
+    },
+    {
+      "gameId": "g_1vo6hl0",
+      "field": "title",
+      "value": "Relax Bicycle Ride",
+      "source": {
+        "type": "page",
+        "key": "bike",
+        "evidence": "Relax Bicycle Ride — Three.js"
+      },
+      "support": [
+        {
+          "type": "post",
+          "postId": "1vo6hl0",
+          "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vo6hl0/",
+          "evidence": "https://royal-waterfall-a15e.quietforge.workers.dev/"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wtrvz1",
+      "field": "title",
+      "value": "AI Ascendancy",
+      "source": {
+        "type": "post",
+        "postId": "1wtrvz1",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wtrvz1/",
+        "evidence": "AI Ascendancy"
+      }
+    },
+    {
+      "gameId": "g_1wtrvz1",
+      "field": "category",
+      "value": "strategy",
+      "source": {
+        "type": "post",
+        "postId": "1wmzmez",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wmzmez/",
+        "evidence": "Plague Inc–style strategy game"
+      }
+    }
+  ],
+  "reviewNotes": [
+    "Pilgrimage's creator-linked assets live on pilgrimagegame.com. Its current root identifies Pilgrimage, offers Play, and links back to the same source repository supplied by the creator. Replace only the explicitly named old accepted Vercel URL; retain its failed observation. The repository's homepage field is stale and is not replacement evidence. The repository license is non-commercial, so this review makes no open-source claim.",
+    "Keep Ictus's creator-supplied fourway URL and retain the observed redirect to /ictus. The listing labels it In development and offers a browser build. Its mixed Rhythm/Racing genres remain store evidence; this review does not invent a single primary genre.",
+    "Snake Orbit 3D is the page heading without Playgama's promotional suffix; Shut-Eye Summit omits the platform suffix; Relax Bicycle Ride omits the Three.js engine suffix. All retain the original Reddit headline in source history.",
+    "Reachable pages and creator-declared playable builds are not gameplay tests. No synthetic visitor feedback, ratings or analytics were submitted.",
+    "AI Ascendancy's current page exceeds the bounded HTML reader, so only link availability is refreshed. Its accepted name comes directly from the newer creator post, not an inferred URL slug."
+  ],
+  "unresolved": [
+    {
+      "gameId": "g_1wj0vuv",
+      "reason": "Quank is introduced tentatively, and the creator says a GitHub release is planned. Current replies do not confirm a public build or final title."
+    }
+  ]
+}

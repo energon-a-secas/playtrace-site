@@ -28,9 +28,15 @@ export async function reviewedHistoryPlan(db,review,rawSources,now=Date.now()){
   const removed=unchanged('removals',`game_id IN(${all})`);if(removed.length)throw new Error('A reviewed entry was withdrawn');
   // Stop for a separate contribution/consent review rather than silently
   // choosing between ratings, guest edits, questionnaires or approved images.
-  for(const table of ['feedback','ratings','follows','price_signals','play_expectations','research_responses','questionnaires','feedback_reviews','media_assets','preview_overrides','project_overrides','change_requests']){
+  for(const table of ['feedback','ratings','follows','price_signals','play_expectations','research_responses','questionnaires','media_assets','preview_overrides','project_overrides','change_requests']){
     if(unchanged(table,`game_id IN(${old})`).length)throw new Error(`Review ${table} before combining histories`);
   }
+  const reviews=unchanged('feedback_reviews',`game_id IN(${all})`),olderReviews=reviews.filter(r=>review.aliases.includes(r.game_id));
+  let adoptedReview=null;
+  if(review.adoptPublishedReview!==undefined){
+    if(!review.aliases.includes(review.adoptPublishedReview)||olderReviews.length!==1||olderReviews[0].game_id!==review.adoptPublishedReview||reviews.some(r=>r.game_id===winner.id))throw new Error('Adopt exactly one published review into an empty destination');
+    adoptedReview=olderReviews[0];
+  }else if(olderReviews.length)throw new Error('Review feedback_reviews before combining histories');
   if(games.some(g=>review.aliases.includes(g.id)&&g.preview.storage==='r2'))throw new Error('Review uploaded artwork before combining histories');
   unchanged('project_overrides',`game_id=${quote(winner.id)}`);
   const memberships=unchanged('source_posts',`game_id IN(${all})`),posts=games.flatMap(g=>g.posts);
@@ -57,6 +63,12 @@ export async function reviewedHistoryPlan(db,review,rawSources,now=Date.now()){
     const previous=evidenceRows.find(r=>r.post_id===post.id);
     if(previous&&JSON.parse(previous.payload_json).archiveRetrievedAt>observation.archiveRetrievedAt)throw new Error('Source review is older than retained evidence');
     observations.push(`INSERT INTO source_evidence(post_id,payload_json,content_hash,checked_at,changed_at) VALUES(${quote(post.id)},${quote(payload)},${quote(hash)},${quote(at)},${quote(at)}) ON CONFLICT(post_id) DO UPDATE SET payload_json=excluded.payload_json,content_hash=excluded.content_hash,checked_at=excluded.checked_at,changed_at=CASE WHEN source_evidence.content_hash=excluded.content_hash THEN source_evidence.changed_at ELSE excluded.changed_at END;`);
+  }
+  if(adoptedReview){
+    const citations=JSON.parse(adoptedReview.payload_json).citations;
+    // A public Reddit summary can follow its verified source history. Site
+    // contributions require a separate consent/conflict review and stay blocked.
+    if(!Array.isArray(citations)||!citations.length||citations.some(c=>c.source!=='reddit'||!posts.some(p=>new RegExp('^https://www\\.reddit\\.com/r/aigamedev/comments/'+p.id+'/_/[a-z0-9]+/$').test(c.url))))throw new Error('Published review citations must belong to the reviewed Reddit history');
   }
   const aliases=unchanged('game_aliases',`alias_id IN(${all}) OR game_id IN(${all})`);
   if(aliases.some(a=>members.includes(a.alias_id)))throw new Error('A reviewed entry is already an alias');
@@ -91,6 +103,7 @@ export async function reviewedHistoryPlan(db,review,rawSources,now=Date.now()){
     `UPDATE games SET status='hidden' WHERE id IN(${old});`,
     `UPDATE source_posts SET game_id=${quote(winner.id)} WHERE game_id IN(${old});`);
   for(const f of adopted)statements.push(`INSERT INTO project_facts(game_id,field,value_json,source_url,evidence_text,checked_at) VALUES(${['game_id','field','value_json','source_url','evidence_text','checked_at'].map(key=>quote(f[key])).join(',')});`);
+  if(adoptedReview)statements.push(`UPDATE feedback_reviews SET game_id=${quote(winner.id)} WHERE game_id=${quote(adoptedReview.game_id)};`);
   // Keep the archived records too. Their failed, expired URLs are evidence,
   // not current destinations for the combined game.
   statements.push(`INSERT OR IGNORE INTO link_observations SELECT ${quote(winner.id)},project_url,checked_at,status,http_status,final_url,reason,redirect_count FROM link_observations WHERE game_id IN(${old});`,
@@ -101,5 +114,5 @@ export async function reviewedHistoryPlan(db,review,rawSources,now=Date.now()){
     `INSERT INTO app_meta(key,value_json) VALUES(${quote('history_review:'+winner.id)},${quote(JSON.stringify({review,at,posts:timeline.map(p=>p.id)}))});`,
     `UPDATE app_meta SET value_json=json_set(value_json,'$.generatedAt',${quote(at)}) WHERE key='catalog';`,
     "DELETE FROM app_meta WHERE key='history_review_guard';");
-  return {sql:statements.join('\n'),report:{keep:winner.id,aliases:review.aliases,posts:timeline.length,addedPosts:added.map(c=>c.post.id),adoptedFacts:adopted.map(f=>f.field),retainedLinkChecks:oldChecks.length}};
+  return {sql:statements.join('\n'),report:{keep:winner.id,aliases:review.aliases,posts:timeline.length,addedPosts:added.map(c=>c.post.id),adoptedFacts:adopted.map(f=>f.field),adoptedPublishedReview:adoptedReview?.game_id||null,retainedLinkChecks:oldChecks.length}};
 }

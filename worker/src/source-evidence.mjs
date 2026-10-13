@@ -110,7 +110,12 @@ export async function refreshSourceRecords(db, rawRows, deps) {
   if(posts.length)statements.push(query(db,`UPDATE source_posts SET payload_json=(SELECT json_extract(value,'$.post') FROM json_each(?) WHERE json_extract(value,'$.id')=source_posts.id),retrieved_at=?
     WHERE id IN(SELECT json_extract(value,'$.id') FROM json_each(?)) AND status='published'`,JSON.stringify(posts),at,JSON.stringify(posts)));
   const removedUrls=records.filter(record=>record.payload.state==='removed').map(record=>record.payload.sourceUrl);
-  if(removedUrls.length)statements.push(query(db,'DELETE FROM project_facts WHERE source_url IN(SELECT value FROM json_each(?))',JSON.stringify(removedUrls)));
+  // Creator replies use the canonical /comments/{post}/_/{comment}/ path.
+  // Withdraw their derived facts with the parent source too. Use an exact
+  // prefix comparison: LIKE would treat Reddit ID underscores as wildcards.
+  if(removedUrls.length)statements.push(query(db,`DELETE FROM project_facts WHERE EXISTS(
+    SELECT 1 FROM json_each(?) removed WHERE source_url=removed.value
+      OR substr(source_url,1,length(removed.value)+2)=removed.value||'_/')`,JSON.stringify(removedUrls)));
   if(updates.length)statements.push(query(db,`UPDATE games SET payload_json=(SELECT json_extract(value,'$.game') FROM json_each(?) WHERE json_extract(value,'$.id')=games.id),
     project_url=(SELECT json_extract(value,'$.url') FROM json_each(?) WHERE json_extract(value,'$.id')=games.id)
     WHERE id IN(SELECT json_extract(value,'$.id') FROM json_each(?))`,JSON.stringify(updates),JSON.stringify(updates),JSON.stringify(updates)));

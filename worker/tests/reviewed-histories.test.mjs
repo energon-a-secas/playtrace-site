@@ -58,3 +58,36 @@ test('rejected, withdrawn and excluded additional sources cannot be restored by 
   assert.equal(db.sql.prepare('SELECT count(*) n FROM game_aliases').get().n,0);db.close();
  }
 });
+function publishedReview(db,gameId,postId,source='reddit'){
+ const payload=JSON.stringify({version:2,summary:'An earlier control concern [1].',citations:[{number:1,source,url:`https://www.reddit.com/r/aigamedev/comments/${postId}/_/reply1/`}],windowStart:'2026-07-01T00:00:00.000Z',windowEnd:new Date(NOW).toISOString()});
+ db.sql.prepare('INSERT INTO feedback_reviews VALUES(?,?,?,?)').run(gameId,payload,new Date(NOW).toISOString(),'editor');
+ return db.sql.prepare('SELECT * FROM feedback_reviews WHERE game_id=?').get(gameId);
+}
+test('an explicitly adopted Reddit review keeps its exact text, citations and publication record',async()=>{
+ const {db,old,latest,raw,review}=await setup(),saved=publishedReview(db,old.id,old.posts[0].id);
+ const plan=await reviewedHistoryPlan(db,{...review,adoptPublishedReview:old.id},raw,NOW);
+ db.sql.exec('BEGIN;'+plan.sql+'COMMIT;');
+ assert.deepEqual(db.sql.prepare('SELECT * FROM feedback_reviews').all().map(r=>({...r})),[{...saved,game_id:latest.id}]);
+ assert.equal(plan.report.adoptedPublishedReview,old.id);
+ assert.equal((await publicGame(db,old.id)).games[0].id,latest.id);db.close();
+});
+test('review adoption rejects conflicts, unrelated citations, site notes and implicit moves',async()=>{
+ for(const kind of ['implicit','conflict','unrelated','site','missing']){
+  const {db,old,latest,raw,review}=await setup();
+  if(kind!=='missing')publishedReview(db,old.id,kind==='unrelated'?'other1':old.posts[0].id,kind==='site'?'playtrace':'reddit');
+  if(kind==='conflict')publishedReview(db,latest.id,latest.posts[0].id);
+  await assert.rejects(reviewedHistoryPlan(db,kind==='implicit'?review:{...review,adoptPublishedReview:old.id},raw,NOW),/review|citations/);
+  assert.equal((await catalog(db)).games.length,2);db.close();
+ }
+});
+test('a changed or newly published review aborts a prepared merge without losing either history',async()=>{
+ for(const kind of ['edited','new']){
+  const {db,old,latest,raw,review}=await setup();publishedReview(db,old.id,old.posts[0].id);
+  const plan=await reviewedHistoryPlan(db,{...review,adoptPublishedReview:old.id},raw,NOW);
+  if(kind==='edited')db.sql.prepare("UPDATE feedback_reviews SET payload_json=json_set(payload_json,'$.summary','Revised') WHERE game_id=?").run(old.id);
+  else publishedReview(db,latest.id,latest.posts[0].id);
+  db.sql.exec('BEGIN');assert.throws(()=>db.sql.exec(plan.sql),/NOT NULL/);db.sql.exec('ROLLBACK');
+  assert.ok(db.sql.prepare('SELECT 1 FROM feedback_reviews WHERE game_id=?').get(old.id));
+  assert.equal((await catalog(db)).games.length,2);db.close();
+ }
+});

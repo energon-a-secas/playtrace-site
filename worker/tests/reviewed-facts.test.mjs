@@ -54,6 +54,20 @@ test('source withdrawal removes facts derived from its text, and whole-project r
   fact(env.DB,'title','A store title','https://maker.itch.io/puzzle');await removal(env.DB,null,'g_abc12','Removal requested',new Date(NOW).toISOString());
   assert.equal(env.DB.sql.prepare('SELECT count(*) AS n FROM project_facts').get().n,0);env.DB.close();
 });
+test('withdrawing a post also clears its creator-reply facts without touching other evidence or admin edits',async()=>{
+  const env=fixtureEnv(),seed=fixtureCatalog();await importCatalog(env.DB,seed);
+  fact(env.DB,'category','adventure');
+  fact(env.DB,'title','Creator title','https://www.reddit.com/r/aigamedev/comments/abc12/_/reply12/');
+  fact(env.DB,'stage','playable','https://www.reddit.com/r/aigamedev/comments/abc123/_/reply34/');
+  fact(env.DB,'platforms',['Browser'],'https://www.reddit.com/r/aigamedev/comments/abc12/x/reply56/');
+  fact(env.DB,'projectUrl','https://maker.itch.io/puzzle','https://maker.itch.io/puzzle');
+  await editDetails(env.DB,'g_abc12',{mode:'edit',revision:0,details:{...detailsOf(seed.games[0]),title:'Owner title'}},{subject:'owner'},deps);
+  const edits=env.DB.sql.prepare('SELECT * FROM project_overrides').all();
+  await refreshSourceRecords(env.DB,[rawPost('abc12',{author:seed.games[0].author.name,selftext:'[removed]',removed_by_category:'moderator'})],deps);
+  assert.deepEqual(env.DB.sql.prepare('SELECT field FROM project_facts ORDER BY field').all().map(r=>r.field),['platforms','projectUrl','stage']);
+  assert.deepEqual(env.DB.sql.prepare('SELECT * FROM project_overrides').all(),edits);
+  assert.equal((await catalog(env.DB)).games[0].title,'Owner title');env.DB.close();
+});
 test('future source matching respects a reviewed link removal and does not attach another game to it',async()=>{
   const env=fixtureEnv(),seed=fixtureCatalog();await importCatalog(env.DB,seed);fact(env.DB,'projectUrl',null);
   const raw=rawPost('later1',{author:seed.games[0].author.name,url:seed.games[0].projectUrl});

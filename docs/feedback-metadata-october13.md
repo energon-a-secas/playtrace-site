@@ -38,4 +38,4 @@ Worker release `c588537a-b20a-4004-9971-79d9ec325751` and the guarded database c
 
 ## Remaining review work
 
-Review creator replies for unnamed showcases, including the space game, flying Snake, the eyes-closed platformer, the synchronized driving demo and the bike game. Confirm Quank's tentative name and investigate a current Pilgrimage destination. These are retained as review questions, not inferred corrections.
+The [creator-reply follow-up](creator-replies-october13.md) resolves the space game, flying Snake, eyes-closed platformer, synchronized driving demo and bike-game names, repairs Pilgrimage's destination, and consolidates three reviewed development histories. Quank's tentative name and public build remain unconfirmed; mixed or unclear primary genres remain open.

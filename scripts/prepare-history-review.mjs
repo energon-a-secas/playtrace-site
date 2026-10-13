@@ -20,6 +20,7 @@ const sql=[],reports=[],before=await catalog(db),now=Date.now(),at=new Date(now)
 const protectedTables=['project_overrides','preview_overrides','media_assets','feedback','ratings','follows','price_signals','play_expectations','research_responses','questionnaires','feedback_reviews','change_requests','removals'];
 const snapshot=table=>JSON.stringify(db.sql.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all());
 const protectedBefore=Object.fromEntries(protectedTables.map(t=>[t,snapshot(t)]));
+const reviewDestinations=new Map(decisions.groups.filter(r=>r.adoptPublishedReview).map(r=>[r.adoptPublishedReview,r.keep]));
 for(const review of decisions.groups){const plan=await reviewedHistoryPlan(db,review,source,now);db.sql.exec('BEGIN;'+plan.sql+'COMMIT;');sql.push(plan.sql);reports.push(plan.report);}
 const guard=(table,row,where)=>`INSERT INTO app_meta(key,value_json) VALUES('enrichment_review_guard',CASE WHEN ${row?`EXISTS(SELECT 1 FROM ${table} WHERE ${Object.entries(row).map(([k,v])=>`${k} IS ${quote(v)}`).join(' AND ')})`:`NOT EXISTS(SELECT 1 FROM ${table} WHERE ${where})`} THEN 'true' ELSE NULL END) ON CONFLICT(key) DO UPDATE SET value_json=excluded.value_json;`;
 for(const label of decisions.categories||[]){
@@ -61,11 +62,14 @@ for(const job of db.sql.prepare("SELECT * FROM editorial_jobs WHERE kind='store'
 }
 for(const row of db.sql.prepare('SELECT * FROM steam_cache').all())if(JSON.stringify(row)!==JSON.stringify(cacheBefore.get(row.app_id))){sql.push(guard('steam_cache',cacheBefore.get(row.app_id),`app_id=${quote(row.app_id)}`),`INSERT INTO steam_cache(${Object.keys(row).join(',')}) VALUES(${Object.values(row).map(quote).join(',')}) ON CONFLICT(app_id) DO UPDATE SET ${Object.keys(row).filter(k=>k!=='app_id').map(k=>`${k}=excluded.${k}`).join(',')};`);}
 sql.push(`UPDATE app_meta SET value_json=json_set(value_json,'$.generatedAt',${quote(at)}) WHERE key='catalog';`,"DELETE FROM app_meta WHERE key='enrichment_review_guard';");
-for(const t of protectedTables)if(snapshot(t)!==protectedBefore[t])throw new Error('Protected data changed: '+t);
+for(const t of protectedTables){
+ const expected=t==='feedback_reviews'?JSON.stringify(JSON.parse(protectedBefore[t]).map(r=>({...r,game_id:reviewDestinations.get(r.game_id)||r.game_id}))):protectedBefore[t];
+ if(snapshot(t)!==expected)throw new Error('Protected data changed: '+t);
+}
 // Validate the actual file against the untouched snapshot, not just the working copy.
 const verify=new LocalD1(original);try{verify.sql.exec('BEGIN;'+sql.join('\n')+'COMMIT;');const after=validateCatalog(await catalog(verify));
  for(const g of before.games.filter(g=>g.preview.storage==='r2'))if(JSON.stringify(after.games.find(p=>p.id===g.id)?.preview)!==JSON.stringify(g.preview))throw new Error('Approved preview changed');
- const report={at,histories:reports,projectsBefore:before.games.length,projectsAfter:after.games.length,sourcePostsBefore:before.games.reduce((n,g)=>n+g.posts.length,0),sourcePostsAfter:after.games.reduce((n,g)=>n+g.posts.length,0),protectedTablesUnchanged:protectedTables,reusedStoreResults:reused,newChecks:checked,upstreamRequests:requests,pendingSkipped:skipped};
+ const report={at,histories:reports,projectsBefore:before.games.length,projectsAfter:after.games.length,sourcePostsBefore:before.games.reduce((n,g)=>n+g.posts.length,0),sourcePostsAfter:after.games.reduce((n,g)=>n+g.posts.length,0),protectedTablesUnchanged:protectedTables.filter(t=>t!=='feedback_reviews'||!reviewDestinations.size),publishedReviewRelocations:[...reviewDestinations].map(([from,to])=>({from,to})),reusedStoreResults:reused,newChecks:checked,upstreamRequests:requests,pendingSkipped:skipped};
  await fs.writeFile(path.join(out,'apply.sql'),sql.join('\n'),{mode:0o600});await fs.writeFile(path.join(out,'report.json'),JSON.stringify(report,null,2),{mode:0o600});await fs.writeFile(path.join(out,'catalog.json'),JSON.stringify({...after,snapshotAt:at}),{mode:0o600});
  console.log(JSON.stringify({...report,reusedStoreResults:reused.length},null,2));
 }finally{verify.close();db.close();}
