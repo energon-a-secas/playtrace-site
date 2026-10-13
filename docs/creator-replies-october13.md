@@ -45,8 +45,14 @@ This improves filter coverage and project identity, not the amount or representa
 
 The private preparation rehearses the full guarded transaction against a fresh production export. It verifies both catalogue schemas, all 17 uploaded previews, all 51 published reviews, 19 unrelated tables and every previous link observation. Retried preparations reuse successful checks with their original observation times. Scheduled score, archive, store and Jev budgets are unchanged.
 
-283 Node tests, 11 schema checks and 80 checks in actual workerd pass. The runtime checks exercise review relocation, source withdrawal and the canonical path in disposable D1/R2. No production visitor data is generated.
+285 Node tests, 11 schema checks and 82 checks in actual workerd pass. The runtime checks exercise review relocation, source withdrawal and the canonical path in disposable D1/R2. No production visitor data is generated.
 
 Worker release `83f3df30-7691-45ea-82e3-47e6738f9b32` and the 331-statement guarded database transaction are deployed. A new production export matches the rehearsed project, source, fact, override, upload, review and alias records, and retains all 791 prior link observations, including Pilgrimage's failed URL. Public API checks confirm all 19 accepted fields, four alias resolutions, all 17 unchanged uploads, 51 unchanged published summaries and matching Insights classifications.
 
 A complete build from the live API contains 1,322 projects, 510 indexable project pages, 18 directory pages and 532 sitemap URLs. The Pages release uses this same complete-snapshot build; former project IDs redirect to the canonical page and stay out of the sitemap.
+
+## Follow-up navigation fix
+
+After the catalogue release, the browser review found that shared Quick Reviews links still returned 404 for a former project ID. The public questionnaire read now resolves that alias before checking the form's project restriction. Its response names the current project, so the page updates its URL and subsequent answer requests use that canonical ID. Private response reads, saves and deletes retain their explicit project scope; discovery never silently reassigns answers. Closed forms, unrelated project restrictions and withdrawals remain enforced.
+
+This follow-up is deployed in Worker release `8a3d4167-6856-4d4c-825d-fa074eb42ede`. Thirteen live browser checks pass: six corrected project pages, the AI Ascendancy redirect/review/favorite at 320–1440px, favorite-only Browse, the arcade feedback filter, and all four old Quick Reviews links including embedded mode. The live sitemap serves XML with 532 URLs, excluding the superseded IDs. Automated browser sessions opt out of metrics, block writes and submit no answers, ratings or comments.

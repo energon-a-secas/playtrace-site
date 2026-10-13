@@ -29,6 +29,13 @@ export async function getResearch(db, id, gameId, allowClosed = true) {
   const [game] = await enrichGames(db, [await getGame(db, selected)]);
   return { questionnaire, game: { id: game.id, title: game.title, author: game.author, projectUrl: game.projectUrl, preview: game.preview } };
 }
+// Shared questionnaire links follow reviewed project redirects. Response reads
+// and mutations still require their explicit canonical project ID; opening an
+// old link must not move or combine anyone's private answers.
+export async function publicResearch(db, id, gameId) {
+  const alias=gameId&&GAME_ID.test(gameId)?await query(db,'SELECT game_id FROM game_aliases WHERE alias_id=?',gameId).first():null;
+  return getResearch(db,id,alias?.game_id||gameId);
+}
 export async function saveResearch(db, id, body, admin, deps) {
   exactKeys(body, ['title','category','gameId','questions','revision','active']);
   if (!/^[a-z][a-z0-9-]{2,59}$/.test(id)) throw invalid('Use a short questionnaire ID.');

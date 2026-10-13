@@ -5,7 +5,7 @@ import { recordUsage, usageMetrics, pruneUsage } from './usage.mjs';
 import { publicGame } from './discovery.mjs';
 import { getHighlights, saveHighlights, rotateHighlights } from './highlights.mjs';
 import { rating, rateGame } from './ratings.mjs';
-import { researchList, getResearch, saveResearch, researchResponse, researchMetrics } from './research.mjs';
+import { researchList, publicResearch, saveResearch, researchResponse, researchMetrics } from './research.mjs';
 import { projectContext } from './references.mjs';
 import { listJobs, enqueueJobs, runJobs, updateJob, queueStoreMaintenance, queueFeedbackMaintenance, queueLinkMaintenance } from './jobs.mjs';
 import { consolidateReposts, resolveGame } from './duplicates.mjs';
@@ -152,7 +152,7 @@ export function createWorker(overrides = {}) {
           else { if(request.method==='DELETE')await readBytes(request.body,0); result=json(await rateGame(database(env),env,request,match[1],request.method==='PUT'?await readJson(request):null,deps)); }
         }
         else if (action === 'researchList') result=json(await researchList(database(env)));
-        else if (action === 'researchGame') result=json(await getResearch(database(env),match[1],url.searchParams.get('game')));
+        else if (action === 'researchGame') result=json(await publicResearch(database(env),match[1],url.searchParams.get('game')));
         else if (action === 'researchResponse') {
           if(request.method==='DELETE')await readBytes(request.body,0);
           result=json(await researchResponse(database(env),env,request,match[1],url.searchParams.get('game'),request.method==='PUT'?await readJson(request):null,deps));
