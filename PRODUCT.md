@@ -92,6 +92,8 @@ Public notes offer an optional first-look / played perspective; old or skipped a
 
 The public feedback pattern report reads live, no-store data, separately from the catalogue snapshot. Count quick answers per current browser/game contribution and reviewed comments per source URL; never add these overlapping measures or infer identities across sources. Compare by game, genre and linked platform, with missing experience and unclassified comments visible. Five citations across three projects is an exploratory repeated-theme label, not statistical significance. Follow-up questions are proposed research, never predictions about likely success or causality.
 
+Let readers filter reported experience and inspect each topic's original comments inline. Research leads rank distinct projects with reviewed concerns or suggestions before comment volume; positive and mixed reactions stay separate. The lead's repeated label needs five concerns/suggestions across three projects, independent of the full topic's coverage. Evidence lists and CSV exports use the same selected records, retain source links and dates, and exclude comment bodies and identities. First-look and played columns are independent comments, not matched people. Paired expectations retain their separate cohort and scope.
+
 
 ## Destination observations and paired expectations
 

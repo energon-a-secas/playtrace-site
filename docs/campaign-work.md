@@ -60,3 +60,7 @@ The [destination review](campaign-destinations-october12.md) corrects 13 game li
 ## Reviewed histories and retained favorites, October 12
 
 The [history consolidation](history-consolidation-october12.md) joins the reviewed Nightshoal, Spascii and UNDER TRAINING timelines, restores Spascii's original showcase, and preserves former URLs and offline favorites. It also reconciles the remaining store queue from existing evidence without new upstream store requests.
+
+## Feedback research leads, October 12
+
+The public feedback report now provides experience filters, project-ranked research leads, inline topic/source inspection and filtered CSV exports. It reuses approved evidence; no model requests, new reviews or visitor contributions are created. [Definitions and scope](feedback-operations.md) keep unknown experience, mixed reactions and matched follow-ups separate.

@@ -25,7 +25,7 @@ export function feedbackReport(records, projects, {category='',platform='',sourc
   const counts={projects:0,siteContributions:0,siteNotes:0,redditCitations:0,siteCitations:0,unclassified:0,preview:0,played:0,unspecified:0};
   const matching=[];
   for(const record of selected){
-    let relevant=source!=='reddit'&&record.expectations?.started>0;
+    let relevant=source!=='reddit'&&!experience&&record.expectations?.started>0;
     if(source!=='reddit')for(const group of record.feedback){
       if(experience&&group.experience!==experience)continue;
       counts.siteContributions+=group.count;counts.siteNotes+=group.notes;relevant ||= group.count>0;
