@@ -1,4 +1,5 @@
-import { query, meta, putMeta } from './store.mjs';
+import { query, meta } from './store.mjs';
+import { rememberArchiveCooldown } from './archive-cooldown.mjs';
 import { normalizePost, decodeEntities } from './archive.mjs';
 import { includedPost } from './source-policy.mjs';
 import { inferName } from './names.mjs';
@@ -150,7 +151,7 @@ export async function refreshSourceBatch(db,deps) {
         ON CONFLICT(post_id) DO UPDATE SET checked_at=excluded.checked_at`,at,at,JSON.stringify(missing)).run();
       return {...result,missing:missing.length};
     }catch(error){
-      if(error.queueCooldown==='archive')await putMeta(db,'editorial_cooldown',{...cooldown,archive:error.retryAt}).run();
+      if(error.queueCooldown==='archive')await rememberArchiveCooldown(db,error.retryAt);
       throw error;
     }
   }finally{await release(db,'source_refresh_lock',owner);}

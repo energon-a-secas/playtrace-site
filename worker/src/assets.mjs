@@ -1,8 +1,10 @@
-import { invalid, readBytes, unavailable } from './http.mjs';
+import { invalid, unavailable } from './http.mjs';
 import { httpsUrl, sourceUrl } from './validation.mjs';
 import { decodeEntities } from './archive.mjs';
-import { query } from './store.mjs';
+import { query, meta } from './store.mjs';
 import { acquire, release } from './lease.mjs';
+import { archiveJson } from './references.mjs';
+import { rememberArchiveCooldown } from './archive-cooldown.mjs';
 
 const IMAGE_HOSTS = ['i.redd.it', 'preview.redd.it', 'external-preview.redd.it', 'a.thumbs.redditmedia.com', 'b.thumbs.redditmedia.com'];
 export function assetUrl(value, kind) {
@@ -55,18 +57,22 @@ export async function hydrateMedia(env, deps, gameId = null) {
   const owner = await acquire(db, 'ingestion_lock', deps.now());
   if (!owner) throw unavailable();
   try {
+    const cooldown = await meta(db, 'editorial_cooldown');
+    if (cooldown?.archive > deps.now()) return { checked: 0, assets: 0, retryAt: new Date(cooldown.archive).toISOString() };
     const rows = await query(db, `SELECT s.id,s.game_id,s.author_key FROM source_posts s JOIN games g ON g.id=s.game_id
       WHERE s.status='published' AND s.media_checked_at IS NULL AND g.status='published'
       AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id) ${gameId ? 'AND g.id=?' : ''}
       ORDER BY CASE WHEN json_extract(g.payload_json,'$.preview.kind')='video' THEN 0 ELSE 1 END,s.created_at DESC LIMIT 10`, ...(gameId ? [gameId] : [])).all();
     if (!rows.results.length) return { checked: 0, assets: 0 };
-    const url = `https://arctic-shift.photon-reddit.com/api/posts/ids?ids=${rows.results.map(row => row.id).join(',')}`;
-    const response = await deps.fetch(url, { redirect: 'manual', signal: AbortSignal.timeout(12000), headers: { Accept: 'application/json' } });
     // One bounded request, no immediate retry on throttling.
-    if (!response.ok) { await response.body?.cancel(); throw unavailable(); }
-    const data = JSON.parse(new TextDecoder().decode(await readBytes(response.body, 8 * 1024 * 1024)));
-    if (!Array.isArray(data?.data) || data.data.length > 10) throw unavailable();
-    const rawById = new Map(data.data.map(raw => [raw.id, raw]));
+    let records;
+    try { records = await archiveJson(`posts/ids?ids=${rows.results.map(row => row.id).join(',')}`, deps, { maxAttempts: 1 }); }
+    catch (error) {
+      if (error.queueCooldown === 'archive') await rememberArchiveCooldown(db, error.retryAt);
+      throw error;
+    }
+    if (records.length > 10) throw unavailable();
+    const rawById = new Map(records.map(raw => [raw.id, raw]));
     let count = 0;
     const updates = rows.results.map(row => {
       const raw = rawById.get(row.id);

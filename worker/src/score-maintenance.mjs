@@ -2,6 +2,7 @@ import { query, meta, putMeta } from './store.mjs';
 import { acquire, release } from './lease.mjs';
 import { archiveJson } from './references.mjs';
 import { scoreObservation, saveScoreObservations } from './reddit-scores.mjs';
+import { rememberArchiveCooldown } from './archive-cooldown.mjs';
 
 export const scorePolicy = { cron: '50 12 * * SUN', lookbackDays: 35, batchSize: 100, maxRequests: 8 };
 export async function scoreMaintenanceStatus(db) {
@@ -53,7 +54,7 @@ export async function refreshWeeklyScores(db, deps) {
       } catch (error) {
         state.failedBatches++; state.status = 'partial';
         if (error.queueCooldown === 'archive') {
-          await putMeta(db, 'editorial_cooldown', { ...await meta(db, 'editorial_cooldown'), archive: error.retryAt }).run();
+          await rememberArchiveCooldown(db, error.retryAt);
           state.retryAt = new Date(error.retryAt).toISOString();
         }
         break; // Leave the last good score intact. No automatic retry loop.

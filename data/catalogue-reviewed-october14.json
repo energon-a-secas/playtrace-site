@@ -1,0 +1,216 @@
+{
+  "version": 1,
+  "categories": {},
+  "method": "Targeted source, creator-reply and destination review; explicit administrative values remain authoritative.",
+  "facts": [
+    {
+      "gameId": "g_1vo6hl0",
+      "field": "category",
+      "value": "arcade",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vf84kn/",
+      "evidence": "The goal is simple: ride as far as possible without crashing."
+    },
+    {
+      "gameId": "g_1wkxxd6",
+      "field": "category",
+      "value": "survival",
+      "sourceUrl": "https://mfcproductions.github.io/Sector-3/",
+      "evidence": "Stay alive.",
+      "observedAt": "2026-10-14T13:56:15.639Z"
+    },
+    {
+      "gameId": "g_1wkxxd6",
+      "field": "platforms",
+      "value": [
+        "Browser",
+        "Mobile"
+      ],
+      "sourceUrl": "https://mfcproductions.github.io/Sector-3/",
+      "evidence": "Left thumb",
+      "observedAt": "2026-10-14T13:56:15.639Z"
+    },
+    {
+      "gameId": "g_1wfnnwg",
+      "field": "category",
+      "value": "adventure",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wfnnwg/",
+      "evidence": "The full story is finished with a mystery tying all the characters together."
+    },
+    {
+      "gameId": "g_1vurkkl",
+      "field": "category",
+      "value": "rpg",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vurkkl/_/p5aatsr/",
+      "evidence": "an FPS RPG similar to destiny but in a world like WoW"
+    },
+    {
+      "gameId": "g_1vurkkl",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vurkkl/_/p54o851/",
+      "evidence": "this is basically in dev"
+    },
+    {
+      "gameId": "g_1vurkkl",
+      "field": "summary",
+      "value": "A first-person RPG in development. The creator describes a shooter and role-playing blend inspired by Destiny and a world like World of Warcraft.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vurkkl/_/p5aatsr/",
+      "evidence": "an FPS RPG similar to destiny but in a world like WoW"
+    },
+    {
+      "gameId": "g_1wj0vuv",
+      "field": "title",
+      "value": "Quank",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wj0vuv/",
+      "evidence": "Say hello to, uh... Quank?"
+    },
+    {
+      "gameId": "g_1wu3sii",
+      "field": "title",
+      "value": "Easy Roads",
+      "sourceUrl": "https://easy-roads.pages.dev/",
+      "evidence": "Easy Roads",
+      "observedAt": "2026-10-12T14:37:09.671Z"
+    },
+    {
+      "gameId": "g_1vzy2hs",
+      "field": "category",
+      "value": "rhythm",
+      "sourceUrl": "https://rom838.itch.io/ictus",
+      "evidence": "Rhythm",
+      "observedAt": "2026-10-13T13:39:11.054Z"
+    },
+    {
+      "gameId": "g_1wzly3u",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wzly3u/_/peeqmd7/",
+      "evidence": "Team based point capture shooter is the direction"
+    },
+    {
+      "gameId": "g_1wzly3u",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wzly3u/_/peeqmd7/",
+      "evidence": "It's a demo stage test bed playground"
+    },
+    {
+      "gameId": "g_1wzly3u",
+      "field": "summary",
+      "value": "A team-based point-capture shooter prototype. The current arena tests character movement, cameras and terrain; the creator is still exploring the eventual multiplayer scale.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wzly3u/_/peeqmd7/",
+      "evidence": "Team based point capture shooter is the direction"
+    },
+    {
+      "gameId": "g_1vmx29v",
+      "field": "category",
+      "value": "action",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vmx29v/_/p3njj05/",
+      "evidence": "all the same issues as most rail shooters"
+    },
+    {
+      "gameId": "g_1vmx29v",
+      "field": "stage",
+      "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vmx29v/_/p3d1uw9/",
+      "evidence": "I'm still working on mechanics for the most part."
+    },
+    {
+      "gameId": "g_1w10n2n",
+      "field": "category",
+      "value": "puzzle",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wb4fi5/",
+      "evidence": "food merge game"
+    },
+    {
+      "gameId": "g_1w10n2n",
+      "field": "stage",
+      "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1w88udc/",
+      "evidence": "Play and tell How it is"
+    },
+    {
+      "gameId": "g_1wsx4ne",
+      "field": "category",
+      "value": "adventure",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wsx4ne/",
+      "evidence": "you're a spider and you explore a infinite procedural world"
+    },
+    {
+      "gameId": "g_1x35qj1",
+      "field": "category",
+      "value": "clicker",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x35qj1/",
+      "evidence": "small browser clicker game called Toilet Plunge"
+    },
+    {
+      "gameId": "g_1x1w50s",
+      "field": "projectUrl",
+      "value": "https://store.steampowered.com/app/5339000/Misty_and_the_Last_Breeze/",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x1w50s/_/pf33ut3/",
+      "evidence": "https://store.steampowered.com/app/5339000/Misty_and_the_Last_Breeze/"
+    },
+    {
+      "gameId": "g_1wxkhi3",
+      "field": "category",
+      "value": "arcade",
+      "sourceUrl": "https://tbone94.github.io/Riso-Runner/",
+      "evidence": "lanes",
+      "observedAt": "2026-10-14T13:56:16.231Z"
+    },
+    {
+      "gameId": "g_1x2owaq",
+      "field": "platforms",
+      "value": [
+        "Windows",
+        "macOS"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1x2owaq/",
+      "evidence": "available for free for Windows and Mac."
+    }
+  ],
+  "flags": {
+    "g_1vqpih8": [
+      "Creator replies describe an iteration prompt and updates but do not supply a public game URL or a confirmed name. The development tool is not a play link."
+    ],
+    "g_1vurkkl": [
+      "Creator says a link was added to the post, but the archive still has no game destination. Tool and tree-generator links were excluded. The game name is not established."
+    ],
+    "g_1wj0vuv": [
+      "Quank is the tentative name used in the creator’s introduction. Their reply says a GitHub release is still planned; no public build URL was inferred."
+    ],
+    "g_1wu3sii": [
+      "The game name is verified by the linked page title. Its driving mechanics do not by themselves establish a racing genre."
+    ],
+    "g_1wgw7wo": [
+      "This is a habit challenge with game elements. A conventional gameplay genre is not established by the source; keep it unspecified."
+    ],
+    "g_1vzy2hs": [
+      "The older creator URL redirects to the Ictus listing. Store labels include both Rhythm and Racing; the reviewed primary category is Rhythm."
+    ],
+    "g_1wzly3u": [
+      "Creator describes a performance test arena and intended team shooter. A released 1,000-player game or public destination has not been established."
+    ],
+    "g_1vmx29v": [
+      "Creator confirms rail-shooter mechanics and ongoing work. The short “Star faux” reply is not sufficient to establish an official game name."
+    ],
+    "g_1wygb0h": [
+      "The linked Fjordfall page describes a downhill skateboarding world; the Reddit showcase describes an NPC art experiment. Confirm how that experiment relates to the current page before deriving a name or playable status from its metadata."
+    ],
+    "g_1wo0s54": [
+      "Creator says a GitHub Pages link was added, but the archived post and reply do not include its URL. Keep the destination unlisted."
+    ],
+    "g_1wmz6w0": [
+      "Creator replies clarify the art workflow but do not supply a public game destination."
+    ],
+    "g_1x2q1ow": [
+      "Creator-reply lookup timed out; the retained post establishes a personal Japanese-learning game but no public build URL. Requests for a download are not evidence of a release."
+    ],
+    "g_1x2owaq": [
+      "Creator says the finished game is free for Windows and Mac, but neither the source post nor creator replies supply its download URL."
+    ],
+    "g_1g6ccq5": [
+      "The creator’s itch.io game URL still returns HTTP 404. Retain the dated observation and request a replacement destination; this does not establish abandonment."
+    ]
+  }
+}

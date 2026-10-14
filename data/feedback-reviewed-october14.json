@@ -1,0 +1,253 @@
+{
+  "version": 1,
+  "reviews": [
+    {
+      "gameId": "g_1x34m4n",
+      "summary": "The animations drew praise [1]. Another commenter saw a promising foundation but wanted more world detail and a gentler soundscape, and found the menus generic [2]. These reactions do not establish how the game feels after playing.",
+      "commentIds": [
+        "pf7u9hb",
+        "pf81a81"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "visuals",
+          "tone": "praise",
+          "experience": "unspecified"
+        },
+        {
+          "number": 2,
+          "theme": "visuals",
+          "tone": "mixed",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1x2q1ow",
+      "summary": "A self-described native Japanese speaker praised the language shown and wanted a release they could try [1]. Others admired the art while asking for English translation [2] and suggested using hiragana or katakana instead of English scaffolding [3]. These are suggestions and first impressions, not evidence of learning outcomes.",
+      "commentIds": [
+        "pf75eem",
+        "pf70mf7",
+        "pf5ys0v"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "idea",
+          "tone": "praise",
+          "experience": "preview"
+        },
+        {
+          "number": 2,
+          "theme": "accessibility",
+          "tone": "suggestion",
+          "experience": "unspecified"
+        },
+        {
+          "number": 3,
+          "theme": "accessibility",
+          "tone": "suggestion",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1x2izrh",
+      "summary": "One person reported finishing a playthrough and praised the art, dialogue and secret ending, while noticing a clock mismatch and a looping background [1]. A separate trailer reaction praised the concept and visual consistency, particularly the suspense built by its final line [2].",
+      "commentIds": [
+        "pf3hf96",
+        "pf3aqpg"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "reliability",
+          "tone": "mixed",
+          "experience": "played"
+        },
+        {
+          "number": 2,
+          "theme": "idea",
+          "tone": "praise",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1x2d78a",
+      "summary": "One visitor said the Steam-page presentation affected their decision not to download the demo [1]. Another found the monster idea interesting but questioned how the repeated loops would stay engaging, and felt the store-page GIFs made the threat look less convincing [2]. These comments concern discovery and expectations; neither establishes a playtest result.",
+      "commentIds": [
+        "pf52bza",
+        "pf2gm72"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "accessibility",
+          "tone": "concern",
+          "experience": "preview"
+        },
+        {
+          "number": 2,
+          "theme": "idea",
+          "tone": "mixed",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1x2b1dc",
+      "summary": "A reported play session was fun for both the commenter and their child, but mobile controls sometimes accelerated, braked or turned unexpectedly. They also wanted fewer warning banners and a clearer landing page [1]. Another commenter liked the Italian setting while describing the presentation as an early alpha needing polish [2].",
+      "commentIds": [
+        "pf0otuc",
+        "pf85k2a"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "controls",
+          "tone": "mixed",
+          "experience": "played"
+        },
+        {
+          "number": 2,
+          "theme": "visuals",
+          "tone": "mixed",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1x23ojj",
+      "summary": "Commenters wanted the interface to reflect the game’s own visual identity, with one suggesting that artwork be brought into the UI [1][2]. A separate reaction praised the fluid-looking combat, animation and voxel effects but found the sound off-putting [3]. These reactions do not confirm completed play sessions.",
+      "commentIds": [
+        "pf00uel",
+        "pez8tre",
+        "pezz7bw"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "visuals",
+          "tone": "suggestion",
+          "experience": "unspecified"
+        },
+        {
+          "number": 2,
+          "theme": "visuals",
+          "tone": "suggestion",
+          "experience": "unspecified"
+        },
+        {
+          "number": 3,
+          "theme": "visuals",
+          "tone": "mixed",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wxz62u",
+      "summary": "Trailer feedback was mixed: one commenter preferred the newer trailer but found the hand jitter excessive [1]. Another liked the character and doorway reveal while wanting a stronger scare [2]. A third thought the game looked good but suggested shorter, personally written trailer copy [3]. These are trailer reactions, not measured in-game fear or enjoyment.",
+      "commentIds": [
+        "pe8ii2g",
+        "pe855hs",
+        "pe2843p"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "visuals",
+          "tone": "mixed",
+          "experience": "preview"
+        },
+        {
+          "number": 2,
+          "theme": "visuals",
+          "tone": "mixed",
+          "experience": "preview"
+        },
+        {
+          "number": 3,
+          "theme": "general",
+          "tone": "suggestion",
+          "experience": "preview"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wyt989",
+      "summary": "The visual style drew encouragement, alongside suggestions to soften oversized shadows and check the apparent headroom inside the train [1]. Another commenter proposed hiding the character briefly between wagons to make transitions cleaner [2]. A third perceived the motion as choppy and asked about slowing it without reducing the frame rate [3]; this is an impression, not a measured performance result.",
+      "commentIds": [
+        "pe67ypj",
+        "pe5x5nb",
+        "peoj5te"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "visuals",
+          "tone": "mixed",
+          "experience": "unspecified"
+        },
+        {
+          "number": 2,
+          "theme": "visuals",
+          "tone": "suggestion",
+          "experience": "unspecified"
+        },
+        {
+          "number": 3,
+          "theme": "reliability",
+          "tone": "suggestion",
+          "experience": "unspecified"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wxpc76",
+      "summary": "Someone on their second run praised the pace and difficulty but found the text small at times and suggested a larger font [1]. Another commenter reported dying in a boss fight and wanting to return with a better weapon [2]. Both describe playing; the font-size concern is a useful follow-up for accessibility testing.",
+      "commentIds": [
+        "pe5v2hj",
+        "pe31ynw"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "accessibility",
+          "tone": "mixed",
+          "experience": "played"
+        },
+        {
+          "number": 2,
+          "theme": "general",
+          "tone": "praise",
+          "experience": "played"
+        }
+      ]
+    },
+    {
+      "gameId": "g_1wwu37u",
+      "summary": "The art style drew praise [1]. Another commenter liked the presentation but found some interface areas empty compared with the panels that already had imagery or particle effects, suggesting more consistent visual treatment [2]. Neither comment establishes how the gameplay feels after trying it.",
+      "commentIds": [
+        "pdpla6y",
+        "pdnrlqc"
+      ],
+      "labels": [
+        {
+          "number": 1,
+          "theme": "visuals",
+          "tone": "praise",
+          "experience": "unspecified"
+        },
+        {
+          "number": 2,
+          "theme": "visuals",
+          "tone": "mixed",
+          "experience": "unspecified"
+        }
+      ]
+    }
+  ]
+}

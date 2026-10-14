@@ -1,4 +1,5 @@
 import { query, getGame, meta, putMeta } from './store.mjs';
+import { providerCooldownStatement } from './archive-cooldown.mjs';
 import { applyDetails, effectiveProjectUrl } from './details.mjs';
 import { checkProject } from './enrichment.mjs';
 import { refreshReferences } from './references.mjs';
@@ -36,8 +37,8 @@ export async function queueFeedbackMaintenance(db,deps,{weekly=false}={}) {
   const due=await query(db,`SELECT g.id FROM games g WHERE g.status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id)
     AND NOT EXISTS(SELECT 1 FROM editorial_jobs j WHERE j.game_id=g.id AND j.kind='feedback' AND j.status IN('pending','running'))
     AND ${weekly?`g.updated_at>=? AND NOT EXISTS(SELECT 1 FROM editorial_jobs j WHERE j.game_id=g.id AND j.kind='feedback' AND j.updated_at>=?)`
-      :`EXISTS(SELECT 1 FROM feedback f WHERE f.game_id=g.id AND f.status='published' AND length(trim(f.body))>=8 AND f.updated_at>=?
-        AND NOT EXISTS(SELECT 1 FROM editorial_jobs j WHERE j.game_id=g.id AND j.kind='feedback' AND j.updated_at>=f.updated_at))`}
+      :`g.id IN(SELECT f.game_id FROM feedback f WHERE f.status='published' AND length(trim(f.body))>=8 AND f.updated_at>=?
+        AND NOT EXISTS(SELECT 1 FROM editorial_jobs j WHERE j.game_id=f.game_id AND j.kind='feedback' AND j.updated_at>=f.updated_at))`}
     ORDER BY COALESCE((SELECT max(updated_at) FROM editorial_jobs j WHERE j.game_id=g.id AND j.kind='feedback'),''),g.updated_at DESC,g.id LIMIT ?`,
     since,...(weekly?[new Date(deps.now()-7*86400000).toISOString()]:[]),Math.min(weekly?8:1,8-pending.count)).all();
   const start=since.slice(0,10)+'T00:00:00.000Z',items=due.results.map(row=>({id:crypto.randomUUID(),gameId:row.id}));
@@ -150,7 +151,7 @@ export async function runJobs(db, env, deps, limit = 1, kind = 'all') {
         const message=/^(Jev |Archive HTTP )/.test(error.message||'')?error.message:'This job could not finish. The source may be unavailable. Retry to check again.';
         if(error.queueCooldown&&Number.isFinite(error.retryAt)){
           cooldown[error.queueCooldown]=error.retryAt;deferred=true;
-          await db.batch([putMeta(db,'editorial_cooldown',cooldown),query(db,"UPDATE editorial_jobs SET status='pending',payload_json=?,updated_at=? WHERE id=? AND status='running'",JSON.stringify({...JSON.parse(job.payload_json),note:message,retryAt:new Date(error.retryAt).toISOString()}),new Date(deps.now()).toISOString(),job.id)]);
+          await db.batch([providerCooldownStatement(db,error.queueCooldown,error.retryAt),query(db,"UPDATE editorial_jobs SET status='pending',payload_json=?,updated_at=? WHERE id=? AND status='running'",JSON.stringify({...JSON.parse(job.payload_json),note:message,retryAt:new Date(error.retryAt).toISOString()}),new Date(deps.now()).toISOString(),job.id)]);
         }else await query(db,"UPDATE editorial_jobs SET status='failed',payload_json=?,updated_at=? WHERE id=? AND status='running'",JSON.stringify({...(JSON.parse(job.payload_json).archiveBatch?{archiveBatch:JSON.parse(job.payload_json).archiveBatch}:{}),error:message}),new Date(deps.now()).toISOString(),job.id).run();
       }
       processed++;

@@ -2,6 +2,7 @@ import { query, meta, putMeta } from './store.mjs';
 import { acquire, release } from './lease.mjs';
 import { archiveJson } from './references.mjs';
 import { effectiveProjectUrl } from './details.mjs';
+import { rememberArchiveCooldown } from './archive-cooldown.mjs';
 
 const day = 86400000;
 export const evidencePolicy = Object.freeze({ eligibleAfterDays: 7, maxProjects: 4, maxIds: 80, maxRequestsPerDay: 4, hoursUTC: [6, 12, 18, 22] });
@@ -173,9 +174,7 @@ export async function refreshEvidenceBatch(db, deps) {
     return result;
   } catch (error) {
     if (error.queueCooldown === 'archive') {
-      const cooldown = await meta(db, 'editorial_cooldown') || {};
-      cooldown.archive = Math.max(cooldown.archive || 0, error.retryAt);
-      await putMeta(db, 'editorial_cooldown', cooldown).run();
+      await rememberArchiveCooldown(db, error.retryAt);
     }
     await putMeta(db, 'evidence_check_run', { checked: 0, checkedAt: at, status: 'deferred', reason: error.queueCooldown === 'archive' ? 'archive-cooldown' : 'source-or-evidence-changed' }).run();
     return { checked: 0, deferred: true };

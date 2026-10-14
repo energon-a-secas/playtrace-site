@@ -5,6 +5,7 @@ import { refreshSourceRecords } from './source-evidence.mjs';
 import { acquire, release } from './lease.mjs';
 import { applyDetails } from './details.mjs';
 import { canonicalProjectUrl } from './validation.mjs';
+import { rememberArchiveCooldown } from './archive-cooldown.mjs';
 
 export const ARCHIVE_URL = 'https://arctic-shift.photon-reddit.com/api/posts/search';
 // r/aigamedev creation timestamp, confirmed by the archive's subreddit record
@@ -31,7 +32,7 @@ function classifyArchiveFailure(error) {
   if (error.code === 'INVALID_REQUEST') return archiveFailure('ARCHIVE_RESPONSE_TOO_LARGE', false);
   return archiveFailure('ARCHIVE_NETWORK_ERROR', true);
 }
-async function archivePage(after, before, deps, ascending = false) {
+async function archivePage(after, before, deps, ascending = false, db = null) {
   const url = new URL(ARCHIVE_URL);
   // A fixed limit can time out on sparse windows. Adaptive queries also return
   // the final few posts reliably; recent scans retain only their bounded page.
@@ -47,6 +48,11 @@ async function archivePage(after, before, deps, ascending = false) {
         // Reset headers accompany ordinary query errors too. They describe a
         // counter window, not a required delay unless the response is 429.
         delay = retryDelay(response.headers, deps.now(), delay, response.status === 429);
+        if (response.status === 429 && db) {
+          // Publish the deadline before any short in-request wait, so a source
+          // or media job running concurrently also respects the provider pause.
+          await rememberArchiveCooldown(db, deps.now() + (Number.isFinite(delay) ? delay : 86400000));
+        }
         // Arctic Shift sometimes reports upstream query timeouts as HTTP 422.
         // Retry that documented response shape only; malformed query errors remain terminal.
         let timedOut = false;
@@ -134,10 +140,12 @@ export async function ingest(env, deps, historical = false) {
   let run, previous;
   try {
     previous = await meta(db, checkpointKey);
-    if (Date.parse(previous?.retryAt) > start) {
-      const error = unavailable(); error.retryAfterSeconds = Math.ceil((Date.parse(previous.retryAt) - start) / 1000); throw error;
-    }
     if (historical && previous?.state === 'ok') return { status: 'ok', fetched: 0, candidates: 0, updatedGames: 0 };
+    const cooldown = await meta(db, 'editorial_cooldown');
+    const retryAt = Math.max(Date.parse(previous?.retryAt) || 0, cooldown?.archive || 0);
+    if (retryAt > start) {
+      const error = unavailable(); error.retryAfterSeconds = Math.ceil((retryAt - start) / 1000); throw error;
+    }
     const resuming = Number.isInteger(previous?.resumeBefore) && Number.isInteger(previous?.resumeAfter) &&
       previous.resumeBefore > previous.resumeAfter && Number.isFinite(Date.parse(previous.targetCoverageThrough));
     let after = resuming ? previous.resumeAfter : Math.max(1104537600,
@@ -159,7 +167,7 @@ export async function ingest(env, deps, historical = false) {
     const pageLimit = historical ? 1 : 3;
     for (let page = 0; page < pageLimit; page++) {
       let rows;
-      try { rows = await archivePage(after, before, deps, historical); }
+      try { rows = await archivePage(after, before, deps, historical, db); }
       catch (error) {
         const failure = classifyArchiveFailure(error); run.errorCode = failure.code;
         if (failure.retryDelayMs > 0 && Number.isFinite(deps.now() + failure.retryDelayMs)) run.retryAt = new Date(deps.now() + failure.retryDelayMs).toISOString();
@@ -209,11 +217,14 @@ export async function ingest(env, deps, historical = false) {
         coverageThrough: historical ? head.source.coverageThrough : previous?.coverageThrough || null,
         lastSuccessfulIngestAt: historical ? head.source.lastSuccessfulIngestAt : previous?.lastSuccessAt || null }, games: plan.changed }) : {importedGames:0};
       const references=candidates.flatMap(candidate=>(candidate.references||[]));
+      // Start from the bounded input, then look up source/game primary keys.
+      // An ordinary JOIN lets SQLite rescan this JSON for every published game.
       if(references.length)await query(db,`INSERT INTO project_references(game_id,url,title,source_post_id)
         SELECT p.game_id,json_extract(r.value,'$.url'),json_extract(r.value,'$.title'),p.id
-        FROM json_each(?) r JOIN source_posts p ON p.id=json_extract(r.value,'$.sourcePostId') JOIN games g ON g.id=p.game_id
+        FROM json_each(?) r CROSS JOIN source_posts p ON p.id=json_extract(r.value,'$.sourcePostId') CROSS JOIN games g ON g.id=p.game_id
         WHERE p.status='published' AND g.status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id)
-        ON CONFLICT(game_id,url) DO UPDATE SET title=excluded.title,source_post_id=excluded.source_post_id`,JSON.stringify(references)).run();
+        ON CONFLICT(game_id,url) DO UPDATE SET title=excluded.title,source_post_id=excluded.source_post_id
+        WHERE project_references.title<>excluded.title OR project_references.source_post_id<>excluded.source_post_id`,JSON.stringify(references)).run();
       run.updatedGames = imported.importedGames;
       run.candidates = await savePending(db, plan.pending, attemptAt);
       const refreshed=await refreshSourceRecords(db,observations,deps);
