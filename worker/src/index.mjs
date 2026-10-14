@@ -28,6 +28,7 @@ import { gameStore, refreshSteamBatch } from './steam.mjs';
 import { hydrateMedia } from './assets.mjs';
 import { refreshSourceBatch } from './source-evidence.mjs';
 import { refreshWeeklyScores, scorePolicy, scoreMaintenanceStatus } from './score-maintenance.mjs';
+import { refreshEvidenceBatch, evidenceMaintenanceStatus, evidencePolicy } from './evidence-maintenance.mjs';
 import { removeEntry, removeSourcePost } from './moderation.mjs';
 import { quizInfo, startQuiz, finishQuiz, deleteQuizData, quizMetrics } from './quiz.mjs';
 
@@ -180,7 +181,7 @@ export function createWorker(overrides = {}) {
           changedPublic=request.method!=='GET'&&['editorHighlights','editorImage','editorDetails','editorMedia','editorCategories','editorJobsRun','editorReposts','editorRemove','editorRemovePost'].includes(action);
           if (action === 'editorInsights') result = json(await insightPage(db,url.searchParams.get('cursor'),deps));
           else if (action === 'editorUsage') result = json(await usageMetrics(db,deps));
-          else if (action === 'editorMaintenance') result = json({ scores: await scoreMaintenanceStatus(db), jev: { connected: Boolean(env.JEV_API_KEY), dailyBudget: await meta(db,'editorial_daily_budget'), cooldown: (await meta(db,'editorial_cooldown'))?.jev || null } });
+          else if (action === 'editorMaintenance') result = json({ scores: await scoreMaintenanceStatus(db), evidence: await evidenceMaintenanceStatus(db), jev: { connected: Boolean(env.JEV_API_KEY), dailyBudget: await meta(db,'editorial_daily_budget'), cooldown: (await meta(db,'editorial_cooldown'))?.jev || null } });
           else if (action === 'editorMe') result = json({ email: admin.email, role: admin.role, integrations: { jev: Boolean(env.JEV_API_KEY), itch: Boolean(env.ITCHIO_API_TOKEN) } });
           else if(action==='editorHighlights') result=json(request.method==='GET'?await getHighlights(db,true):await saveHighlights(db,await readJson(request),admin,deps));
           else if(action==='editorResearchList')result=json(await researchList(db,true));
@@ -221,6 +222,7 @@ export function createWorker(overrides = {}) {
             exactKeys(body,['action','options']);
             changedPublic=body.action==='run'||(body.action==='reposts'&&body.options?.apply===true);
             if(body.action==='enqueue')result=json(await enqueueJobs(db,body.options,{subject:'operator'},deps));
+            else if(body.action==='check-evidence'){exactKeys(body.options,[]);const checked=await refreshEvidenceBatch(db,deps);changedPublic=checked.withdrawn>0;result=json(checked);}
             else if(body.action==='run'){exactKeys(body.options,Object.hasOwn(body.options||{},'kind')?['kind']:[]);result=json(await runJobs(db,env,deps,2,body.options.kind??'all'));}
             else if(body.action==='reposts'){exactKeys(body.options,['apply']);if(typeof body.options.apply!=='boolean')throw notFound();result=json(await consolidateReposts(db,deps,body.options.apply,env.PREVIEWS));}
             else if(body.action==='jobs'){exactKeys(body.options,['status','cursor']);result=json(await listJobs(db,body.options.status,body.options.cursor));}
@@ -264,7 +266,11 @@ export function createWorker(overrides = {}) {
         }
         if (event?.cron === '0 3,4 * * SAT' || event?.cron === '0 3,4 * * 6') return (await rotateHighlights(database(env), deps)).rotated;
         if (event?.cron === '20 * * * *') { const db=database(env); await queueFeedbackMaintenance(db,deps);await queueLinkMaintenance(db,deps);await queueStoreMaintenance(db,deps); return (await runJobs(db,env,deps,2)).processed>0; }
-        if (event?.cron === '50 * * * *') { await pruneUsage(database(env),deps); return (await consolidateReposts(database(env),deps,true,env.PREVIEWS)).merged>0; }
+        if (event?.cron === '50 * * * *') {
+          const db=database(env);
+          if(evidencePolicy.hoursUTC.includes(new Date(deps.now()).getUTCHours()))return (await refreshEvidenceBatch(db,deps)).withdrawn>0;
+          await pruneUsage(db,deps); return (await consolidateReposts(db,deps,true,env.PREVIEWS)).merged>0;
+        }
         if (sourceTick) { if(!ingestionConfigured(env))return false;const refreshed=await refreshSourceBatch(database(env),deps);return refreshed.changed>0||refreshed.updatedGames>0||refreshed.scoreObservations>0; }
         if (event?.cron === '5 * * * *'||maintenance) {
           const db = database(env);

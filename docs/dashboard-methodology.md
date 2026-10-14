@@ -4,6 +4,14 @@ The business question is what this community is making, how its visible output c
 
 ## Views and denominators
 
+The **Weekly brief** compares the latest two complete Monday–Sunday UTC weeks. It counts first-shared projects, projects with any eligible post, distinct source posts, and arrival cohorts with a currently playable/released build. Genres use current labels on first-shared cohorts. Art and model mentions count each project once per label among that week's active projects. Only the three most frequent labels are shown per dimension; the downloadable report retains the complete distributions. Missing labels stay in the denominator. These are descriptive archive counts, not changes in the whole industry's output or evidence that a new model caused a trend.
+
+The hourly publisher computes this brief from the same complete evidence snapshot as the charts, without another full database traversal per visitor. `data/weekly-brief.json` contains public aggregate counts. The visible observation date applies to all its comparisons; the separate feedback report continues to load live evidence.
+
+`data/insight-history.json` retains at most 14 daily checkpoints. The first observation of each UTC date stays fixed. Each checkpoint contains only hashed project/source identifiers, first-source dates and hashes of chart metadata/evidence. It contains no old titles, authors, excerpts, URLs, images or contributions. The publisher compares with the closest checkpoint at least seven days earlier, or the earliest real checkpoint available and explicitly labels a shorter baseline. The first run can bootstrap from the previously published, dated public Insights snapshot. It never invents a previous-week database state.
+
+Catalogue differences separate newly indexed recent entries, recovered older entries, changes to current metadata, changes to the source evidence used in charts, regrouped histories, and entries no longer indexed. Metadata and evidence changes can overlap. A new project key containing an already known source is regrouping, not a new game. Merely checking a URL or store again does not count as a correction. Failed, incomplete or malformed historical reads abort publication instead of replacing a good comparison with zeros.
+
 | View | Date and unit | Meaning |
 | --- | --- | --- |
 | Genre, stage, linked platform | One project at its first source-post date | Arrival cohorts with current editorial labels. Not past states or verified launch dates. |

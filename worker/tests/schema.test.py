@@ -32,7 +32,7 @@ class SchemaTests(unittest.TestCase):
     def test_forward_installs_exact_tables_and_enforces_foreign_keys(self):
         actual = {row[0] for row in self.db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
         self.assertEqual(actual, {
-            "link_observations", "play_expectations",
+            "link_observations", "play_expectations", "evidence_checks",
             "reddit_scores",
             "usage_daily", "usage_receipts", "project_facts",
             "ratings", "game_aliases", "project_references", "project_enrichment", "questionnaires", "research_responses", "editorial_jobs", "feedback_reviews",

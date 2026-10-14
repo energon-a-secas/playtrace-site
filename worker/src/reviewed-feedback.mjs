@@ -21,7 +21,8 @@ export function reviewedFeedback(game, draft, decision, comments, checkedAt) {
       ||current.removed_by_category||!Number.isFinite(current.created_utc)||current.created_utc*1000!==Date.parse(evidence.createdAt)||current.created_utc*1000<Date.parse(draft.windowStart)||current.created_utc*1000>Date.parse(draft.windowEnd)
       ||evidence.url!==`https://www.reddit.com/r/aigamedev/comments/${postId}/_/${id}/`)throw new Error('Source changed, missing or outside this project: '+id);
     const label=decision.labels?.[i];
-    return {number:i+1,url:evidence.url,author:evidence.author,body:evidence.body,createdAt:evidence.createdAt,source:'reddit',
+    const retrieved=typeof current.retrieved_on==='number'&&current.retrieved_on>=1104537600&&current.retrieved_on*1000<=Date.parse(checkedAt)+30000?new Date(current.retrieved_on*1000).toISOString():null;
+    return {number:i+1,url:evidence.url,author:evidence.author,body:evidence.body,createdAt:evidence.createdAt,source:'reddit',...(retrieved?{archiveRetrievedAt:retrieved}:{}),
       theme:label?.theme||null,tone:label?.tone||null,experience:label?.experience||'unspecified'};
   });
   return {version:2,summary:decision.summary,citations,windowStart:draft.windowStart,windowEnd:draft.windowEnd,sampled:draft.sampled,

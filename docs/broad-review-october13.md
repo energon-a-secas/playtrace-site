@@ -25,4 +25,6 @@ Duplicate comments are not independent players. A reported hosting outage retain
 
 The transaction is rehearsed against a fresh production export, then rebased before publication. It preserves all 17 uploaded previews, 51 earlier reviews, previous destination observations, administrator overrides, guest feedback, ratings, favorites, questionnaires and private responses. Guards reject concurrent source, contribution or editorial changes.
 
-The 719-statement transaction succeeded in production. The immediate verification read encountered the account's daily D1 read limit; post-reset verification is recorded with the subsequent release. All 285 existing Node tests passed before publication.
+The 719-statement transaction succeeded in production. The immediate verification read encountered the account's daily D1 read limit. After the UTC reset, production reads confirm 1,325 projects, 71 published reviews and 17 uploaded previews. A fresh production export matches all rehearsed project, source, accepted-fact, review, alias and override rows. Seventeen protected tables and all earlier link observations are preserved. Anonymous usage totals can grow independently while the batch runs; the batch never writes those tables.
+
+The resulting complete site build contains 517 indexable game pages, 18 directory pages and 539 sitemap URLs. The new weekly brief keeps these metadata corrections separate from source-date activity.

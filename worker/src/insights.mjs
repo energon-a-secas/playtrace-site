@@ -52,6 +52,7 @@ export function composeReview(entries) {
     const key = `${entry.tone.value}:${entry.theme.value}`, group = groups.get(key) || [];
     citations.push({ number: citations.length + 1, source: entry.source || 'reddit', id: entry.id,
       url: entry.url, author: entry.author, body: entry.body, createdAt: entry.createdAt,
+      ...(entry.archiveRetrievedAt ? { archiveRetrievedAt: entry.archiveRetrievedAt } : {}),
       ...(entry.updatedAt ? { updatedAt: entry.updatedAt } : {}), experience: entry.experience || 'unspecified',
       theme: entry.theme.value, tone: entry.tone.value }); group.push(citations.length); groups.set(key,group);
   }
@@ -74,7 +75,8 @@ export function feedbackSample(game, since, until, comments) {
         ||row.author.toLowerCase()===game.author.name.toLowerCase()||row.author.toLowerCase()==='automoderator'
         ||typeof row.body!=='string'||!row.body.trim()||/^\[(deleted|removed)\]$/i.test(row.body.trim())
         ||row.removed_by_category||!Number.isFinite(row.created_utc)||row.created_utc*1000<Date.parse(since)||row.created_utc*1000>Date.parse(until))continue;
-      seen.add(row.id);evidence.push({source:'reddit',id:row.id,author:row.author,body:row.body.slice(0,1800),createdAt:new Date(row.created_utc*1000).toISOString(),url:`https://www.reddit.com/r/aigamedev/comments/${post.id}/_/${row.id}/`});
+      const retrieved=typeof row.retrieved_on==='number'&&row.retrieved_on>=1104537600&&row.retrieved_on*1000<=Date.parse(until)+30000?new Date(row.retrieved_on*1000).toISOString():null;
+      seen.add(row.id);evidence.push({source:'reddit',id:row.id,author:row.author,body:row.body.slice(0,1800),createdAt:new Date(row.created_utc*1000).toISOString(),...(retrieved?{archiveRetrievedAt:retrieved}:{}),url:`https://www.reddit.com/r/aigamedev/comments/${post.id}/_/${row.id}/`});
     }
   }
   evidence.sort((a,b)=>b.createdAt.localeCompare(a.createdAt));

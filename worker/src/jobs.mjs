@@ -8,6 +8,7 @@ import { GAME_ID } from './validation.mjs';
 import { acquire, release } from './lease.mjs';
 import { currentNotesSql } from './feedback-evidence.mjs';
 import { feedbackTopics } from '../../js/feedback-patterns.js';
+import { checkedRedditEvidence } from './evidence-maintenance.mjs';
 
 export const jobKinds = ['links','store','feedback','references','research'];
 const projectUrl = effectiveProjectUrl;
@@ -139,17 +140,18 @@ export async function runJobs(db, env, deps, limit = 1, kind = 'all') {
           const evidence=answers.results.slice(0,30).map((row,i)=>({id:String(i+1),body:JSON.parse(row.questions_json).map(q=>{const answer=JSON.parse(row.answers_json)[q.id];return `${q.title}: ${Array.isArray(answer)?answer.map(n=>q.options[n]).join(', '):typeof answer==='number'?q.options[answer]:answer||'Skipped'}`;}).join('\n'),questionnaireId:row.questionnaire_id,revision:row.revision,createdAt:row.updated_at}));
           result={...await classifyEvidence(evidence,env,deps),sampled:answers.results.length>30,note:evidence.length?'Private analysis of questionnaire responses. These are browser contributions, not unique players.':'No questionnaire responses in this window.'};
         }
+        const sourceCheck=job.kind==='feedback'?await checkedRedditEvidence(db,job.game_id,result.evidence):null;
         const payload=JSON.stringify(result);
-        const saved=await query(db,`UPDATE editorial_jobs SET status='ready',payload_json=?,updated_at=? WHERE id=?
+        const saved=await query(db,`UPDATE editorial_jobs SET status='ready',payload_json=?,updated_at=? WHERE id=? AND status='running'
           AND EXISTS(SELECT 1 FROM games g WHERE g.id=editorial_jobs.game_id AND g.status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id))
-          ${job.kind==='feedback'?`AND ${currentNotesSql('evidence')}`:''} RETURNING id`,payload,new Date(deps.now()).toISOString(),job.id,...(job.kind==='feedback'?[payload,job.game_id]:[])).first();
+          ${job.kind==='feedback'?`AND ${currentNotesSql('evidence')} AND COALESCE((SELECT payload_json FROM evidence_checks WHERE game_id=?),'')=?`:''} RETURNING id`,payload,new Date(deps.now()).toISOString(),job.id,...(job.kind==='feedback'?[payload,job.game_id,job.game_id,sourceCheck]:[])).first();
         if(!saved)throw new Error('Public evidence changed while this review was running.');
       }catch(error){
         const message=/^(Jev |Archive HTTP )/.test(error.message||'')?error.message:'This job could not finish. The source may be unavailable. Retry to check again.';
         if(error.queueCooldown&&Number.isFinite(error.retryAt)){
           cooldown[error.queueCooldown]=error.retryAt;deferred=true;
-          await db.batch([putMeta(db,'editorial_cooldown',cooldown),query(db,"UPDATE editorial_jobs SET status='pending',payload_json=?,updated_at=? WHERE id=?",JSON.stringify({...JSON.parse(job.payload_json),note:message,retryAt:new Date(error.retryAt).toISOString()}),new Date(deps.now()).toISOString(),job.id)]);
-        }else await query(db,"UPDATE editorial_jobs SET status='failed',payload_json=?,updated_at=? WHERE id=?",JSON.stringify({...(JSON.parse(job.payload_json).archiveBatch?{archiveBatch:JSON.parse(job.payload_json).archiveBatch}:{}),error:message}),new Date(deps.now()).toISOString(),job.id).run();
+          await db.batch([putMeta(db,'editorial_cooldown',cooldown),query(db,"UPDATE editorial_jobs SET status='pending',payload_json=?,updated_at=? WHERE id=? AND status='running'",JSON.stringify({...JSON.parse(job.payload_json),note:message,retryAt:new Date(error.retryAt).toISOString()}),new Date(deps.now()).toISOString(),job.id)]);
+        }else await query(db,"UPDATE editorial_jobs SET status='failed',payload_json=?,updated_at=? WHERE id=? AND status='running'",JSON.stringify({...(JSON.parse(job.payload_json).archiveBatch?{archiveBatch:JSON.parse(job.payload_json).archiveBatch}:{}),error:message}),new Date(deps.now()).toISOString(),job.id).run();
       }
       processed++;
       if(deferred)break;
@@ -162,6 +164,7 @@ export async function updateJob(db,id,body,admin,deps){
   const versioned=Object.hasOwn(body||{},'expectedUpdatedAt');
   exactKeys(body,['action',...(edited?['review']:[]),...(versioned?['expectedUpdatedAt']:[])]); if(!['retry','dismiss','publish'].includes(body.action)||edited&&body.action!=='publish')throw invalid();
   const job=await query(db,'SELECT * FROM editorial_jobs WHERE id=?',id).first(); if(!job)throw notFound();
+  if(job.requested_by==='evidence-maintenance'&&body.action!=='dismiss')throw invalid('Source-watch flags are rechecked by scheduled maintenance. Queue a fresh feedback review after checking the source.');
   if(versioned&&body.expectedUpdatedAt!==job.updated_at)throw new ApiError('EDIT_CONFLICT','This draft changed. Refresh the queue and check its sources again.',409);
   await getGame(db,job.game_id);
   if(job.status==='running')throw new ApiError('CONFLICT','This job is still running.',409);
@@ -188,11 +191,14 @@ export async function updateJob(db,id,body,admin,deps){
     }
     const review={version:data.version||1,summary:data.summary,citations:data.citations,windowStart:data.windowStart,windowEnd:data.windowEnd,sampled:data.sampled,model:data.model,classifiedComments:data.classifiedComments,
       ...(data.sources?{sources:data.sources,archiveWindowEnd:data.archiveWindowEnd}:{}),editorialReview:{checkedAt:at,method:'Admin-approved cited review'}};
+    let sourceCheck;
+    try{sourceCheck=await checkedRedditEvidence(db,job.game_id,review.citations);}catch{throw new ApiError('CONFLICT','A cited Reddit source changed. Run a new feedback review before publishing.',409);}
     const [saved]=await db.batch([query(db,`INSERT INTO feedback_reviews(game_id,payload_json,published_at,published_by)
       SELECT ?,?,?,? WHERE EXISTS(SELECT 1 FROM editorial_jobs WHERE id=? AND status='ready' AND payload_json=? AND updated_at=?)
         AND EXISTS(SELECT 1 FROM games WHERE id=? AND status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=games.id))
         AND ${currentNotesSql('citations')}
-      ON CONFLICT(game_id) DO UPDATE SET payload_json=excluded.payload_json,published_at=excluded.published_at,published_by=excluded.published_by RETURNING game_id`,job.game_id,JSON.stringify(review),at,admin.subject,id,job.payload_json,job.updated_at,job.game_id,JSON.stringify(review),job.game_id),
+        AND COALESCE((SELECT payload_json FROM evidence_checks WHERE game_id=?),'')=?
+      ON CONFLICT(game_id) DO UPDATE SET payload_json=excluded.payload_json,published_at=excluded.published_at,published_by=excluded.published_by RETURNING game_id`,job.game_id,JSON.stringify(review),at,admin.subject,id,job.payload_json,job.updated_at,job.game_id,JSON.stringify(review),job.game_id,job.game_id,sourceCheck),
       query(db,"UPDATE editorial_jobs SET status='published',payload_json=?,updated_at=? WHERE id=? AND status='ready' AND payload_json=? AND EXISTS(SELECT 1 FROM feedback_reviews WHERE game_id=? AND published_at=? AND payload_json=?)",JSON.stringify({...data,editorialReview:review.editorialReview}),at,id,job.payload_json,job.game_id,at,JSON.stringify(review))]);
     if(!saved.results.length)throw new ApiError('CONFLICT','A cited public note changed. Run this review again before publishing.',409);
   }else await query(db,'UPDATE editorial_jobs SET status=?,updated_at=? WHERE id=?',body.action==='retry'?'pending':'dismissed',at,id).run();
