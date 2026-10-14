@@ -34,10 +34,12 @@ Ten [reviewed summaries](../data/feedback-reviewed-october14.json) use 24 indivi
 
 The feedback preparation command checks source-health records and guards them against concurrent changes. `--comments` can reuse a saved archive response no older than 24 hours during rebasing. Selected summaries report their reviewed sample rather than inheriting a larger draft's classification count.
 
+Public summary coverage now counts the actual citations by source. This keeps a selected review from displaying a missing draft count or implying that every retained comment appears in its published evidence.
+
 Validation covers query plans, saved-row equivalence, shared cooldowns, checkpoint preservation, feedback deduplication and source changes before publication. Operator checks preserve existing reviews, visitor/account data, admin edits and uploaded previews. No synthetic visitor activity is sent to production.
 
 ## Publication checks
 
-All 309 JavaScript tests, 11 schema tests and 89 local workerd checks passed. The combined data transaction was rehearsed against a fresh production export: 1,348 active projects retained, 81 published summaries after the batch, all 17 uploaded previews preserved, and no changes to visitor contributions or administrative overrides. Six dated link observations were added without dropping prior observations.
+Validation passed for the complete JavaScript suite, 11 schema tests and 89 local workerd checks. The combined data transaction was rehearsed against a fresh production export: 1,348 active projects retained, 81 published summaries after the batch, all 17 uploaded previews preserved, and no changes to visitor contributions or administrative overrides. Six dated link observations were added without dropping prior observations.
 
 The Worker was deployed as `50be39dc-4dbe-423a-9b32-96df6d973af2`. Production accepted all 155 guarded statements; that editorial transaction read 310 rows. The query-cost improvement still needs a complete deployed day of production observations before evaluating its effect on daily usage.

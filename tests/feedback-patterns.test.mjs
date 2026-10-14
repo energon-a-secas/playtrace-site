@@ -3,6 +3,16 @@ import assert from 'node:assert/strict';
 import { feedbackReport } from '../js/feedback-patterns.js';
 import { feedbackEvidence, feedbackResearchLeads, feedbackEvidenceCsv } from '../js/feedback-research.js';
 import { researchLeadsMarkup, topicEvidenceMarkup } from '../js/feedback-research-view.js';
+import { reviewMarkup } from '../js/feedback-review.js';
+
+test('published summary coverage counts cited sources instead of missing or larger draft totals',()=>{
+  const citation={number:1,url:'https://www.reddit.com/r/aigamedev/comments/abc12/_/comm1/',source:'reddit',body:'I played it.',author:'Player'};
+  const review={summary:'A reported play session [1].',citations:[citation],classifiedComments:null,windowStart:'2026-10-01T00:00:00Z',windowEnd:'2026-10-12T00:00:00Z'};
+  const selected=reviewMarkup(review);
+  assert.match(selected,/1 cited Reddit comment ·/);assert.doesNotMatch(selected,/null|undefined|0 cited Playtrace/);
+  const mixed=reviewMarkup({...review,classifiedComments:30,sources:{reddit:{classified:30},playtrace:{classified:10}},citations:[citation,{...citation,number:2,source:'playtrace',url:'https://playtrace.neorgon.com/games/g_abc12/#feedback-2'}]});
+  assert.match(mixed,/1 cited Reddit comment · 1 cited Playtrace note/);assert.doesNotMatch(mixed,/30 archived|10 public/);
+});
 
 test('pattern filters keep missing context unknown, count source URLs once and avoid calling one project a trend',()=>{
   const citation={url:'https://www.reddit.com/comments/abc12/_/comm1/',source:'reddit',theme:'controls',tone:'concern'};
