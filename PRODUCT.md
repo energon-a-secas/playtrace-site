@@ -18,7 +18,7 @@ Find a game to try, understand what changed, and share a useful note with an opt
 
 Two optional multi-select questions invite a quick first impression, followed by an optional note. Keep the questions before existing contributions on narrow screens. Display name and ideal price expand only when wanted. Publish aggregate choices alongside the conversation without presenting visitor responses as verified players.
 
-The screenshot quiz remains available at its dedicated route, but is not promoted in primary navigation or home. Discovery, Browse, Insights and Submit feedback take priority.
+The screenshot quiz remains available at its dedicated route, but is not promoted in primary navigation or home. Discovery, Browse and Insights take priority. Keep Submit feedback available through project pages and its dedicated URL, outside the primary header.
 
 ## Voice and principles
 
@@ -112,3 +112,10 @@ Run source-post research locally from a private D1 export. Jev answers six typed
 Compare score observations at similar post ages, not the dates Playtrace downloaded them. The initial October study found scores were usually archived within seconds of posting, so no best posting time or successful-post ranking is supported. Keep small cohorts suppressed and treat future associations as observational. Reddit remains the primary discussion source.
 
 Use /browse/, /insights/, /about/, /feedback/ and /admin/. The Pages build creates directory indexes and legacy .html redirects that preserve queries and fragments. Canonical metadata and the sitemap use the shorter routes. Project ID URLs remain stable.
+
+
+Admin Post research imports the local Jev sample as private drafts with source fingerprints, revision protection and explicit follow-up questions. Source-reviewed and unreviewed aggregates are separate, with assistant source inspection distinguished from Admin inspection. No approval sends messages or changes public facts. Source changes invalidate reviewed findings.
+
+Where games live separates destination pies for stated desktop and mobile support. Browser-only labels stay outside both device cohorts. Show cross-device overlap, unspecified support and missing destinations.
+
+Reddit engagement history retains up to 52 real dated observations per source, including supplied comment counts. Re-reading an unchanged archive does not refresh an observation. Approved OAuth may replace archive score reads under the same Sunday eight-request ceiling, including authentication. Live access remains disabled until approved credentials are configured.

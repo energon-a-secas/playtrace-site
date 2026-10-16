@@ -48,3 +48,5 @@ The pilot classified 120 posts from a 743-post, 60-day window in 24 requests. Pr
 The main action is **Submit feedback**, with a game picker leading to a public note on that project. Optional questionnaires retain their existing private storage and consent. Public-note access remains available when no questionnaire is open. Home centers **Browse the collection** and **Insights** below the artwork.
 
 GitHub Pages now serves `/browse/`, `/feedback/`, `/insights/`, `/about/`, `/admin/` and `/quiz/` as directory indexes. Existing `.html` links are client redirects that preserve query strings and fragments, with a timed HTML fallback. They are not server-side HTTP 301 redirects. Canonical URLs, internal navigation and the sitemap use the shorter paths. Game pages retain their existing `/games/<id>/` addresses.
+
+The cached study can now be imported into the private [Admin review workspace](post-research-workspace.md). Source-matched imports reuse the existing classifications without additional Jev calls.

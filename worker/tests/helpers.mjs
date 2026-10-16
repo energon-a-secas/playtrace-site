@@ -28,6 +28,8 @@ export class TestDB {
     this.sql.exec(readFileSync(new URL('../migrations/0015_link_observations.sql', import.meta.url), 'utf8'));
     this.sql.exec(readFileSync(new URL('../migrations/0016_play_expectations.sql', import.meta.url), 'utf8'));
     this.sql.exec(readFileSync(new URL('../migrations/0017_evidence_checks.sql', import.meta.url), 'utf8'));
+    this.sql.exec(readFileSync(new URL('../migrations/0018_post_research.sql', import.meta.url), 'utf8'));
+    this.sql.exec(readFileSync(new URL('../migrations/0019_engagement_history.sql', import.meta.url), 'utf8'));
   }
   prepare(sql) {
     const db = this;

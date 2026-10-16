@@ -97,7 +97,6 @@
       <!-- template:actions -->
 <div class="header-actions">
   <a class="btn btn--ghost btn--sm" href="/browse/">Browse</a>
-  <a class="btn btn--ghost btn--sm" href="/feedback/">Submit feedback</a>
   <a class="btn btn--ghost btn--sm" href="/insights/">Insights</a>
   <a class="btn btn--ghost btn--sm" href="/about/">About</a>
 </div>
@@ -124,7 +123,7 @@
     <section id="adminGate" class="admin-gate" aria-labelledby="adminGateTitle"><h3 id="adminGateTitle">Sign in to manage Playtrace</h3><p>Admin access is checked against your verified account.</p><button id="adminSignIn" class="btn btn--primary" type="button" disabled>Sign in</button></section>
     <p id="adminMessage" class="admin-message" role="status" aria-live="polite">Checking admin availability…</p>
     <div id="adminWorkspace" hidden>
-      <nav class="admin-tabs" aria-label="Admin views"><button type="button" data-admin-tab="inbox" aria-current="page">Change requests</button><button type="button" data-admin-tab="insights">Insights</button><button type="button" data-admin-tab="images">Projects</button><button type="button" data-admin-tab="highlights">Weekly highlights</button><button type="button" data-admin-tab="queue">Review queue</button><button type="button" data-admin-tab="research">Questionnaires</button><button type="button" data-admin-tab="quiz">Game recognition</button><button type="button" data-admin-tab="access" id="accessTab" hidden>Admin access</button></nav>
+      <nav class="admin-tabs" aria-label="Admin views"><button type="button" data-admin-tab="inbox" aria-current="page">Change requests</button><button type="button" data-admin-tab="insights">Insights</button><button type="button" data-admin-tab="images">Projects</button><button type="button" data-admin-tab="highlights">Weekly highlights</button><button type="button" data-admin-tab="queue">Review queue</button><button type="button" data-admin-tab="postStudy">Post research</button><button type="button" data-admin-tab="research">Questionnaires</button><button type="button" data-admin-tab="quiz">Game recognition</button><button type="button" data-admin-tab="access" id="accessTab" hidden>Admin access</button></nav>
       <section id="insightsPanel" aria-labelledby="insightsTitle" hidden>
         <div class="insights-intro"><p class="eyebrow">RESEARCH / ADMIN PREVIEW</p><h3 id="insightsTitle">What is the community making?</h3><p>Explore game types, art styles and model mentions through time. Follow each pattern back to its source before drawing a conclusion.</p></div>
         <div class="insights-toolbar"><p id="insightStatus" role="status" aria-live="polite"></p><button type="button" class="btn btn--secondary" id="refreshInsights">Refresh evidence</button></div>
@@ -145,6 +144,14 @@
           <section class="insight-section"><h4>Discovery and participation</h4><div id="usageInsights"></div></section>
           <section class="insight-section insight-method"><h4>How to read this dashboard</h4><p>Art, engine and model labels are explicit keyword mentions in titles and retained source text. They may describe an influence, a comparison or a tool the maker did not use. The matcher does not inspect screenshots or infer missing versions. Multiple labels can apply to a project. Always inspect the linked source.</p><p>Charts use original source-post dates with the latest available text, including later edits. Store data and editorial genres describe the present. Deleted source text is excluded from mention extraction; its date may remain in the timeline. Imported history, duplicates, missing flair and unequal text coverage limit comparisons. No measured trend here establishes causation.</p><p>The <a href="/insights/">public dashboard</a> shares catalogue evidence and release dates. Visitor activity, questionnaire responses, account information and editorial notes remain in the admin workspace.</p></section>
         </div>
+      </section>
+      <section id="postStudyPanel" aria-labelledby="postStudyTitle" hidden>
+        <div class="admin-section-heading"><div><p class="eyebrow">PRIVATE / SOURCE RESEARCH</p><h3 id="postStudyTitle">Better questions, clearer listings</h3><p>Review Jev’s reading of source posts, identify gaps and prepare useful follow-up questions.</p></div><button id="refreshPostStudy" class="btn btn--secondary" type="button">Refresh</button></div>
+        <p id="postStudyMessage" role="status"></p>
+        <div class="field"><label for="postStudyCohort">Report evidence</label><select id="postStudyCohort" class="select"><option value="reviewed">Source-reviewed labels</option><option value="draft">Unreviewed Jev sample</option></select></div>
+        <div id="postStudyReport"></div><section id="postStudyEngagement" class="insight-section"></section>
+        <div class="admin-section-heading"><h4>Data-gap review queue</h4><div class="field"><label for="postStudyState">Review state</label><select id="postStudyState" class="select"><option value="draft">Awaiting review</option><option value="reviewed">Reviewed</option><option value="stale">Changed sources</option><option value="dismissed">Dismissed</option></select></div></div>
+        <div id="postStudyQueue"></div><button id="morePostStudy" class="btn btn--secondary" type="button" hidden>More posts</button>
       </section>
       <section id="inboxPanel" aria-labelledby="inboxTitle">
         <div class="admin-section-heading"><div><h3 id="inboxTitle">The community inbox</h3><p>Private requests from project pages.</p></div><div class="admin-inline"><label class="sr-only" for="inboxStatus">Request status</label><select id="inboxStatus" class="select"><option value="open">Open requests</option><option value="resolved">Resolved</option><option value="dismissed">Dismissed</option></select><button type="button" id="refreshInbox" class="btn btn--secondary">Refresh</button></div></div>

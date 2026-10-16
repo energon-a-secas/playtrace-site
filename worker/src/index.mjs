@@ -1,3 +1,4 @@
+import { importPostResearch, postResearchQueue, reviewPostResearch, postResearchReport } from './post-research.mjs';
 import { insightPage } from './catalogue-insights.mjs';
 import { feedbackPatterns } from './feedback-patterns.mjs';
 import { ownExpectation, saveExpectation } from './expectations.mjs';
@@ -37,6 +38,9 @@ const routes = [
   [/^\/feedback-patterns$/, ['GET'], 'feedbackPatterns'],
   [/^\/games\/(g_[a-z0-9]{5,12})\/expectations$/, ['GET','PUT','DELETE'], 'expectations'],
   [/^\/usage$/, ['POST'], 'usage'],
+  [/^\/admin\/post-research$/, ['GET'], 'editorPostResearch'],
+  [/^\/admin\/post-research\/report$/, ['GET'], 'editorPostResearchReport'],
+  [/^\/admin\/post-research\/([a-z0-9]{5,12})$/, ['PUT'], 'editorPostResearchReview'],
   [/^\/admin\/insights$/, ['GET'], 'editorInsights'],
   [/^\/admin\/usage$/, ['GET'], 'editorUsage'],
   [/^\/admin\/maintenance$/, ['GET'], 'editorMaintenance'],
@@ -180,8 +184,11 @@ export function createWorker(overrides = {}) {
           const admin = await authorizeAdmin(request, env, deps), db = database(env);
           changedPublic=request.method!=='GET'&&['editorHighlights','editorImage','editorDetails','editorMedia','editorCategories','editorJobsRun','editorReposts','editorRemove','editorRemovePost'].includes(action);
           if (action === 'editorInsights') result = json(await insightPage(db,url.searchParams.get('cursor'),deps));
+          else if(action==='editorPostResearch')result=json(await postResearchQueue(db,url.searchParams));
+          else if(action==='editorPostResearchReport')result=json(await postResearchReport(db));
+          else if(action==='editorPostResearchReview')result=json(await reviewPostResearch(db,match[1],await readJson(request,8192),admin,deps));
           else if (action === 'editorUsage') result = json(await usageMetrics(db,deps));
-          else if (action === 'editorMaintenance') result = json({ scores: await scoreMaintenanceStatus(db), evidence: await evidenceMaintenanceStatus(db), jev: { connected: Boolean(env.JEV_API_KEY), dailyBudget: await meta(db,'editorial_daily_budget'), cooldown: (await meta(db,'editorial_cooldown'))?.jev || null } });
+          else if (action === 'editorMaintenance') result = json({ scores: await scoreMaintenanceStatus(db,env), evidence: await evidenceMaintenanceStatus(db), jev: { connected: Boolean(env.JEV_API_KEY), dailyBudget: await meta(db,'editorial_daily_budget'), cooldown: (await meta(db,'editorial_cooldown'))?.jev || null } });
           else if (action === 'editorMe') result = json({ email: admin.email, role: admin.role, integrations: { jev: Boolean(env.JEV_API_KEY), itch: Boolean(env.ITCHIO_API_TOKEN) } });
           else if(action==='editorHighlights') result=json(request.method==='GET'?await getHighlights(db,true):await saveHighlights(db,await readJson(request),admin,deps));
           else if(action==='editorResearchList')result=json(await researchList(db,true));
@@ -221,7 +228,12 @@ export function createWorker(overrides = {}) {
           if (action === 'campaign') {
             exactKeys(body,['action','options']);
             changedPublic=body.action==='run'||(body.action==='reposts'&&body.options?.apply===true);
-            if(body.action==='enqueue')result=json(await enqueueJobs(db,body.options,{subject:'operator'},deps));
+            if(body.action==='import-post-research')result=json(await importPostResearch(db,body.options,deps));
+            else if(body.action==='review-post-research'){
+              const {id,...decision}=body.options||{};if(!/^[a-z0-9]{5,12}$/.test(id||''))throw notFound();
+              result=json(await reviewPostResearch(db,id,decision,{subject:'assistant-source-review'},deps));
+            }
+            else if(body.action==='enqueue')result=json(await enqueueJobs(db,body.options,{subject:'operator'},deps));
             else if(body.action==='check-evidence'){exactKeys(body.options,[]);const checked=await refreshEvidenceBatch(db,deps);changedPublic=checked.withdrawn>0;result=json(checked);}
             else if(body.action==='run'){exactKeys(body.options,Object.hasOwn(body.options||{},'kind')?['kind']:[]);result=json(await runJobs(db,env,deps,2,body.options.kind??'all'));}
             else if(body.action==='reposts'){exactKeys(body.options,['apply']);if(typeof body.options.apply!=='boolean')throw notFound();result=json(await consolidateReposts(db,deps,body.options.apply,env.PREVIEWS));}
@@ -262,7 +274,7 @@ export function createWorker(overrides = {}) {
         // Reuse the hourly :50 trigger; keep the account within five triggers.
         if (event?.cron === scorePolicy.cron || event?.cron==='50 * * * *'&&scheduledAt.getUTCDay()===0&&scheduledAt.getUTCHours()===12) {
           if(!ingestionConfigured(env))return false;
-          const db=database(env),result=await refreshWeeklyScores(db,deps);await queueFeedbackMaintenance(db,deps,{weekly:true});return result.updated>0;
+          const db=database(env),result=await refreshWeeklyScores(db,deps,env);await queueFeedbackMaintenance(db,deps,{weekly:true});return result.updated>0;
         }
         if (event?.cron === '0 3,4 * * SAT' || event?.cron === '0 3,4 * * 6') return (await rotateHighlights(database(env), deps)).rotated;
         if (event?.cron === '20 * * * *') { const db=database(env); await queueFeedbackMaintenance(db,deps);await queueLinkMaintenance(db,deps);await queueStoreMaintenance(db,deps); return (await runJobs(db,env,deps,2)).processed>0; }
