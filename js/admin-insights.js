@@ -7,18 +7,33 @@ import { feedbackOptions } from './feedback-options.js';
 import { releaseTimeline } from './release-evidence.js';
 import { loadFeedbackPatterns } from './feedback-pattern-view.js';
 import { renderHosting } from './hosting-view.js';
+import { renderTechniques, renderStores } from './discovery-insights.js';
+import { renderProjectList, bindChart } from './insight-projects.js';
+import { deviceGroups } from './hosting-charts.js';
+import { periodKey } from './insight-analysis.js';
 
 const $=id=>document.getElementById(id),n=value=>Number(value).toLocaleString(),pct=(a,b)=>b?`${(a/b*100).toFixed(1)}%`:'No sample';
-let api,run=0,busy=false,data=null,usage=null,exportRows=[],evidenceLimit=20,publicView=false;
-const dimensionLabels={category:'Game genre',stage:'Current development stage',distribution:'Linked platform',styles:'Art style mentions',formats:'Visual format mentions',models:'AI model mentions',engines:'Engine mentions'};
+let api,run=0,busy=false,data=null,allData=null,usage=null,exportRows=[],evidenceLimit=20,publicView=false,selectedPeriod='';
+const dimensionLabels={category:'Game genre',stage:'Current development stage',distribution:'Linked platform',styles:'Art style mentions',formats:'Visual format mentions',models:'AI model mentions',engines:'Engine mentions',techniques:'Technique mentions',resources:'Tool / asset mentions'};
 const label=value=>data?.categories?.find(item=>item.id===value)?.label||({unknown:'Unspecified',prototype:'Prototype',concept:'Concept',playable:'Playable build',released:'Released'})[value]||value;
-export function resetInsights(){run++;busy=false;data=null;usage=null;exportRows=[];for(const id of ['insightCoverage','trendChart','trendTable','insightSources','releaseComparison','genreBreakdown','platformBreakdown','stageBreakdown','storeCoverage','storeReleaseTimeline','usageInsights','feedbackInsights'])$(id).replaceChildren();$('insightsContent').hidden=true;$('insightStatus').textContent='';$('refreshInsights').disabled=false;}
+export function resetInsights(){run++;busy=false;data=null;allData=null;usage=null;exportRows=[];for(const id of ['insightCoverage','trendChart','trendTable','insightSources','releaseComparison','genreBreakdown','platformBreakdown','stageBreakdown','storeCoverage','storeReleaseTimeline','usageInsights','feedbackInsights'])$(id).replaceChildren();$('insightsContent').hidden=true;$('insightStatus').textContent='';$('refreshInsights').disabled=false;}
 export function initInsights({request,publicMode=false}){
   api=request;
   publicView=publicMode;
   $('refreshInsights').addEventListener('click',()=>loadInsights(true));
-  $('trendDimension').addEventListener('change',()=>{setValues('trend');paintTrend();});
-  for(const id of ['trendValue','trendGrain','trendMeasure','trendFrom','trendTo'])$(id).addEventListener('change',()=>{evidenceLimit=20;paintTrend();});
+  $('trendDimension').addEventListener('change',()=>{selectedPeriod='';evidenceLimit=20;setValues('trend');paintTrend();});
+  for(const id of ['trendValue','trendGrain','trendMeasure','trendFrom','trendTo'])$(id).addEventListener('change',()=>{evidenceLimit=20;selectedPeriod='';paintTrend();});
+  for(const select of document.querySelectorAll('[data-insight-filter]'))select.addEventListener('change',applyScope);
+  $('resetInsightScope')?.addEventListener('click',()=>{document.querySelectorAll('[data-insight-filter]').forEach(select=>select.value='');applyScope();});
+  for(const dimension of ['category','stage','distribution']){
+    const target=$(dimension==='category'?'genreBreakdown':dimension==='stage'?'stageBreakdown':'platformBreakdown');
+    target?.addEventListener('click',event=>{const button=event.target.closest('[data-breakdown]');if(!button)return;
+      const value=button.dataset.breakdown;
+      renderProjectList($('collectionProjects'),data.games.filter(game=>value===missingLabel[dimension]?!valuesFor(game,dimension).length:valuesFor(game,dimension).includes(value)),{title:label(value),focus:true});
+    });
+  }
+  bindChart($('trendChart'),period=>{selectedPeriod=selectedPeriod===period?'':period;evidenceLimit=20;paintEvidence();const details=$('insightSources').closest('details');details.open=true;details.querySelector('summary').focus({preventScroll:true});});
+  $('clearTrendPeriod')?.addEventListener('click',()=>{selectedPeriod='';paintEvidence();});
   $('comparisonDimension').addEventListener('change',()=>{setValues('comparison');paintComparison();});
   for(const id of ['releaseEvent','comparisonValue','comparisonWindow'])$(id).addEventListener('change',paintComparison);
   $('moreInsightSources').addEventListener('click',()=>{evidenceLimit+=20;paintEvidence();});
@@ -38,16 +53,34 @@ export async function loadInsights(refresh=false){
       $('insightStatus').textContent=`Reading evidence: ${n(games.length)} of ${n(total)} projects…`;
     }while(cursor);
     if(games.length!==total)throw new Error('Some projects are missing. Refresh to retry.');
-    data={...head,games};usage=null;
+    data={...head,games};allData=data;usage=null;
     if(!publicView)try{usage=await api('/admin/usage');}catch(error){if(current===run)$('usageInsights').textContent=`Usage counts are unavailable: ${error.message}`;}
     if(current!==run)return;
     $('insightsContent').hidden=false;$('insightStatus').textContent=`${n(games.length)} projects · evidence read ${dateLabel(data.observedAt)}${publicView?' · Public catalogue evidence':' · Admin view'}`;
     setValues('trend');setValues('comparison');$('releaseEvent').innerHTML=modelReleases.map((item,i)=>`<option value="${i}">${e(item.name)} · ${item.date}</option>`).join('');$('releaseEvent').value=String(modelReleases.length-1);
-    paintOverview();paintTrend();paintComparison();paintUsage();paintReleases();
-    renderHosting($('hostingInsights'),data.games);
+    populateScope();applyScope();paintUsage();
     loadFeedbackPatterns($('feedbackPatterns'),api,data.games,data.categories);
   }catch(error){if(current===run)$('insightStatus').textContent=error.message;}
   finally{if(current===run){busy=false;$('refreshInsights').disabled=false;}}
+}
+function populateScope(){
+  const choices={genre:[...new Set(allData.games.map(game=>game.category))].map(value=>[value,label(value)]),platform:[...new Set(allData.games.map(game=>game.distribution))].map(value=>[value,value]),stage:[...new Set(allData.games.map(game=>game.stage))].map(value=>[value,label(value)]),device:[['desktop','Desktop'],['mobile','Mobile'],['browser','Browser'],['unspecified','Device not specified']]};
+  for(const select of document.querySelectorAll('[data-insight-filter]')){
+    const old=select.value,first=select.options[0].textContent;
+    select.innerHTML=`<option value="">${e(first)}</option>`+choices[select.dataset.insightFilter].sort((a,b)=>a[1].localeCompare(b[1])).map(([value,name])=>`<option value="${e(value)}">${e(name)}</option>`).join('');
+    if([...select.options].some(option=>option.value===old))select.value=old;
+  }
+  if($('insightScopeFields'))$('insightScopeFields').disabled=false;
+}
+function applyScope(){
+  if(!allData)return;
+  const scope=Object.fromEntries([...document.querySelectorAll('[data-insight-filter]')].map(select=>[select.dataset.insightFilter,select.value]));
+  data={...allData,games:allData.games.filter(game=>(!scope.genre||game.category===scope.genre)&&(!scope.platform||game.distribution===scope.platform)&&(!scope.stage||game.stage===scope.stage)&&(!scope.device||(scope.device==='browser'?game.platforms?.includes('Browser'):scope.device==='unspecified'?!game.platforms?.length:deviceGroups(game)[scope.device])))};
+  if($('insightScopeCount'))$('insightScopeCount').textContent=`${n(data.games.length)} of ${n(allData.games.length)} projects in this selection`;
+  if($('collectionProjects'))$('collectionProjects').hidden=true;
+  evidenceLimit=20;selectedPeriod='';setValues('trend');setValues('comparison');paintOverview();paintTrend();paintComparison();paintReleases();
+  renderHosting($('hostingInsights'),data.games);renderStores($('storeInsights'),data.games);
+  renderTechniques($('techniqueInsights'),data.games,(dimension,value)=>{selectedPeriod='';$('trendDimension').value=dimension;setValues('trend');$('trendValue').value=value;paintTrend();location.hash='trends';});
 }
 function paintReleases(){
   if(!$('storeReleaseTimeline'))return;
@@ -61,23 +94,27 @@ function setValues(prefix){
   if([...select.options].some(option=>option.value===old))select.value=old;
   else select.value=prefix==='trend'?'':values[0]?.label||'';
 }
-function distribution(rows,total){return `<ul class="insight-distribution">${rows.map(row=>`<li><span>${e(label(row.label))}</span><span>${n(row.count)} <small>(${pct(row.count,total)})</small></span><meter min="0" max="${Math.max(1,total)}" value="${row.count}" aria-label="${e(label(row.label))}: ${row.count} of ${total}"></meter></li>`).join('')}</ul>`;}
+function distribution(rows,total,interactive=false){
+  const list=items=>`<ul class="insight-distribution">${items.map(row=>`<li>${interactive?`<button type="button" class="text-button" data-breakdown="${e(row.label)}">${e(label(row.label))}</button>`:`<span>${e(label(row.label))}</span>`}<span>${n(row.count)} <small>(${pct(row.count,total)})</small></span><meter min="0" max="${Math.max(1,total)}" value="${row.count}" aria-label="${e(label(row.label))}: ${row.count} of ${total}"></meter></li>`).join('')}</ul>`;
+  return interactive&&rows.length>8?list(rows.slice(0,8))+`<details><summary>Show ${rows.length-8} more</summary>${list(rows.slice(8))}</details>`:list(rows);
+}
 function paintOverview(){
   const games=data.games,posts=games.flatMap(game=>game.observations),full=posts.filter(post=>post.coverage==='full-text').length,model=games.filter(game=>valuesFor(game,'models').length).length,style=games.filter(game=>valuesFor(game,'styles').length).length;
   $('insightCoverage').innerHTML=`<dl class="insight-overview"><div><dt>Source posts</dt><dd>${n(posts.length)}<small>${n(full)} with retained full text</small></dd></div><div><dt>Explicit model mentions</dt><dd>${pct(model,games.length)}<small>${n(model)} of ${n(games.length)} projects</small></dd></div><div><dt>Recognized art style mentions</dt><dd>${pct(style,games.length)}<small>${n(style)} of ${n(games.length)} projects</small></dd></div><div><dt>Current genre classified</dt><dd>${pct(games.filter(g=>g.category!=='other').length,games.length)}<small>One catalogue genre per project</small></dd></div></dl><p class="insight-method">The archive includes eligible showcases and individually reviewed older unlabeled posts. Missing posts, truncated excerpts and later edits affect every comparison. ${data.source?.coverageThrough?`Collection checked through ${e(dateLabel(data.source.coverageThrough))}.`:''} Full text covers ${pct(full,posts.length)} of included posts. No recognized mention means unknown, not “no AI” or “no art style.”</p>`;
-  $('genreBreakdown').innerHTML=distribution(breakdown(games,'category'),games.length);
-  $('platformBreakdown').innerHTML=distribution(breakdown(games,'distribution'),games.length);
-  $('stageBreakdown').innerHTML=distribution(breakdown(games,'stage'),games.length);
+  $('genreBreakdown').innerHTML=distribution(breakdown(games,'category'),games.length,Boolean($('collectionProjects')));
+  $('platformBreakdown').innerHTML=distribution(breakdown(games,'distribution'),games.length,Boolean($('collectionProjects')));
+  $('stageBreakdown').innerHTML=distribution(breakdown(games,'stage'),games.length,Boolean($('collectionProjects')));
   const stores=games.filter(g=>g.storeProvider),demos=stores.filter(g=>g.releaseKind==='demo'),relatedDemos=stores.filter(g=>g.demoAvailable),health=new Map();for(const g of games.filter(g=>g.projectUrl))health.set(g.linkState,(health.get(g.linkState)||0)+1);
   $('storeCoverage').innerHTML=`<p>${n(stores.length)} projects have store evidence; ${n(demos.length)} link to demo listings and ${n(relatedDemos.length)} full-game listings have a separately verified, released Steam demo. ${n(stores.filter(g=>g.browserBuild).length)} store pages offer browser builds and ${n(stores.filter(g=>g.downloadableBuild).length)} offer downloads; these may overlap and checks do not test gameplay. Current stages above combine creator descriptions, editorial choices and recent store checks. They are not verified launch counts or a release timeline.</p><p>Listed game links: ${[...health].map(([key,count])=>`${n(count)} ${e(key.replaceAll('-',' '))}`).join(' · ')}. A reachable page does not prove the build works.</p>`;
 }
 function paintTrend(){
   if(!data)return;const dimension=$('trendDimension').value,value=$('trendValue').value,from=$('trendFrom').value,to=$('trendTo').value;
-  if(from&&to&&from>to){$('trendDescription').textContent='Choose an end date after the start date.';return;}
+  if(from&&to&&from>to){$('trendDescription').textContent='Choose an end date after the start date.';for(const id of ['trendChart','trendTable','insightSources'])$(id).replaceChildren();$('sourceCount').textContent='';$('moreInsightSources').hidden=true;$('exportInsights').disabled=true;return;}
+  $('exportInsights').disabled=false;
   const rows=trend(data.games,{dimension,value,grain:$('trendGrain').value,from,to}),share=$('trendMeasure').value==='share';
   $('trendDescription').textContent=mentionDimensions.has(dimension)?'Projects with source posts in each period; each project counts once per period. Mentions come from currently available text at the original post date, so later edits can change the apparent history.':'Projects grouped by their first source-post date, using today’s catalogue labels. These are arrival cohorts, not historical changes of genre, stage or platform.';
   const vals=rows.map(row=>share?(row.total?row.count/row.total*100:0):row.count),max=Math.max(1,...vals),width=880,height=270,pad=44,plot=height-pad*2,step=(width-pad*2)/Math.max(1,rows.length),bar=Math.min(48,step*.7);
-  $('trendChart').innerHTML=rows.length?`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${e(value?label(value):'All observed projects')} by ${$('trendGrain').value}. Values available in the table below.">${[0,.5,1].map(f=>`<line class="chart-line" x1="${pad}" y1="${height-pad-f*plot}" x2="${width-pad}" y2="${height-pad-f*plot}"/><text x="${pad-8}" y="${height-pad-f*plot+4}" text-anchor="end">${share?Math.round(max*f)+'%':Math.round(max*f)}</text>`).join('')}${rows.map((row,i)=>`<rect class="chart-bar" x="${pad+i*step+(step-bar)/2}" y="${height-pad-vals[i]/max*plot}" width="${bar}" height="${vals[i]/max*plot}"><title>${row.period}: ${row.count} / ${row.total} projects (${pct(row.count,row.total)}); ${row.unknown} unknown</title></rect>${i%Math.max(1,Math.ceil(rows.length/8))===0||i===rows.length-1?`<text x="${pad+i*step+step/2}" y="${height-18}" text-anchor="middle">${row.period}</text>`:''}`).join('')}</svg><figcaption>${e(value?label(value):'All observed projects')} · ${share?'share of all observed projects in that period':'project count'} · empty periods mean no observed entries.</figcaption>`:'<p>No observed projects in this date range.</p>';
+  $('trendChart').innerHTML=rows.length?`<svg viewBox="0 0 ${width} ${height}" role="group" aria-label="${e(value?label(value):'All observed projects')} by ${$('trendGrain').value}. Values available in the table below.">${[0,.5,1].map(f=>`<line class="chart-line" x1="${pad}" y1="${height-pad-f*plot}" x2="${width-pad}" y2="${height-pad-f*plot}"/><text x="${pad-8}" y="${height-pad-f*plot+4}" text-anchor="end">${share?Math.round(max*f)+'%':Math.round(max*f)}</text>`).join('')}${rows.map((row,i)=>`<rect class="chart-bar" role="button" tabindex="0" data-chart-value="${row.period}" data-chart-label="${row.period}: ${row.count} of ${row.total} projects (${pct(row.count,row.total)}). Select to inspect sources." aria-label="${row.period}: ${row.count} of ${row.total} projects. Show sources." x="${pad+i*step+(step-bar)/2}" y="${height-pad-vals[i]/max*plot}" width="${bar}" height="${vals[i]/max*plot}"><title>${row.period}: ${row.count} / ${row.total} projects (${pct(row.count,row.total)}); ${row.unknown} unknown</title></rect>${i%Math.max(1,Math.ceil(rows.length/8))===0||i===rows.length-1?`<text x="${pad+i*step+step/2}" y="${height-18}" text-anchor="middle">${row.period}</text>`:''}`).join('')}</svg><p class="chart-tooltip" data-chart-tooltip role="tooltip" hidden></p><figcaption>${e(value?label(value):'All observed projects')} · ${share?'share of all observed projects in that period':'project count'} · empty periods mean no observed entries.</figcaption>`:'<p>No observed projects in this date range.</p>';
   const headers=['Period','Matching projects','All observed projects','Share of all observed (%)','Unknown / no recognized mention','With retained full text'];
   exportRows=[['Dimension',dimension,'Selected value',value||'all','Date basis',mentionDimensions.has(dimension)?'source post date, current text':'first source date, current labels'],headers,...rows.map(row=>[row.period,row.count,row.total,row.total?(row.count/row.total*100).toFixed(2):'',row.unknown,row.full])];
   $('trendTable').innerHTML=`<table class="insight-table"><caption>${e(dimensionLabels[dimension])}: ${e(value?label(value):'All observed projects')}</caption><thead><tr>${headers.map(title=>`<th scope="col">${title}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr><th scope="row">${row.period}</th><td>${row.count}</td><td>${row.total}</td><td>${pct(row.count,row.total)}</td><td>${row.unknown}</td><td>${row.full}</td></tr>`).join('')}</tbody></table>`;
@@ -89,13 +126,15 @@ function paintEvidence(){
   for(const game of data.games){
     if(!mentions&&((from&&game.firstSeenAt.slice(0,10)<from)||(to&&game.firstSeenAt.slice(0,10)>to)||value&&!valuesFor(game,dimension).includes(value)))continue;
     for(const post of game.observations){
+      if(selectedPeriod&&periodKey(mentions?post.at:game.firstSeenAt,$('trendGrain').value)!==selectedPeriod)continue;
       if(mentions&&((from&&post.at.slice(0,10)<from)||(to&&post.at.slice(0,10)>to)||value&&!(post[dimension]||[]).includes(value)))continue;
       const quote=mentions?post.evidence.find(item=>item.kind===dimension&&(!value||item.label===value)):game.fieldEvidence?.find(item=>item.field===dimension);rows.push({game,post,quote});if(!mentions)break;
     }
   }
   rows.sort((a,b)=>b.post.at.localeCompare(a.post.at));
   $('insightSources').innerHTML=rows.slice(0,evidenceLimit).map(({game,post,quote})=>`<li><${publicView?'h4':'h5'}><a href="${projectPath(game)}" target="_blank" rel="noopener noreferrer">${e(game.title)} ↗</a></${publicView?'h4':'h5'}><small>u/${e(game.author)} · ${e(dateLabel(post.at))} · ${e(post.coverage.replaceAll('-',' '))}${post.editedAt?' · Source edited':''}</small>${quote?`<blockquote>“${e(quote.text)}”</blockquote>`:''}<a class="text-link" href="${e(quote?.url||post.url)}" target="_blank" rel="noopener noreferrer">${quote?.url?'Classification source':'Original Reddit post'} ↗</a></li>`).join('')||'<li>No matching sources.</li>';
-  $('sourceCount').textContent=`${Math.min(evidenceLimit,rows.length)} of ${n(rows.length)} matching source records`;$('moreInsightSources').hidden=rows.length<=evidenceLimit;
+  $('sourceCount').textContent=`${Math.min(evidenceLimit,rows.length)} of ${n(rows.length)} matching source records${selectedPeriod?' · '+selectedPeriod:''}`;$('moreInsightSources').hidden=rows.length<=evidenceLimit;
+  if($('clearTrendPeriod'))$('clearTrendPeriod').hidden=!selectedPeriod;
 }
 function paintComparison(){
   if(!data)return;const release=modelReleases[Number($('releaseEvent').value)],dimension=$('comparisonDimension').value,value=$('comparisonValue').value;if(!release||!value){$('releaseComparison').textContent='No matching evidence is available.';return;}

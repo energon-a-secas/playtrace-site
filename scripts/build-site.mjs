@@ -6,7 +6,7 @@ import { validateCatalog } from '../js/collection.js';
 import { escHtml as e } from '../js/utils.js';
 import { gamePageContent, gameDescription, gameStructuredData, previewUrl } from '../js/game-page-view.js';
 import { projectPath } from '../js/project-url.js';
-import { highlightPanels } from '../js/highlight-view.js';
+import { highlightPanels, highlightImageHints } from '../js/highlight-view.js';
 import { collectInsightPages } from '../js/insight-snapshot.js';
 import { buildWeeklyBrief, fetchPreviousInsights } from './weekly-brief.mjs';
 import { weeklyBriefView } from '../js/weekly-brief-view.js';
@@ -102,7 +102,7 @@ export async function buildSite({catalog,highlights,insights,savedHistory,priorS
   const editorPick=editorGame?{gameId:editorGame.id,game:editorGame}:null;
   if(items.length){
     const home=await readFile(path.join(out,'index.html'),'utf8');
-    await writeFile(path.join(out,'index.html'),home.replace(/(<ol id="weeklyHighlights"[^>]*>)[\s\S]*?<\/ol>/,`$1${highlightPanels(items,editorPick)}</ol>`).replace('aria-busy="true"','aria-busy="false"').replace('>Community highlights</span>',`>Week of ${e(picks.week)}</span>`));
+    await writeFile(path.join(out,'index.html'),home.replace('<!-- highlight-image-hints -->',highlightImageHints(items,editorPick)).replace(/(<ol id="weeklyHighlights"[^>]*>)[\s\S]*?<\/ol>/,`$1${highlightPanels(items,editorPick)}</ol>`).replace('aria-busy="true"','aria-busy="false"').replace('>Community highlights</span>',`>Week of ${e(picks.week)}</span>`));
     await writeFile(path.join(out,'data/highlights.json'),JSON.stringify({...picks,items,editorPick}));
   }
   const browse=await readFile(path.join(root,'browse.html'),'utf8');

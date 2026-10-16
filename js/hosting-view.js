@@ -2,7 +2,8 @@ import { destinationHost, hostingReport, linkStates, linkReasons } from './link-
 import { escHtml as e } from './utils.js';
 import { dateLabel, safeUrl } from './collection.js';
 import { projectPath } from './project-url.js';
-import { hostingCharts } from './hosting-charts.js';
+import { hostingCharts, hostingSliceGames } from './hosting-charts.js';
+import { renderProjectList, bindChart } from './insight-projects.js';
 
 export function renderHosting(root,games){
   if(!root)return;
@@ -10,8 +11,14 @@ export function renderHosting(root,games){
   const all=hostingReport(normalized),providers=all.groups;
   root.innerHTML=`<section class="insight-section" aria-labelledby="hostingTitle"><p class="eyebrow">DESTINATIONS / CHECKS</p><h3 id="hostingTitle">Where games live</h3><p>${all.listed} projects have a game link; ${all.unlisted} have no listed destination. Hosting labels describe the URL, not verified server infrastructure. Custom domains keep their own hostname. File-transfer links are identified separately; their expiry does not establish that a project has stopped.</p>
     ${hostingCharts(normalized)}
+    <div class="insight-results" data-hosting-projects hidden></div>
+    <details class="insight-checks"><summary>Link checks and follow-up</summary>
     <div class="insight-controls"><div class="field"><label for="hostingProvider">Hosting or store</label><select id="hostingProvider" class="select"><option value="">All destinations</option>${providers.map(row=>`<option value="${row.id}">${e(row.label)} (${row.projects})</option>`).join('')}</select></div><div class="field"><label for="hostingStatus">Latest check</label><select id="hostingStatus" class="select"><option value="">All results</option>${Object.entries(linkStates).map(([id,label])=>`<option value="${id}">${label}</option>`).join('')}</select></div></div>
-    <div data-hosting-result aria-live="polite"></div><p class="insight-method">Reported missing means HTTP 404 or 410. Access restrictions, rate limits, timeouts and DNS failures remain separate. A successful response or store metadata check does not prove gameplay works. Counts describe this catalogue snapshot, not host reliability or market share. Several projects can share one host or maker.</p></section>`;
+    <div data-hosting-result aria-live="polite"></div><p class="insight-method">Reported missing means HTTP 404 or 410. Access restrictions, rate limits, timeouts and DNS failures remain separate. A successful response or store metadata check does not prove gameplay works. Counts describe this catalogue snapshot, not host reliability or market share. Several projects can share one host or maker.</p></details></section>`;
+  for(const figure of root.querySelectorAll('.hosting-pie'))bindChart(figure,(label,target)=>{
+    const device=target.dataset.device;
+    renderProjectList(root.querySelector('[data-hosting-projects]'),hostingSliceGames(normalized,device,label),{title:`${device==='desktop'?'Desktop':'Mobile'} · ${label}`,focus:true});
+  });
   let limit=20;
   function paint(){
     const report=hostingReport(normalized,{provider:root.querySelector('#hostingProvider').value,status:root.querySelector('#hostingStatus').value});

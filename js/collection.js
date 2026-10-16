@@ -143,6 +143,7 @@ export function validateAvailability(value, projectUrl) {
     value[key].forEach(label => text(label, 120));
   }
   if (value.releaseStatus !== null && !['Released','In development','Prototype','Canceled','On hold'].includes(value.releaseStatus)) throw new Error('Invalid listing status');
+  if (value.pricing != null && (!Number.isInteger(value.pricing.cents) || value.pricing.cents < 0 || value.pricing.cents > 1000000 || !/^[A-Z]{3}$/.test(value.pricing.currency || ''))) throw new Error('Invalid store pricing');
   if (!Array.isArray(value.screenshots) || value.screenshots.length > 6) throw new Error('Invalid store screenshots');
   for (const shot of value.screenshots) {
     const image = new URL(safeUrl(shot));

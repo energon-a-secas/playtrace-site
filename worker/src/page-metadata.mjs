@@ -36,7 +36,7 @@ function productData(html) {
 export function pageMetadata(html, destination) {
   const url = new URL(destination);
   const itch = !url.port && url.hostname.endsWith('.itch.io') && url.hostname.split('.').length === 3;
-  const product = itch ? productData(html) : null;
+  const product = itch ? productData(html.replace(/<!--[\s\S]*?-->/g, '')) : null;
   const markup = html.replace(/<!--[\s\S]*?-->/g, '').replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, '');
   const metas = [...markup.matchAll(/<meta\b[^>]*>/gi)].map(match => attributes(match[0]));
   const meta = name => metas.find(tag => tag.property === name || tag.name === name)?.content;
@@ -56,6 +56,15 @@ export function pageMetadata(html, destination) {
     platforms: [], genres: [], tags: [], engines: [], inputs: [], languages: [], aiDisclosure: [],
     releaseStatus: null, screenshots: [], provenance };
   if (!itch) return result;
+  const offers = Array.isArray(product?.offers) ? product.offers : product?.offers ? [product.offers] : [];
+  // Only an explicit, unambiguous store price is evidence. A download button
+  // or missing purchase control never establishes that a game is free.
+  const prices = offers.filter(offer => offer && /^\d+(?:\.\d{1,2})?$/.test(String(offer.price))
+    && /^[A-Z]{3}$/.test(offer.priceCurrency || '') && Number(offer.price) <= 10000)
+    .map(offer => ({ cents: Math.round(Number(offer.price) * 100), currency: offer.priceCurrency }));
+  if (prices.length && prices.length === offers.length && prices.every(price => price.cents === prices[0].cents && price.currency === prices[0].currency)) {
+    result.pricing = prices[0]; provenance.pricing = 'JSON-LD offers: listed minimum price';
+  }
   // Use itch's information widget, excluding prose, comments and JS strings.
   const panel = markup.match(/<div\b[^>]*\bclass=["'][^"']*\bgame_info_panel_widget\b[^"']*["'][^>]*>[\s\S]*?<\/table>/i)?.[0] || '';
   const rows = new Map([...panel.matchAll(/<tr\b[^>]*>\s*<td\b[^>]*>([\s\S]*?)<\/td>\s*<td\b[^>]*>([\s\S]*?)<\/td>[\s\S]*?<\/tr>/gi)]

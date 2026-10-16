@@ -9,7 +9,7 @@
        package CDN: a Convex deployment adds its https and wss URLs to connect-src, and sign-in
        adds the CSP table in packages/neorgon-ui/auth/README.md. frame-ancestors, report-uri and
        sandbox are ignored in a meta tag, so they are left out. -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-na6phygP/tfoCIp4oBeQgGJJpQsZob/udrLum+20QTI=' https://gc.zgo.at https://static.cloudflareinsights.com https://clerk.neorgon.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.neorgon.org/v1.0.0/; img-src 'self' data: https://img.itch.zone https://demos.tahazsh.com https://playtrace-api.neorgon.workers.dev https://neorgon.goatcounter.com https://img.clerk.com https://preview.redd.it https://external-preview.redd.it https://i.redd.it https://b.thumbs.redditmedia.com https://a.thumbs.redditmedia.com https://shared.akamai.steamstatic.com https://shared.fastly.steamstatic.com https://cdn.akamai.steamstatic.com https://cdn.cloudflare.steamstatic.com; media-src https://v.redd.it https://preview.redd.it https://i.redd.it; font-src 'self'; connect-src 'self' https://playtrace-api.neorgon.workers.dev https://neorgon.goatcounter.com https://cloudflareinsights.com https://clerk.neorgon.com https://challenges.cloudflare.com; manifest-src 'self'; frame-src https://challenges.cloudflare.com; worker-src blob:; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-6M+a3b+XQePNcmaidvTAkpBR9NogtA5YwgyVX8tZtvA=' https://gc.zgo.at https://static.cloudflareinsights.com https://clerk.neorgon.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.neorgon.org/v1.0.0/; img-src 'self' data: https://img.itch.zone https://demos.tahazsh.com https://playtrace-api.neorgon.workers.dev https://neorgon.goatcounter.com https://img.clerk.com https://preview.redd.it https://external-preview.redd.it https://i.redd.it https://b.thumbs.redditmedia.com https://a.thumbs.redditmedia.com https://shared.akamai.steamstatic.com https://shared.fastly.steamstatic.com https://cdn.akamai.steamstatic.com https://cdn.cloudflare.steamstatic.com; media-src https://v.redd.it https://preview.redd.it https://i.redd.it; font-src 'self'; connect-src 'self' https://playtrace-api.neorgon.workers.dev https://neorgon.goatcounter.com https://cloudflareinsights.com https://clerk.neorgon.com https://challenges.cloudflare.com; manifest-src 'self'; frame-src https://challenges.cloudflare.com; worker-src blob:; object-src 'none'; base-uri 'none'; form-action 'self'">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
@@ -31,6 +31,7 @@
   <link rel="canonical" href="https://playtrace.neorgon.com/">
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="#f3f4f7">
+  <!-- highlight-image-hints -->
   <link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin>
   <meta property="og:image" content="https://playtrace.neorgon.com/og-preview.jpg">
@@ -45,7 +46,7 @@
 <link rel="stylesheet" href="/css/collection.css">
   <!-- /template:styles -->
   <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN). Keep after style.css, the kit owns the header. -->
-  <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
+  <script>(function(){document.documentElement.dataset.showcaseLoading='pending';var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
   <link rel="stylesheet" href="/css/neorgon-header.css">
   <link rel="stylesheet" href="/css/neorgon-themes.css">
   <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
@@ -96,7 +97,7 @@
            so clicking either resets the view. The hub icon in .header-right
            is the only header link to neorgon.com. -->
       <a href="/" class="header-title-link">
-        <img src="/energon-classic-logo.png" class="header-logo-img" alt="">
+        <span class="header-logo-img header-logo-mark header-logo-own" style="-webkit-mask-image:url('/logo.svg');mask-image:url('/logo.svg')" aria-hidden="true"></span>
         <div class="header-title-wrap">
           <h1>Playtrace</h1>
           <div class="header-subtitle">Games in the making</div>
@@ -149,6 +150,7 @@
   </footer>
 
   <div id="app-toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+  <script type="module" src="/js/showcase-images.js"></script>
   <script type="module" src="/js/home.js"></script>
   <script type="module" src="/js/usage.js"></script>
 </body>

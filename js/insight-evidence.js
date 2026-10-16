@@ -1,4 +1,5 @@
 // Explicit text mentions, not image recognition, model attribution or proof of use.
+import { techniqueRules, resourceRules } from './technique-evidence.js';
 export const artRules = [
   ['Pixel art', /\bpixel[ -]?art\b/i], ['Low poly', /\blow[ -]?poly(?:gon)?\b/i],
   ['Voxel', /\bvoxels?\b/i], ['Hand drawn', /\bhand[ -]?drawn\b/i],
@@ -7,16 +8,22 @@ export const artRules = [
   ['Watercolor', /\bwatercolou?r\b/i], ['Isometric', /\bisometric\b/i],
   ['PS1 / retro 3D', /\b(?:ps1|playstation[ -]1)[ -]?(?:style|art(?:style)?|inspired|aesthetic)\b/i],
   ['Anime', /\banime[ -]?(?:style|art|inspired|aesthetic)\b/i],
+  ['Cel shaded', /\bcel[ -]shad(?:ed|ing)\b/i],
 ];
 const engineRules = [['Godot',/\bgodot\b/i],['Unity',/\bunity\b/i],['Unreal Engine',/\bunreal(?:\s+engine)?\b/i],['Phaser',/\bphaser\b/i],['Three.js',/\bthree\.?js\b/i],['GameMaker',/\bgame\s?maker\b/i],['Ren’Py',/\bren['’]?py\b/i],['Pygame',/\bpygame\b/i]];
 const formatRules = [['2D',/\b2[ -]?d\b/i],['3D',/\b3[ -]?d\b/i],['Text based',/\btext[ -](?:based|driven|adventure)\b/i]];
-const snippet = (text, match) => text.slice(Math.max(0, match.index - 65), Math.min(text.length, match.index + match[0].length + 110)).replace(/\s+/g, ' ').trim();
+const snippet = (text, match) => {
+  let start=Math.max(0,match.index-65),end=Math.min(text.length,match.index+match[0].length+110);
+  if(start>0){const space=text.indexOf(' ',start);if(space>=0&&space<match.index)start=space+1;}
+  if(end<text.length){const space=text.lastIndexOf(' ',end);if(space>match.index+match[0].length)end=space;}
+  return `${start?'… ':''}${text.slice(start,end).replace(/\s+/g,' ').trim()}${end<text.length?' …':''}`;
+};
 export function extractMentions(value) {
   const text = String(value || '').normalize('NFKC').replace(/[‐‑–−]/g, '-')
     .replace(/!\[[^\]]*\]\([^)]*\)/g,' ').replace(/\[([^\]]+)\]\([^)]*\)/g,'$1')
     .replace(/https?:\/\/\S+/gi,' ').replace(/<[^>]*>/g,' ');
-  const evidence = [], styles = [], formats = [], engines = [], models = new Set();
-  for (const [kind,rules,values] of [['styles',artRules,styles],['formats',formatRules,formats],['engines',engineRules,engines]]) for (const [label,rule] of rules) {
+  const evidence = [], styles = [], formats = [], engines = [], techniques = [], resources = [], models = new Set();
+  for (const [kind,rules,values] of [['techniques',techniqueRules,techniques],['resources',resourceRules,resources],['styles',artRules,styles],['formats',formatRules,formats],['engines',engineRules,engines]]) for (const [label,rule] of rules) {
     const match = rule.exec(text); if (match) { values.push(label); evidence.push({kind,label,text:snippet(text,match)}); }
   }
   function model(label, match) { if (models.has(label)) return; models.add(label); evidence.push({kind:'models',label,text:snippet(text,match)}); }
@@ -29,7 +36,7 @@ export function extractMentions(value) {
   for (const match of text.matchAll(/\bdall[· -]?e(?:[ -](2|3))?\b/gi))model(`DALL·E${match[1]?' '+match[1]:''}`,match);
   for (const [label,rule] of [['Midjourney',/\bmidjourney\b/i],['Stable Diffusion',/\bstable diffusion\b/i],['FLUX',/\bflux[. -](?:1|2|dev|schnell|pro)\b/i],['Codex (version not stated)',/\b(?:openai\s+)?codex\b/i]]) {const match=rule.exec(text);if(match&&(label!=='Codex (version not stated)'||![...models].some(name=>/codex$/i.test(name))))model(label,match);}
   for (const [prefix,label,rule] of [['Claude','Claude (version not stated)',/\bclaude\b/i],['GPT-','ChatGPT (version not stated)',/\bchat\s?gpt\b/i],['Gemini','Gemini (version not stated)',/\bgemini\b/i]]) {const match=rule.exec(text);if(match&&![...models].some(name=>name.startsWith(prefix)))model(label,match);}
-  return {styles,formats,engines,models:[...models],evidence:evidence.slice(0,24)};
+  return {styles,formats,engines,techniques,resources,models:[...models],evidence:evidence.slice(0,48)};
 }
 
 // Dates are provider announcements, not inferred from Reddit text or version numbers.

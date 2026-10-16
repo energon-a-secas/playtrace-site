@@ -14,7 +14,11 @@
 .showcase-panels > li:last-child .showcase-game { clip-path: polygon(var(--slant) 0, 100% 0, 100% 100%, 0 100%); }
 .showcase-art, .showcase-art img { position: absolute; inset: 0; width: 100%; height: 100%; }
 .showcase-art { z-index: -2; }
-.showcase-art img { object-fit: cover; filter: saturate(.65) brightness(.86); transition: filter 350ms ease-out; }
+.showcase-art img { object-fit: cover; filter: saturate(.65) brightness(.86); transition: filter 350ms ease-out, opacity 360ms cubic-bezier(.22,1,.36,1); }
+html[data-showcase-loading] .showcase-art img:not(.is-ready) { opacity: 0; }
+/* If the enhancement fails to start, the original images remain available. */
+html[data-showcase-loading="pending"] .showcase-art img { animation: showcase-image-recover 1ms 2500ms forwards; }
+@keyframes showcase-image-recover { to { opacity: 1; } }
 .showcase-game::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, oklch(.16 .02 260 / .1), transparent 30%, oklch(.13 .025 260 / .46) 65%, oklch(.13 .025 260 / .98)); z-index: -1; }
 .showcase-caption { margin: auto 0 clamp(20px, 2.4vh, 32px) calc(var(--slant) * .5 + 24px); width: calc((100% - var(--slant)) * .64); }
 .showcase-maker { display: block; color: oklch(.88 .008 260); font: 13px/1.45 var(--pt-body); overflow-wrap: anywhere; }
@@ -75,6 +79,7 @@
 }
 @keyframes showcase-label-enter { from { transform: translateX(calc(-100% - 24px)); } to { transform: translateX(0); } }
 @media (prefers-reduced-motion: reduce) {
+  html[data-showcase-loading] .showcase-art img:not(.is-ready) { opacity: 1; animation: none; }
   .showcase-heading > div { animation: none; }
   .showcase-art, .showcase-art img, .showcase--motion > li, .showcase--motion > li .showcase-game, .showcase-play, .showcase-action-face { transition: none; }
 }

@@ -148,3 +148,11 @@ Jev uses the encrypted `JEV_API_KEY` and `https://api.typesafe.ai/v1/systemone`.
 See [feedback operations and methodology](docs/feedback-operations.md) for definitions and review workflow.
 
 Local Jev post research, timing-data limitations and shorter public routes are documented in [the post research guide](docs/post-research.md).
+
+### Interactive discovery reports
+
+Insights now groups its catalogue evidence into topic views with shared genre/platform/device/stage filters. Pie slices, legends, distribution labels and trend bars expose their underlying projects or source records. Technique and resource extraction runs on retained public source text; `js/technique-evidence.js` defines the explicit vocabulary. Counts describe mentions, not verified adoption. Source excerpts, original dates, missing classifications and model-comparison limitations remain visible.
+
+Store summaries deduplicate by Steam app or itch.io listing. The Steam calendar separates exact planned dates from month/quarter/year-only and unknown announcements; past dates on still-upcoming listings need rechecking, not an inferred release. Itch.io minimum prices are collected from unambiguous JSON-LD offers during normal bounded store maintenance. Existing observations without a price stay unknown. The calendar and past-release timeline have distinct semantics.
+
+Home image hints are generated from the actual published picks. Desktop preloads start in the document head; mobile retains lazy loading beyond the first image. `showcase-images.js` coordinates decoded artwork with a bounded, reduced-motion-aware reveal. Live refreshes reconcile unchanged panels rather than replacing them. Approved media's withdrawal and no-store behavior are preserved; loading improvements do not create a second persistent copy of uploaded artwork.

@@ -1,6 +1,6 @@
 import { request } from './api.js';
 import { NeoAuth } from './neorgon-auth.js';
-import { highlightPanels } from './highlight-view.js';
+import { updateHighlightPanels } from './highlight-view.js';
 import { dateLabel } from './collection.js';
 import { bindShowcase } from './showcase-motion.js';
 
@@ -35,14 +35,12 @@ if (['game','q','cat','platform','stage','maker','author','following','view','so
     if (!Array.isArray(items) || !items.length || items.length > 5) throw new Error('No highlights yet');
     const communityPicks = items.filter(item => item.basis === 'community').length;
     document.getElementById('highlightWeek').textContent = `Week of ${dateLabel(picks.week + 'T12:00:00Z')}${communityPicks ? ` · ${communityPicks} community ${communityPicks === 1 ? 'pick' : 'picks'}` : ''}${saved ? ' · Saved picks' : ''}`;
-    document.getElementById('weeklyHighlights').innerHTML = highlightPanels(items, picks.editorPick);
+    updateHighlightPanels(document.getElementById('weeklyHighlights'), items, picks.editorPick);
     document.getElementById('weeklyHighlights').setAttribute('aria-busy', 'false');
     refreshShowcase();
   } catch {
-    document.getElementById('weeklyHighlights').innerHTML = '<li class="highlights-empty">Weekly picks are taking a break. <a href="/browse/">Explore the collection ↗</a></li>';
+    // The published selection remains useful when the live service is slow.
+    if (!document.querySelector('#weeklyHighlights .showcase-game')) document.getElementById('weeklyHighlights').innerHTML = '<li class="highlights-empty">Weekly picks are taking a break. <a href="/browse/">Explore the collection ↗</a></li>';
     document.getElementById('weeklyHighlights').setAttribute('aria-busy', 'false');
   }
-  document.getElementById('weeklyHighlights').addEventListener('error', event => {
-    if (event.target.tagName === 'IMG') { event.target.hidden = true; event.target.parentElement.classList.add('showcase-art--missing'); }
-  }, true);
 }

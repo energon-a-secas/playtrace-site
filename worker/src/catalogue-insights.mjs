@@ -26,6 +26,10 @@ export async function insightPage(db, cursor, deps) {
     releaseKind:game.steam?.releaseKind||(game.availability?.demo===true?'demo':null),
     storeProvider:game.steam?'Steam':game.availability?.metadataVersion===2?game.availability.provider:null,
     storeCheckedAt:game.steam?.checkedAt||game.availability?.storeCheckedAt||null,
+    storeUrl:game.steam?.url||game.availability?.sourceUrl||null,
+    listingStatus:game.availability?.releaseStatus||null,
+    storeIsFree:game.steam?.isFree??(game.availability?.pricing ? game.availability.pricing.cents===0 : null),
+    storePrice:game.steam?.currency&&Number.isInteger(game.steam.priceCents)?{cents:game.steam.priceCents,currency:game.steam.currency}:game.availability?.pricing||null,
     storeState:game.steam?.state||null,browserBuild:game.availability?.browser===true,downloadableBuild:game.availability?.downloadable===true,storeEngines:game.availability?.engines||[],aiDisclosure:game.availability?.aiDisclosure||[],priceCents:game.steam?.currency==='USD'?game.steam.priceCents:null,
     linkState:game.availability?.status||'not-checked',linkCheckedAt:game.availability?.checkedAt||null,link:linkEvidence(game),
     observations:game.posts.map(post=>{

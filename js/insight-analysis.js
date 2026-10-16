@@ -1,6 +1,6 @@
 const day=86400000;
-export const mentionDimensions=new Set(['styles','formats','models','engines']);
-export const missingLabel={category:'Other / unclassified',stage:'Unspecified',distribution:'No project link',styles:'No recognized style mention',formats:'No recognized format mention',models:'No recognized model mention',engines:'No recognized engine mention'};
+export const mentionDimensions=new Set(['styles','formats','models','engines','techniques','resources']);
+export const missingLabel={category:'Other / unclassified',stage:'Unspecified',distribution:'No project link',styles:'No recognized style mention',formats:'No recognized format mention',models:'No recognized model mention',engines:'No recognized engine mention',techniques:'No recognized technique mention',resources:'No recognized tool / asset mention'};
 export function periodKey(at,grain='month') { const d=new Date(at);return grain==='quarter'?`${d.getUTCFullYear()}-Q${Math.floor(d.getUTCMonth()/3)+1}`:d.toISOString().slice(0,7); }
 export function valuesFor(game,dimension,observations=game.observations) {
   if(mentionDimensions.has(dimension))return [...new Set(observations.flatMap(post=>post[dimension]||[]))];
