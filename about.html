@@ -22,17 +22,17 @@
   <meta property="og:title" content="Playtrace | Games in the Making">
   <meta property="og:description" content="Explore the history of games shared on r/aigamedev. Leave public feedback and an optional ideal price, no account needed.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://playtrace.neorgon.com/about.html">
+  <meta property="og:url" content="https://playtrace.neorgon.com/about/">
   <meta property="og:site_name" content="Neorgon">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Playtrace | Games in the Making">
   <meta name="twitter:description" content="Explore the history of games shared on r/aigamedev. Leave public feedback and an optional ideal price, no account needed.">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://playtrace.neorgon.com/about.html">
+  <link rel="canonical" href="https://playtrace.neorgon.com/about/">
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="#f3f4f7">
-  <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin>
   <meta property="og:image" content="https://playtrace.neorgon.com/og-preview.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -40,34 +40,34 @@
   <meta name="twitter:image" content="https://playtrace.neorgon.com/og-preview.jpg">
   <!-- Fleet design tokens: canonical, do not redeclare locally (docs/references/new-project-context.md, Design) -->
   <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/styles/base.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
   <!-- template:styles -->
-<link rel="stylesheet" href="css/collection.css">
+<link rel="stylesheet" href="/css/collection.css">
   <!-- /template:styles -->
   <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN). Keep after style.css, the kit owns the header. -->
   <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
-  <link rel="stylesheet" href="css/neorgon-header.css">
-  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="/css/neorgon-header.css">
+  <link rel="stylesheet" href="/css/neorgon-themes.css">
   <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
-  <script defer src="js/neorgon-header.js"></script>
+  <script defer src="/js/neorgon-header.js"></script>
   <!-- Neorgon Footer Kit (vendored). Pins the footer to the viewport floor on short
        pages and builds the meta bar + back-to-top. See packages/neorgon-ui/footer/README.md.
        Optional stamps: <meta name="neo-repo"|"neo-version"|"neo-updated"> -->
-  <link rel="stylesheet" href="css/neorgon-footer.css">
-  <script defer src="js/neorgon-footer.js"></script>
+  <link rel="stylesheet" href="/css/neorgon-footer.css">
+  <script defer src="/js/neorgon-footer.js"></script>
   <meta name="clerk-publishable-key" content="pk_live_Y2xlcmsubmVvcmdvbi5jb20k">
-  <link rel="stylesheet" href="css/neorgon-auth.css">
+  <link rel="stylesheet" href="/css/neorgon-auth.css">
   <!-- Neorgon Beacon Kit (vendored). Bottom-left correction reporter: it
        carries page context to balise.neorgon.com in a URL fragment and the
        visitor writes there. No form on this page and no request from it.
        Opt out per page with <meta name="beacon" content="off">.
        See packages/neorgon-ui/beacon/README.md. -->
   <meta name="beacon-site" content="playtrace-site">
-  <link rel="stylesheet" href="css/neorgon-beacon.css">
-  <script defer src="js/neorgon-beacon.js"></script>
-  <script defer src="js/site-footer.js"></script>
-  <link rel="stylesheet" href="css/report.css">
-  <link rel="stylesheet" href="css/campaign.css">
+  <link rel="stylesheet" href="/css/neorgon-beacon.css">
+  <script defer src="/js/neorgon-beacon.js"></script>
+  <script defer src="/js/site-footer.js"></script>
+  <link rel="stylesheet" href="/css/report.css">
+  <link rel="stylesheet" href="/css/campaign.css">
 </head>
 <body>
 
@@ -81,8 +81,8 @@
       <!-- PATTERN: one link: mark + name go to THIS site's home (root or #home)
            so clicking either resets the view. The hub icon in .header-right
            is the only header link to neorgon.com. -->
-      <a href="./" class="header-title-link">
-        <img src="energon-classic-logo.png" class="header-logo-img" alt="">
+      <a href="/" class="header-title-link">
+        <img src="/energon-classic-logo.png" class="header-logo-img" alt="">
         <div class="header-title-wrap">
           <h1>Playtrace</h1>
           <div class="header-subtitle">Games in the making</div>
@@ -94,10 +94,10 @@
     <div class="header-right">
       <!-- template:actions -->
 <div class="header-actions">
-  <a class="btn btn--ghost btn--sm" href="browse.html">Browse</a>
-  <a class="btn btn--ghost btn--sm" href="research.html">Quick reviews</a>
-  <a class="btn btn--ghost btn--sm" href="insights.html">Insights</a>
-  <a class="btn btn--ghost btn--sm" href="about.html" aria-current="page">About</a>
+  <a class="btn btn--ghost btn--sm" href="/browse/">Browse</a>
+  <a class="btn btn--ghost btn--sm" href="/feedback/">Submit feedback</a>
+  <a class="btn btn--ghost btn--sm" href="/insights/">Insights</a>
+  <a class="btn btn--ghost btn--sm" href="/about/" aria-current="page">About</a>
 </div>
   <!-- /template:actions -->
 
@@ -125,16 +125,16 @@
       <section><h3>Useful feedback, open to everyone</h3><p>Read the conversation or contribute without signing in. Start with quick multi-select questions, then add an optional note. Tell a maker what you enjoyed, where you got stuck, or what you’d like to try. Your choices, optional perspective (first look or played), display name, note, and optional ideal price are public. “Played” is self-reported, never verified.</p><p>“Your ideal price” is a suggestion for the maker, with no purchase commitment. Their pricing is always their choice. A Steam store price, when available, is shown separately in USD.</p><p>A random edit key stays in your browser so you can update or remove your contribution. Clearing browser data removes that editing access. Older account-based price responses stay private.</p></section>
       <section id="link-health"><h3>Game links and hosting</h3><p>We store dated link checks: the requested and final URLs, response status, redirects and the reason for an incomplete check. Projects retain up to 52 observations; their pages show the 12 latest checks for the current URL. HTTP 404 or 410 is flagged as missing. Access restrictions, timeouts and DNS failures remain separate. A successful page response or store metadata observation does not verify that gameplay works.</p><p>Hosting labels describe the public domain, not the infrastructure behind a custom domain. Temporary file-transfer links can expire while development continues. Browser links become eligible for rechecking weekly if uncertain and monthly if reachable, within the shared queue budget; eligible does not mean checked on that exact day. Steam and itch.io use the existing store maintenance.</p></section>
       <section id="expectations"><h3>Before and after playing</h3><p>Optionally save your interest in a project before playing, then return from the same browser to say how it matched your expectations. The first impression stays fixed once you add a follow-up. These answers contribute to public grouped statistics; individual answers and the browser edit key are not published. Only saved first impressions with a later answer are paired, and playing is self-reported. You can edit the follow-up or remove the whole comparison from the project page. Clearing browser data removes that editing access.</p></section>
-      <section><h3>A quick rating, or a closer review</h3><p>Rate a game from one to five stars without signing in. The public average counts one editable rating per browser and game. Use the separate star shortcut to save a favorite on this device, even without an account. If you sign in later, those favorites join your account and sync across devices. Offline changes retry when you reconnect. Clearing browser data removes favorites that have not synced.</p><p><a href="research.html">Share a quick review</a>, one question at a time, or follow a project’s custom questionnaire. These answers go privately to the editorial team and may be analyzed with Jev to spot themes. You can edit or remove your answers from the same browser. Public project comments remain a separate conversation.</p></section>
-      <section><h3>A game of recognition</h3><p><a href="quiz.html">Name five games from their screenshots</a>, chosen randomly from 20 curated projects with available builds. Some are demos or works in progress. The quiz uses real game names, checked against their project pages; Reddit post headlines are not quiz answers.</p><p>Finishing saves your choices and contributes to recognition counts. Replays count as new rounds, and skipped or unavailable images do not count as wrong guesses. These are guesses, not ratings or verified-player counts. You can remove this browser’s quiz answers from the game’s privacy controls. Quiz identifiers are kept separate from public feedback.</p></section>
+      <section><h3>A quick rating, or a closer review</h3><p>Rate a game from one to five stars without signing in. The public average counts one editable rating per browser and game. Use the separate star shortcut to save a favorite on this device, even without an account. If you sign in later, those favorites join your account and sync across devices. Offline changes retry when you reconnect. Clearing browser data removes favorites that have not synced.</p><p><a href="/feedback/">Share a quick review</a>, one question at a time, or follow a project’s custom questionnaire. These answers go privately to the editorial team and may be analyzed with Jev to spot themes. You can edit or remove your answers from the same browser. Public project comments remain a separate conversation.</p></section>
+      <section><h3>A game of recognition</h3><p><a href="/quiz/">Name five games from their screenshots</a>, chosen randomly from 20 curated projects with available builds. Some are demos or works in progress. The quiz uses real game names, checked against their project pages; Reddit post headlines are not quiz answers.</p><p>Finishing saves your choices and contributes to recognition counts. Replays count as new rounds, and skipped or unavailable images do not count as wrong guesses. These are guesses, not ratings or verified-player counts. You can remove this browser’s quiz answers from the game’s privacy controls. Quiz identifiers are kept separate from public feedback.</p></section>
       <section><h3>Sources, with their limits visible</h3><p>The <a href="https://arctic-shift.photon-reddit.com/" target="_blank" rel="noopener noreferrer">Arctic Shift archive</a> helps preserve the community’s history. Collection starts when the community was created in December 2022. Posts tagged <strong>Demo | Project | Workflow</strong> are eligible; older posts without a flair need an individual review confirming they showcase a game. News, discussion, promotion, tools, and other explicitly labeled categories are excluded. Records can be delayed or incomplete. Projects are grouped when source authors and project evidence support the match. Closely matching reposts by one maker within 48 hours keep the newest entry, preserving the earlier sources and shared links. Source-described entries await editorial review.</p><p>Development stages reflect the maker’s posts and available store evidence. Link checks distinguish missing pages from blocked or unverified destinations. A page loading successfully does not prove its game is playable. Historical showcases can remain useful even when a build is no longer available. A Steam badge means the linked app was found in the store; a released badge requires Steam to list it as released. It does not verify the maker’s identity. Prices are for the US store, can change, and may differ in your region.</p></section>
       <section><h3>From comments to useful themes</h3><p>Editors can combine recent Reddit comments and public Playtrace notes into cited summaries. Jev helps classify topics and reactions; editors check the quotes, correct labels and wording, and approve publication. Private questionnaire answers are excluded. Summaries cover a bounded sample from the last 60 days, link back to each source, and keep first looks, reported play and unknown context separate. Editing or removing a cited Playtrace note withdraws summaries that copied it. The public Insights report counts quick choices separately from reviewed comments; the totals are not unique players or predictions.</p></section>
       <section><h3>Keep the picture accurate</h3><p>Previews belong to their creators. Original videos and GIFs stay linked to their source, with playback where the host supports it. Admins can select a clearer image or store an authorized replacement when a clip opens on a black frame.</p><p>Use <strong>Request a change</strong> at the top of a project to flag its image, link, details, or a removal. Requests go privately to the admin inbox. For wider site issues, <a href="https://balise.neorgon.com/report/" target="_blank" rel="noopener noreferrer">send a correction</a>.</p></section>
       <section id="measurement"><h3>Anonymous usage counts</h3><p>We count page views, game-link clicks, favorites and completed feedback actions to understand what helps people discover games. These are action totals, not unique people or verified plays. We do not include account IDs, browser IDs, search text, referrers or written answers in these counts. Totals are retained for 180 days; random delivery IDs expire after one day. Temporary network hashes reduce spam and expire hourly.</p><label><input type="checkbox" id="allowMeasurement"> Include my visits in anonymous usage counts</label><p class="field__hint">This preference stays on this device. Do Not Track and Global Privacy Control also disable these counts. Previously aggregated totals cannot be tied back to you.</p></section>
-      <div class="article-return"><a class="btn btn--primary" href="browse.html">Explore the collection <span aria-hidden="true">↗</span></a></div>
+      <div class="article-return"><a class="btn btn--primary" href="/browse/">Explore the collection <span aria-hidden="true">↗</span></a></div>
     </article>
   </div></main>
-  <footer class="neo-footer" data-footer-mode="minimal"><p class="neo-footer-note">Playtrace · Follow the idea. <a href="admin.html">Admin</a></p></footer>
-  <script type="module" src="js/usage.js"></script>
+  <footer class="neo-footer" data-footer-mode="minimal"><p class="neo-footer-note">Playtrace · Follow the idea. <a href="/admin/">Admin</a></p></footer>
+  <script type="module" src="/js/usage.js"></script>
 </body>
 </html>

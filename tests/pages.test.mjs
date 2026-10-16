@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp,readFile,rm,access } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { buildSite,fetchCatalog,indexable } from '../scripts/build-site.mjs';
+import { buildSite,fetchCatalog,indexable,pageRoutes } from '../scripts/build-site.mjs';
 import { fixtureGame,fixtureCatalog } from '../worker/tests/helpers.mjs';
 import { gameStructuredData } from '../js/game-page-view.js';
 import { playLabel } from '../js/icons.js';
@@ -21,6 +21,13 @@ test('static game pages include their content, unique metadata and safe JSON wit
   assert.match(html,/src="\/js\/game-page\.js\?v=[a-f0-9]{12}"/);
   assert.match(await readFile(path.join(out,'js/game-page.js'),'utf8'),/from '\.\/api\.js\?v=[a-f0-9]{12}'/);
   assert.match(await readFile(path.join(out,'sitemap.xml'),'utf8'),/games\/g_abc12/);
+  const sitemap=await readFile(path.join(out,'sitemap.xml'),'utf8');assert.doesNotMatch(sitemap,/\.html/);
+  for(const [file,route] of Object.entries(pageRoutes)){
+    const page=await readFile(path.join(out,route,'index.html'),'utf8'),legacy=await readFile(path.join(out,file),'utf8');
+    assert.match(page,/src="\/js\//);assert.doesNotMatch(page,/\b(?:href|src)="(?:css|js|data|assets)\//);
+    assert.ok(legacy.includes(`id="canonicalPage" href="${route}"`));assert.match(legacy,/page-redirect\.js\?v=/);assert.match(legacy,/noindex, follow/);
+  }
+  const feedback=await readFile(path.join(out,'feedback/index.html'),'utf8');assert.match(feedback,/id="publicFeedbackLink"/);assert.match(feedback,/Leave a public note/);assert.match(feedback,/Questionnaire answers are private/);
   for(const file of ['worker/src/index.mjs','.env','docs/insights','data/historical-review.json'])await assert.rejects(access(path.join(out,file)));
   const schema=gameStructuredData(game,catalog);assert.equal(schema['@graph'][1]['@type'],'VideoGame');assert.equal(schema['@graph'][1].aggregateRating,undefined);
  }finally{await rm(out,{recursive:true,force:true});}

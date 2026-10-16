@@ -64,13 +64,13 @@ async function boot(){
     if(current.id!==game.id){location.replace(projectPath(current)+location.search+location.hash);return;}
     game=current;
   }catch(error){
-    if(error.status===404){$('gameContent').innerHTML='<section class="game-page-unavailable"><h1>This entry is no longer available.</h1><p>It may have been withdrawn or combined with another project.</p><a class="btn btn--primary" href="/browse.html">Browse games</a></section>';$('gameFeedback').hidden=true;document.querySelector('meta[name=robots]')?.setAttribute('content','noindex');return;}
+    if(error.status===404){$('gameContent').innerHTML='<section class="game-page-unavailable"><h1>This entry is no longer available.</h1><p>It may have been withdrawn or combined with another project.</p><a class="btn btn--primary" href="/browse/">Browse games</a></section>';$('gameFeedback').hidden=true;document.querySelector('meta[name=robots]')?.setAttribute('content','noindex');return;}
     $('gameFreshness').textContent=`Saved listing from ${new Date(initial.snapshotAt||initial.generatedAt).toLocaleDateString()}. Live details are temporarily unavailable.`;
   }
   $('gameContent').innerHTML=gamePageContent(game,catalog);document.title=`${game.title} | Playtrace`;
   state.catalog=catalog;state.games=[game];state.detail=game;
   favorites.setAliases(catalog.games);
-  $('projectResearch').href=`/research.html?game=${game.id}`;
+  $('projectResearch').href=`/feedback/?game=${game.id}`;
   const ratings=ratingControl($('ratingControl'));ratings.load(game.id);
   bindFeedback();resetFeedback(game.id);
   request('/status').then(service=>{state.service=service;renderFeedback();}).catch(()=>{});

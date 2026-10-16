@@ -29,6 +29,8 @@ function selectedGame(){
   const game=games.find(game=>game.id===$('researchGame').value);
   $('startResearch').disabled=!game||!$('researchFormSelect').value;
   $('researchChoice').hidden=!game;
+  $('publicFeedbackLink').hidden=!game;
+  if(game)$('publicFeedbackLink').href=projectPath(game)+'#gameFeedback';
   if(game){$('researchChoiceTitle').textContent=game.title;$('researchTry').hidden=!game.projectUrl;if(game.projectUrl)$('researchTry').href=safeUrl(game.projectUrl);}
 }
 async function loadGames(){
@@ -51,7 +53,7 @@ async function loadGames(){
 }
 async function start(formId,gameId){
   if(!formId||!gameId)return;
-  const version=++epoch;$('startResearch').disabled=true;$('researchMessage').textContent='Loading your review…';
+  const version=++epoch;$('startResearch').disabled=true;$('researchMessage').textContent='Loading questions…';
   try{
     current=await request(`/research/${encodeURIComponent(formId)}?game=${encodeURIComponent(gameId)}`);
     if(version!==epoch)return;
@@ -75,7 +77,7 @@ async function start(formId,gameId){
       await request(`/research/${questionnaire.id}/responses`,{method:'PUT',feedbackKey:editKey(true),body:{gameId:game.id,revision:questionnaire.revision,answers}});
       if(version!==epoch)return;
       document.dispatchEvent(new CustomEvent('research-completed',{detail:{gameId:game.id}}));
-      $('questionFlow').innerHTML='<div class="research-thanks" tabindex="-1"><span aria-hidden="true">✓</span><h3>That helps the next version.</h3><p>Your review is saved for the editorial team. Thanks for taking a closer look.</p><button id="editResearchAnswers" type="button" class="btn btn--secondary">Edit my answers</button></div>';
+      $('questionFlow').innerHTML='<div class="research-thanks" tabindex="-1"><span aria-hidden="true">✓</span><h3>That helps the next version.</h3><p>Your answers are saved for the editorial team. Thanks for taking a closer look.</p><button id="editResearchAnswers" type="button" class="btn btn--secondary">Edit my answers</button></div>';
       $('questionFlow').firstElementChild.focus();$('removeResearch').hidden=false;$('editResearchAnswers').onclick=()=>start(questionnaire.id,game.id);
     }});
     const url=new URL(location.href);url.searchParams.set('form',questionnaire.id);url.searchParams.set('game',game.id);history.replaceState(null,'',url);
@@ -89,13 +91,17 @@ $('researchFormSelect').addEventListener('change',gameOptions);
 $('changeResearch').addEventListener('click',()=>{epoch++;$('researchSession').hidden=true;const url=new URL(location.href);url.searchParams.delete('game');history.replaceState(null,'',url);params.delete('game');boot(false);});
 $('removeResearch').addEventListener('click',async event=>{const {game,questionnaire}=current;event.currentTarget.disabled=true;try{await request(`/research/${questionnaire.id}/responses?game=${game.id}`,{method:'DELETE',feedbackKey:editKey(false)});$('removeResearch').hidden=true;await start(questionnaire.id,game.id);$('researchMessage').textContent='Your answers were removed.';}catch(error){$('researchMessage').textContent=error.message;}finally{$('removeResearch').disabled=false;}});
 async function boot(direct=true){
-  if(booting)return;booting=true;$('researchPicker').hidden=false;$('researchPickerFields').disabled=true;$('researchPicker').setAttribute('aria-busy','true');$('researchUnavailable').hidden=true;$('retryResearch').disabled=true;$('researchMessage').textContent='Loading quick reviews…';
+  if(booting)return;booting=true;$('researchPicker').hidden=false;$('researchPickerFields').disabled=true;$('researchPicker').setAttribute('aria-busy','true');$('researchUnavailable').hidden=true;$('retryResearch').disabled=true;$('researchMessage').textContent='Loading feedback options…';
+  $('researchTitle').textContent='Share feedback on a game.';
   try{
-    const result=await request('/research');forms=result.questionnaires;
-    if(!forms.length)throw new Error('There are no open questionnaires right now. Please check back soon.');
+    // Public notes remain accessible when no study is open or the optional
+    // questionnaire service is unavailable.
+    let result;try{result=await request('/research');}catch{result={questionnaires:[],categories:[]};}
+    forms=result.questionnaires;
     $('researchCategory').innerHTML='<option value="">All topics</option>'+result.categories.map(category=>`<option>${e(category)}</option>`).join('');options();
-    if(direct&&params.get('game'))await start(params.get('form')||'playtest',params.get('game'));
+    if(direct&&params.get('game')&&forms.length)await start(params.get('form')||'playtest',params.get('game'));
     else {await loadGames();$('researchMessage').textContent='';}
+    if(!forms.length)$('researchMessage').textContent='Questionnaires are unavailable right now. You can still choose a game and leave a public note.';
     $('researchPickerFields').disabled=false;
   }catch(error){$('researchPicker').hidden=true;$('researchUnavailable').hidden=false;$('researchMessage').textContent=error.code==='SERVICE_UNAVAILABLE'?'':error.message;}
   finally{booting=false;$('researchPicker').setAttribute('aria-busy','false');$('retryResearch').disabled=false;}

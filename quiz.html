@@ -22,17 +22,17 @@
   <meta property="og:title" content="Name that game | Playtrace">
   <meta property="og:description" content="Five screenshots. Four names. Can you recognize these community games? Play a quick round and discover something new, no account needed.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://playtrace.neorgon.com/quiz.html">
+  <meta property="og:url" content="https://playtrace.neorgon.com/quiz/">
   <meta property="og:site_name" content="Neorgon">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Name that game | Playtrace">
   <meta name="twitter:description" content="Five screenshots. Four names. Can you recognize these community games? Play a quick round and discover something new, no account needed.">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://playtrace.neorgon.com/quiz.html">
+  <link rel="canonical" href="https://playtrace.neorgon.com/quiz/">
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="#f3f4f7">
-  <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin>
   <meta property="og:image" content="https://playtrace.neorgon.com/og-preview.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -40,35 +40,35 @@
   <meta name="twitter:image" content="https://playtrace.neorgon.com/og-preview.jpg">
   <!-- Fleet design tokens: canonical, do not redeclare locally (docs/references/new-project-context.md, Design) -->
   <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/styles/base.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
   <!-- template:styles -->
-<link rel="stylesheet" href="css/collection.css">
+<link rel="stylesheet" href="/css/collection.css">
   <!-- /template:styles -->
   <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN). Keep after style.css, the kit owns the header. -->
   <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
-  <link rel="stylesheet" href="css/neorgon-header.css">
-  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="/css/neorgon-header.css">
+  <link rel="stylesheet" href="/css/neorgon-themes.css">
   <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
-  <script defer src="js/neorgon-header.js"></script>
+  <script defer src="/js/neorgon-header.js"></script>
   <!-- Neorgon Footer Kit (vendored). Pins the footer to the viewport floor on short
        pages and builds the meta bar + back-to-top. See packages/neorgon-ui/footer/README.md.
        Optional stamps: <meta name="neo-repo"|"neo-version"|"neo-updated"> -->
-  <link rel="stylesheet" href="css/neorgon-footer.css">
-  <script defer src="js/neorgon-footer.js"></script>
+  <link rel="stylesheet" href="/css/neorgon-footer.css">
+  <script defer src="/js/neorgon-footer.js"></script>
   <meta name="clerk-publishable-key" content="pk_live_Y2xlcmsubmVvcmdvbi5jb20k">
-  <link rel="stylesheet" href="css/neorgon-auth.css">
+  <link rel="stylesheet" href="/css/neorgon-auth.css">
   <!-- Neorgon Beacon Kit (vendored). Bottom-left correction reporter: it
        carries page context to balise.neorgon.com in a URL fragment and the
        visitor writes there. No form on this page and no request from it.
        Opt out per page with <meta name="beacon" content="off">.
        See packages/neorgon-ui/beacon/README.md. -->
   <meta name="beacon-site" content="playtrace-site">
-  <link rel="stylesheet" href="css/neorgon-beacon.css">
-  <script defer src="js/neorgon-beacon.js"></script>
-  <script defer src="js/site-footer.js"></script>
-  <link rel="stylesheet" href="css/report.css">
-  <link rel="stylesheet" href="css/campaign.css">
-  <link rel="stylesheet" href="css/quiz.css">
+  <link rel="stylesheet" href="/css/neorgon-beacon.css">
+  <script defer src="/js/neorgon-beacon.js"></script>
+  <script defer src="/js/site-footer.js"></script>
+  <link rel="stylesheet" href="/css/report.css">
+  <link rel="stylesheet" href="/css/campaign.css">
+  <link rel="stylesheet" href="/css/quiz.css">
   <link rel="preconnect" href="https://img.itch.zone">
   <link rel="preconnect" href="https://playtrace-api.neorgon.workers.dev" crossorigin>
 </head>
@@ -84,8 +84,8 @@
       <!-- PATTERN: one link: mark + name go to THIS site's home (root or #home)
            so clicking either resets the view. The hub icon in .header-right
            is the only header link to neorgon.com. -->
-      <a href="./" class="header-title-link">
-        <img src="energon-classic-logo.png" class="header-logo-img" alt="">
+      <a href="/" class="header-title-link">
+        <img src="/energon-classic-logo.png" class="header-logo-img" alt="">
         <div class="header-title-wrap">
           <h1>Playtrace</h1>
           <div class="header-subtitle">Games in the making</div>
@@ -97,10 +97,10 @@
     <div class="header-right">
       <!-- template:actions -->
 <div class="header-actions">
-  <a class="btn btn--ghost btn--sm" href="browse.html">Browse</a>
-  <a class="btn btn--ghost btn--sm" href="research.html">Quick reviews</a>
-  <a class="btn btn--ghost btn--sm" href="insights.html">Insights</a>
-  <a class="btn btn--ghost btn--sm" href="about.html">About</a>
+  <a class="btn btn--ghost btn--sm" href="/browse/">Browse</a>
+  <a class="btn btn--ghost btn--sm" href="/feedback/">Submit feedback</a>
+  <a class="btn btn--ghost btn--sm" href="/insights/">Insights</a>
+  <a class="btn btn--ghost btn--sm" href="/about/">About</a>
 </div>
   <!-- /template:actions -->
 
@@ -122,7 +122,7 @@
 
   <main id="main" tabindex="-1">
     <div class="container collection quiz-page">
-      <a class="text-link quiz-back-link" href="browse.html"><span aria-hidden="true">←</span> Back to the collection</a>
+      <a class="text-link quiz-back-link" href="/browse/"><span aria-hidden="true">←</span> Back to the collection</a>
       <section class="name-game" id="name-game" aria-labelledby="quizTitle">
         <div class="quiz-intro">
           <div><p class="eyebrow intro-eyebrow">THE SCREENSHOT GAME</p><h2 id="quizTitle">Can you name<br> that game?</h2><p id="quizPoolNote">Five screenshots, 20 playable community games. Which names ring a bell?</p></div>
@@ -136,13 +136,13 @@
         <div id="quizPanel" class="quiz-panel" hidden><button id="quizClose" class="text-button quiz-close" type="button">Close round ×</button><div id="quizBody"></div></div>
         <p id="quizMessage" role="status" aria-live="polite"></p><button id="quizConnectRetry" class="text-button" type="button" hidden>Try connecting again</button><button id="quizFresh" class="btn btn--secondary" type="button" hidden>Start a fresh round</button>
         <details class="quiz-privacy"><summary>No login. Your guesses help us learn which games people recognize.</summary><p>Choices are saved when you finish. Results show community totals, never a player profile. A random key in this browser lets you remove your quiz answers; clearing browser data removes that access. Unfinished rounds expire after a day.</p><button id="quizDelete" class="text-button" type="button" hidden>Remove my quiz answers</button></details>
-        <noscript><p>This game needs JavaScript. You can still <a href="./">explore the collection</a>.</p></noscript>
+        <noscript><p>This game needs JavaScript. You can still <a href="/">explore the collection</a>.</p></noscript>
       </section>
     </div>
   </main>
 
-  <footer class="neo-footer" data-footer-mode="minimal"><p class="neo-footer-note">Playtrace · Follow the idea. <a href="admin.html">Admin</a></p></footer>
-  <script type="module" src="js/quiz-page.js"></script>
-  <script type="module" src="js/usage.js"></script>
+  <footer class="neo-footer" data-footer-mode="minimal"><p class="neo-footer-note">Playtrace · Follow the idea. <a href="/admin/">Admin</a></p></footer>
+  <script type="module" src="/js/quiz-page.js"></script>
+  <script type="module" src="/js/usage.js"></script>
 </body>
 </html>

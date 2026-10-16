@@ -130,8 +130,8 @@ export function renderDetail(game) {
   $('projectSource').href = [...game.posts].sort((a,b)=>b.createdAt.localeCompare(a.createdAt))[0].url;
   $('projectSource').dataset.brand = 'reddit'; $('projectSource').classList.add('brand-action');
   $('projectSource').innerHTML = `${icon('reddit')}<span class="project-icon__label" aria-hidden="true">Latest Reddit post</span>`;
-  $('projectResearch').href = `research.html?game=${game.id}`;
-  $('inlineProjectEditor').hidden = true; $('quickImagePanel').hidden = true; $('fullImageEditor').href = `admin.html?game=${game.id}#projectImageTitle`;
+  $('projectResearch').href = `/feedback/?game=${game.id}`;
+  $('inlineProjectEditor').hidden = true; $('quickImagePanel').hidden = true; $('fullImageEditor').href = `/admin/?game=${game.id}#projectImageTitle`;
   $('editThumbnail').hidden = !state.isAdmin; $('editProject').hidden = !state.isAdmin; if (!state.isAdmin) $('inlineProjectEditor').hidden = true;
   $('projectSource').setAttribute('aria-label', `${game.preview.kind === 'video' ? 'Watch original post on Reddit' : 'Original post'} (opens in a new tab)`);
   $('gameTimeline').innerHTML = game.posts.map(post => `<li><div class="timeline__date"><time datetime="${e(post.createdAt)}">${e(dateLabel(post.createdAt))}</time><span>${e(label(post.kind))}</span></div><h4>${sourceLink(post.url, post.title)}</h4><p>${e(post.excerpt)}</p></li>`).join('');

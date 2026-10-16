@@ -8,7 +8,7 @@ async function evidenceRequest(path){
   if(path==='/feedback-patterns'||path.startsWith('/feedback-patterns?'))return request(path);
   if(path!=='/insights'&&!path.startsWith('/insights?'))throw new Error('This view only reads public catalogue evidence.');
   if(path==='/insights')try{
-    const response=await fetch('data/community-insights.json',{cache:'no-cache'});
+    const response=await fetch('/data/community-insights.json',{cache:'no-cache'});
     if(!response.ok)throw new Error('No snapshot');
     const data=await response.json(),age=Date.now()-Date.parse(data.observedAt);
     if(data.version!==1||!Array.isArray(data.games)||data.games.length!==data.pagination?.total||data.pagination.nextCursor!==null||!Number.isFinite(age)||age<0||age>86400000)throw new Error('Outdated snapshot');

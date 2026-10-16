@@ -17,22 +17,22 @@
   <meta name="apple-mobile-web-app-title" content="Playtrace">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="neo-mark" content="on">
-  <title>Quick reviews | Playtrace</title>
+  <title>Submit feedback | Playtrace</title>
   <meta name="description" content="Try a community game and answer up to five short questions. Share a private review with Playtrace editors, no account needed.">
-  <meta property="og:title" content="Quick reviews | Playtrace">
+  <meta property="og:title" content="Submit feedback | Playtrace">
   <meta property="og:description" content="Try a community game and answer up to five short questions. Share a private review with Playtrace editors, no account needed.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://playtrace.neorgon.com/research.html">
+  <meta property="og:url" content="https://playtrace.neorgon.com/feedback/">
   <meta property="og:site_name" content="Neorgon">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Quick reviews | Playtrace">
+  <meta name="twitter:title" content="Submit feedback | Playtrace">
   <meta name="twitter:description" content="Try a community game and answer up to five short questions. Share a private review with Playtrace editors, no account needed.">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://playtrace.neorgon.com/research.html">
+  <link rel="canonical" href="https://playtrace.neorgon.com/feedback/">
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="#f3f4f7">
-  <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin>
   <meta property="og:image" content="https://playtrace.neorgon.com/og-preview.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -40,34 +40,34 @@
   <meta name="twitter:image" content="https://playtrace.neorgon.com/og-preview.jpg">
   <!-- Fleet design tokens: canonical, do not redeclare locally (docs/references/new-project-context.md, Design) -->
   <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/styles/base.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
   <!-- template:styles -->
-<link rel="stylesheet" href="css/collection.css">
+<link rel="stylesheet" href="/css/collection.css">
   <!-- /template:styles -->
   <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN). Keep after style.css, the kit owns the header. -->
   <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
-  <link rel="stylesheet" href="css/neorgon-header.css">
-  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="/css/neorgon-header.css">
+  <link rel="stylesheet" href="/css/neorgon-themes.css">
   <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
-  <script defer src="js/neorgon-header.js"></script>
+  <script defer src="/js/neorgon-header.js"></script>
   <!-- Neorgon Footer Kit (vendored). Pins the footer to the viewport floor on short
        pages and builds the meta bar + back-to-top. See packages/neorgon-ui/footer/README.md.
        Optional stamps: <meta name="neo-repo"|"neo-version"|"neo-updated"> -->
-  <link rel="stylesheet" href="css/neorgon-footer.css">
-  <script defer src="js/neorgon-footer.js"></script>
+  <link rel="stylesheet" href="/css/neorgon-footer.css">
+  <script defer src="/js/neorgon-footer.js"></script>
   <meta name="clerk-publishable-key" content="pk_live_Y2xlcmsubmVvcmdvbi5jb20k">
-  <link rel="stylesheet" href="css/neorgon-auth.css">
+  <link rel="stylesheet" href="/css/neorgon-auth.css">
   <!-- Neorgon Beacon Kit (vendored). Bottom-left correction reporter: it
        carries page context to balise.neorgon.com in a URL fragment and the
        visitor writes there. No form on this page and no request from it.
        Opt out per page with <meta name="beacon" content="off">.
        See packages/neorgon-ui/beacon/README.md. -->
   <meta name="beacon-site" content="playtrace-site">
-  <link rel="stylesheet" href="css/neorgon-beacon.css">
-  <script defer src="js/neorgon-beacon.js"></script>
-  <script defer src="js/site-footer.js"></script>
-  <link rel="stylesheet" href="css/report.css">
-  <link rel="stylesheet" href="css/campaign.css">
+  <link rel="stylesheet" href="/css/neorgon-beacon.css">
+  <script defer src="/js/neorgon-beacon.js"></script>
+  <script defer src="/js/site-footer.js"></script>
+  <link rel="stylesheet" href="/css/report.css">
+  <link rel="stylesheet" href="/css/campaign.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -94,8 +94,8 @@
       <!-- PATTERN: one link: mark + name go to THIS site's home (root or #home)
            so clicking either resets the view. The hub icon in .header-right
            is the only header link to neorgon.com. -->
-      <a href="./" class="header-title-link">
-        <img src="energon-classic-logo.png" class="header-logo-img" alt="">
+      <a href="/" class="header-title-link">
+        <img src="/energon-classic-logo.png" class="header-logo-img" alt="">
         <div class="header-title-wrap">
           <h1>Playtrace</h1>
           <div class="header-subtitle">Games in the making</div>
@@ -107,10 +107,10 @@
     <div class="header-right">
       <!-- template:actions -->
 <div class="header-actions">
-  <a class="btn btn--ghost btn--sm" href="browse.html">Browse</a>
-  <a class="btn btn--ghost btn--sm" href="research.html" aria-current="page">Quick reviews</a>
-  <a class="btn btn--ghost btn--sm" href="insights.html">Insights</a>
-  <a class="btn btn--ghost btn--sm" href="about.html">About</a>
+  <a class="btn btn--ghost btn--sm" href="/browse/">Browse</a>
+  <a class="btn btn--ghost btn--sm" href="/feedback/" aria-current="page">Submit feedback</a>
+  <a class="btn btn--ghost btn--sm" href="/insights/">Insights</a>
+  <a class="btn btn--ghost btn--sm" href="/about/">About</a>
 </div>
   <!-- /template:actions -->
 
@@ -131,15 +131,15 @@
   </header>
 
   <main id="main" tabindex="-1"><div class="container collection research-page">
-<div class="research-intro"><p class="eyebrow">COMMUNITY / QUICK REVIEWS</p><h2 id="researchTitle">Try a game.<br>Share your take.</h2><p>Played something from the collection? Answer up to five short questions about how it felt and whether it worked. Your answers help Playtrace editors improve the catalogue.</p><p class="research-how">Choose a game <span aria-hidden="true">→</span> Try its build <span aria-hidden="true">→</span> Share a quick review</p></div>
-<div id="researchUnavailable" class="research-unavailable" hidden><h3>Quick reviews are temporarily unavailable</h3><p>Your saved answers are safe. You can still browse games and visit their original posts. Please try again when the review service is available.</p><div class="admin-inline"><button type="button" id="retryResearch" class="btn btn--secondary">Try again</button><a href="browse.html" class="btn btn--primary">Browse games ↗</a></div></div>
+<div class="research-intro"><p class="eyebrow">COMMUNITY FEEDBACK</p><h2 id="researchTitle">Share feedback on a game.</h2><p>Choose a game to leave a public note or answer optional questions. Most community discussion still happens on <a href="https://www.reddit.com/r/aigamedev/" target="_blank" rel="noopener noreferrer">Reddit</a>.</p></div>
+<div id="researchUnavailable" class="research-unavailable" hidden><h3>Feedback is temporarily unavailable</h3><p>Your saved answers are safe. You can still browse games and visit their original posts. Please try again when the review service is available.</p><div class="admin-inline"><button type="button" id="retryResearch" class="btn btn--secondary">Try again</button><a href="/browse/" class="btn btn--primary">Browse games ↗</a></div></div>
 <form id="researchPicker" class="research-picker" aria-busy="true"><fieldset id="researchPickerFields" disabled><legend class="sr-only">Choose a game to review</legend>
 <div class="field research-game-field"><label for="researchGameSearch">Find a game you’ve tried</label><div class="search-select" id="researchGamePicker"><input id="researchGameSearch" class="input" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="researchGameOptions" autocomplete="off" placeholder="Search by game or maker…"><button type="button" aria-label="Show game options" tabindex="-1">⌄</button><input type="hidden" id="researchGame"><ul id="researchGameOptions" role="listbox" aria-label="Games" hidden></ul></div><p id="researchGameCount" class="field__hint" role="status">Loading projects…</p></div>
 <details class="research-topics"><summary>Choose a different questionnaire</summary><div class="research-topic-fields"><div class="field"><label for="researchCategory">Topic</label><select id="researchCategory" class="select"><option value="">All topics</option></select></div><div class="field"><label for="researchFormSelect">Questionnaire</label><select id="researchFormSelect" class="select" required></select></div></div></details>
 <div id="researchChoice" class="research-choice" hidden><p id="researchChoiceTitle"></p><a id="researchTry" class="play-link" target="_blank" rel="noopener noreferrer">Try this game ↗</a></div>
-<div class="research-start"><button class="btn btn--primary" id="startResearch" type="submit" disabled>Review this game →</button><span>No account needed</span></div></fieldset></form>
-<section id="researchSession" hidden><div class="research-project"><img id="researchImage" alt="" hidden><div><p class="eyebrow">YOU’RE EXPLORING</p><h3 id="researchProject"></h3><div class="admin-inline"><a id="researchVisit" class="text-link" target="_blank" rel="noopener noreferrer">Open game ↗</a><a id="researchProjectLink" class="text-link" target="_blank" rel="noopener noreferrer">Project notes ↗</a></div></div></div><div id="questionFlow"></div><div class="research-session-actions"><button class="text-button" id="changeResearch" type="button">Review another game</button><button class="text-button" id="removeResearch" type="button" hidden>Remove my answers</button></div></section>
-<p id="researchMessage" role="status"></p><p class="research-privacy">No account needed. Answers are private to Playtrace admins and may be classified by Jev to guide catalogue improvements. A random browser key lets you edit or remove your answers. Clearing browser data removes that editing access. Public summaries are reviewed before publication.</p>
+<div class="research-start"><a id="publicFeedbackLink" class="btn btn--primary" hidden>Leave a public note</a><button class="btn btn--secondary" id="startResearch" type="submit" disabled>Answer questions</button><span>No account needed</span></div></fieldset></form>
+<section id="researchSession" hidden><div class="research-project"><img id="researchImage" alt="" hidden><div><p class="eyebrow">YOU’RE EXPLORING</p><h3 id="researchProject"></h3><div class="admin-inline"><a id="researchVisit" class="text-link" target="_blank" rel="noopener noreferrer">Open game ↗</a><a id="researchProjectLink" class="text-link" target="_blank" rel="noopener noreferrer">Project notes ↗</a></div></div></div><div id="questionFlow"></div><div class="research-session-actions"><button class="text-button" id="changeResearch" type="button">Choose another game</button><button class="text-button" id="removeResearch" type="button" hidden>Remove my answers</button></div></section>
+<p id="researchMessage" role="status"></p><p class="research-privacy">Public notes appear on the game’s page. Questionnaire answers are private to Playtrace admins and may be classified by Jev to guide catalogue improvements. A random browser key lets you edit or remove your answers. Clearing browser data removes that editing access. Public summaries are reviewed before publication.</p>
 </div></main>
 
   <!-- Neorgon Footer Kit contract. data-footer-mode: minimal (default) | content | app.
@@ -150,7 +150,7 @@
   </footer>
 
   <div id="app-toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
-  <script type="module" src="js/research-page.js"></script>
-  <script type="module" src="js/usage.js"></script>
+  <script type="module" src="/js/research-page.js"></script>
+  <script type="module" src="/js/usage.js"></script>
 </body>
 </html>

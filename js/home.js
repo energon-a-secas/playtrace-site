@@ -6,7 +6,7 @@ import { bindShowcase } from './showcase-motion.js';
 
 const current = new URL(location.href);
 if (['game','q','cat','platform','stage','maker','author','following','view','sort'].some(key => current.searchParams.has(key)) || current.hash === '#discover') {
-  current.pathname = current.pathname.replace(/(?:index\.html)?$/, 'browse.html'); location.replace(current.href);
+  current.pathname = '/browse/'; location.replace(current.href);
 } else {
   const refreshShowcase = bindShowcase(document.getElementById('weeklyHighlights'));
   NeoAuth.onChange(async auth => {
@@ -25,7 +25,7 @@ if (['game','q','cat','platform','stage','maker','author','following','view','so
     try { picks = await request('/highlights'); }
     catch (error) {
       if (error.code !== 'SERVICE_UNAVAILABLE' && !(error instanceof TypeError)) throw error;
-      const response = await fetch('data/highlights.json', { cache: 'no-cache' });
+      const response = await fetch('/data/highlights.json', { cache: 'no-cache' });
       if (!response.ok) throw error;
       picks = await response.json(); saved = true;
       const age = Date.now() - Date.parse(picks.updatedAt);
@@ -39,7 +39,7 @@ if (['game','q','cat','platform','stage','maker','author','following','view','so
     document.getElementById('weeklyHighlights').setAttribute('aria-busy', 'false');
     refreshShowcase();
   } catch {
-    document.getElementById('weeklyHighlights').innerHTML = '<li class="highlights-empty">Weekly picks are taking a break. <a href="browse.html">Explore the collection ↗</a></li>';
+    document.getElementById('weeklyHighlights').innerHTML = '<li class="highlights-empty">Weekly picks are taking a break. <a href="/browse/">Explore the collection ↗</a></li>';
     document.getElementById('weeklyHighlights').setAttribute('aria-busy', 'false');
   }
   document.getElementById('weeklyHighlights').addEventListener('error', event => {

@@ -41,7 +41,7 @@ export async function openInlineEditor() {
     record = value; categories(value.game.category);
     const flags=value.duplicateFlags||[];
     $('inlineDuplicateFlags').hidden=!flags.length;
-    $('inlineDuplicateFlags').innerHTML=flags.length?`<strong>Possible duplicates to review</strong><ul>${flags.map(flag=>`<li>${e(flag.reason)}. <a class="text-link" target="_blank" rel="noopener noreferrer" href="browse.html?game=${flag.gameId===id?flag.otherId:flag.gameId}">${e(flag.gameId===id?flag.otherTitle:flag.title)} ↗</a></li>`).join('')}</ul>`:'';
+    $('inlineDuplicateFlags').innerHTML=flags.length?`<strong>Possible duplicates to review</strong><ul>${flags.map(flag=>`<li>${e(flag.reason)}. <a class="text-link" target="_blank" rel="noopener noreferrer" href="/browse/?game=${flag.gameId===id?flag.otherId:flag.gameId}">${e(flag.gameId===id?flag.otherTitle:flag.title)} ↗</a></li>`).join('')}</ul>`:'';
     $('inlineSourcePosts').innerHTML=value.game.posts.map(post=>`<li><a class="text-link" href="${e(post.url)}" target="_blank" rel="noopener noreferrer">${e(post.title)} ↗</a>${value.game.posts.some(other=>other.id!==post.id&&Math.abs(Date.parse(other.createdAt)-Date.parse(post.createdAt))<=48*3600000)?'<small>Posts within 48 hours</small>':''}${value.game.posts.length>1&&![value.sourcePreview.sourceUrl,value.game.preview.sourceUrl].includes(post.url)?`<button type="button" class="text-button" data-remove-post="${post.id}">Remove post</button>`:'<small>Required source</small>'}</li>`).join('');
     $('inlineRemovalConfirm').hidden=true;removalTarget=null;
     for (const [key, field] of Object.entries(fields)) $(field).value = Array.isArray(value.game[key]) ? value.game[key].join(', ') : value.game[key] || '';

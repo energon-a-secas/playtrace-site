@@ -29,9 +29,12 @@ test('body stream failures and binary downloads stay separate from HTTP failures
 });
 test('large HTML records a successful link check without inventing a playable build or refreshing prior store evidence',async()=>{
   const env=fixtureEnv(),game=fixtureGame();await importCatalog(env.DB,fixtureCatalog([game]));
+  const failed=await checkProject(env.DB,env,game.id,{now:()=>NOW-1000,fetch:async()=>{throw new DOMException('Timed out','TimeoutError');}},true);
+  assert.equal(failed.status,'unverified');assert.ok(failed.note.includes('could not verify'));
   const response=()=>new Response('<div class="html_embed_widget">'+'x'.repeat(1024*1024),{headers:{'Content-Type':'text/html'}});
   let result=await checkProject(env.DB,env,game.id,{now:()=>NOW,fetch:publicFetcher(response())},true);
   assert.equal(result.status,'reachable');assert.equal(result.httpStatus,200);assert.equal(result.metadataStatus,'too-large');assert.equal(result.provider,undefined);assert.equal(result.playable,undefined);
+  assert.equal(result.note,null);assert.equal(result.failureReason,null);
   const at=new Date(NOW-86400000).toISOString();
   await query(env.DB,'UPDATE project_enrichment SET payload_json=? WHERE game_id=?',JSON.stringify({...result,provider:'itch',playable:true,storeCheckedAt:at,storeStatus:'reachable'}),game.id).run();
   result=await checkProject(env.DB,env,game.id,{now:()=>NOW+60000,fetch:publicFetcher(response())},true);

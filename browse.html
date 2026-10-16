@@ -22,17 +22,17 @@
   <meta property="og:title" content="Playtrace | Games in the Making">
   <meta property="og:description" content="Explore the history of games shared on r/aigamedev. Leave public feedback and an optional ideal price, no account needed.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://playtrace.neorgon.com/browse.html">
+  <meta property="og:url" content="https://playtrace.neorgon.com/browse/">
   <meta property="og:site_name" content="Neorgon">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Playtrace | Games in the Making">
   <meta name="twitter:description" content="Explore the history of games shared on r/aigamedev. Leave public feedback and an optional ideal price, no account needed.">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://playtrace.neorgon.com/browse.html">
+  <link rel="canonical" href="https://playtrace.neorgon.com/browse/">
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="#f3f4f7">
-  <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin>
   <meta property="og:image" content="https://playtrace.neorgon.com/og-preview.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -40,34 +40,34 @@
   <meta name="twitter:image" content="https://playtrace.neorgon.com/og-preview.jpg">
   <!-- Fleet design tokens: canonical, do not redeclare locally (docs/references/new-project-context.md, Design) -->
   <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/styles/base.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
   <!-- template:styles -->
-<link rel="stylesheet" href="css/collection.css">
+<link rel="stylesheet" href="/css/collection.css">
   <!-- /template:styles -->
   <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN). Keep after style.css, the kit owns the header. -->
   <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
-  <link rel="stylesheet" href="css/neorgon-header.css">
-  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="/css/neorgon-header.css">
+  <link rel="stylesheet" href="/css/neorgon-themes.css">
   <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
-  <script defer src="js/neorgon-header.js"></script>
+  <script defer src="/js/neorgon-header.js"></script>
   <!-- Neorgon Footer Kit (vendored). Pins the footer to the viewport floor on short
        pages and builds the meta bar + back-to-top. See packages/neorgon-ui/footer/README.md.
        Optional stamps: <meta name="neo-repo"|"neo-version"|"neo-updated"> -->
-  <link rel="stylesheet" href="css/neorgon-footer.css">
-  <script defer src="js/neorgon-footer.js"></script>
+  <link rel="stylesheet" href="/css/neorgon-footer.css">
+  <script defer src="/js/neorgon-footer.js"></script>
   <meta name="clerk-publishable-key" content="pk_live_Y2xlcmsubmVvcmdvbi5jb20k">
-  <link rel="stylesheet" href="css/neorgon-auth.css">
+  <link rel="stylesheet" href="/css/neorgon-auth.css">
   <!-- Neorgon Beacon Kit (vendored). Bottom-left correction reporter: it
        carries page context to balise.neorgon.com in a URL fragment and the
        visitor writes there. No form on this page and no request from it.
        Opt out per page with <meta name="beacon" content="off">.
        See packages/neorgon-ui/beacon/README.md. -->
   <meta name="beacon-site" content="playtrace-site">
-  <link rel="stylesheet" href="css/neorgon-beacon.css">
-  <script defer src="js/neorgon-beacon.js"></script>
-  <script defer src="js/site-footer.js"></script>
-  <link rel="stylesheet" href="css/report.css">
-  <link rel="stylesheet" href="css/campaign.css">
+  <link rel="stylesheet" href="/css/neorgon-beacon.css">
+  <script defer src="/js/neorgon-beacon.js"></script>
+  <script defer src="/js/site-footer.js"></script>
+  <link rel="stylesheet" href="/css/report.css">
+  <link rel="stylesheet" href="/css/campaign.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -94,8 +94,8 @@
       <!-- PATTERN: one link: mark + name go to THIS site's home (root or #home)
            so clicking either resets the view. The hub icon in .header-right
            is the only header link to neorgon.com. -->
-      <a href="./" class="header-title-link">
-        <img src="energon-classic-logo.png" class="header-logo-img" alt="">
+      <a href="/" class="header-title-link">
+        <img src="/energon-classic-logo.png" class="header-logo-img" alt="">
         <div class="header-title-wrap">
           <h1>Playtrace</h1>
           <div class="header-subtitle">Games in the making</div>
@@ -107,10 +107,10 @@
     <div class="header-right">
       <!-- template:actions -->
 <div class="header-actions">
-  <a class="btn btn--ghost btn--sm" href="browse.html" aria-current="page">Browse</a>
-  <a class="btn btn--ghost btn--sm" href="research.html">Quick reviews</a>
-  <a class="btn btn--ghost btn--sm" href="insights.html">Insights</a>
-  <a class="btn btn--ghost btn--sm" href="about.html">About</a>
+  <a class="btn btn--ghost btn--sm" href="/browse/" aria-current="page">Browse</a>
+  <a class="btn btn--ghost btn--sm" href="/feedback/">Submit feedback</a>
+  <a class="btn btn--ghost btn--sm" href="/insights/">Insights</a>
+  <a class="btn btn--ghost btn--sm" href="/about/">About</a>
 </div>
   <!-- /template:actions -->
 
@@ -234,7 +234,7 @@
   </section>
   <section id="quickImagePanel" class="quick-image-panel" aria-labelledby="quickImageTitle" hidden>
     <h3 id="quickImageTitle">Update thumbnail</h3>
-    <form id="quickImageForm" class="stack"><label for="quickImageFile">Upload an image</label><input id="quickImageFile" type="file" accept="image/png,image/jpeg,image/webp"><label for="quickImageUrl">Or use a Reddit, Steam or itch.io image URL</label><input id="quickImageUrl" class="input" type="url" maxlength="2048"><label for="quickImageAlt">Image description</label><input id="quickImageAlt" class="input" maxlength="300" required><label><input id="quickImagePermission" type="checkbox" checked>I have permission to use this upload.</label><div class="admin-inline"><button class="btn btn--primary" type="submit">Save thumbnail</button><button class="text-button" id="cancelQuickImage" type="button">Cancel</button><a id="fullImageEditor" class="text-link" href="admin.html">Full editor ↗</a></div></form><p id="quickImageMessage" role="status"></p>
+    <form id="quickImageForm" class="stack"><label for="quickImageFile">Upload an image</label><input id="quickImageFile" type="file" accept="image/png,image/jpeg,image/webp"><label for="quickImageUrl">Or use a Reddit, Steam or itch.io image URL</label><input id="quickImageUrl" class="input" type="url" maxlength="2048"><label for="quickImageAlt">Image description</label><input id="quickImageAlt" class="input" maxlength="300" required><label><input id="quickImagePermission" type="checkbox" checked>I have permission to use this upload.</label><div class="admin-inline"><button class="btn btn--primary" type="submit">Save thumbnail</button><button class="text-button" id="cancelQuickImage" type="button">Cancel</button><a id="fullImageEditor" class="text-link" href="/admin/">Full editor ↗</a></div></form><p id="quickImageMessage" role="status"></p>
   </section>
   <div class="dialog__body">
     <div class="project-toolbar">
@@ -299,7 +299,7 @@
       <div class="feedback-heading"><div><p class="eyebrow">HELP THE NEXT VERSION</p><h3 id="feedbackTitle">Player feedback</h3></div><span id="feedbackCount"></span></div>
       <div class="feedback-layout">
         <section class="feedback-compose" aria-labelledby="feedbackFormTitle">
-          <h4 id="feedbackFormTitle">A quick first impression</h4><a id="projectResearch" class="text-link" href="research.html">Share a quick review ↗</a>
+          <h4 id="feedbackFormTitle">A quick first impression</h4><a id="projectResearch" class="text-link" href="/feedback/">Submit feedback</a>
           <p class="field__hint">Pick any that fit. A first look is welcome; skip anything you haven’t tried.</p>
           <form id="feedbackForm">
             <div id="feedbackExperience"></div>
@@ -352,11 +352,11 @@
        Replace the copy with a real note (privacy, data provenance, disclaimer) or drop
        the text entirely, the kit appends "Part of Neorgon" and any version stamps. -->
   <footer class="neo-footer" data-footer-mode="minimal">
-    <div class="collection-footer"><span id="collectionProvenance">Sources: r/aigamedev and Arctic Shift</span><button type="button" class="text-button" data-open-info>Sources &amp; privacy</button><a class="text-link" href="admin.html">Admin</a></div>
+    <div class="collection-footer"><span id="collectionProvenance">Sources: r/aigamedev and Arctic Shift</span><button type="button" class="text-button" data-open-info>Sources &amp; privacy</button><a class="text-link" href="/admin/">Admin</a></div>
   </footer>
 
   <div id="app-toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
-  <script type="module" src="js/app.js"></script>
-  <script type="module" src="js/usage.js"></script>
+  <script type="module" src="/js/app.js"></script>
+  <script type="module" src="/js/usage.js"></script>
 </body>
 </html>

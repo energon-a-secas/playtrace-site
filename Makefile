@@ -7,17 +7,18 @@ PORT = 8900
 help:
 	@echo ""
 	@echo "  make serve    Start dev server → http://localhost:$(PORT)"
+	@echo "  make build    Rebuild directory routes from the saved catalogue"
 	@echo "  make kill     Kill this project's HTTP server"
 	@echo ""
 
 # ── Dev server ────────────────────────────────────────────────────────────────
-# scripts/serve.py is http.server plus Cache-Control: no-cache; a plain
-# http.server sends only Last-Modified, so browsers keep stale ES modules after
-# edits. Falls back to plain http.server outside the monorepo.
-.PHONY: serve
-serve:
+# Directory routes and versioned assets use the same publisher as production.
+.PHONY: build serve
+build:
+	node scripts/build-site.mjs --catalog data/public-catalog.json
+serve: build
 	@echo "Serving → http://localhost:$(PORT)"
-	@if [ -f ../../scripts/serve.py ]; then python3 ../../scripts/serve.py $(PORT); else python3 -m http.server $(PORT); fi
+	python3 -m http.server $(PORT) --directory _site
 
 # ── Kill ──────────────────────────────────────────────────────────────────────
 .PHONY: kill

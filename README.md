@@ -38,7 +38,7 @@ Public feedback uses a random browser edit key so visitors can update or remove 
 
 ## Features
 
-- **Focused navigation** -- Home showcases five weekly picks and a separate editor’s pick in a full-width artwork wall; Browse includes a star filter for local/account favorites. Quick reviews and About have dedicated pages. The quiz remains available but is not promoted in navigation. Existing shared project/filter links still work.
+- **Focused navigation** -- Home showcases five weekly picks and a separate editor’s pick in a full-width artwork wall; Browse includes a star filter for local/account favorites. Submit feedback and About have dedicated pages. The quiz remains available but is not promoted in navigation. Existing shared project/filter links still work.
 - **Source-linked discovery** -- Real previews, genre and development-stage filters, a searchable Maker dropdown, search, grid/list layouts, and shareable project links.
 - **Project platforms** -- Filter by itch.io, Steam, mobile stores, game portals, code repositories, other websites, or projects without a link. Cards and details identify the destination automatically from the project URL. Hosting, supported devices, and development stage remain separate facts.
 - **Project histories** -- Older and newer posts join an existing game only when author and canonical project link match. Existing project links stay stable when an earlier source is found. Closely matching same-author reposts within 48 hours retain the newest entry, with old links redirected. Sharing an author alone never merges games.
@@ -59,11 +59,13 @@ The bundled snapshot is dated local exploration data; the live catalogue grows s
 
 ## Running locally
 
-There is no frontend build step. From this directory:
+The static publisher creates the directory routes and versioned assets. From this directory:
 
 ```bash
 make serve
 ```
+
+This builds `_site/` from the saved catalogue before serving it. After editing source files, run `make build` again and reload. For a current catalogue build, run `node scripts/build-site.mjs`, then serve `_site/` directly.
 
 Open `http://localhost:8900`. `js/config.js` pins the production API address, whose CORS policy does not allow localhost. To explore the bundled snapshot, set `apiBase` to an empty string in your local checkout. Guest feedback and account features will then show as unavailable. Restore the pinned value before publishing. A configured API failure never switches silently to the bundled snapshot. For interactive local feedback, use the disposable Worker setup in [the runbook](worker/README.md#local-feedback-preview).
 
@@ -132,7 +134,7 @@ The Pages workflow in `.github/workflows/pages.yml` builds `_site/` from a compl
 
 For a local snapshot build: `node scripts/build-site.mjs --catalog data/public-catalog.json`. For current production reads: `node scripts/build-site.mjs`. `_site/` is generated and ignored. Search Console ownership and sitemap submission require the property owner; generating a sitemap does not guarantee indexing.
 
-[Community Insights](https://playtrace.neorgon.com/insights.html) provides catalogue trends, model announcement comparisons, source inspection, CSV export and a separate Steam release timeline. Its hourly public snapshot is built from the allowlisted `/insights` endpoint. Admin desk → Insights adds community choices and anonymous usage counts through protected endpoints. Private questionnaires, identities and editorial jobs are never exported. See [the dashboard methodology](docs/dashboard-methodology.md) and [100-project enrichment pilot](docs/enrichment-pilot100.md). Apply all migrations through `0014_feedback_context.sql` before deploying this version. Accepted source-linked facts survive imports; explicit admin edits and approved images take precedence.
+[Community Insights](https://playtrace.neorgon.com/insights/) provides catalogue trends, model announcement comparisons, source inspection, CSV export and a separate Steam release timeline. Its hourly public snapshot is built from the allowlisted `/insights` endpoint. Admin desk → Insights adds community choices and anonymous usage counts through protected endpoints. Private questionnaires, identities and editorial jobs are never exported. See [the dashboard methodology](docs/dashboard-methodology.md) and [100-project enrichment pilot](docs/enrichment-pilot100.md). Apply all migrations through `0014_feedback_context.sql` before deploying this version. Accepted source-linked facts survive imports; explicit admin edits and approved images take precedence.
 
 
 ### Weekly scores and community feedback
@@ -144,3 +146,5 @@ Jev uses the encrypted `JEV_API_KEY` and `https://api.typesafe.ai/v1/systemone`.
 `GET /feedback-patterns` exposes recent public quick-answer counts and already-published citation labels, never draft classification or private research. Responses are uncached so removals apply immediately. `GET /games/:id/feedback/:feedbackId` resolves an individual public citation even beyond the first feedback page. Public notes have optional `experience` (`preview`, `played`, `unspecified`); older clients preserve prior values. Updating, hiding or deleting a copied note withdraws its derived review, including protection against jobs finishing after a removal.
 
 See [feedback operations and methodology](docs/feedback-operations.md) for definitions and review workflow.
+
+Local Jev post research, timing-data limitations and shorter public routes are documented in [the post research guide](docs/post-research.md).

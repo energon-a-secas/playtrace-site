@@ -13,6 +13,7 @@ import { weeklyBriefView } from '../js/weekly-brief-view.js';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const origin='https://playtrace.neorgon.com',api='https://playtrace-api.neorgon.workers.dev/api/v1';
+export const pageRoutes={'browse.html':'/browse/','research.html':'/feedback/','insights.html':'/insights/','about.html':'/about/','admin.html':'/admin/','quiz.html':'/quiz/','profile.html':'/favorites/'};
 const jsonScript=value=>JSON.stringify(value).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
 async function versionAssets(out){
   const hash=createHash('sha256');
@@ -63,7 +64,7 @@ const metadata={
  'index.html':['Playtrace | Discover games made with AI','Discover games shared by the r/aigamedev community. Explore weekly highlights, follow development and help makers with feedback.'],
  'browse.html':['Browse community games | Playtrace','Find community games by genre, platform and maker. Explore demos, browser games and prototypes, save favorites and follow each project’s history.'],
  'about.html':['About Playtrace | Sources, feedback and privacy','How Playtrace collects community game showcases, credits their creators, checks store information and handles feedback and privacy.'],
- 'research.html':['Quick game reviews | Playtrace','Share a short review of a community game, one question at a time. Help makers understand the controls, challenge, accessibility and player experience.'],
+ 'research.html':['Submit game feedback | Playtrace','Choose a community game to leave a public note or answer optional questions about your experience. No account needed.'],
  'quiz.html':['Name that game | Playtrace','Recognize five community games from their screenshots and discover what to play next.'],
  'insights.html':['Community Insights | Playtrace','Explore game genres, art styles, platforms and AI model mentions through time, with linked sources, store release dates and transparent coverage.'],
 };
@@ -107,10 +108,10 @@ export async function buildSite({catalog,highlights,insights,savedHistory,priorS
   const browse=await readFile(path.join(root,'browse.html'),'utf8');
   const head=browse.slice(0,browse.indexOf('</head>')+7).replace(/\b(href|src)="(?!https?:|\/|#|data:)([^"]+)"/g,(_,attr,url)=>`${attr}="/${url.replace(/^\.\//,'')}"`);
   const header=browse.match(/<header class="header-bar"[\s\S]*?<\/header>/)[0].replace('<h1>Playtrace</h1>','<span class="header-site-name">Playtrace</span>').replace(/href="\.\/"/g,'href="/"').replace(/\b(href|src)="(?!https?:|\/|#|data:)([^"]+)"/g,'$1="/$2"');
-  const feedback=browse.slice(browse.indexOf('    <section class="project-feedback"'),browse.indexOf('\n  </div>\n</dialog>',browse.indexOf('    <section class="project-feedback"'))).replace('class="project-feedback"','id="gameFeedback" class="project-feedback"').replace('href="research.html"','href="/research.html"');
-  const footer='<footer class="neo-footer" data-footer-mode="minimal"><p class="neo-footer-note">Playtrace · <a href="/about.html">Sources &amp; privacy</a> · <a href="/games/">Game directory</a> · <a href="/admin.html">Admin</a></p></footer>';
+  const feedback=browse.slice(browse.indexOf('    <section class="project-feedback"'),browse.indexOf('\n  </div>\n</dialog>',browse.indexOf('    <section class="project-feedback"'))).replace('class="project-feedback"','id="gameFeedback" class="project-feedback"');
+  const footer='<footer class="neo-footer" data-footer-mode="minimal"><p class="neo-footer-note">Playtrace · <a href="/about/">Sources &amp; privacy</a> · <a href="/games/">Game directory</a> · <a href="/admin/">Admin</a></p></footer>';
   const shell=(main,data='')=>`${head.replace('</head>','<link rel="stylesheet" href="/css/game-page.css"></head>')}<body data-page="game"><a class="skip-link" href="#main">Skip to content</a>${header}<main id="main" class="game-page" tabindex="-1">${main}</main>${footer}<div id="app-toast" class="toast" role="status" aria-live="polite"></div>${data}<script type="module" src="/js/usage.js"></script></body></html>`;
-  const urls=[{path:'/'},{path:'/browse.html'},{path:'/about.html'},{path:'/insights.html'}],manifest=[];
+  const urls=[{path:'/'},{path:'/browse/'},{path:'/about/'},{path:'/insights/'}],manifest=[];
   const ordered=[...checked.games].sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt)||a.id.localeCompare(b.id));
   for(const game of ordered){
     const route=projectPath(game),related=ordered.filter(other=>other.id!==game.id&&(other.author.name===game.author.name||(game.category!=='other'&&other.category===game.category))).slice(0,3);
@@ -132,16 +133,24 @@ export async function buildSite({catalog,highlights,insights,savedHistory,priorS
     const route=page?`/games/page-${page+1}/`:'/games/';
     const links=ordered.slice(page*pageSize,(page+1)*pageSize).map(game=>`<li><a href="${projectPath(game)}">${e(game.title)}</a><small>u/${e(game.author.name)} · ${e(game.stage)}${game.distribution?` · ${e(game.distribution.label)}`:''}</small></li>`).join('');
     const nav=Array.from({length:totalPages},(_,i)=>`<a href="${i?`/games/page-${i+1}/`:'/games/'}" ${i===page?'aria-current="page"':''}>${i+1}</a>`).join('');
-    const html=metaPage(shell(`<h1>Community game directory</h1><p>${ordered.length} source-linked projects. <a href="/browse.html">Browse with filters ↗</a></p><ol class="directory-list">${links}</ol><nav class="directory-pagination" aria-label="Directory pages">${nav}</nav>`).replace('data-page="game"','data-page="directory"'),{title:`Game directory${page?` · Page ${page+1}`:''} | Playtrace`,description:'Explore the community’s games, with links to project pages, creators and original source posts.',url:origin+route});
+    const html=metaPage(shell(`<h1>Community game directory</h1><p>${ordered.length} source-linked projects. <a href="/browse/">Browse with filters ↗</a></p><ol class="directory-list">${links}</ol><nav class="directory-pagination" aria-label="Directory pages">${nav}</nav>`).replace('data-page="game"','data-page="directory"'),{title:`Game directory${page?` · Page ${page+1}`:''} | Playtrace`,description:'Explore the community’s games, with links to project pages, creators and original source posts.',url:origin+route});
     await mkdir(path.join(out,route),{recursive:true});await writeFile(path.join(out,route,'index.html'),html);urls.push({path:route});
   }
   for(const [file,[title,description]]of Object.entries(metadata)){
     const source=await readFile(path.join(out,file),'utf8');
-    const html=metaPage(source,{title,description,url:origin+(file==='index.html'?'/':'/'+file),noindex:['research.html','quiz.html'].includes(file),schema:file==='index.html'?{'@context':'https://schema.org','@type':'WebSite',name:'Playtrace',url:origin+'/',description}:null});
+    const html=metaPage(source,{title,description,url:origin+(pageRoutes[file]||'/'),noindex:['research.html','quiz.html'].includes(file),schema:file==='index.html'?{'@context':'https://schema.org','@type':'WebSite',name:'Playtrace',url:origin+'/',description}:null});
     await writeFile(path.join(out,file),html);
   }
   const browseOut=await readFile(path.join(out,'browse.html'),'utf8');
   await writeFile(path.join(out,'browse.html'),browseOut.replace('<div class="collection-footer">','<div class="collection-footer"><a class="text-link" href="/games/">Game directory</a>'));
+  // GitHub Pages serves directory indexes. Keep legacy filenames as redirects
+  // so shared study links, filters, fragments and bookmarks survive the move.
+  for(const [file,route] of Object.entries(pageRoutes)){
+    const source=await readFile(path.join(out,file),'utf8');
+    await mkdir(path.join(out,route),{recursive:true});await writeFile(path.join(out,route,'index.html'),source);
+    const redirect=metaPage(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Page moved</title><meta http-equiv="refresh" content="5;url=${route}"><script type="module" src="/js/page-redirect.js"></script></head><body><main><h1>Opening Playtrace</h1><p><a id="canonicalPage" href="${route}">Continue to the page</a></p></main></body></html>`,{title:'Page moved | Playtrace',description:'This Playtrace page has a shorter address.',url:origin+route,noindex:true});
+    await writeFile(path.join(out,file),redirect);
+  }
   // lastmod is omitted rather than pretending every fetch changes the content.
   await writeFile(path.join(out,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(url=>`<url><loc>${e(origin+url.path)}</loc></url>`).join('')}</urlset>\n`);
   await writeFile(path.join(out,'data/page-manifest.json'),JSON.stringify({generatedAt:snapshotAt,games:manifest}));

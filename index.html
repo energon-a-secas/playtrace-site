@@ -31,8 +31,8 @@
   <link rel="canonical" href="https://playtrace.neorgon.com/">
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="#f3f4f7">
-  <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin>
   <meta property="og:image" content="https://playtrace.neorgon.com/og-preview.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -40,35 +40,35 @@
   <meta name="twitter:image" content="https://playtrace.neorgon.com/og-preview.jpg">
   <!-- Fleet design tokens: canonical, do not redeclare locally (docs/references/new-project-context.md, Design) -->
   <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/styles/base.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
   <!-- template:styles -->
-<link rel="stylesheet" href="css/collection.css">
+<link rel="stylesheet" href="/css/collection.css">
   <!-- /template:styles -->
   <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN). Keep after style.css, the kit owns the header. -->
   <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
-  <link rel="stylesheet" href="css/neorgon-header.css">
-  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="/css/neorgon-header.css">
+  <link rel="stylesheet" href="/css/neorgon-themes.css">
   <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
-  <script defer src="js/neorgon-header.js"></script>
+  <script defer src="/js/neorgon-header.js"></script>
   <!-- Neorgon Footer Kit (vendored). Pins the footer to the viewport floor on short
        pages and builds the meta bar + back-to-top. See packages/neorgon-ui/footer/README.md.
        Optional stamps: <meta name="neo-repo"|"neo-version"|"neo-updated"> -->
-  <link rel="stylesheet" href="css/neorgon-footer.css">
-  <script defer src="js/neorgon-footer.js"></script>
+  <link rel="stylesheet" href="/css/neorgon-footer.css">
+  <script defer src="/js/neorgon-footer.js"></script>
   <meta name="clerk-publishable-key" content="pk_live_Y2xlcmsubmVvcmdvbi5jb20k">
-  <link rel="stylesheet" href="css/neorgon-auth.css">
+  <link rel="stylesheet" href="/css/neorgon-auth.css">
   <!-- Neorgon Beacon Kit (vendored). Bottom-left correction reporter: it
        carries page context to balise.neorgon.com in a URL fragment and the
        visitor writes there. No form on this page and no request from it.
        Opt out per page with <meta name="beacon" content="off">.
        See packages/neorgon-ui/beacon/README.md. -->
   <meta name="beacon-site" content="playtrace-site">
-  <link rel="stylesheet" href="css/neorgon-beacon.css">
-  <script defer src="js/neorgon-beacon.js"></script>
-  <script defer src="js/site-footer.js"></script>
-  <link rel="stylesheet" href="css/report.css">
-  <link rel="stylesheet" href="css/campaign.css">
-  <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="/css/neorgon-beacon.css">
+  <script defer src="/js/neorgon-beacon.js"></script>
+  <script defer src="/js/site-footer.js"></script>
+  <link rel="stylesheet" href="/css/report.css">
+  <link rel="stylesheet" href="/css/campaign.css">
+  <link rel="stylesheet" href="/css/home.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -95,8 +95,8 @@
       <!-- PATTERN: one link: mark + name go to THIS site's home (root or #home)
            so clicking either resets the view. The hub icon in .header-right
            is the only header link to neorgon.com. -->
-      <a href="./" class="header-title-link">
-        <img src="energon-classic-logo.png" class="header-logo-img" alt="">
+      <a href="/" class="header-title-link">
+        <img src="/energon-classic-logo.png" class="header-logo-img" alt="">
         <div class="header-title-wrap">
           <h1>Playtrace</h1>
           <div class="header-subtitle">Games in the making</div>
@@ -108,10 +108,10 @@
     <div class="header-right">
       <!-- template:actions -->
 <div class="header-actions">
-  <a class="btn btn--ghost btn--sm" href="browse.html">Browse</a>
-  <a class="btn btn--ghost btn--sm" href="research.html">Quick reviews</a>
-  <a class="btn btn--ghost btn--sm" href="insights.html">Insights</a>
-  <a class="btn btn--ghost btn--sm" href="about.html">About</a>
+  <a class="btn btn--ghost btn--sm" href="/browse/">Browse</a>
+  <a class="btn btn--ghost btn--sm" href="/feedback/">Submit feedback</a>
+  <a class="btn btn--ghost btn--sm" href="/insights/">Insights</a>
+  <a class="btn btn--ghost btn--sm" href="/about/">About</a>
 </div>
   <!-- /template:actions -->
 
@@ -133,12 +133,12 @@
 
   <main id="main" tabindex="-1" class="home-stage">
     <section class="home-showcase" aria-labelledby="highlightsTitle">
-      <div class="showcase-heading"><div><h2 id="highlightsTitle">This week’s picks</h2><span id="highlightWeek">Community highlights</span></div><a id="editHighlights" class="btn btn--secondary btn--sm" href="admin.html#highlights" hidden>Edit picks</a></div>
+      <div class="showcase-heading"><div><h2 id="highlightsTitle">This week’s picks</h2><span id="highlightWeek">Community highlights</span></div><a id="editHighlights" class="btn btn--secondary btn--sm" href="/admin/#highlights" hidden>Edit picks</a></div>
       <ol id="weeklyHighlights" class="showcase-panels" aria-busy="true"><li class="highlights-empty">Loading this week’s picks…</li></ol>
     </section>
     <section class="home-invitation" aria-label="Explore the community">
       <a class="home-community-link" href="https://www.reddit.com/r/aigamedev/" target="_blank" rel="noopener noreferrer">From the <strong>r/aigamedev</strong> community <span aria-hidden="true">↗</span></a>
-      <div class="home-invitation-action"><p>Find your next game in the making.<br>Play something unexpected. Leave a trace.</p><a href="browse.html" class="btn btn--primary">Explore the collection <span aria-hidden="true">↗</span></a></div>
+      <div class="home-invitation-action"><a href="/browse/" class="btn btn--primary">Browse the collection</a><a href="/insights/" class="btn btn--secondary">Insights</a></div>
     </section>
   </main>
 
@@ -146,11 +146,11 @@
        Replace the copy with a real note (privacy, data provenance, disclaimer) or drop
        the text entirely, the kit appends "Part of Neorgon" and any version stamps. -->
   <footer class="neo-footer" data-footer-mode="minimal">
-    <p class="neo-footer-note">An independent index with <a href="about.html">original sources and maker credits</a>. <a class="home-review-link" href="research.html">Share a quick review ↗</a></p>
+    <p class="neo-footer-note">An independent index with <a href="/about/">original sources and maker credits</a>. <a class="home-review-link" href="/feedback/">Submit feedback</a></p>
   </footer>
 
   <div id="app-toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
-  <script type="module" src="js/home.js"></script>
-  <script type="module" src="js/usage.js"></script>
+  <script type="module" src="/js/home.js"></script>
+  <script type="module" src="/js/usage.js"></script>
 </body>
 </html>

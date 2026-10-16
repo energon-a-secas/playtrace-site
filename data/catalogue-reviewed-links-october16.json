@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "method": "Review of 39 flagged destinations, their retained creator posts and current public repository metadata. HTTP reachability is separate from playability. Search caches were not accepted as current destination checks.",
+  "facts": [
+    {"gameId":"g_1uzmejp","field":"title","value":"Teotlan: Land of Gods","sourceUrl":"https://www.reddit.com/r/aigamedev/comments/1uzmejp/","evidence":"What is Teotlan: Land of Gods?"},
+    {"gameId":"g_1uzmejp","field":"summary","value":"A turn-based RPG with roguelite elements inspired by Mesoamerican mythology. Choose a patron god, assemble a divine team and explore the nine layers of Mictlan. The creator is seeking feedback on balance and pacing.","sourceUrl":"https://www.reddit.com/r/aigamedev/comments/1uzmejp/","evidence":"Teotlan is a turn-based RPG with roguelite elements, deeply rooted in Mesoamerican mythology."},
+    {"gameId":"g_1uvkm97","field":"title","value":"Migla","sourceUrl":"https://www.reddit.com/r/aigamedev/comments/1uvkm97/","evidence":"it’s called Migla."},
+    {"gameId":"g_1uvkm97","field":"stage","value":"playable","sourceUrl":"https://www.reddit.com/r/aigamedev/comments/1uvkm97/","evidence":"open alpha testing was launched.","reason":"The creator explicitly describes an open alpha. A public launch of testing does not establish a finished game release; current link health remains unverified."},
+    {"gameId":"g_1uvkm97","field":"category","value":"rpg","sourceUrl":"https://www.reddit.com/r/aigamedev/comments/1uvkm97/","evidence":"RuneScape inspired tiny MMO"},
+    {"gameId":"g_1uvkm97","field":"summary","value":"A small MMO inspired by RuneScape and Melvor Idle, built with Three.js and Rust. The creator opened the alpha for community playtesting.","sourceUrl":"https://www.reddit.com/r/aigamedev/comments/1uvkm97/","evidence":"RuneScape and Melvor Idle inspired"},
+    {"gameId":"g_1po5nc2","field":"title","value":"SuperSnakes.io","sourceUrl":"https://supersnakes.io/","evidence":"SUPERSNAKES.IO - Ultimate Snake Arcade Game"},
+    {"gameId":"g_1po5nc2","field":"category","value":"arcade","sourceUrl":"https://supersnakes.io/","evidence":"the ultimate snake arcade IO game"},
+    {"gameId":"g_1po5nc2","field":"summary","value":"An arcade snake game with power-ups, unlockable skins and boss fights. Grow your snake, cut off opponents and climb the leaderboard. The game’s site lists desktop and mobile play.","sourceUrl":"https://supersnakes.io/","evidence":"Grow your snake, cut off enemies, and equip guns to fight massive bosses."},
+    {"gameId":"g_1po5nc2","field":"platforms","value":["Browser","Mobile"],"sourceUrl":"https://supersnakes.io/","evidence":"Free to play on desktop and mobile."},
+    {"gameId":"g_1rb7yp3","field":"title","value":"Dungeon Minus One","sourceUrl":"https://github.com/johnwesley/dungeon_minus_one","evidence":"Dungeon Minus One"},
+    {"gameId":"g_1x3yir1","field":"repositoryUrl","value":"https://github.com/franmndezzzz/The-fracture","sourceUrl":"https://github.com/franmndezzzz/The-fracture","evidence":"https://franmndezzzz.github.io/The-fracture/"}
+  ],
+  "notes": {
+    "g_1x3yir1":"The original GitHub Pages destination now returns 200. Its creator repository links this same build. The large page exceeded the bounded metadata reader; no fields were extracted from partial HTML.",
+    "g_1uzmejp":"The original GitHub Pages destination now returns 200. The creator explicitly names Teotlan: Land of Gods. The large page exceeded the metadata reader; reachability does not certify gameplay.",
+    "g_1po5nc2":"The original destination now returns 200. Current page metadata establishes the title and arcade description; the original creator post describes a finished online game. Gameplay was not tested.",
+    "g_1wopai1":"The CrazyGames address still returns 404. A similarly named GitHub Android project was found, but a sufficient creator identity link was not established, so it was not substituted.",
+    "g_1vyf2j5":"The itch.io address still returns 404. The source describes an early project that was not yet playable; do not label this as a lost released build.",
+    "g_1ub1uaj":"The source describes an upcoming horse simulation and links an art gallery. The missing website is not evidence of a previously playable release.",
+    "g_1u5klnz":"The old creator account redirects to cocolitocollective.itch.io/familiar-frenzy, but the final game page still returns 404. Historical search results are not proof of current availability.",
+    "g_1tnm5pv":"The old creator account redirects to cocolitocollective.itch.io/key-pong, but the final game page still returns 404. The current creator profile does not list this game.",
+    "g_1ta282h":"The official game-jam entry links the same missing Flow Shrink address. No working replacement was confirmed.",
+    "g_1syt5fp":"The original game path still returns 404. The domain homepage now advertises web development services; it is not a replacement game URL.",
+    "g_1q3rlvc":"The host redirects from pub.mgx.dev to pub.atoms.world, but the final page still returns 404. Record the platform migration without claiming the game recovered.",
+    "g_1p11p7k":"The old creator account redirects to emergentstudios.itch.io/greywake, but the final game page still returns 404. The original game also required the player's own Anthropic API key.",
+    "g_1vj8w78":"The hosted game returns 503. The creator-linked OverWorked repository is accessible and describes local setup; it is a source repository, not a verified replacement hosted build.",
+    "g_1uvkm97":"The game timed out and its creator-linked GitHub repository returned 404. The original post explicitly names Migla and calls it an open alpha. No replacement or abandonment conclusion is supported.",
+    "g_1rb7yp3":"The game domain could not be resolved. Its creator-linked repository is accessible and archived, but still links the same game domain. Repository archival does not establish game abandonment.",
+    "g_1g63wqc":"Steam did not return current metadata for app 2974560. Retain the original game link and unknown store state; secondary listings do not verify a current price or release."
+  }
+}

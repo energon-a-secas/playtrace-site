@@ -15,7 +15,7 @@ export function researchLeadsMarkup(report,{gameId=''}={}) {
       <small>${lead.recurring?'Repeated across projects':'Early observations'}</small></div>
       <div class="feedback-lead-question"><p>${e(lead.question.question)}</p><div class="feedback-actions">
         <button type="button" class="text-button" data-feedback-topic="${lead.id}" data-feedback-tone="actionable" aria-controls="feedbackTopicEvidence">Inspect evidence<span class="sr-only"> for ${e(lead.label)}</span></button>
-        <a class="text-link" href="/research.html?form=${lead.question.form}${gameId?`&amp;game=${e(gameId)}`:''}">Open focused review ↗</a>
+        <a class="text-link" href="/feedback/?form=${lead.question.form}${gameId?`&amp;game=${e(gameId)}`:''}">Open focused review ↗</a>
       </div></div></li>`).join('')}</ol></section>`;
 }
 

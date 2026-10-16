@@ -1,3 +1,3 @@
-const url = new URL('browse.html', location.href);
+const url = new URL('/browse/', location.href);
 url.searchParams.set('following', '1');
 location.replace(url.href);

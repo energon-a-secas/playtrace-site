@@ -85,6 +85,6 @@ test('evidence presentation escapes source titles, keeps direct citations and of
   assert.ok(html.includes('&lt;img'));assert.ok(!html.includes('<img'));assert.ok(html.includes('target="_blank" rel="noopener noreferrer"'));
   assert.ok(html.includes('/games/g_abc12/#review-source-1'));assert.ok(html.includes('Reported play'));
   assert.ok(topicEvidenceMarkup(report,{topic:'controls',tone:'praise'}).includes('No reviewed comments match'));
-  assert.ok(researchLeadsMarkup(report,{gameId:game.id}).includes('/research.html?form=controls&amp;game=g_abc12'));
+  assert.ok(researchLeadsMarkup(report,{gameId:game.id}).includes('/feedback/?form=controls&amp;game=g_abc12'));
   report.projects[0].cited[0].url='javascript:alert(1)';assert.throws(()=>topicEvidenceMarkup(report,{topic:'controls'}),/Invalid source URL/);
 });

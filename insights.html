@@ -22,17 +22,17 @@
   <meta property="og:title" content="Community Insights | Playtrace">
   <meta property="og:description" content="Explore game genres, art styles, platforms and AI model mentions through time, with linked sources, store release dates and transparent coverage.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://playtrace.neorgon.com/insights.html">
+  <meta property="og:url" content="https://playtrace.neorgon.com/insights/">
   <meta property="og:site_name" content="Playtrace">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Community Insights | Playtrace">
   <meta name="twitter:description" content="Explore game genres, art styles, platforms and AI model mentions through time, with linked sources, store release dates and transparent coverage.">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://playtrace.neorgon.com/insights.html">
+  <link rel="canonical" href="https://playtrace.neorgon.com/insights/">
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="#f3f4f7">
-  <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin>
   <meta property="og:image" content="https://playtrace.neorgon.com/og-preview.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -40,35 +40,35 @@
   <meta name="twitter:image" content="https://playtrace.neorgon.com/og-preview.jpg">
   <!-- Fleet design tokens: canonical, do not redeclare locally (docs/references/new-project-context.md, Design) -->
   <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/styles/base.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
   <!-- template:styles -->
-<link rel="stylesheet" href="css/collection.css">
+<link rel="stylesheet" href="/css/collection.css">
   <!-- /template:styles -->
   <!-- Neorgon Header Kit (vendored; ?header=live swaps CSS to CDN). Keep after style.css, the kit owns the header. -->
   <script>(function(){var m=location.search.match(/[?&]theme=([\w-]+)/)||document.cookie.match(/(?:^|;\s*)neo_theme=([\w-]+)/);if(m&&m[1]!=='default')document.documentElement.dataset.theme=decodeURIComponent(m[1]);})();</script>
-  <link rel="stylesheet" href="css/neorgon-header.css">
-  <link rel="stylesheet" href="css/neorgon-themes.css">
+  <link rel="stylesheet" href="/css/neorgon-header.css">
+  <link rel="stylesheet" href="/css/neorgon-themes.css">
   <link rel="stylesheet" href="https://cdn.neorgon.org/v1.0.0/header/season.css">
-  <script defer src="js/neorgon-header.js"></script>
+  <script defer src="/js/neorgon-header.js"></script>
   <!-- Neorgon Footer Kit (vendored). Pins the footer to the viewport floor on short
        pages and builds the meta bar + back-to-top. See packages/neorgon-ui/footer/README.md.
        Optional stamps: <meta name="neo-repo"|"neo-version"|"neo-updated"> -->
-  <link rel="stylesheet" href="css/neorgon-footer.css">
-  <script defer src="js/neorgon-footer.js"></script>
+  <link rel="stylesheet" href="/css/neorgon-footer.css">
+  <script defer src="/js/neorgon-footer.js"></script>
   <meta name="clerk-publishable-key" content="pk_live_Y2xlcmsubmVvcmdvbi5jb20k">
-  <link rel="stylesheet" href="css/neorgon-auth.css">
+  <link rel="stylesheet" href="/css/neorgon-auth.css">
   <!-- Neorgon Beacon Kit (vendored). Bottom-left correction reporter: it
        carries page context to balise.neorgon.com in a URL fragment and the
        visitor writes there. No form on this page and no request from it.
        Opt out per page with <meta name="beacon" content="off">.
        See packages/neorgon-ui/beacon/README.md. -->
   <meta name="beacon-site" content="playtrace-site">
-  <link rel="stylesheet" href="css/neorgon-beacon.css">
-  <script defer src="js/neorgon-beacon.js"></script>
-  <script defer src="js/site-footer.js"></script>
-  <link rel="stylesheet" href="css/report.css">
-  <link rel="stylesheet" href="css/campaign.css">
-<link rel="stylesheet" href="css/insights.css">
+  <link rel="stylesheet" href="/css/neorgon-beacon.css">
+  <script defer src="/js/neorgon-beacon.js"></script>
+  <script defer src="/js/site-footer.js"></script>
+  <link rel="stylesheet" href="/css/report.css">
+  <link rel="stylesheet" href="/css/campaign.css">
+<link rel="stylesheet" href="/css/insights.css">
 </head>
 <body data-page="insights"><a class="skip-link" href="#main">Skip to content</a>
   <header class="header-bar" data-header-mode="content" data-header-skin="custom">
@@ -76,8 +76,8 @@
       <!-- PATTERN: one link: mark + name go to THIS site's home (root or #home)
            so clicking either resets the view. The hub icon in .header-right
            is the only header link to neorgon.com. -->
-      <a href="./" class="header-title-link">
-        <img src="energon-classic-logo.png" class="header-logo-img" alt="">
+      <a href="/" class="header-title-link">
+        <img src="/energon-classic-logo.png" class="header-logo-img" alt="">
         <div class="header-title-wrap">
           <h1>Playtrace</h1>
           <div class="header-subtitle">Games in the making</div>
@@ -89,10 +89,10 @@
     <div class="header-right">
       <!-- template:actions -->
 <div class="header-actions">
-  <a class="btn btn--ghost btn--sm" href="browse.html">Browse</a>
-  <a class="btn btn--ghost btn--sm" href="research.html">Quick reviews</a>
-  <a class="btn btn--ghost btn--sm" href="insights.html" aria-current="page">Insights</a>
-  <a class="btn btn--ghost btn--sm" href="about.html">About</a>
+  <a class="btn btn--ghost btn--sm" href="/browse/">Browse</a>
+  <a class="btn btn--ghost btn--sm" href="/feedback/">Submit feedback</a>
+  <a class="btn btn--ghost btn--sm" href="/insights/" aria-current="page">Insights</a>
+  <a class="btn btn--ghost btn--sm" href="/about/">About</a>
 </div>
   <!-- /template:actions -->
 
@@ -129,7 +129,7 @@
           <div id="hostingInsights"></div>
           <div id="feedbackPatterns"></div>
           <section class="insight-section"><h3 id="releaseTimelineTitle">When builds released</h3><div id="storeReleaseTimeline" class="insight-method"></div></section>
-          <section class="insight-section insight-method"><h3 id="insightMethodTitle">How to read this dashboard</h3><p>Art, engine and model labels are explicit keyword mentions in titles and retained source text. They may describe an influence, a comparison or a tool the maker did not use. The matcher does not inspect screenshots or infer missing versions. Multiple labels can apply to a project. Always inspect the linked source.</p><p>Charts use original source-post dates with the latest available text, including later edits. Store data and editorial genres describe the present. Deleted source text is excluded from mention extraction; its date may remain in the timeline. Imported history, duplicates, missing flair and unequal text coverage limit comparisons. No measured trend here establishes causation.</p><p>This dashboard uses public project and source evidence. It contains no account details, private questionnaire answers or visitor activity. The <a href="about.html">About page</a> explains inclusion, corrections and privacy.</p></section>
+          <section class="insight-section insight-method"><h3 id="insightMethodTitle">How to read this dashboard</h3><p>Art, engine and model labels are explicit keyword mentions in titles and retained source text. They may describe an influence, a comparison or a tool the maker did not use. The matcher does not inspect screenshots or infer missing versions. Multiple labels can apply to a project. Always inspect the linked source.</p><p>Charts use original source-post dates with the latest available text, including later edits. Store data and editorial genres describe the present. Deleted source text is excluded from mention extraction; its date may remain in the timeline. Imported history, duplicates, missing flair and unequal text coverage limit comparisons. No measured trend here establishes causation.</p><p>This dashboard uses public project and source evidence. It contains no account details, private questionnaire answers or visitor activity. The <a href="/about/">About page</a> explains inclusion, corrections and privacy.</p></section>
         </div>
       </section>
-<noscript><p>The interactive charts need JavaScript. <a href="data/community-insights.json">Download the dated public evidence</a> or explore the <a href="games/">game directory</a>.</p></noscript></main><footer class="neo-footer" data-footer-mode="minimal"><p class="neo-footer-note">Playtrace · <a href="about.html">Sources &amp; privacy</a> · <a href="games/">Game directory</a> · <a href="admin.html#insights">Admin</a></p></footer><script type="module" src="js/community-insights.js"></script><script type="module" src="js/usage.js"></script></body></html>
+<noscript><p>The interactive charts need JavaScript. <a href="/data/community-insights.json">Download the dated public evidence</a> or explore the <a href="/games/">game directory</a>.</p></noscript></main><footer class="neo-footer" data-footer-mode="minimal"><p class="neo-footer-note">Playtrace · <a href="/about/">Sources &amp; privacy</a> · <a href="/games/">Game directory</a> · <a href="/admin/#insights">Admin</a></p></footer><script type="module" src="/js/community-insights.js"></script><script type="module" src="/js/usage.js"></script></body></html>

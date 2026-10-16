@@ -57,7 +57,7 @@ export async function loadCatalog(render) {
       } while (cursor);
     }
     else {
-      const response = await fetch('data/catalog.json', { signal: controller.signal, cache: 'no-cache' });
+      const response = await fetch('/data/catalog.json', { signal: controller.signal, cache: 'no-cache' });
       if (!response.ok) throw new Error('The collection could not be loaded. Please try again.');
       value = await response.json();
     }

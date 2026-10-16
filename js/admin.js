@@ -137,7 +137,7 @@ function imageUrl(preview) { return preview.posterUrl || (preview.kind === 'imag
 function paintEditor(withDetails = true) {
   const game = editing.game;
   $('imageEditor').hidden = false; $('editorTitle').textContent = game.title;
-  $('editorProjectLink').href = `browse.html?game=${encodeURIComponent(game.id)}`;
+  $('editorProjectLink').href = `/browse/?game=${encodeURIComponent(game.id)}`;
   const image = imageUrl(game.preview); if (image) $('editorPreview').src = image; else $('editorPreview').removeAttribute('src');
   $('previewStatus').textContent = editing.override ? `Custom preview · updated ${dateLabel(editing.override.updatedAt)}` : 'Automatic preview';
   $('imageUrl').value = ''; $('imageAlt').value = (game.preview.alt || game.title).slice(0, 300);
