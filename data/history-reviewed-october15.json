@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "groups": [
+    {
+      "keep": "g_1wygb0h",
+      "aliases": ["g_1wtms9r", "g_1wryf9i", "g_1wnn9tg"],
+      "reason": "The same creator identifies Fjordfall by name and links its main browser game, cat showcase and level workshop across four development updates. The latest NPC experiment is explicitly part of the creator's shared game world. Keep all four dated posts under the latest entry, retain the existing feedback summary, and redirect the older entry IDs.",
+      "evidence": [
+        { "postId": "1wygb0h", "quote": "I am creating NPCs that 'exist' in my game's dynamic world." },
+        { "postId": "1wtms9r", "quote": "Fjordfall is a quiet downhill skateboarding game set in Norwegian valleys, running in the browser" },
+        { "postId": "1wryf9i", "quote": "Fjordfall is a free browser game set in a Norway-inspired valley" },
+        { "postId": "1wnn9tg", "quote": "in my chill skateboarding game fjordfall" }
+      ]
+    }
+  ]
+}

@@ -34,11 +34,15 @@ export async function queueFeedbackMaintenance(db,deps,{weekly=false}={}) {
   if(weekly&&(await meta(db,key))?.week===week)return {queued:0};
   const pending=await query(db,"SELECT count(*) AS count FROM editorial_jobs WHERE kind='feedback' AND status IN('pending','running')").first();
   if(pending.count>=8)return {queued:0,backlog:true};
-  const due=await query(db,`SELECT g.id FROM games g WHERE g.status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id)
+  // Hourly work starts from written feedback; IN alone still let SQLite scan
+  // the catalogue even when no new notes were waiting. Weekly work is broader.
+  const candidates=weekly?'games g':`(SELECT DISTINCT f.game_id FROM feedback f WHERE f.status='published' AND length(trim(f.body))>=8 AND f.updated_at>=?
+    AND NOT EXISTS(SELECT 1 FROM editorial_jobs j WHERE j.game_id=f.game_id AND j.kind='feedback' AND j.updated_at>=f.updated_at)) eligible
+    CROSS JOIN games g ON g.id=eligible.game_id`;
+  const due=await query(db,`SELECT g.id FROM ${candidates} WHERE g.status='published' AND NOT EXISTS(SELECT 1 FROM removals WHERE game_id=g.id)
     AND NOT EXISTS(SELECT 1 FROM editorial_jobs j WHERE j.game_id=g.id AND j.kind='feedback' AND j.status IN('pending','running'))
     AND ${weekly?`g.updated_at>=? AND NOT EXISTS(SELECT 1 FROM editorial_jobs j WHERE j.game_id=g.id AND j.kind='feedback' AND j.updated_at>=?)`
-      :`g.id IN(SELECT f.game_id FROM feedback f WHERE f.status='published' AND length(trim(f.body))>=8 AND f.updated_at>=?
-        AND NOT EXISTS(SELECT 1 FROM editorial_jobs j WHERE j.game_id=f.game_id AND j.kind='feedback' AND j.updated_at>=f.updated_at))`}
+      :'1'}
     ORDER BY COALESCE((SELECT max(updated_at) FROM editorial_jobs j WHERE j.game_id=g.id AND j.kind='feedback'),''),g.updated_at DESC,g.id LIMIT ?`,
     since,...(weekly?[new Date(deps.now()-7*86400000).toISOString()]:[]),Math.min(weekly?8:1,8-pending.count)).all();
   const start=since.slice(0,10)+'T00:00:00.000Z',items=due.results.map(row=>({id:crypto.randomUUID(),gameId:row.id}));

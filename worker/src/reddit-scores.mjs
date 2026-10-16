@@ -24,11 +24,18 @@ export function saveScoreObservations(db, observations, { initialOnly = false } 
 // Highest single source-post score. Adding posts never adds their scores together.
 // Resolve membership at read time so merges, splits and removals remain correct.
 export function projectScoresQuery(db, ids) {
-  return query(db, `SELECT game_id,post_id,score,observed_at,checked_at,covered_posts FROM (
-    SELECT p.game_id,s.*,count(*) OVER(PARTITION BY p.game_id) AS covered_posts,
-      row_number() OVER(PARTITION BY p.game_id ORDER BY s.score DESC,p.created_at DESC,p.id DESC) AS rank
-    FROM source_posts p JOIN reddit_scores s ON s.post_id=p.id
-    WHERE p.status='published' AND p.game_id IN(SELECT value FROM json_each(?))) WHERE rank=1`, JSON.stringify(ids));
+  // Resolve the best post and coverage through the game/post indexes. Keeping
+  // requested IDs outermost avoids scanning unrelated games; separate lookups
+  // also avoid the two window functions materializing every scored post.
+  return query(db, `WITH selected AS (SELECT DISTINCT value AS game_id FROM json_each(?))
+    SELECT selected.game_id,s.post_id,s.score,s.observed_at,s.checked_at,
+      (SELECT count(*) FROM source_posts p CROSS JOIN reddit_scores covered ON covered.post_id=p.id
+        WHERE p.game_id=selected.game_id AND p.status='published') AS covered_posts
+    FROM selected CROSS JOIN reddit_scores s ON s.post_id=(
+      SELECT p.id FROM source_posts p CROSS JOIN reddit_scores best ON best.post_id=p.id
+      WHERE p.game_id=selected.game_id AND p.status='published'
+      ORDER BY best.score DESC,p.created_at DESC,p.id DESC LIMIT 1)
+    ORDER BY selected.game_id`, JSON.stringify(ids));
 }
 
 export function publicScore(row, posts) {

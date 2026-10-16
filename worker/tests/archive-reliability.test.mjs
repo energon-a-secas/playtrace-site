@@ -85,10 +85,16 @@ test('source-link and score writes keep the incoming batch outside catalogue sca
 test('the hourly feedback queue starts from eligible notes and preserves per-game deduplication', async () => {
   const env = fixtureEnv(), db = env.DB;
   await importCatalog(db, fixtureCatalog([fixtureGame('queue1'), fixtureGame('queue2'), fixtureGame('queue3')]));
+  const statements=[],prepare=db.prepare.bind(db);
+  db.prepare=sql=>{const s=prepare(sql);statements.push(s);return s;};
   for (const [id, gameId, body, status] of [['note1','g_queue1','Useful written feedback','published'], ['note2','g_queue1','Another written note','published'], ['note3','g_queue2','','published'], ['note4','g_queue3','Hidden written feedback','hidden']]) {
     await query(db, 'INSERT INTO feedback(id,game_id,guest_key_hash,display_name,body,status,created_at,updated_at,choices_json) VALUES(?,?,?,?,?,?,?,?,?)', id, gameId, id, 'Guest', body, status, new Date(NOW).toISOString(), new Date(NOW).toISOString(), '["visuals"]').run();
   }
   assert.equal((await queueFeedbackMaintenance(db, deps())).queued, 1);
+  const due=statements.find(s=>s.sql.startsWith('SELECT g.id FROM (SELECT DISTINCT f.game_id'));
+  const plan=db.sql.prepare('EXPLAIN QUERY PLAN '+due.sql).all(...due.args).map(row=>row.detail);
+  assert.ok(plan.some(step=>/SEARCH g USING INDEX .+ \(id=\?\)/.test(step)),plan.join('\n'));
+  assert.ok(!plan.some(step=>/games_published_date_idx/.test(step)),plan.join('\n'));
   assert.equal((await queueFeedbackMaintenance(db, deps())).queued, 0);
   assert.deepEqual(db.sql.prepare("SELECT game_id FROM editorial_jobs WHERE requested_by='feedback-maintenance'").all().map(row => row.game_id), ['g_queue1']);
   db.close();

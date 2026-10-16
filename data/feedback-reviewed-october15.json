@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "reviews": [
+    {
+      "gameId": "g_1wt5ggf",
+      "summary": "One commenter who had played praised the game's atmosphere [1]. Another liked the car-autobattler concept and asked how many races a championship contains, how long it takes, and whether it has a roguelike structure [2]. Those questions suggest useful details to explain before a first session.",
+      "commentIds": ["pcr994g", "pcr6qbo"],
+      "labels": [
+        { "number": 1, "theme": "general", "tone": "praise", "experience": "played" },
+        { "number": 2, "theme": "idea", "tone": "praise", "experience": "unspecified" }
+      ]
+    },
+    {
+      "gameId": "g_1wqdtk3",
+      "summary": "One PC player liked the visual style but described loose-feeling handling and a camera that followed the track more than the car. They suggested skid sounds and marks, found medium opponents easy to overturn, and questioned why music became quieter while accelerating [1]. This is one play report, with concrete follow-ups for controls, camera and audio testing.",
+      "commentIds": ["pc5jii4"],
+      "labels": [
+        { "number": 1, "theme": "controls", "tone": "mixed", "experience": "played" }
+      ]
+    },
+    {
+      "gameId": "g_1wvpj3a",
+      "summary": "One commenter enjoyed the bouncing apples and found the challenge greater than it first appeared [1]. Another reported catching 29 apples on their first attempt [2]. These contrasting reactions are a starting point for asking about difficulty; they do not establish an average score or a balance problem.",
+      "commentIds": ["pddr5th", "pddvimj"],
+      "labels": [
+        { "number": 1, "theme": "challenge", "tone": "praise", "experience": "unspecified" },
+        { "number": 2, "theme": "challenge", "tone": "praise", "experience": "played" }
+      ]
+    },
+    {
+      "gameId": "g_1wuk8z2",
+      "summary": "First-look feedback asked for a stronger visual theme and faster-looking combat; that commenter explicitly said they could not judge the cards without knowing how they work in-game [1]. Another wanted a clearer reason to choose this over similar games and disliked creatures appearing near the bridges [2]. Neither comment confirms a play session.",
+      "commentIds": ["pd5hhv8", "pd4098t"],
+      "labels": [
+        { "number": 1, "theme": "visuals", "tone": "mixed", "experience": "preview" },
+        { "number": 2, "theme": "idea", "tone": "concern", "experience": "preview" }
+      ]
+    },
+    {
+      "gameId": "g_1wpdmah",
+      "summary": "One player praised the visuals but found gameplay and controls difficult while using a laptop trackpad [1]. Their device is useful context for a follow-up test, but this comment alone cannot establish whether the controls or the input setup caused the difficulty.",
+      "commentIds": ["pbxjb5w"],
+      "labels": [
+        { "number": 1, "theme": "controls", "tone": "mixed", "experience": "played" }
+      ]
+    },
+    {
+      "gameId": "g_1wud27k",
+      "summary": "One commenter reported playing for three to four hours and found the diving relaxing. They later struggled to reach deeper locations, found the radar difficult to read, wanted a way to reopen tasks and understand earnings, and felt exploration was becoming repetitive [1]. These are reported obstacles to investigate, not independently reproduced bugs.",
+      "commentIds": ["pe0lfzi"],
+      "labels": [
+        { "number": 1, "theme": "accessibility", "tone": "mixed", "experience": "played" }
+      ]
+    },
+    {
+      "gameId": "g_1x26kxm",
+      "summary": "A trailer reaction liked the premise but wanted battles to convey more impact and less unit clumping [1]. After trying the demo, the same commenter praised the foundation and the strategic map's simplicity, while asking for a tighter introduction, reconsideration of the 3D map, and less repetitive clicking to expand territory [2]. These are two stages of one person's feedback, not two independent playtests.",
+      "commentIds": ["pezvrzf", "pf04o7c"],
+      "labels": [
+        { "number": 1, "theme": "idea", "tone": "mixed", "experience": "preview" },
+        { "number": 2, "theme": "idea", "tone": "mixed", "experience": "played" }
+      ]
+    }
+  ]
+}

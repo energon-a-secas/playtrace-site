@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "method": "Explicit source review and current public destination checks. Corrections to accepted facts name the previous value; admin overrides remain authoritative.",
+  "facts": [
+    {
+      "gameId": "g_1g6ccq5", "field": "projectUrl", "value": "https://fantastico-studio.itch.io/mind-bender-simulator",
+      "sourceUrl": "https://fantastico-studio.itch.io/mind-bender-simulator", "evidence": "Mind Bender Simulator",
+      "replaces": "https://fantasticostudio.itch.io/mind-bender-simulator",
+      "reason": "The current itch.io listing identifies the same title and Fantastico Studio creator. The creator profile links the studio's official domain. The old URL omitted the hyphen in the itch.io account name. Keep the previous 404 observations."
+    },
+    {
+      "gameId": "g_1g6ccq5", "field": "platforms", "value": ["Windows"],
+      "sourceUrl": "https://fantastico-studio.itch.io/mind-bender-simulator", "evidence": "Windows"
+    },
+    {
+      "gameId": "g_1umgq47", "field": "projectUrl", "value": "https://mhwang-1.github.io/merlion-defense/",
+      "sourceUrl": "https://github.com/mhwang-1/merlion-defense", "evidence": "https://mhwang-1.github.io/merlion-defense/",
+      "reason": "The creator's original source repository redirects to merlion-defense and names this working GitHub Pages build as its homepage. The public build and source repository remain separate fields."
+    },
+    {
+      "gameId": "g_1umgq47", "field": "repositoryUrl", "value": "https://github.com/mhwang-1/merlion-defense",
+      "sourceUrl": "https://github.com/mhwang-1/merlion-defense", "evidence": "merlion-defense"
+    },
+    {
+      "gameId": "g_1umgq47", "field": "stage", "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1umgq47/", "evidence": "Play:"
+    },
+    {
+      "gameId": "g_1umgq47", "field": "platforms", "value": ["Browser"],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1umgq47/", "evidence": "web games, so I tried one too"
+    },
+    {
+      "gameId": "g_1wygb0h", "field": "title", "value": "Fjordfall",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wtms9r/", "evidence": "Fjordfall is a quiet downhill skateboarding game"
+    },
+    {
+      "gameId": "g_1wygb0h", "field": "category", "value": "sports",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wtms9r/", "evidence": "quiet downhill skateboarding game"
+    },
+    {
+      "gameId": "g_1wygb0h", "field": "stage", "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wtms9r/", "evidence": "Free, in the browser:"
+    },
+    {
+      "gameId": "g_1wygb0h", "field": "platforms", "value": ["Browser"],
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wtms9r/", "evidence": "running in the browser"
+    },
+    {
+      "gameId": "g_1wygb0h", "field": "summary",
+      "value": "A free browser skateboarding game set in Norwegian valleys, with a level workshop and forest cats to discover. The latest update explores NPCs that add art to the shared world; that feature is still a proof of concept.",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wtms9r/", "evidence": "Fjordfall is a quiet downhill skateboarding game set in Norwegian valleys",
+      "replaces": "An NPC experiment where characters create art and sculptures in a shared world. Players can inspect building timelapses and the decisions behind them; the creator calls it a proof of concept.",
+      "reason": "The consolidated entry describes the underlying game while retaining the latest feature's explicit prototype qualification.",
+      "supportingEvidence": [
+        { "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wryf9i/", "evidence": "There are six Norwegian forest cats in it now" },
+        { "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wnn9tg/", "evidence": "allowing players to create and ride rough versions of their own levels" },
+        { "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wygb0h/", "evidence": "It is still a proof of concept" }
+      ]
+    },
+    {
+      "gameId": "g_1wvpj3a", "field": "title", "value": "Apple Gravity",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wvpj3a/", "evidence": "So I built Apple Gravity"
+    },
+    {
+      "gameId": "g_1wvpj3a", "field": "category", "value": "puzzle",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wvpj3a/", "evidence": "Draw your own container in 25 seconds, then catch as many falling apples as you can."
+    },
+    {
+      "gameId": "g_1wvpj3a", "field": "stage", "value": "playable",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wvpj3a/", "evidence": "Game link- https://gravity-bucket.emergent.host/"
+    },
+    {
+      "gameId": "g_1wuk8z2", "field": "category", "value": "strategy",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wuk8z2/", "evidence": "leveless clash royale with gamebreaking abilities"
+    },
+    {
+      "gameId": "g_1wuk8z2", "field": "stage", "value": "prototype",
+      "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wuk8z2/", "evidence": "Vite gives me a fast local preview with live updates",
+      "reason": "The source describes a local development preview, not a public playable URL. No official game name or public build is established."
+    }
+  ],
+  "resolutions": {
+    "g_1g6ccq5": "The replacement itch.io listing returns HTTP 200 and matches the original game and studio. Retain old 404 observations; the prototype's download has not been installed or playtested.",
+    "g_1umgq47": "The original source repository redirects to the renamed repository, which links a working browser build. Both destinations were checked; the game has not been playtested.",
+    "g_1wygb0h": "Four matching creator posts establish Fjordfall as the underlying browser game. Its NPC art feature remains a proof of concept. Old source links and the already published feedback summary are preserved.",
+    "g_1wvpj3a": "The creator names Apple Gravity and supplies the working game URL and draw-to-catch mechanics."
+  }
+}
