@@ -1,6 +1,6 @@
 /* ══════════════════════════════════════════════════════════════
    Neorgon Beacon Kit: beacon.js
-   A dimmed bottom-left control that lets a visitor report a correction.
+   A ladybug in the footer bar that lets a visitor report an issue.
    Canonical source: packages/neorgon-ui/beacon/
    Vendored per site as js/neorgon-beacon.js. Do not edit copies.
 
@@ -26,7 +26,7 @@
   if (window.__neoBeaconInit) return;
   window.__neoBeaconInit = true;
 
-  var VERSION = '1.0.0';
+  var VERSION = '1.1.0';
   var REPORT_URL = 'https://balise.neorgon.com/report/';
 
   /* CONTRACTS.md C1 lengths, restated as numbers rather than imported,
@@ -106,9 +106,10 @@
   }
 
   /* ── What the visitor was looking at ────────────────────────────────
-     The beacon is a fixed control in a corner, so by the time it is
-     activated it is itself the focused element. Track the last thing the
-     person touched or focused outside the widget and resolve against that.
+     The beacon sits in the footer, so by the time it is activated it is
+     itself the focused element, and reaching it was a scroll away from the
+     thing being reported. Track the last thing the person touched or
+     focused outside the widget and resolve against that.
      Both events, because plenty of reportable things in this fleet are
      cards and table rows that never take focus. ────────────────────── */
   var lastContext = null;
@@ -175,244 +176,114 @@
     e.preventDefault();
     window.open(url, '_blank', 'noopener');
   }
+  /* ── Where it sits: the bottom of the page ──────────────────────────
+     Docked in the footer kit's bar, in flow, so it is never drawn over the
+     page. It used to float in the bottom-left corner, and every site that
+     met it paid for that: the footer copy sat under it on pages that do not
+     scroll (queue #88, which grew a measured --beacon-clear, a ResizeObserver
+     and a frame watcher to lift it clear), Runcible shortened its chapter
+     rail by the control's height and hid it during drills, and Playtrace
+     moved it into its own footer by hand. A control in the footer has
+     nothing to clear and nothing to cover, on a phone or anywhere else.
 
-  /* ── Clearing the footer (queue #88) ────────────────────────────────
-     A fixed bottom-left control assumes the bottom-left of the viewport
-     belongs to nobody. On a page that does not scroll, the footer kit pins
-     its bar to the viewport floor and this icon lands on that copy. Seven
-     sites pair the beacon with data-footer-mode="app", and two of them fixed
-     it by measuring their own footer and hardcoding --beacon-offset: 62px and
-     88px on aficion, 82px and 110px on portent. Four numbers, one
-     measurement, redone per site and per breakpoint, and wrong again as soon
-     as the footer copy wraps differently.
+     It leads the bar rather than trailing it. The trailing end of the bar is
+     where the footer kit's back-to-top rests on an app-mode page (right and
+     bottom 20px), and two controls stacked there is the overlap this move
+     exists to remove. Leading, it sits left of "Fin." in every mode, and in
+     content mode at the head of the right-hand group, beside the links it
+     belongs with.
 
-     So the kit measures. --beacon-clear is however much of the footer is
-     inside the viewport plus GAP, and the CSS takes max() of that and the
-     resting offset: on a long page the control sits exactly where it always
-     did and rises only as the footer scrolls in. The hardcoded values were
-     this same arithmetic done by hand, which is why a 50px app footer plus
-     GAP is aficion's 62.
-
-     Measured, not derived from data-footer-mode: mode names a set of
-     paddings, not a height, and `minimal` alone ranges from one line to two.
-     ─────────────────────────────────────────────────────────────────── */
-  var GAP = 12;
-  var footer = null;
-  var observed = null;
-  var ro = null;
-  var queued = false;
-  var placed = null;
-  /* Frames still loading, and whether the observer is on: see below. */
-  var waiting = [];
-  var watching = false;
-
-  function footerEl() {
-    /* Looked up late and re-looked-up when it goes away. Both this file and
-       footer.js are deferred, and which runs first is the host page's script
-       order, so a footer resolved once at init is a footer half the fleet
-       would not have found. */
-    if (footer && footer.isConnected) return footer;
-    footer = document.querySelector('.neo-footer');
-    return footer;
+     The page's real footer is found by the footer kit's own rule: the last
+     .neo-footer directly under <body>, since previews and embedded samples
+     sit deeper. A page with no footer at all keeps the old floating corner,
+     the one place left that nothing else marks as the bottom. ─────────── */
+  function primaryFooter() {
+    var all = document.querySelectorAll('.neo-footer');
+    var last = null;
+    for (var i = 0; i < all.length; i++) {
+      if (all[i].parentElement === document.body) last = all[i];
+    }
+    return last || all[all.length - 1] || null;
   }
 
-  function clearance() {
-    var el = footerEl();
-    if (!el) return 0;
-    var box = el.getBoundingClientRect();
-    /* A zero height is display:none, a print sheet, or a footer the kit has
-       not filled in yet. Nothing to clear either way. */
-    if (box.height <= 0) return 0;
-    var view = window.innerHeight || 0;
-    /* The footer's TOP edge, measured up from the viewport floor. Not its
-       height: a long page's footer is below the fold and must move the control
-       nowhere, and a half-scrolled footer must be cleared by the part that is
-       actually in the way. */
-    var lift = view - box.top;
-    if (lift <= 0) return 0;
-    /* A footer taller than the viewport (content mode on a phone) would
-       otherwise push the control off the top of the screen, which is worse
-       than an overlap: the widget becomes unreachable. */
-    var ceiling = view - (link ? link.offsetHeight : 0) - GAP;
-    return Math.max(0, Math.min(Math.round(lift) + GAP, Math.round(ceiling)));
+  function childOf(parent, cls) {
+    for (var n = parent.firstElementChild; n; n = n.nextElementSibling) {
+      if (n.classList.contains(cls)) return n;
+    }
+    return null;
   }
 
-  /* Written only when it changes. Most frames on a long page measure 0 again,
-     and a write is a style invalidation on the scroll path for nothing. */
+  /* footer.js always builds .neo-footer-inner, so a footer without one is a
+     footer it has not reached yet. Both kits are deferred and the sync script
+     wires this one after the footer's line, but the order is still the host
+     page's to choose. */
+  function built(footer) {
+    return !!(childOf(footer, 'neo-footer-inner') || childOf(footer, 'neo-footer-bar'));
+  }
+
   function place() {
-    queued = false;
-    if (!link) return;
-    var value = clearance() + 'px';
-    if (value === placed) return;
-    placed = value;
-    link.style.setProperty('--beacon-clear', value);
-  }
-
-  /* Coalesced into a frame. Scroll fires far more often than the control can
-     usefully move, and reading a rect per event is a layout read on the
-     scroll path of every site in the fleet. */
-  function schedule() {
-    if (queued) return;
-    queued = true;
-    if (window.requestAnimationFrame) window.requestAnimationFrame(place);
-    else setTimeout(place, 16);
-  }
-
-  function watchFooter() {
-    schedule();
-    if (!window.ResizeObserver || waiting.length) return;
-    if (!ro) ro = new window.ResizeObserver(schedule);
-    if (!watching) {
-      /* The footer's POSITION, which its own size says nothing about. It sits
-         in flow after the page's content, so content that arrives late (a
-         view rendered from a fetch, an image, a webfont reflowing a long
-         page) pushes it down with no scroll, no resize and no change to its
-         height. Runcible measured 345px while its #view still said "Loading"
-         and kept it over the chapter text until the reader scrolled. Content
-         that moves the footer changes the body's height, so the body is
-         observed too. Not a MutationObserver: that fires on every text node a
-         timer touches, and most mutations move nothing. */
-      ro.observe(document.body);
-      watching = true;
+    var footer = primaryFooter();
+    if (!footer) {
+      link.classList.remove('is-docked');
+      if (link.parentNode !== document.body) document.body.appendChild(link);
+      return;
     }
-    var el = footerEl();
-    if (!el || el === observed) return;
-    if (observed) ro.unobserve(observed);
-    ro.observe(el);
-    observed = el;
+    var bar = childOf(footer, 'neo-footer-bar');
+    /* A footer whose copy already links the hub and declares no repo,
+       version or stamp gets no bar from the kit. The control then closes the
+       footer itself rather than building a bar of its own, which would hand
+       that site a row the footer kit chose not to draw. */
+    var host = bar ? (childOf(bar, 'neo-footer-bar-group') || bar) : footer;
+    link.classList.add('is-docked');
+    host.insertBefore(link, bar ? host.firstChild : null);
   }
 
-  /* ── Standing aside while a frame loads ─────────────────────────────
-     Firefox answers a ResizeObserver by flushing layout for every
-     same-process document in the page's tree before it notifies, and a frame
-     still fetching its stylesheets is one of them. Its layout is forced
-     before its sheets arrive, which risks a flash of unstyled content and
-     logs "Layout was forced before the page was fully loaded". Runcible's
-     Yomu reader logged it on 10 loads of 10 while this kit kept one.
-
-     So while any frame on the page is still loading, the kit keeps no
-     ResizeObserver: it disconnects, or never connects. Scroll, resize and
-     load still place the control; a rect read flushes this document and its
-     ancestors, never a frame inside it. When the last frame fires load (or
-     error) the observer comes back, and one placement catches up with
-     whatever moved while it was away.
-
-     A frame that never fires load (a lazy one far below the fold, a host
-     that never answers) must not switch the observer off for good, so each
-     one is waited for FRAME_WAIT at most and then stops counting. */
-  var FRAME_WAIT = 10000;
-
-  function loadsDocument(frame) {
-    if (frame.hasAttribute('srcdoc')) return true;
-    /* No src, or about:blank, is the empty document every frame starts
-       with: no stylesheet to wait for, and its load fires during the
-       insertion itself, before any observer could hear it. */
-    var src = (frame.getAttribute('src') || '').trim();
-    return src !== '' && !/^about:/i.test(src);
-  }
-
-  function expect(frame) {
-    if (!frame.isConnected || !loadsDocument(frame)) return;
-    for (var i = 0; i < waiting.length; i++) {
-      if (waiting[i].frame === frame) return;
+  function dock() {
+    var footer = primaryFooter();
+    if (footer && !built(footer) && document.readyState !== 'complete') {
+      /* Placed once the footer exists, so its sweep of loose children into
+         .neo-footer-inner cannot carry the control off into the copy. Both
+         events, because a script injected after DOMContentLoaded would wait
+         for it forever; place() is idempotent, so the second is harmless. */
+      document.addEventListener('DOMContentLoaded', place);
+      window.addEventListener('load', place);
+      return;
     }
-    /* early: it began loading before the page's own load, see onLoad. */
-    var w = { frame: frame, early: document.readyState !== 'complete' };
-    w.done = function () { if (drop(w) && !waiting.length) watchFooter(); };
-    frame.addEventListener('load', w.done);
-    frame.addEventListener('error', w.done);
-    w.timer = setTimeout(w.done, FRAME_WAIT);
-    waiting.push(w);
-  }
-
-  function drop(w) {
-    var at = waiting.indexOf(w);
-    if (at < 0) return false;
-    waiting.splice(at, 1);
-    clearTimeout(w.timer);
-    w.frame.removeEventListener('load', w.done);
-    w.frame.removeEventListener('error', w.done);
-    return true;
-  }
-
-  function standAside() {
-    if (ro) ro.disconnect();
-    watching = false;
-    observed = null;
-    /* Whatever inserted the frame may have moved the footer too, and the
-       observer that would have said so is gone. */
-    schedule();
-  }
-
-  /* Frames arrive at any time: Runcible builds Yomu's when its reader sheet
-     first opens. The stance above, no MutationObserver, is about measuring
-     on one. This one never measures. A clock that writes textContent every
-     second does wake it (that replaces a child node), and each wake costs a
-     nodeType test per added node and a tag lookup inside each added
-     element: Runcible's 27 routes cost 53 wakes and 1.2ms in all. It reads
-     no layout, writes no style and schedules nothing unless a frame went in
-     or one being waited for went out. */
-  function onMutations(records) {
-    var had = waiting.length;
-    var removed = false;
-    for (var i = 0; i < records.length; i++) {
-      var added = records[i].addedNodes;
-      for (var j = 0; j < added.length; j++) {
-        var node = added[j];
-        if (node.nodeType !== 1) continue;
-        if (node.localName === 'iframe') expect(node);
-        else if (node.firstElementChild) {
-          var inner = node.getElementsByTagName('iframe');
-          for (var k = 0; k < inner.length; k++) expect(inner[k]);
-        }
-      }
-      if (records[i].removedNodes.length) removed = true;
-    }
-    /* A frame taken out before it loaded never fires load. */
-    if (removed) {
-      for (var n = waiting.length - 1; n >= 0; n--) {
-        if (!waiting[n].frame.isConnected) drop(waiting[n]);
-      }
-    }
-    if (!had && waiting.length) standAside();
-    else if (had && !waiting.length) watchFooter();
-  }
-
-  function onLoad() {
-    /* The page's load waits for every frame that began loading before it,
-       lazy ones aside, so a frame like that still listed here loaded before
-       the kit was listening to it. */
-    for (var i = waiting.length - 1; i >= 0; i--) {
-      var w = waiting[i];
-      if (w.early && w.frame.getAttribute('loading') !== 'lazy') drop(w);
-    }
-    watchFooter();
-  }
-
-  function watch() {
     place();
-    window.addEventListener('scroll', schedule, { passive: true });
-    window.addEventListener('resize', schedule);
-    /* The footer moves or changes height with no scroll and no resize: the
-       kit appends its bar after this script may have run, a disclaimer dialog
-       closes, a webfont lands and one line becomes two, a view renders late
-       and pushes it below the fold. `load` catches the late build, the
-       observer on the footer and the body catches the rest. */
-    window.addEventListener('load', onLoad);
-    if (window.ResizeObserver) {
-      /* Frames already in the page count as loading: nothing outside a
-         frame can tell whether one has finished. */
-      var found = document.getElementsByTagName('iframe');
-      for (var i = 0; i < found.length; i++) expect(found[i]);
-      if (window.MutationObserver) {
-        new window.MutationObserver(onMutations)
-          .observe(document, { childList: true, subtree: true });
-      }
-    }
-    watchFooter();
   }
 
-  /* ── The control ────────────────────────────────────────────────── */
+  /* ── The control ──────────────────────────────────────────────────
+     A ladybug, because a bug is what the fleet already calls a thing that is
+     wrong, and a ladybug is the one bug that reads as friendly at 18px: round
+     spotted body, solid head, antennae, legs. Drawn on the fleet's icon grid,
+     24x24 with one 2px stroke, round caps and joins, stroked in currentColor
+     so the lit state and every theme recolour it. 51% ink at 16px, under the
+     55% the favicon audit holds glyphs to. */
+  var SVG_NS = 'http://www.w3.org/2000/svg';
+
+  function svgEl(name, attrs) {
+    var n = document.createElementNS(SVG_NS, name);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+
+  function ladybug() {
+    var icon = svgEl('svg', {
+      viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2',
+      'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true',
+      focusable: 'false'
+    });
+    icon.appendChild(svgEl('circle', { cx: '12', cy: '14.5', r: '6.5' }));
+    icon.appendChild(svgEl('path', { d: 'M9 8.6a3 3 0 0 1 6 0z', fill: 'currentColor' }));
+    icon.appendChild(svgEl('path', {
+      d: 'M12 8.6V21M10.5 6 9 3.8M13.5 6 15 3.8M6 12l-2.4-1.2M6 17l-2.4 1.2' +
+         'M18 12l2.4-1.2M18 17l2.4 1.2'
+    }));
+    icon.appendChild(svgEl('circle', { cx: '8.8', cy: '14.5', r: '1.5', fill: 'currentColor', stroke: 'none' }));
+    icon.appendChild(svgEl('circle', { cx: '15.2', cy: '14.5', r: '1.5', fill: 'currentColor', stroke: 'none' }));
+    return icon;
+  }
+
   function buildLink() {
     var a = document.createElement('a');
     a.className = 'neo-beacon-link';
@@ -422,35 +293,9 @@
        host page URL reaches Balise only inside the fragment, which no server
        is ever sent. Without it that same URL lands in an access log. */
     a.rel = 'noopener noreferrer';
-    a.title = 'Report a correction';
-    a.setAttribute('aria-label', 'Report a correction, opens Balise in a new tab');
-
-    var ns = 'http://www.w3.org/2000/svg';
-    var icon = document.createElementNS(ns, 'svg');
-    icon.setAttribute('viewBox', '0 0 24 24');
-    icon.setAttribute('fill', 'none');
-    icon.setAttribute('stroke', 'currentColor');
-    icon.setAttribute('stroke-width', '1.7');
-    icon.setAttribute('stroke-linecap', 'round');
-    icon.setAttribute('aria-hidden', 'true');
-
-    var core = document.createElementNS(ns, 'circle');
-    core.setAttribute('cx', '12');
-    core.setAttribute('cy', '12');
-    core.setAttribute('r', '2.6');
-    core.setAttribute('fill', 'currentColor');
-    core.setAttribute('stroke', 'none');
-    icon.appendChild(core);
-
-    ['M16.6 7.4a6.5 6.5 0 0 1 0 9.2', 'M7.4 16.6a6.5 6.5 0 0 1 0-9.2',
-     'M19.4 4.6a10.5 10.5 0 0 1 0 14.8', 'M4.6 19.4a10.5 10.5 0 0 1 0-14.8'
-    ].forEach(function (d) {
-      var p = document.createElementNS(ns, 'path');
-      p.setAttribute('d', d);
-      icon.appendChild(p);
-    });
-
-    a.appendChild(icon);
+    a.title = 'Report an issue';
+    a.setAttribute('aria-label', 'Report an issue, opens Balise in a new tab');
+    a.appendChild(ladybug());
 
     /* No inline handlers anywhere in this kit. pointerenter is here so the
        browser's own status-bar preview names the real destination before the
@@ -460,8 +305,6 @@
     a.addEventListener('focus', refresh);
     a.addEventListener('contextmenu', refresh);
     a.addEventListener('click', onClick);
-
-    document.body.appendChild(a);
     return a;
   }
 
@@ -484,7 +327,7 @@
     document.addEventListener('pointerdown', remember, true);
     link = buildLink();
     refresh();
-    watch();
+    dock();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

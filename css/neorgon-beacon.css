@@ -20,17 +20,18 @@
    ══════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Geometry. 40px matches the footer kit's back-to-top control so the two
-     read as one family when both are on screen. */
-  --beacon-size: 40px;
+  /* Geometry. 44px is the touch target in both of the control's places:
+     the whole control when it floats, and the area around the chip when it
+     is docked in the footer bar. */
+  --beacon-target: 44px;
+  /* The circle drawn in the footer bar. Smaller than the target so the bar
+     keeps its height; the target grows around it, see the docked rules. */
+  --beacon-chip: 28px;
+  /* Floating fallback only, on a page with no footer kit. */
   --beacon-offset: 20px;
-  /* How far the footer pushes the control up, written by beacon.js from the
-     footer's measured height whenever any of it is on screen. 0 is the
-     resting state, and also the state with JS off, where there is no control
-     to place. See README.md, "Clearing the footer". */
-  --beacon-clear: 0px;
   /* Above the footer kit's back-to-top (150), below the header (200) and
-     modals (400). See packages/neorgon-ui/footer/footer.css:36. */
+     modals (400). See packages/neorgon-ui/footer/footer.css:36. Only the
+     floating fallback is positioned high enough for it to matter. */
   --beacon-z: 160;
 
   /* Palette. Fleet token first, literal second. */
@@ -45,29 +46,13 @@
 
 /* ── The control ──────────────────────────────────────────────
    An <a>, not a <button>, because it navigates: see README.md, "A link, and
-   what that buys". Styled as a circular icon control so it reads as one
-   affordance with the footer kit's back-to-top rather than as body copy.
-
-   Bottom LEFT, deliberately. The footer kit pins its back-to-top button at
-   right:20px/bottom:20px on 69 vendored copies, so a bottom-right beacon
-   would ship overlapping controls across the fleet and nothing would detect
-   it.
-
-   `max()` rather than a sum, so the two knobs cannot double up: the resting
-   offset applies while the footer is away, the measured clearance takes over
-   once it arrives, and a site that raises --beacon-offset still gets whichever
-   is larger instead of one added to the other. */
+   what that buys". A circle with the ladybug in it, so it reads as one
+   affordance with the footer kit's back-to-top rather than as body copy. */
 .neo-beacon-link {
-  position: fixed;
-  left: calc(var(--beacon-offset) + env(safe-area-inset-left, 0px));
-  bottom: calc(max(var(--beacon-offset), var(--beacon-clear, 0px))
-               + env(safe-area-inset-bottom, 0px));
-  z-index: var(--beacon-z);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--beacon-size);
-  height: var(--beacon-size);
+  box-sizing: border-box;
   padding: 0;
   border: 1px solid var(--beacon-border);
   border-radius: 50%;
@@ -77,44 +62,130 @@
      draw a rule under the icon. */
   text-decoration: none;
   cursor: pointer;
-  /* Dimmed at rest. It is a correction affordance, not a call to action:
-     it must be findable without competing with the page. */
-  opacity: .55;
+  -webkit-tap-highlight-color: transparent;
   transition: opacity var(--beacon-dur) ease,
               color var(--beacon-dur) ease,
               border-color var(--beacon-dur) ease,
               box-shadow var(--beacon-dur) ease;
 }
 
+/* Author display beats the UA's [hidden] rule, so the kit restates it. A
+   site that sets hidden on the control (Runcible, while a drill runs) means
+   gone, not restyled. */
+.neo-beacon-link[hidden] { display: none; }
+
 .neo-beacon-link svg {
   display: block;
-  width: 20px;
-  height: 20px;
+  flex: none;
+  width: 22px;
+  height: 22px;
 }
 
-/* Lights on hover AND on focus. Keyboard users get the same signal that
-   pointer users get; that parity is the whole point of naming both. */
+/* ── Docked: the bottom of the page ───────────────────────────
+   beacon.js puts the control at the head of the footer kit's bar, in flow,
+   so it never covers the page. Scoped under .neo-footer so it outranks the
+   footer's own `.neo-footer a` and `.neo-footer-bar a` rules, which would
+   otherwise square the circle and swap the idle colour for the link one.
+
+   The chip is 28px in a line about 20px tall. Grown to its full size it
+   would make `minimal` and `app` footers some 24px taller than the budget
+   they are tuned to, so it takes the footer kit's own approach to target
+   size: the difference is handed back as negative block margin and the row
+   keeps its height. The 44px target is a transparent ::before around the
+   chip, positioned off the padding box, hence the extra pixel of border. */
+.neo-footer .neo-beacon-link.is-docked {
+  position: relative;
+  flex: none;
+  width: var(--beacon-chip);
+  height: var(--beacon-chip);
+  min-width: 0;
+  min-height: 0;
+  margin-block: min(0px, calc((var(--footer-line, 1.7) * 1em - var(--beacon-chip)) / 2));
+  border-color: var(--footer-border, var(--beacon-border));
+  border-radius: 50%;
+  background: transparent;
+  color: var(--footer-text, var(--beacon-idle));
+  text-decoration: none;
+  vertical-align: middle;
+}
+
+.neo-footer .neo-beacon-link.is-docked::before {
+  content: "";
+  position: absolute;
+  inset: calc((var(--beacon-chip) - var(--beacon-target)) / 2 - 1px);
+}
+
+/* A text baseline for the chip. As the bar's first item it sets the bar's
+   baseline, and an icon alone would offer the bottom of the svg, so the
+   minimal footer, which lines its note and its bar up by baseline, grew 5px
+   taller to reconcile the two (measured on quiz, 70 to 75px). An empty line
+   of the footer's own height, centred and ordered first, puts the chip's
+   baseline exactly where the text beside it has one. Width 0, and the link's
+   aria-label is its name, so nothing of it is seen or announced. */
+.neo-footer .neo-beacon-link.is-docked::after {
+  content: "\200b";
+  order: -1;
+  width: 0;
+  overflow: hidden;
+  line-height: var(--footer-line, 1.7);
+}
+
+.neo-footer .neo-beacon-link.is-docked svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ── Floating: a page with no footer ──────────────────────────
+   The one place left that nothing else marks as the bottom. Bottom LEFT,
+   because the footer kit's back-to-top owns bottom right. The safe-area
+   insets keep it clear of a phone's home indicator and rounded corners. */
+.neo-beacon-link:not(.is-docked) {
+  position: fixed;
+  left: calc(var(--beacon-offset) + env(safe-area-inset-left, 0px));
+  bottom: calc(var(--beacon-offset) + env(safe-area-inset-bottom, 0px));
+  z-index: var(--beacon-z);
+  width: var(--beacon-target);
+  height: var(--beacon-target);
+  /* Dimmed at rest. It is a correction affordance, not a call to action:
+     it must be findable without competing with the page. */
+  opacity: .55;
+}
+
+/* ── Lit ──────────────────────────────────────────────────────
+   On hover AND on focus. Keyboard users get the same signal that pointer
+   users get; that parity is the whole point of naming both. The amber is
+   Balise's, the same in every footer and every theme. */
 .neo-beacon-link:hover,
-.neo-beacon-link:focus-visible {
+.neo-beacon-link:focus-visible,
+.neo-footer .neo-beacon-link.is-docked:hover,
+.neo-footer .neo-beacon-link.is-docked:focus-visible {
   opacity: 1;
   color: var(--beacon-lit);
   border-color: var(--beacon-lit);
+  text-decoration: none;
+}
+
+.neo-beacon-link:not(.is-docked):hover,
+.neo-beacon-link:not(.is-docked):focus-visible {
   box-shadow: 0 0 0 1px rgba(245, 158, 11, .18), 0 6px 18px rgba(0, 0, 0, .35);
 }
 
-.neo-beacon-link:focus-visible {
+.neo-beacon-link:focus-visible,
+.neo-footer .neo-beacon-link.is-docked:focus-visible {
   outline: 2px solid var(--beacon-focus);
   outline-offset: 3px;
 }
 
 @media (max-width: 700px) {
-  :root { --beacon-size: 36px; --beacon-offset: 14px; }
-  .neo-beacon-link svg { width: 18px; height: 18px; }
+  :root { --beacon-offset: 14px; }
 }
 
-/* A fixed control has no place on paper. */
+/* A control for reporting a page has no place on paper. The docked selector
+   is named because the footer's `.neo-footer-bar a { display }` outranks
+   the bare class, and the footer itself prints. */
 @media print {
-  .neo-beacon-link { display: none; }
+  .neo-beacon-link,
+  .neo-footer .neo-beacon-link.is-docked { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
