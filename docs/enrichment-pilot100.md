@@ -2,7 +2,7 @@
 
 The pilot improves what a visitor can learn and try, and tests whether catalogue trends have enough evidence to be useful. It covers 100 existing projects and 116 source posts across 2023–2026, balanced across first-shared year and destination. Four regression examples are retained: The Manor, Underbloom, Wayward Crown Demo and Physical Digivice Game. Selection is deterministic, not random or representative; do not extrapolate its percentages to all games or developers.
 
-## Applied results — October 12, 2026
+## Applied results: October 12, 2026
 
 The dated, machine-readable counts are in [`data/enrichment-pilot100.json`](../data/enrichment-pilot100.json).
 
