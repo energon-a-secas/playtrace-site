@@ -22,7 +22,26 @@
  * Contract, CSP and troubleshooting: packages/neorgon-ui/auth/README.md
  */
 
-const CLERK_BUNDLE = 'npm/@clerk/clerk-js@5/dist/clerk.browser.js';
+// Clerk Core 3. The prebuilt components left clerk-js for @clerk/ui, and both come from the
+// instance's own Frontend API host, so no CSP needs a new origin. clerk-js floats within its
+// major: the host answers @6 with a 307 to the release it pins (6.41.0 on 2026-11-03), so
+// Clerk's fixes arrive without a kit release. @clerk/ui is pinned, as Clerk recommends for
+// customised components: the kit leans on its markup, and on two option values its docs do
+// not list. Bumping it is a kit release with a check list (README, Clerk Core 3).
+const CLERK_BUNDLE = 'npm/@clerk/clerk-js@6/dist/clerk.browser.js';
+const CLERK_UI_BUNDLE = 'npm/@clerk/ui@1.42.0/dist/ui.browser.js';
+// Clerk's own strings for a kit locale other than English, vendored beside this file and
+// imported only when a page is in that language. English is Clerk's default and needs none.
+// CLERK_GAPS, below, fills keys the vendored file leaves to English.
+const CLERK_LOCALES = { es: { file: './neorgon-auth-es.js', name: 'esMX' } };
+// A Convex token with less than this left is replaced before it is handed out: the leeway
+// Convex's own WebSocket client refreshes with (authRefreshTokenLeewaySeconds).
+const TOKEN_LEEWAY_S = 10;
+const MIN_RESYNC_MS = 5_000;
+const UNREADABLE_RESYNC_MS = 20_000;
+// Offline, Clerk answers from memory at once or retries the network for about 15 s; the kit
+// waits this long for the first and never for the second.
+const OFFLINE_GRACE_MS = 250;
 const PRIVACY_URL = 'https://neorgon.com/privacy/';
 const TERMS_URL = 'https://neorgon.com/tos/';
 const LOCAL_HOSTS = ['localhost', '127.0.0.1', '[::1]'];
@@ -89,6 +108,57 @@ const STRINGS = {
     sitesFailed: 'No se pudieron cargar tus sitios. Inténtalo de nuevo en un momento.',
   },
 };
+
+// Keys @clerk/localizations 4.24.4 es-MX leaves undefined, on paths this instance reaches:
+// email code or link, password, Google, optional first and last name, the avatar menu, and
+// Clerk Protect should it ever be switched on. Billing, organisations, SSO, phone and
+// passkeys are off and stay in English. tests/auth.test.mjs fails on a key here that upstream
+// has since translated, so a re-vendor shows which ones to drop. Exported for that test.
+const PROTECT_CHECK_ES = {
+  loading: 'Cargando…',
+  retryButton: 'Intentar de nuevo',
+  subtitle: 'Espera mientras verificamos tu solicitud.',
+  title: 'Verificando tu solicitud',
+};
+export const CLERK_ES_GAPS = {
+  formFieldInputPlaceholder__signUpPassword: 'Crea una contraseña',
+  formFieldInput__emailAddress_format: 'Formato de ejemplo: nombre@ejemplo.com',
+  identityPreviewEditButton__emailAddress: 'Editar correo electrónico',
+  identityPreviewEditButton__identifier: 'Editar identificador',
+  actionBlocked: {
+    title: 'No pudimos completar esta solicitud',
+    subtitle: 'Por tu seguridad, no se pudo completar esta solicitud.',
+    traceIdLabel: 'Referencia',
+  },
+  signIn: {
+    emailLink: { verifiedTransferable: { title: 'Correo verificado', subtitle: 'Regresa a la pestaña original para continuar' } },
+    passwordCompromised: { title: 'Contraseña comprometida' },
+    passwordUntrusted: { title: 'Contraseña no confiable' },
+    protectCheck: PROTECT_CHECK_ES,
+  },
+  signUp: { protectCheck: PROTECT_CHECK_ES },
+  userButton: {
+    action__openUserMenu: 'Abrir el menú de usuario',
+    action__closeUserMenu: 'Cerrar el menú de usuario',
+  },
+  unstable__errors: {
+    action_blocked: 'No se pudo completar esta acción. Inténtalo de nuevo más tarde o contacta a soporte si el problema continúa.',
+    form_new_password_matches_current: 'La nueva contraseña no puede ser igual a la actual.',
+    form_password_matches_identifier: 'La contraseña no puede coincidir con tu correo electrónico, número de teléfono o nombre de usuario. Por la seguridad de tu cuenta, usa otra contraseña.',
+    form_password_untrusted__sign_in: 'Es posible que tu contraseña esté comprometida. Para proteger tu cuenta, continúa con otro método de inicio de sesión. Tendrás que restablecer tu contraseña después de iniciar sesión.',
+    oauth_access_denied: 'No otorgaste acceso a tu cuenta.',
+    protect_check_execution_failed: 'La verificación no se completó. Inténtalo de nuevo.',
+    protect_check_invalid_script: 'No se pudo cargar la verificación. Contacta a soporte si el problema continúa.',
+    protect_check_invalid_sdk_url: 'No se pudo iniciar la verificación. Contacta a soporte.',
+    protect_check_required: 'Este inicio de sesión necesita un paso de verificación adicional que no se puede mostrar aquí. Inténtalo de nuevo o usa otro método de inicio de sesión.',
+    protect_check_script_load_failed: 'No se pudo cargar la verificación. Puede deberse a un problema de red o a una política de seguridad de contenido que bloquea el script de verificación. Inténtalo de nuevo o contacta a soporte.',
+    protect_check_timed_out: 'La verificación no se completó a tiempo. Inténtalo de nuevo.',
+    protect_check_unsupported_environment: 'La verificación no es compatible con este entorno. Continúa en un navegador estándar o contacta a soporte.',
+    ticket_expired_code: 'Este enlace ha expirado. Vuelve a empezar o solicita un enlace nuevo.',
+    ticket_invalid_code: 'Este enlace ya no es válido o ya se usó. Vuelve a empezar o solicita un enlace nuevo.',
+  },
+};
+const CLERK_GAPS = { es: CLERK_ES_GAPS };
 
 const ICON_PERSON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 19.5c1.3-3.2 4-4.8 7-4.8s5.7 1.6 7 4.8"/></svg>';
 const ICON_CLOSE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
@@ -191,16 +261,83 @@ export function localeFor(lang) {
 }
 
 /**
- * Clerk's layout options for one mount: 'embedded' (the sign-in dialog), 'menu' (the
- * avatar button) or 'global' (load-time defaults, and the account pages).
+ * Whether a failed getToken means the browser is offline. Core 3 throws ClerkOfflineError
+ * there (code "clerk_offline") where Core 2 resolved null, and any failure while the browser
+ * itself reports no connection counts too: Clerk decides it is offline the same way. The
+ * kit's own give-up while offline (templateToken) carries the same code.
+ */
+export function isOfflineError(error, onLine) {
+  if (onLine === false) return true;
+  return error?.code === 'clerk_offline' || error?.constructor?.kind === 'ClerkOfflineError';
+}
+
+/**
+ * A copy of Clerk's strings with the kit's gaps filled in: a gap lands only where upstream
+ * has no string, so a key upstream translates later keeps upstream's wording.
+ */
+export function fillGaps(base, gaps) {
+  const out = isPlainObject(base) ? { ...base } : {};
+  for (const [key, value] of Object.entries(gaps ?? {})) {
+    if (isPlainObject(value)) out[key] = fillGaps(out[key], value);
+    else if (out[key] === undefined) out[key] = value;
+  }
+  return out;
+}
+
+/** { iat, exp } from a JWT's payload, in seconds, or null for anything that is not one. Read, never verified. */
+export function tokenTimes(jwt) {
+  const parts = String(jwt ?? '').split('.');
+  if (parts.length !== 3 || !parts[1]) return null;
+  let claims;
+  try {
+    const b64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    claims = JSON.parse(atob(b64 + '='.repeat((4 - (b64.length % 4)) % 4)));
+  } catch {
+    return null;
+  }
+  if (!isPlainObject(claims) || !Number.isFinite(claims.exp)) return null;
+  return { iat: Number.isFinite(claims.iat) ? claims.iat : null, exp: claims.exp };
+}
+
+/**
+ * Whether a held token is too close to expiry to hand out. By this device's clock against
+ * exp, which is how Clerk's own token cache decides. A token the kit cannot read is not due:
+ * forcing a fresh one would only fetch another it cannot read.
+ */
+export function tokenIsDue(times, nowMs = Date.now()) {
+  return !!times && times.exp - nowMs / 1000 <= TOKEN_LEEWAY_S;
+}
+
+/**
+ * How long until the bound clients need their next token, in ms. A token fetched fresh is
+ * timed from its own lifetime (exp - iat), which no clock skew can bend; one from Clerk's
+ * cache is timed against exp, as Clerk times it. Never sooner than MIN_RESYNC_MS, so a
+ * device whose clock is badly off cannot spin.
+ */
+export function resyncDelay(times, fresh, nowMs = Date.now()) {
+  if (!times) return UNREADABLE_RESYNC_MS;
+  const left = fresh && times.iat !== null ? times.exp - times.iat : times.exp - nowMs / 1000;
+  return Math.max(MIN_RESYNC_MS, Math.round((left - TOKEN_LEEWAY_S) * 1000));
+}
+
+/**
+ * Clerk's appearance.options (clerk-js 5 called them appearance.layout) for one mount:
+ * 'embedded' (the sign-in dialog), 'menu' (the avatar button) or 'global' (load-time
+ * defaults, and the account pages).
  *
  * The dialog turns Clerk's logo off. Its head already draws the site's own mark, and
  * Clerk shows the instance logo (uploaded by scripts/setup-clerk-branding.sh) in the
  * header of every step; the kit's CSS hides that header on the first step only, so from
  * "Check your email" on the Neorgon logo sat right under the site's mark. 'none' is
- * neither 'inside' nor 'outside', the two values clerk-js draws a logo for, so no logo
- * node renders and the image is never fetched. The menu and the account pages keep
- * Clerk's default.
+ * neither 'inside' nor 'outside', the two values Clerk's components draw a logo for, so no
+ * logo node renders and the image is never fetched. The menu and the account pages keep
+ * Clerk's default. Clerk's docs list only those two values, so 'none' holds for the pinned
+ * @clerk/ui; appearanceFor() also hides the logo box through `elements`, which is documented,
+ * in case a later release reads 'none' as its default.
+ *
+ * showOptionalFields is Core 2's behaviour, kept on purpose: Core 3 turned it off by default,
+ * and sign-up would stop offering the optional first and last name, which the header label
+ * prefers over the email address.
  */
 export function layoutFor(kind, reducedMotion) {
   return {
@@ -208,6 +345,7 @@ export function layoutFor(kind, reducedMotion) {
     socialButtonsVariant: 'blockButton',
     shimmer: false,
     animations: !reducedMotion,
+    showOptionalFields: true,
     ...(kind === 'embedded' ? { logoPlacement: 'none' } : {}),
   };
 }
@@ -270,7 +408,15 @@ const auth = {
   label: '',
   options: {},
   locale: 'en',
+  localizations: {},       // locale -> promise of Clerk's strings, or of null
+  ui: null,                // { promise, resolve, loading }: @clerk/ui, which load() is handed as a promise
   clients: new Set(),
+  held: null,              // { session, token }: what the bound clients hold
+  tokenTimer: null,
+  syncing: null,
+  syncAgain: false,
+  warned: new Set(),
+  listening: false,
   listeners: new Set(),
   waiters: [],
   invoker: null,
@@ -302,6 +448,12 @@ function h(tag, attrs = {}, ...children) {
 
 function authError(code, message) {
   return Object.assign(new Error(message), { code });
+}
+
+function warnOnce(key, message, error) {
+  if (auth.warned.has(key)) return;
+  auth.warned.add(key);
+  console.warn(`Neorgon auth: ${message}`, ...(error ? [error] : []));
 }
 
 function snapshot() {
@@ -364,25 +516,116 @@ function displayLabel(user) {
 
 /* ── Clerk ───────────────────────────────────────────────────────────────── */
 
-function injectClerk(host, key) {
-  if (typeof window.Clerk?.load === 'function') return Promise.resolve(window.Clerk);
+function injectScript(host, path, name, data = {}) {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
-    script.src = `https://${host}/${CLERK_BUNDLE}`;
+    script.src = `https://${host}/${path}`;
     script.async = true;
     script.crossOrigin = 'anonymous';
-    // The browser bundle throws "Missing publishableKey" without this attribute, and
-    // window.Clerk is then a ready instance rather than a constructor.
-    script.dataset.clerkPublishableKey = key;
-    script.addEventListener('load', () => {
-      if (typeof window.Clerk?.load === 'function') resolve(window.Clerk);
-      else reject(authError('no-clerk', `clerk-js loaded from ${host} but did not expose window.Clerk`));
-    }, { once: true });
+    Object.assign(script.dataset, data);
+    script.addEventListener('load', () => resolve(), { once: true });
     script.addEventListener('error', () => {
-      reject(authError('script-blocked', `clerk-js could not load from ${host}; check that the page's script-src allows https://${host}`));
+      reject(authError('script-blocked', `${name} could not load from ${host}; check that the page's script-src allows https://${host}`));
     }, { once: true });
     document.head.append(script);
   });
+}
+
+async function injectClerk(host, key) {
+  if (typeof window.Clerk?.load !== 'function') {
+    // The browser bundle throws "Missing publishableKey" without this attribute, and
+    // window.Clerk is then a ready instance rather than a constructor.
+    await injectScript(host, CLERK_BUNDLE, 'clerk-js', { clerkPublishableKey: key });
+  }
+  if (typeof window.Clerk?.load !== 'function') {
+    throw authError('no-clerk', `clerk-js loaded from ${host} but did not expose window.Clerk`);
+  }
+  return window.Clerk;
+}
+
+/**
+ * What load() is handed as ui.ClerkUI. Clerk takes a constructor or a promise of one
+ * (clerk.com/docs/js-frontend/reference/objects/clerk, load options), and queues every mount
+ * until it settles. This one settles only when ensureUI() has the bundle, and it never
+ * rejects: a failed download is retried, and Clerk cannot be handed a second promise.
+ */
+function uiPromise() {
+  if (!auth.ui) {
+    let resolve;
+    const promise = new Promise((done) => { resolve = done; });
+    auth.ui = { promise, resolve, loading: null };
+  }
+  return auth.ui.promise;
+}
+
+/**
+ * @clerk/ui, the prebuilt components, fetched the first time anything needs one: the sign-in
+ * form, or the avatar menu on a page with a header slot. A page that only asks for tokens
+ * (cachet's broker) never downloads it. Rejects on a failed download, so the dialog can
+ * offer a retry, which tries again.
+ */
+function ensureUI() {
+  uiPromise();
+  if (auth.ui.loading) return auth.ui.loading;
+  auth.ui.loading = (async () => {
+    if (typeof window.__internal_ClerkUICtor !== 'function') {
+      await injectScript(hostFromPublishableKey(auth.key), CLERK_UI_BUNDLE, '@clerk/ui');
+    }
+    const ctor = window.__internal_ClerkUICtor;
+    if (typeof ctor !== 'function') {
+      throw authError('no-clerk', '@clerk/ui loaded but did not expose its components');
+    }
+    auth.ui.resolve(ctor);
+    return ctor;
+  })();
+  auth.ui.loading.catch(() => { auth.ui.loading = null; });
+  return auth.ui.loading;
+}
+
+/** Whether this page will want a component as soon as Clerk is up. */
+const wantsComponents = () => !!(document.querySelector('[data-neo-auth]') || auth.signInDialog?.open);
+
+/**
+ * Clerk's strings for a kit locale, or null: for English, which is Clerk's default, and on
+ * any failure, so a missing or broken locale file costs the translation and never the form.
+ */
+function localizationFor(locale) {
+  const source = CLERK_LOCALES[locale];
+  if (!source) return Promise.resolve(null);
+  auth.localizations[locale] ??= import(new URL(source.file, import.meta.url).href)
+    .then((module) => (isPlainObject(module[source.name]) ? fillGaps(module[source.name], CLERK_GAPS[locale]) : null))
+    .catch((error) => {
+      delete auth.localizations[locale];
+      console.warn(`Neorgon auth: Clerk's "${locale}" strings could not load, so its form stays in English.`, error);
+      return null;
+    });
+  return auth.localizations[locale];
+}
+
+/**
+ * Give Clerk the strings for a language chosen after it loaded. Core 3 names the call
+ * __internal_updateProps (Core 2's __unstable__updateProps): it merges into the options the
+ * UI holds and re-renders whatever is mounted, an open form included. English is no
+ * localization at all, so switching back clears it. It is internal, and clerk-js floats
+ * within 6, so a release that renames it is said out loud rather than leaving the form in
+ * the language it loaded with and nothing in the console.
+ */
+async function applyLocalization() {
+  const clerk = auth.clerk;
+  if (!clerk) return;
+  if (typeof clerk.__internal_updateProps !== 'function') {
+    warnOnce('update-props', `clerk-js ${clerk.version ?? ''} has no __internal_updateProps, so Clerk's form keeps the language it loaded with until the page reloads. See README, Clerk Core 3.`);
+    return;
+  }
+  const locale = auth.locale;
+  const localization = await localizationFor(locale);
+  // A later switch, or a different Clerk, makes this one stale; the later call applies.
+  if (auth.clerk !== clerk || auth.locale !== locale) return;
+  try {
+    await clerk.__internal_updateProps({ options: { localization: localization ?? undefined } });
+  } catch (error) {
+    console.warn('Neorgon auth: Clerk did not take the new language.', error);
+  }
 }
 
 function loadClerk() {
@@ -391,16 +634,39 @@ function loadClerk() {
     if (isLocalHost() && auth.key.startsWith('pk_live_')) {
       throw authError('local-production-key', `a production key cannot run on localhost; set localStorage["${DEV_KEY_STORAGE}"] to a pk_test_ key`);
     }
-    const clerk = await injectClerk(hostFromPublishableKey(auth.key), auth.key);
+    const locale = auth.locale;
+    // The locale file and, on a page that will show a component, @clerk/ui are fetched
+    // beside clerk-js, not after it, so a page waits for the slowest rather than for each in
+    // turn. A page that will not (no header slot, no dialog open) gets clerk-js alone. A
+    // failed @clerk/ui costs the components, not the session: tokens and state still work,
+    // and the dialog's retry or the avatar's mount fetches it again.
+    const [clerk, , localization] = await Promise.all([
+      injectClerk(hostFromPublishableKey(auth.key), auth.key),
+      wantsComponents() ? ensureUI().catch((error) => { console.error(`Neorgon auth: ${error.message}`, error); }) : null,
+      localizationFor(locale),
+    ]);
     await clerk.load({
+      ui: { ClerkUI: uiPromise() },
       telemetry: false,
       appearance: appearanceFor('global'),
+      ...(localization ? { localization } : {}),
       // Signing out stays on the page. Without this the instance default sends people
       // to the Account Portal on accounts.neorgon.com, away from the site they were using.
       afterSignOutUrl: location.href,
     });
     auth.clerk = clerk;
-    clerk.addListener(() => { void refresh(); });
+    // <html lang> changed while Clerk was loading: the strings it loaded with are stale.
+    if (auth.locale !== locale) void applyLocalization();
+    if (!auth.listening) {
+      auth.listening = true;
+      clerk.addListener(() => { void refresh(); });
+      // Two moments Clerk does not tick for: the connection coming back, and a tab coming
+      // back, whose timers the browser may have held for a minute or more while hidden.
+      window.addEventListener('online', () => { void syncClients(); });
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') void syncClients();
+      });
+    }
     await refresh();
     return clerk;
   })();
@@ -413,30 +679,132 @@ function loadClerk() {
   return auth.loading;
 }
 
-async function syncClients() {
-  if (!auth.clients.size) return;
-  const session = auth.clerk?.session;
-  let token = null;
-  if (session) {
-    try {
-      token = await session.getToken({ template: 'convex' });
-    } catch (error) {
-      // Loud on purpose: a silent failure here means signed in on screen and
-      // "Not authenticated" on every mutation, with nothing saying why.
-      console.error('Neorgon auth: could not mint the Convex token. Check that a JWT template named "convex" exists on this Clerk instance (Clerk dashboard, JWT templates).', error);
-    }
+/**
+ * session.getToken for the convex template. Online it is Clerk's own call. Offline, Clerk
+ * answers from memory while its cached token is valid, and only a miss goes to the network,
+ * which it retries for about 15 s before throwing ClerkOfflineError. The kit takes an answer
+ * from memory and does not wait out retries for a request that cannot go out.
+ */
+function templateToken(session, fresh = false) {
+  const options = fresh ? { template: 'convex', skipCache: true } : { template: 'convex' };
+  if (navigator.onLine !== false) return session.getToken(options);
+  if (fresh) return Promise.reject(authError('clerk_offline', 'the browser is offline'));
+  const request = session.getToken(options);
+  request.catch(() => {}); // settles once Clerk's retries run out, when nobody is waiting
+  let timer;
+  const giveUp = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(authError('clerk_offline', 'the browser is offline and Clerk holds no valid token')), OFFLINE_GRACE_MS);
+  });
+  return Promise.race([request, giveUp]).finally(() => clearTimeout(timer));
+}
+
+/**
+ * The convex token to hand out now: Clerk's cached one, or a fresh one when that is within
+ * TOKEN_LEEWAY_S of expiry. Core 3 serves a cached template token until 5 s before it expires
+ * and refreshes it in the background without a tick, so a client given whatever the cache
+ * held could sit on a token that dies seconds later. Offline, a due token is still the best
+ * there is, and comes back as it stands.
+ */
+async function currentToken(session) {
+  const cached = await templateToken(session);
+  if (!cached || !tokenIsDue(tokenTimes(cached))) return { token: cached, fresh: false };
+  try {
+    return { token: await templateToken(session, true), fresh: true };
+  } catch (error) {
+    if (isOfflineError(error, navigator.onLine)) return { token: cached, fresh: false };
+    throw error;
   }
+}
+
+function setClients(token, sessionId) {
   for (const client of auth.clients) {
     if (token) client.setAuth(token);
     else client.clearAuth?.();
   }
+  auth.held = token ? { session: sessionId, token } : null;
 }
 
-/** Runs on load and on every Clerk tick. Clerk ticks as it refreshes the session token. */
+/**
+ * Keep every bound ConvexHttpClient on a live token. A client takes a plain string, so the
+ * kit hands it a new one before the old expires: on its own timer, TOKEN_LEEWAY_S before
+ * expiry, because Clerk ticks for the session token only and refreshes a template token
+ * without a word. Clerk's ticks, a client bound, the connection or the tab coming back run
+ * it too. Calls that arrive while one runs fold into a single run after it, so tokens are
+ * set in the order they were asked for.
+ */
+function syncClients() {
+  if (auth.syncing) {
+    auth.syncAgain = true;
+    return auth.syncing;
+  }
+  auth.syncing = (async () => {
+    try {
+      do {
+        auth.syncAgain = false;
+        await syncOnce();
+      } while (auth.syncAgain);
+    } finally {
+      auth.syncing = null;
+    }
+  })();
+  return auth.syncing;
+}
+
+async function syncOnce() {
+  clearTimeout(auth.tokenTimer);
+  auth.tokenTimer = null;
+  if (!auth.clients.size) return;
+  const session = auth.clerk?.session;
+  if (!session) {
+    setClients(null, null);
+    return;
+  }
+  let next;
+  try {
+    next = await currentToken(session);
+  } catch (error) {
+    // A client that already holds this session's token keeps it: clearing it would make a
+    // signed-in person anonymous for the length of a dropped connection, and its calls
+    // cannot go out offline anyway. A token from any other session is dropped, so nobody's
+    // calls go out as somebody else. The next tick, or the online event, tries again.
+    if (auth.held?.session !== session.id) setClients(null, null);
+    // Offline is expected, and Core 3 throws there where Core 2 resolved null. Anything
+    // else is loud on purpose: a silent failure means signed in on screen and "Not
+    // authenticated" on every mutation, with nothing saying why.
+    if (!isOfflineError(error, navigator.onLine)) {
+      console.error('Neorgon auth: could not mint the Convex token. If the error names a missing template, add a JWT template named "convex" on this Clerk instance (Clerk dashboard, JWT templates).', error);
+    }
+    return;
+  }
+  // Signed out or switched while the token was on its way: the run folded in after this
+  // one settles it, and this token is not handed to anyone.
+  if (auth.clerk?.session?.id !== session.id) {
+    auth.syncAgain = true;
+    return;
+  }
+  setClients(next.token, session.id);
+  if (next.token && navigator.onLine !== false) {
+    auth.tokenTimer = setTimeout(() => { void syncClients(); }, resyncDelay(tokenTimes(next.token), next.fresh));
+  }
+}
+
+/**
+ * Runs on load and on every Clerk tick: Clerk ticks when the session or the user changes and
+ * when it refreshes the session token. It does not tick for a template token, which is why
+ * syncOnce() keeps its own timer.
+ */
 async function refresh() {
   const clerk = auth.clerk;
   if (!clerk) return;
-  await syncClients();
+  if (clerk.session) {
+    // Listeners may call Convex the moment they hear "signed in", so the token goes first.
+    await syncClients();
+  } else {
+    // Signing out does not wait behind a token request still in flight: the clients are
+    // cleared now, and that request's token, which no longer matches a session, is dropped.
+    setClients(null, null);
+    void syncClients();
+  }
   const user = clerk.session ? clerk.user : null;
   const wasSignedIn = auth.status === 'signed-in';
   const changed = commit(user
@@ -453,6 +821,11 @@ async function refresh() {
   }
 }
 
+/**
+ * Core 3 is the first clerk-js with user.updateMetadata (PATCH /me/metadata: a deep merge
+ * where null removes a key), and its user.update() sends unsafeMetadata there too, so this
+ * path is new in production on Core 3 either way. It is on the README's live check list.
+ */
 async function writeMetadata(user, patch) {
   if (typeof user.updateMetadata === 'function') return user.updateMetadata({ unsafeMetadata: patch });
   return user.update({ unsafeMetadata: mergeMetadata(user.unsafeMetadata, patch) });
@@ -534,13 +907,17 @@ function appearanceFor(kind) {
       card: { width: '100%', padding: '8px 0 4px', background: 'transparent', boxShadow: 'none', border: 'none' },
       footer: { background: 'transparent' },
       formButtonPrimary: { textTransform: 'none', fontWeight: 600 },
+      // Belt to logoPlacement 'none' (see layoutFor): hidden even if a release draws it.
+      logoBox: { display: 'none' },
+      // A long placeholder (es-MX's runs past a 320 px sheet) ends in an ellipsis, not mid-word.
+      formFieldInput: { textOverflow: 'ellipsis' },
     }
     : kind === 'menu'
       ? { userButtonAvatarBox: { width: '32px', height: '32px' } }
       : {};
-  // "layout" is the clerk-js 5 name; Core 3 renamed it "options". Both are sent so the
-  // loader can move majors without this object changing.
-  return { variables, elements, layout, options: layout };
+  // Core 3 renamed clerk-js 5's appearance.layout to appearance.options and reads only the
+  // new name. The dialog's logoPlacement 'none' taking effect on the showcase shows it does.
+  return { variables, elements, options: layout };
 }
 
 /** Where the visible header ends, so a dialog centres in the space under it. 0 with no header in view. */
@@ -586,6 +963,9 @@ function renderSlot(slot) {
     const host = h('div', { class: 'neo-auth-user' });
     slot.replaceChildren(host);
     slot.neoUserHost = host;
+    // Already under way on a page that had its slot when Clerk loaded. A slot added later
+    // starts it here; Clerk holds the mount until the components arrive.
+    ensureUI().catch((error) => warnOnce('ui-menu', 'the avatar menu could not load.', error));
     auth.clerk.mountUserButton(host, {
       appearance: appearanceFor('menu'),
       userProfileProps: { appearance: appearanceFor('global') },
@@ -758,6 +1138,9 @@ async function mountSignIn() {
   status.replaceChildren(statusBlock('loading', t().loading));
   try {
     const clerk = await loadClerk();
+    // Mounting waits for the components rather than handing Clerk a mount it would hold
+    // forever if they never arrive: a failure here shows the retry, which fetches again.
+    await ensureUI();
     if (!dialog.open) return;
     if (clerk.session) { dialog.close(); return; }
     unmountSignIn();
@@ -891,6 +1274,9 @@ export function start(options = {}) {
       if (next === auth.locale) return;
       auth.locale = next;
       renderSlots();
+      // Clerk's own strings follow too. Before Clerk loads there is nothing to tell:
+      // loadClerk reads the locale when it starts, and checks it again when it is done.
+      if (auth.clerk) void applyLocalization();
       if (auth.signInDialog?.open) paintSignInCopy(auth.signInDialog);
       if (auth.sitesDialog?.open) void openSites({ preview: auth.sitesDialog.neoPreview });
     }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
@@ -996,10 +1382,21 @@ export async function signOut() {
   await auth.clerk?.signOut();
 }
 
-/** A fresh Convex token, for a site that calls Convex over plain fetch. */
+/**
+ * A Convex token with more than TOKEN_LEEWAY_S to live, for a site that calls Convex over
+ * plain fetch. Null when signed out. Offline it is the token Clerk still holds in memory, or
+ * null when it holds none: the contract sites were written against, which Core 3 broke by
+ * throwing ClerkOfflineError there. Any other failure still throws.
+ */
 export async function convexToken() {
   const session = auth.clerk?.session;
-  return session ? session.getToken({ template: 'convex' }) : null;
+  if (!session) return null;
+  try {
+    return (await currentToken(session)).token;
+  } catch (error) {
+    if (isOfflineError(error, navigator.onLine)) return null;
+    throw error;
+  }
 }
 
 export const NeoAuth = {
