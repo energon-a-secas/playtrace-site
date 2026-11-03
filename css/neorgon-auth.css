@@ -233,7 +233,9 @@ body:has(.neo-auth-dialog[open]) { overflow: hidden; }
 
 /* Clerk's start step titles itself "Continue to Neorgon", which repeats the
    dialog's own title. Later steps ("Check your email") keep their header
-   because it carries the instruction. */
+   because it carries the instruction. Clerk's logo is not part of this: the
+   dialog turns it off on every step (logoPlacement 'none', layoutFor() in
+   neorgon-auth.js), because the dialog's head already shows the site's mark. */
 .neo-auth-dialog :is(.cl-signIn-start, .cl-signUp-start) .cl-header { display: none; }
 
 .neo-auth-foot {

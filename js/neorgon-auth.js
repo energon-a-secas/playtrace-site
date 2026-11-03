@@ -190,6 +190,28 @@ export function localeFor(lang) {
   return /^es(?:-|$)/i.test(String(lang ?? '')) ? 'es' : 'en';
 }
 
+/**
+ * Clerk's layout options for one mount: 'embedded' (the sign-in dialog), 'menu' (the
+ * avatar button) or 'global' (load-time defaults, and the account pages).
+ *
+ * The dialog turns Clerk's logo off. Its head already draws the site's own mark, and
+ * Clerk shows the instance logo (uploaded by scripts/setup-clerk-branding.sh) in the
+ * header of every step; the kit's CSS hides that header on the first step only, so from
+ * "Check your email" on the Neorgon logo sat right under the site's mark. 'none' is
+ * neither 'inside' nor 'outside', the two values clerk-js draws a logo for, so no logo
+ * node renders and the image is never fetched. The menu and the account pages keep
+ * Clerk's default.
+ */
+export function layoutFor(kind, reducedMotion) {
+  return {
+    socialButtonsPlacement: 'top',
+    socialButtonsVariant: 'blockButton',
+    shimmer: false,
+    animations: !reducedMotion,
+    ...(kind === 'embedded' ? { logoPlacement: 'none' } : {}),
+  };
+}
+
 function parseColor(value) {
   const raw = String(value ?? '').trim().toLowerCase();
   let match = /^#([0-9a-f]{3,8})$/.exec(raw);
@@ -504,12 +526,7 @@ function appearanceFor(kind) {
     borderRadius: '10px',
     fontFamily: font,
   };
-  const layout = {
-    socialButtonsPlacement: 'top',
-    socialButtonsVariant: 'blockButton',
-    shimmer: false,
-    animations: !matchMedia('(prefers-reduced-motion: reduce)').matches,
-  };
+  const layout = layoutFor(kind, matchMedia('(prefers-reduced-motion: reduce)').matches);
   const elements = kind === 'embedded'
     ? {
       rootBox: { width: '100%' },
