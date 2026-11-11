@@ -528,13 +528,53 @@
     return { actions: actions, overflow: overflow, menu: menu, movable: movable };
   }
 
+  /* An icon-only control (the source link, the Workspace gear, a site's own
+     icon button) reads as a bare glyph in a row of labelled menu items. On
+     the way in it gets a visible label from its own accessible name; on the
+     way out the label goes again, so the bar stays icon-only. The element
+     keeps its aria-label, which still names it, so nothing is read twice. */
+  var MENU_LABEL = 'header-menu-label';
+
+  function iconOnly(el) {
+    return !el.textContent.trim() && !!el.querySelector('svg, img');
+  }
+
+  function nameOf(el) {
+    var img = el.querySelector('img[alt]');
+    return (el.getAttribute('aria-label') || el.title || (img && img.alt) || '').trim();
+  }
+
+  function labelControls(el) {
+    var list = el.matches('a, button') ? [el] : el.querySelectorAll('a, button');
+    Array.prototype.forEach.call(list, function (c) {
+      if (!iconOnly(c)) return;
+      var name = nameOf(c);
+      if (!name) return;
+      var span = document.createElement('span');
+      span.className = MENU_LABEL;
+      span.setAttribute('aria-hidden', 'true');
+      span.textContent = name;
+      c.appendChild(span);
+    });
+  }
+
+  function unlabelControls(el) {
+    Array.prototype.forEach.call(el.querySelectorAll('.' + MENU_LABEL), function (span) {
+      span.parentNode.removeChild(span);
+    });
+  }
+
   function syncOverflow(state) {
     if (!state) return;
     if (mq.matches) {
-      state.movable().forEach(function (el) { state.menu.appendChild(el); });
+      state.movable().forEach(function (el) {
+        state.menu.appendChild(el);
+        if (!el.querySelector('.' + MENU_LABEL)) labelControls(el);
+      });
     } else {
       /* Restore everything the menu holds (copy first: the list is live). */
       Array.prototype.slice.call(state.menu.children).forEach(function (el) {
+        unlabelControls(el);
         state.actions.insertBefore(el, state.overflow);
       });
       if (state.menu === openMenu) closeMenu();
