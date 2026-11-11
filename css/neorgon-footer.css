@@ -88,7 +88,10 @@ body.neo-footer-root {
   background: var(--footer-bg);
   border-top: 1px solid var(--footer-border);
   color: var(--footer-text);
-  font-size: .78rem;
+  /* Every size in this file is floored at 12px: reading text under it failed
+     the fleet's type floor (queue #154). max() keeps the rem scaling for a
+     site whose root runs larger, and only lifts one whose root runs small. */
+  font-size: max(12px, .78rem);
   line-height: var(--footer-line);
   text-align: center;
 }
@@ -173,7 +176,7 @@ body.neo-footer-root {
 .neo-footer-stamp {
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
   font-variant-numeric: tabular-nums;
-  font-size: .95em;
+  font-size: max(12px, .95em);
   opacity: .8;
 }
 
@@ -202,7 +205,7 @@ body.neo-footer-root {
 .neo-footer[data-footer-mode="app"] {
   padding-top: var(--footer-pad-block-app);
   padding-bottom: calc(var(--footer-pad-block-app) + env(safe-area-inset-bottom, 0px));
-  font-size: .72rem;
+  font-size: max(12px, .75rem);
   background: var(--footer-surface);
 }
 .neo-footer[data-footer-mode="app"] .neo-footer-inner,
@@ -253,7 +256,7 @@ body.neo-footer-root {
 .neo-footer-col h2,
 .neo-footer-col h3 {
   margin: 0 0 2px;
-  font-size: .72rem;
+  font-size: max(12px, .75rem);
   font-weight: 600;
   letter-spacing: .08em;
   text-transform: uppercase;
