@@ -515,8 +515,10 @@
        buttons/links and grouped controls (.header-btn-group divs, navs) —
        groups travel into the menu as a unit so their listeners survive.
        A live query, not an init-time snapshot: a control injected after
-       init (site JS, or the kit's own source link) still collapses. */
+       init (site JS, or the kit's own source link) still collapses. A bar
+       marked data-keep-mobile itself (affinity's nav) keeps every child. */
     function movable() {
+      if (actions.hasAttribute('data-keep-mobile')) return [];
       return Array.prototype.filter.call(actions.children, function (el) {
         return el !== overflow &&
                !el.hasAttribute('data-keep-mobile') &&
@@ -566,8 +568,14 @@
 
   function syncOverflow(state) {
     if (!state) return;
+    /* Site JS that rewrites .header-actions with innerHTML after init drops
+       this node with the old children; without it restoring has no anchor. */
+    if (state.overflow.parentNode !== state.actions) state.actions.appendChild(state.overflow);
     if (mq.matches) {
       state.movable().forEach(function (el) {
+        /* A marker keeps the control's place, so it returns between any
+           data-keep-mobile neighbours instead of after them. */
+        el._neoMark = state.actions.insertBefore(document.createComment(''), el);
         state.menu.appendChild(el);
         if (!el.querySelector('.' + MENU_LABEL)) labelControls(el);
       });
@@ -575,7 +583,10 @@
       /* Restore everything the menu holds (copy first: the list is live). */
       Array.prototype.slice.call(state.menu.children).forEach(function (el) {
         unlabelControls(el);
-        state.actions.insertBefore(el, state.overflow);
+        var mark = el._neoMark;
+        el._neoMark = null;
+        if (mark && mark.parentNode === state.actions) state.actions.replaceChild(el, mark);
+        else state.actions.insertBefore(el, state.overflow);
       });
       if (state.menu === openMenu) closeMenu();
     }
