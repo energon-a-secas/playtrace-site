@@ -34,12 +34,11 @@
      floating fallback is positioned high enough for it to matter. */
   --beacon-z: 160;
 
-  /* Palette. Fleet token first, literal second. */
+  /* Palette. Fleet token first, literal second. --beacon-surface,
+     --beacon-border and --beacon-focus follow the header and are resolved
+     on the link itself, not here: see the control's rule below. */
   --beacon-lit: #f59e0b;
   --beacon-idle: var(--text-muted, rgba(255, 255, 255, .55));
-  --beacon-surface: var(--header-menu-bg, #10142a);
-  --beacon-border: var(--header-border, rgba(255, 255, 255, .07));
-  --beacon-focus: var(--header-focus, #f2e9f4);
 
   --beacon-dur: var(--dur, 200ms);
 }
@@ -47,16 +46,27 @@
 /* ── The control ──────────────────────────────────────────────
    An <a>, not a <button>, because it navigates: see README.md, "A link, and
    what that buys". A circle with the ladybug in it, so it reads as one
-   affordance with the footer kit's back-to-top rather than as body copy. */
+   affordance with the footer kit's back-to-top rather than as body copy.
+
+   The three header-derived colours are resolved on the link, not on :root.
+   A var() is resolved where it is declared, so a root-level
+   `--beacon-focus: var(--header-focus)` kept the kit's pink ring on a
+   jade or slate site and through an armed season, whose tokens sit on
+   .header-bar (queue #156). The header kit and season.css hand those
+   --header-* tokens to .neo-beacon-link as well; a site's own --beacon-*
+   still comes first. The --_beacon-* names are private. */
 .neo-beacon-link {
+  --_beacon-surface: var(--beacon-surface, var(--header-menu-bg, #10142a));
+  --_beacon-border: var(--beacon-border, var(--header-border, rgba(255, 255, 255, .07)));
+  --_beacon-focus: var(--beacon-focus, var(--header-focus, #f2e9f4));
   display: inline-flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
   padding: 0;
-  border: 1px solid var(--beacon-border);
+  border: 1px solid var(--_beacon-border);
   border-radius: 50%;
-  background: var(--beacon-surface);
+  background: var(--_beacon-surface);
   color: var(--beacon-idle);
   /* A host site's own `a { text-decoration: underline }` would otherwise
      draw a rule under the icon. */
@@ -101,7 +111,7 @@
   min-width: 0;
   min-height: 0;
   margin-block: min(0px, calc((var(--footer-line, 1.7) * 1em - var(--beacon-chip)) / 2));
-  border-color: var(--footer-border, var(--beacon-border));
+  border-color: var(--_footer-border, var(--_beacon-border));
   border-radius: 50%;
   background: transparent;
   color: var(--footer-text, var(--beacon-idle));
@@ -172,7 +182,7 @@
 
 .neo-beacon-link:focus-visible,
 .neo-footer .neo-beacon-link.is-docked:focus-visible {
-  outline: 2px solid var(--beacon-focus);
+  outline: 2px solid var(--_beacon-focus);
   outline-offset: 3px;
 }
 

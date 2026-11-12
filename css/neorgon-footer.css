@@ -21,19 +21,41 @@
   --footer-line: 1.7;
   --footer-target: 24px;
 
-  /* Palette — inherits the header theme tokens so ?theme=matrix and the
-     fleet-wide season.css re-skin the footer too. Fallbacks keep the kit
-     usable on a page that never loads the header kit. */
+  /* Palette. --footer-bg, --footer-text, --footer-text-strong and
+     --footer-surface are plain defaults. The four that follow the header
+     (--footer-accent, --footer-border, --footer-border-strong,
+     --footer-hover) are deliberately NOT declared here: see "Header-derived
+     tokens" just below. A site still sets any of them, anywhere, to win. */
   --footer-bg: transparent;
-  --footer-border: var(--header-border, rgba(255, 255, 255, .07));
-  --footer-border-strong: var(--header-border-strong, rgba(255, 255, 255, .22));
   --footer-text: var(--text-muted, rgba(255, 255, 255, .55));
   --footer-text-strong: var(--text-secondary, #cacaca);
-  --footer-accent: var(--header-accent, #e879f9);
   --footer-surface: var(--surface-1, rgba(255, 255, 255, .03));
-  --footer-hover: var(--header-menu-hover, rgba(255, 255, 255, .08));
 
   --footer-z-top: 150; /* back-to-top: above content, below header (200) and modals (400) */
+}
+
+/* ── Header-derived tokens ────────────────────────────────────
+   The accent, borders and hover follow the header: ?theme=, a named
+   header skin (data-header-skin) and an armed CDN season. Themes declare
+   on <html>, but skins and seasons declare on .header-bar, which the
+   footer does not sit inside, so the header kit (header.css) and
+   season.css hand the same --header-* tokens to these pieces as well:
+   .neo-footer, .neo-top, .neo-modal (the last two are appended to <body>).
+
+   That only helps if the tokens are resolved HERE, on the pieces. A
+   custom property's var() is resolved where it is declared, so the old
+   `:root { --footer-accent: var(--header-accent) }` baked in the root's
+   magenta and every footer focus ring on a slate or jade site stayed
+   magenta (queue #156). The --_footer-* names are private: read them,
+   never set them. A site's own --footer-accent, on :root, body or the
+   footer itself, still comes first. */
+.neo-footer,
+.neo-top,
+.neo-modal {
+  --_footer-accent: var(--footer-accent, var(--header-accent, #e879f9));
+  --_footer-border: var(--footer-border, var(--header-border, rgba(255, 255, 255, .07)));
+  --_footer-border-strong: var(--footer-border-strong, var(--header-border-strong, rgba(255, 255, 255, .22)));
+  --_footer-hover: var(--footer-hover, var(--header-menu-hover, rgba(255, 255, 255, .08)));
 }
 
 /* ── Always-at-the-bottom ─────────────────────────────────────
@@ -86,7 +108,7 @@ body.neo-footer-root {
   padding: var(--footer-pad-block) var(--space-6, 24px);
   padding-bottom: calc(var(--footer-pad-block) + env(safe-area-inset-bottom, 0px));
   background: var(--footer-bg);
-  border-top: 1px solid var(--footer-border);
+  border-top: 1px solid var(--_footer-border);
   color: var(--footer-text);
   /* Every size in this file is floored at 12px: reading text under it failed
      the fleet's type floor (queue #154). max() keeps the rem scaling for a
@@ -115,7 +137,7 @@ body.neo-footer-root {
 }
 .neo-footer a:hover,
 .neo-footer a:focus-visible { color: var(--footer-text-strong); text-decoration: underline; }
-.neo-footer a:focus-visible { outline: 2px solid var(--footer-accent); outline-offset: 3px; }
+.neo-footer a:focus-visible { outline: 2px solid var(--_footer-accent); outline-offset: 3px; }
 
 /* ── Meta bar (built by footer.js) ────────────────────────────── */
 .neo-footer-bar {
@@ -268,7 +290,7 @@ body.neo-footer-root {
   justify-content: space-between;
   margin-top: 28px;
   padding-top: 18px;
-  border-top: 1px solid var(--footer-border);
+  border-top: 1px solid var(--_footer-border);
 }
 
 /* ── Theme switcher (opt-in: <meta name="neo-theme-switcher" content="footer">) */
@@ -279,7 +301,7 @@ body.neo-footer-root {
   gap: 6px;
   height: var(--footer-control-h);
   padding: 0 10px;
-  border: 1px solid var(--footer-border);
+  border: 1px solid var(--_footer-border);
   border-radius: 999px;
   background: transparent;
   color: var(--footer-text);
@@ -290,8 +312,8 @@ body.neo-footer-root {
 .neo-footer-theme-toggle:hover,
 .neo-footer-theme-toggle[aria-expanded="true"] {
   color: var(--footer-text-strong);
-  border-color: var(--footer-border-strong);
-  background: var(--footer-hover);
+  border-color: var(--_footer-border-strong);
+  background: var(--_footer-hover);
 }
 .neo-footer-theme-toggle svg { width: 15px; height: 15px; display: block; }
 
@@ -304,7 +326,7 @@ body.neo-footer-root {
   padding: 6px;
   list-style: none;
   background: var(--header-menu-bg, #10142a);
-  border: 1px solid var(--footer-border-strong);
+  border: 1px solid var(--_footer-border-strong);
   border-radius: 10px;
   box-shadow: 0 -10px 30px rgba(0, 0, 0, .5);
   display: none;
@@ -328,7 +350,7 @@ body.neo-footer-root {
   cursor: pointer;
 }
 .neo-footer-menu button:hover,
-.neo-footer-menu button:focus-visible { background: var(--footer-hover); outline: none; }
+.neo-footer-menu button:focus-visible { background: var(--_footer-hover); outline: none; }
 .neo-footer-menu .theme-swatch {
   width: 12px;
   height: 12px;
@@ -339,7 +361,7 @@ body.neo-footer-root {
 .neo-footer-menu [aria-checked="true"]::after {
   content: "✓";
   margin-left: auto;
-  color: var(--footer-accent);
+  color: var(--_footer-accent);
 }
 
 /* ── Back to top (built by footer.js; data-footer-top="off" disables) ── */
@@ -354,7 +376,7 @@ body.neo-footer-root {
   width: 40px;
   height: 40px;
   padding: 0;
-  border: 1px solid var(--footer-border-strong);
+  border: 1px solid var(--_footer-border-strong);
   border-radius: 50%;
   background: var(--header-menu-bg, #10142a);
   color: var(--footer-text-strong);
@@ -370,8 +392,8 @@ body.neo-footer-root {
   transition: opacity var(--dur, 200ms) ease, transform var(--dur, 200ms) ease, visibility var(--dur, 200ms);
 }
 .neo-top.is-visible { opacity: .9; visibility: visible; transform: none; pointer-events: auto; }
-.neo-top:hover { opacity: 1; background: var(--footer-hover); color: var(--header-text, #f9f9f9); }
-.neo-top:focus-visible { outline: 2px solid var(--footer-accent); outline-offset: 3px; opacity: 1; visibility: visible; transform: none; pointer-events: auto; }
+.neo-top:hover { opacity: 1; background: var(--_footer-hover); color: var(--header-text, #f9f9f9); }
+.neo-top:focus-visible { outline: 2px solid var(--_footer-accent); outline-offset: 3px; opacity: 1; visibility: visible; transform: none; pointer-events: auto; }
 .neo-top svg { width: 18px; height: 18px; display: block; }
 
 /* ── Mobile ───────────────────────────────────────────────────── */
@@ -420,7 +442,7 @@ body.neo-footer-root {
   color: var(--footer-text-strong);
   text-decoration-style: solid;
 }
-.neo-footer-disclaimer:focus-visible { outline: 2px solid var(--footer-accent); outline-offset: 3px; }
+.neo-footer-disclaimer:focus-visible { outline: 2px solid var(--_footer-accent); outline-offset: 3px; }
 
 .neo-modal {
   width: min(640px, calc(100vw - 32px));
@@ -431,7 +453,7 @@ body.neo-footer-root {
      did exactly that. Too site-dependent to leave implicit. */
   margin: auto;
   padding: 0;
-  border: 1px solid var(--footer-border-strong);
+  border: 1px solid var(--_footer-border-strong);
   border-radius: 12px;
   background: var(--header-bg-end, #0d0d12);
   color: var(--footer-text-strong);
@@ -448,7 +470,7 @@ body.neo-footer-root {
   align-items: center;
   gap: 12px;
   padding: 16px 18px;
-  border-bottom: 1px solid var(--footer-border);
+  border-bottom: 1px solid var(--_footer-border);
 }
 .neo-modal-title {
   margin: 0;
@@ -466,15 +488,15 @@ body.neo-footer-root {
   width: var(--footer-control-h);
   height: var(--footer-control-h);
   padding: 0;
-  border: 1px solid var(--footer-border-strong);
+  border: 1px solid var(--_footer-border-strong);
   border-radius: 8px;
   background: transparent;
   color: var(--footer-text);
   cursor: pointer;
   transition: color var(--dur, 200ms) ease, background var(--dur, 200ms) ease;
 }
-.neo-modal-close:hover { color: var(--footer-text-strong); background: var(--footer-hover); }
-.neo-modal-close:focus-visible { outline: 2px solid var(--footer-accent); outline-offset: 2px; }
+.neo-modal-close:hover { color: var(--footer-text-strong); background: var(--_footer-hover); }
+.neo-modal-close:focus-visible { outline: 2px solid var(--_footer-accent); outline-offset: 2px; }
 .neo-modal-close svg { width: 18px; height: 18px; display: block; }
 
 .neo-modal-body {
@@ -488,7 +510,7 @@ body.neo-footer-root {
 .neo-modal-body > :last-child { margin-bottom: 0; }
 .neo-modal-body p { margin: 0 0 .9em; }
 .neo-modal-body strong { color: var(--footer-text-strong); font-weight: 620; }
-.neo-modal-body a { color: var(--footer-accent); text-decoration: underline; }
+.neo-modal-body a { color: var(--_footer-accent); text-decoration: underline; }
 
 @media (max-width: 700px) {
   .neo-modal { width: calc(100vw - 20px); max-height: 84dvh; }

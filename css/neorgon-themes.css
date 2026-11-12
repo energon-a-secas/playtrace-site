@@ -56,6 +56,7 @@
   --header-bg-end: #052e16;
   --header-glass: rgba(5, 46, 22, .45);
   --header-accent: #fbbf24;
+  --header-focus: oklch(0.97 0.02 85);  /* near-white in the theme's hue: header and Beacon focus rings */
   --header-border: rgba(251, 191, 36, .25);
   --header-border-strong: rgba(251, 191, 36, .45);
   --header-text: #fefce8;
@@ -91,6 +92,7 @@
   --header-bg-end: #020617;
   --header-glass: rgba(30, 27, 75, .45);
   --header-accent: #fcd34d;
+  --header-focus: oklch(0.97 0.02 90);
   --header-border: rgba(252, 211, 77, .24);
   --header-border-strong: rgba(252, 211, 77, .45);
   --header-text: #f5f3ff;
@@ -130,6 +132,7 @@
   --header-bg-end: #0c0a09;
   --header-glass: rgba(28, 25, 23, .5);
   --header-accent: #f97316;
+  --header-focus: oklch(0.97 0.02 55);
   --header-border: rgba(249, 115, 22, .22);
   --header-border-strong: rgba(249, 115, 22, .45);
   --header-text: #fff7ed;
@@ -165,6 +168,7 @@
   --header-bg-end: #000000;
   --header-glass: rgba(0, 12, 0, .45);
   --header-accent: #00ff41;
+  --header-focus: oklch(0.97 0.02 145);
   --header-border: rgba(0, 255, 65, .18);
   --header-border-strong: rgba(0, 255, 65, .4);
   --header-text: #ccffcc;
@@ -206,6 +210,7 @@
   --header-bg-end: #070c14;
   --header-glass: rgba(12, 20, 32, .5);
   --header-accent: #7dd3fc;
+  --header-focus: oklch(0.97 0.02 230);
   --header-border: rgba(125, 211, 252, .2);
   --header-border-strong: rgba(125, 211, 252, .38);
   --header-text: #f0f9ff;
@@ -241,6 +246,7 @@
   --header-bg-end: #140a14;
   --header-glass: rgba(40, 20, 36, .45);
   --header-accent: #fbcfe8;
+  --header-focus: oklch(0.97 0.02 350);
   --header-border: rgba(251, 207, 232, .22);
   --header-border-strong: rgba(251, 207, 232, .4);
   --header-text: #fff1f6;
@@ -271,6 +277,7 @@
   --header-bg-end: #0c0a0a;
   --header-glass: rgba(69, 10, 10, .45);
   --header-accent: #f59e0b;
+  --header-focus: oklch(0.97 0.02 75);
   --header-border: rgba(245, 158, 11, .25);
   --header-border-strong: rgba(245, 158, 11, .45);
   --header-text: #fef2f2;

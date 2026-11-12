@@ -108,6 +108,22 @@ html:not([data-theme]) {
       sites. Do not raise the specificity here without raising it
       there too, or skinned sites will silently sit out the season.
 
+   3. The Footer Kit's pieces (.neo-footer, and .neo-top and .neo-modal,
+      which it appends to <body>) and the Beacon link sit outside
+      .header-bar, so a skin declared only on the bar never reaches
+      their focus rings and borders (queue #156). Every skin rule
+      therefore names them too, behind `:has()` on <html>. That item is
+      wrapped in `:is()` because :is() forgives a selector it cannot
+      parse: a browser without :has() drops that one item, not the
+      whole rule and with it the header's own skin. `:where()` inside
+      :has() keeps it at (0,2,1), under an armed season's (0,3,2)
+      pieces rule in season.css. The footer and beacon resolve the
+      tokens on those pieces; see "Header-derived tokens" in footer.css.
+
+   Each skin also sets --header-focus, a near-white in its own hue, so
+   the header's focus rings and the Beacon's stop being the default's
+   pink on a skinned site.
+
    Each skin re-tunes the edge ramp and control border for its own
    surface — those defaults are calibrated to the magenta gradient
    and are wrong on a black bar.
@@ -115,7 +131,9 @@ html:not([data-theme]) {
 
 /* ink — near-black neutral. The default choice for a site whose
    palette the magenta gradient fights. */
-html:not([data-theme]) .header-bar[data-header-skin="ink"] {
+html:not([data-theme]) .header-bar[data-header-skin="ink"],
+:is(html:not([data-theme]):has(:where(.header-bar[data-header-skin="ink"])) :is(.neo-footer, .neo-top, .neo-modal, .neo-beacon-link)) {
+  --header-focus: oklch(0.97 0.01 255);
   --header-bg-start: #14161c;
   --header-bg-mid: #0b0d12;
   --header-bg-end: #050609;
@@ -137,7 +155,9 @@ html:not([data-theme]) .header-bar[data-header-skin="ink"] {
 
 /* carbon — flat true black, no gradient. The most restrained option;
    the hairline does all the separating. */
-html:not([data-theme]) .header-bar[data-header-skin="carbon"] {
+html:not([data-theme]) .header-bar[data-header-skin="carbon"],
+:is(html:not([data-theme]):has(:where(.header-bar[data-header-skin="carbon"])) :is(.neo-footer, .neo-top, .neo-modal, .neo-beacon-link)) {
+  --header-focus: oklch(0.97 0 0);
   --header-bg-start: #08080a;
   --header-bg-mid: #08080a;
   --header-bg-end: #08080a;
@@ -157,7 +177,9 @@ html:not([data-theme]) .header-bar[data-header-skin="carbon"] {
 
 /* brass — warm dark, tuned to incident-runbook's #b8935f / #d8b280
    accents and its #040714 page background. */
-html:not([data-theme]) .header-bar[data-header-skin="brass"] {
+html:not([data-theme]) .header-bar[data-header-skin="brass"],
+:is(html:not([data-theme]):has(:where(.header-bar[data-header-skin="brass"])) :is(.neo-footer, .neo-top, .neo-modal, .neo-beacon-link)) {
+  --header-focus: oklch(0.97 0.02 75);
   --header-bg-start: #2a2114;
   --header-bg-mid: #16120c;
   --header-bg-end: #040714;
@@ -176,7 +198,9 @@ html:not([data-theme]) .header-bar[data-header-skin="brass"] {
 }
 
 /* slate — cool blue-grey. Neutral without going fully black. */
-html:not([data-theme]) .header-bar[data-header-skin="slate"] {
+html:not([data-theme]) .header-bar[data-header-skin="slate"],
+:is(html:not([data-theme]):has(:where(.header-bar[data-header-skin="slate"])) :is(.neo-footer, .neo-top, .neo-modal, .neo-beacon-link)) {
+  --header-focus: oklch(0.97 0.02 230);
   --header-bg-start: #33415a;
   --header-bg-mid: #1e293b;
   --header-bg-end: #0b1120;
@@ -195,7 +219,9 @@ html:not([data-theme]) .header-bar[data-header-skin="slate"] {
 }
 
 /* aurora — deep teal into cyan. For data/monitoring surfaces. */
-html:not([data-theme]) .header-bar[data-header-skin="aurora"] {
+html:not([data-theme]) .header-bar[data-header-skin="aurora"],
+:is(html:not([data-theme]):has(:where(.header-bar[data-header-skin="aurora"])) :is(.neo-footer, .neo-top, .neo-modal, .neo-beacon-link)) {
+  --header-focus: oklch(0.97 0.02 205);
   --header-bg-start: #0e7490;
   --header-bg-mid: #0a3d4d;
   --header-bg-end: #040714;
@@ -215,7 +241,9 @@ html:not([data-theme]) .header-bar[data-header-skin="aurora"] {
 
 /* ember — warm amber into rust. For alert/ops surfaces that want
    warmth without reading as the danger theme. */
-html:not([data-theme]) .header-bar[data-header-skin="ember"] {
+html:not([data-theme]) .header-bar[data-header-skin="ember"],
+:is(html:not([data-theme]):has(:where(.header-bar[data-header-skin="ember"])) :is(.neo-footer, .neo-top, .neo-modal, .neo-beacon-link)) {
+  --header-focus: oklch(0.97 0.02 85);
   --header-bg-start: #9a3412;
   --header-bg-mid: #4a1608;
   --header-bg-end: #040714;
@@ -236,7 +264,9 @@ html:not([data-theme]) .header-bar[data-header-skin="ember"] {
 /* jade — clinical emerald. Tuned to headpain-site's #059669 / #10b981
    accents on its #040714 page. For calm medical/health surfaces where
    both the magenta default and ember's warning-warmth read wrong. */
-html:not([data-theme]) .header-bar[data-header-skin="jade"] {
+html:not([data-theme]) .header-bar[data-header-skin="jade"],
+:is(html:not([data-theme]):has(:where(.header-bar[data-header-skin="jade"])) :is(.neo-footer, .neo-top, .neo-modal, .neo-beacon-link)) {
+  --header-focus: oklch(0.97 0.02 165);
   --header-bg-start: #065f46;
   --header-bg-mid: #043b2c;
   --header-bg-end: #040714;
@@ -264,7 +294,9 @@ html:not([data-theme]) .header-bar[data-header-skin="jade"] {
    In the site's own css/style.css, copy this selector EXACTLY — the
    scoping and the specificity are the whole contract:
 
-     html:not([data-theme]) .header-bar[data-header-skin="custom"] {
+     html:not([data-theme]) .header-bar[data-header-skin="custom"],
+     html:not([data-theme]) :is(.neo-footer, .neo-top, .neo-modal, .neo-beacon-link) {
+       --header-focus: …;
        --header-bg-start: …;  --header-bg-mid: …;  --header-bg-end: …;
        --header-accent: …;    --header-text: …;    --header-text-dim: …;
        --header-icon-color: …; --header-border: …; --header-border-strong: …;
@@ -279,6 +311,12 @@ html:not([data-theme]) .header-bar[data-header-skin="jade"] {
        kit default, below an armed season's (0,4,2) skin variant. A
        bare `.header-bar { --header-bg-start: … }` is only (0,1,0)
        and the kit's own defaults would beat it.
+     · The second line hands the same tokens to the Footer Kit's
+       pieces and the Beacon link, which sit outside the bar. Without
+       it the footer's focus rings stay the kit's magenta (queue #156).
+       It is (0,2,1), below an armed season's (0,3,2) pieces rule, so
+       a season still re-skins the footer. A site that only skins a
+       page with no footer can leave it out.
    Set only the three gradient stops if that is all that clashes; the
    bar re-composes --header-bg from them (see .header-bar below).
    Only the three stops + accent are usually enough — but re-tune the
