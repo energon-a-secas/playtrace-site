@@ -32,6 +32,13 @@
   --footer-surface: var(--surface-1, rgba(255, 255, 255, .03));
 
   --footer-z-top: 150; /* back-to-top: above content, below header (200) and modals (400) */
+
+  /* Back-to-top geometry. Phones get 14px and 38px. The gap is what the
+     button keeps above the footer once the footer scrolls into view (see
+     "Riding above the footer" at .neo-top). */
+  --footer-top-size: 40px;
+  --footer-top-inset: 20px;
+  --footer-top-gap: 8px;
 }
 
 /* ── Header-derived tokens ────────────────────────────────────
@@ -364,17 +371,28 @@ body.neo-footer-root {
   color: var(--_footer-accent);
 }
 
-/* ── Back to top (built by footer.js; data-footer-top="off" disables) ── */
+/* ── Back to top (built by footer.js; data-footer-top="off" disables) ──
+   Riding above the footer. The button is fixed in the bottom-right corner,
+   and at the foot of the page that corner is the footer's: it sat on
+   floorplan's v1.0.0 stamp at 390px, and on the right end of the bar or the
+   note in every mode somewhere between 390 and 1440px (84 of 283 fleet views,
+   2026-11-12). Over a bar link it then stepped aside, so it vanished exactly
+   where a reader wants it. footer.js writes how much of the footer is on
+   screen into --_footer-top-lift, and the button rests that far up plus
+   --footer-top-gap, never lower than its corner. The footer keeps its layout
+   and its height budget; reserving room inside the bar instead cost 13 fleet
+   views a line, minimal one-row footers among them. */
 .neo-top {
   position: fixed;
-  right: 20px;
-  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  right: var(--footer-top-inset);
+  bottom: max(calc(var(--footer-top-inset) + env(safe-area-inset-bottom, 0px)),
+              calc(var(--_footer-top-lift, 0px) + var(--footer-top-gap)));
   z-index: var(--footer-z-top);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: var(--footer-top-size);
+  height: var(--footer-top-size);
   padding: 0;
   border: 1px solid var(--_footer-border-strong);
   border-radius: 50%;
@@ -398,6 +416,7 @@ body.neo-footer-root {
 
 /* ── Mobile ───────────────────────────────────────────────────── */
 @media (max-width: 700px) {
+  :root { --footer-top-size: 38px; --footer-top-inset: 14px; }
   .neo-footer { padding-left: var(--space-4, 16px); padding-right: var(--space-4, 16px); }
   .neo-footer[data-footer-mode="content"] {
     text-align: center;
@@ -409,7 +428,6 @@ body.neo-footer-root {
   .neo-footer-tagline { max-width: none; }
   .neo-footer-col { align-items: center; }
   .neo-footer[data-footer-mode="content"] .neo-footer-bar { justify-content: center; }
-  .neo-top { right: 14px; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); width: 38px; height: 38px; }
 }
 
 /* ── Reduced motion ───────────────────────────────────────────── */

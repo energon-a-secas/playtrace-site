@@ -369,7 +369,9 @@
      Hidden rather than moved. A button shifted up lands on the next control
      up, and the corner belongs to the page; back-to-top is a convenience. The
      same rule keeps it off the beacon kit's bottom-left control, which is a
-     link, on any viewport narrow enough for the two to meet.
+     link, on any viewport narrow enough for the two to meet. The one move it
+     does make is above the kit's own footer, at the foot of the page; see
+     rideAbove below.
 
      What counts is deliberately generous. A false positive costs the
      convenience for as long as the corner is busy; a false negative costs a
@@ -470,9 +472,26 @@
     var settle = 0;
     var back = 0;
 
+    var lift = -1;
+
+    /* Riding above the footer (footer.css, at .neo-top): how much of the
+       footer is on screen, so the button rests above it instead of on its
+       bar. Set before the probe below, which then looks at where the button
+       really is. */
+    function rideAbove() {
+      /* Never past half the viewport: a footer taller than the screen would
+         otherwise carry the button off the top. */
+      var seen = Math.round(Math.min(window.innerHeight / 2,
+        Math.max(0, window.innerHeight - footer.getBoundingClientRect().top)));
+      if (seen === lift) return;
+      lift = seen;
+      btn.style.setProperty('--_footer-top-lift', seen + 'px');
+    }
+
     function update() {
       ticking = false;
       var past = window.scrollY > TOP_THRESHOLD;
+      if (past) rideAbove();
       /* Focus means a keyboard user is on it, and a key press is not a tap
          that could land on the wrong thing, so it never yields from under
          them. */
