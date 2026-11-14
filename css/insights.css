@@ -191,8 +191,9 @@
 .scope-summary p { font-size: 13px; color: var(--pt-muted); margin: 8px 0; }
 .scope-summary button { flex-shrink: 0; min-height: 44px; }
 .insights-page [data-insight-view] > .insight-section:first-child, .insights-page [data-insight-view] > div > .insight-section:first-child { border-top: 0; padding-top: 12px; }
-.insights-page .insight-section > .eyebrow { color: var(--pt-muted); font-size: 11px; margin: 0 0 10px; }
+.insights-page .insight-section > .eyebrow { color: var(--pt-muted); font-size: 12px; margin: 0 0 10px; }
 .insight-controls { margin: 24px 0 16px; }
+#releaseEventHint { margin: -4px 0 16px; }
 .insight-section .insight-controls .field { margin: 0; }
 .insight-results { margin-top: 28px; border-top: 1px solid var(--pt-line); padding-top: 20px; }
 .insight-result-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; margin: 16px 0 12px; }

@@ -8,7 +8,7 @@ export function researchLeadsMarkup(report,{gameId=''}={}) {
   const leads=feedbackResearchLeads(report).slice(0,3);
   if(!leads.length)return report.themes.length?'<p class="field__hint">No reviewed concerns or suggestions in this selection. Positive and mixed reactions remain in the topic table; this does not establish that the games have no issues.</p>':'';
   return `<section class="feedback-next" aria-labelledby="feedbackNextTitle"><h4 id="feedbackNextTitle">Where another playtest could help</h4>
-    <p class="field__hint">Three research leads at most, ordered by projects with concerns or suggestions, then comments reporting play. These are questions to investigate, not confirmed defects.</p>
+    <p class="field__hint">Questions to investigate, not confirmed defects.</p>
     <ol class="feedback-leads">${leads.map(lead=>`<li><div class="feedback-lead-scope"><h5>${e(lead.label)}</h5>
       <p><strong>${lead.count}</strong> ${lead.count===1?'concern or suggestion':'concerns or suggestions'} across <strong>${lead.projects}</strong> ${lead.projects===1?'project':'projects'}</p>
       <p class="field__hint">${lead.contexts.preview} first look · ${lead.contexts.played} reported play · ${lead.contexts.unspecified} not specified</p>
