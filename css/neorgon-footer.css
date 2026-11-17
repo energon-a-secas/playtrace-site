@@ -1,12 +1,12 @@
 /* ══════════════════════════════════════════════════════════════
-   Neorgon Footer Kit — footer.css
+   Neorgon Footer Kit: footer.css
    Canonical source: packages/neorgon-ui/footer/
-   Vendored per site as css/neorgon-footer.css — do not edit copies.
+   Vendored per site as css/neorgon-footer.css. Do not edit copies.
    Live CDN: https://cdn.neorgon.org/v1.0.0/footer/footer.css
    ══════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Geometry — minimal mode is sized to match the one-line .info-footer
+  /* Geometry: minimal mode is sized to match the one-line .info-footer
      it replaces (~70px total). Raise --footer-pad-block per site only if
      that site genuinely wants a heavier footer. */
   --footer-pad-block: 24px;
@@ -16,7 +16,7 @@
   --footer-control-h: 32px;
   /* One line of footer copy, and the WCAG 2.5.8 minimum a bar target has to
      reach. They are tokens because the bar compensates its target boxes
-     against the line height exactly — see .neo-footer-bar a below — and a
+     against the line height exactly (see .neo-footer-bar a below), and a
      hand-edited `line-height: 1.7` would silently put that compensation out. */
   --footer-line: 1.7;
   --footer-target: 24px;
@@ -134,7 +134,7 @@ body.neo-footer-root {
 .neo-footer-note { margin: 0; }
 .neo-footer-note + .neo-footer-note { margin-top: 6px; }
 
-/* Links — .neo-footer a is styled broadly so retrofitted markup that
+/* Links: .neo-footer a is styled broadly so retrofitted markup that
    still uses .footer-link inherits the right treatment for free. */
 .neo-footer a {
   color: var(--footer-text);
@@ -156,7 +156,13 @@ body.neo-footer-root {
   max-width: var(--footer-max-w);
   margin: 0 auto;
 }
-.neo-footer-inner + .neo-footer-bar { margin-top: 14px; }
+/* A row between the copy and the bar must not cost the bar its gap: an
+   adjacent-sibling rule alone stops matching the moment anything sits
+   between them (an app-mode phone footer lost 14px that way while the row
+   was placed there). Declared before the modes, which reset it at equal
+   specificity. */
+.neo-footer-inner + .neo-footer-bar,
+.neo-footer-inner + .neo-more + .neo-footer-bar { margin-top: 14px; }
 
 /* Right-hand cluster in content mode (© stays left) */
 .neo-footer-bar-group {
@@ -166,22 +172,26 @@ body.neo-footer-root {
   gap: 6px 12px;
 }
 
-/* Target size — WCAG 2.5.8 (Minimum, 24x24). Bar links are standalone
+/* Target size: WCAG 2.5.8 (Minimum, 24x24). Bar links are standalone
    controls in a row, not links inside a sentence, so the inline exception
    does not cover them: they measured ~84x20 and ~37x20.
 
    Each one is grown to a 24px box and handed the difference straight back as
    negative block margin, so the item's *margin* box still measures exactly one
-   line and the bar does not get taller. That matters here more than usual —
+   line and the bar does not get taller. That matters here more than usual:
    `minimal` is tuned to ~70px against the .info-footer it replaced and `app`
    to ~50px, and this row is what sets both. The text keeps the baseline it
    had; only the hit area grows, ~2px above and below the line.
 
    min() clamps the compensation at zero, so a site that sets a line taller
    than the 24px minimum keeps its own spacing instead of being pulled tight.
-   Sized in em, not px, because `app` mode runs a smaller font than the rest. */
+   Sized in em, not px, because `app` mode runs a smaller font than the rest.
+   The "More in" row's links are the same kind of standalone control on the
+   same line, so they take the same box. In content mode they are a column
+   instead, spaced like the link columns (see .neo-footer-col a). */
 .neo-footer-bar a,
-.neo-footer-bar .neo-footer-disclaimer {
+.neo-footer-bar .neo-footer-disclaimer,
+.neo-footer:not([data-footer-mode="content"]) .neo-more__list a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -192,7 +202,7 @@ body.neo-footer-root {
 
 .neo-footer-sep { opacity: .4; user-select: none; }
 
-/* Version / updated stamps — mono + tabular so they never jitter */
+/* The version stamp: mono + tabular so it never jitters */
 /* The end mark. Ornament only: it states nothing the page needs, which is
    why it is safe to render in a language most visitors do not read. */
 .neo-footer-fin {
@@ -209,7 +219,7 @@ body.neo-footer-root {
   opacity: .8;
 }
 
-/* ── Mode: minimal (default) — the one-liner most tool sites use ──
+/* ── Mode: minimal (default): the one-liner most tool sites use ──
    The note and the meta bar share ONE centred line whenever they fit,
    and wrap to a second only when the copy is genuinely long. Stacking
    them unconditionally made this mode ~60% taller than the
@@ -230,7 +240,7 @@ body.neo-footer-root {
   font-size: 1em;
 }
 
-/* ── Mode: app — slim, low-contrast, stays out of the way ───────── */
+/* ── Mode: app: slim, low-contrast, stays out of the way ───────── */
 .neo-footer[data-footer-mode="app"] {
   padding-top: var(--footer-pad-block-app);
   padding-bottom: calc(var(--footer-pad-block-app) + env(safe-area-inset-bottom, 0px));
@@ -256,9 +266,21 @@ body.neo-footer-root {
     gap: 16px;
   }
   .neo-footer[data-footer-mode="app"] .neo-footer-inner { flex: 1 1 auto; }
+  /* A site that turns the row on keeps its one line (note left, bar right)
+     and gets the row as a second, left-aligned line: footer.js puts it after
+     the bar in app mode, so it needs no reordering. Squeezed into the same
+     line it wrapped the note, the row and the bar into three ragged columns. */
+  .neo-footer[data-footer-mode="app"][data-footer-more="on"] { flex-wrap: wrap; row-gap: 6px; }
+  /* A long note can push the bar onto its own line; it stays at the right. */
+  .neo-footer[data-footer-mode="app"][data-footer-more="on"] > .neo-footer-bar { margin-left: auto; margin-right: 0; }
+  .neo-footer[data-footer-mode="app"][data-footer-more="on"] > .neo-more {
+    flex: 1 0 100%;
+    justify-content: flex-start;
+  }
+  .neo-footer[data-footer-mode="app"][data-footer-more="on"] .neo-more__list { justify-content: flex-start; }
 }
 
-/* ── Mode: content — brand block + link columns + bottom bar ──────
+/* ── Mode: content: brand block + link columns + bottom bar ──────
    Deliberately the tall one: it carries navigation, not just a note. */
 .neo-footer[data-footer-mode="content"] { text-align: left; padding-top: var(--footer-pad-block-content); }
 .neo-footer[data-footer-mode="content"] .neo-footer-inner {
@@ -299,6 +321,105 @@ body.neo-footer-root {
   padding-top: 18px;
   border-top: 1px solid var(--_footer-border);
 }
+
+/* ── More in <category> (stamped by scripts/fleet_stamp.py) ─────
+   Sibling tools from the registry, between <!-- neo-fleet:more -->
+   markers in the page. footer.js lifts the row out of the copy and puts
+   it between the copy and the bar (minimal, app) or among the columns
+   (content).
+
+   It wears the footer's own tokens, nothing else: a header skin, an
+   armed season and a visitor theme re-skin it with the rest of the
+   footer. The category is told by its icon and its label, never by a
+   category colour, which stays on the hub's board.
+
+   In minimal mode it is one more item of the footer's wrapping row, so
+   on a wide screen with a short note the whole footer is still one line
+   inside the ~70px budget, and it takes a line of its own only when the
+   copy is long. Measured in tests/footer-more-browser.mjs. */
+.neo-more {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 2px 10px;
+  margin: 0;
+}
+.neo-footer[data-footer-mode="minimal"] > .neo-more,
+.neo-footer:not([data-footer-mode]) > .neo-more { margin-inline: 6px; }
+
+.neo-more__label {
+  display: inline-flex;
+  /* Baseline, so the row lines up on the words and not on the icon's
+     bottom edge, which is where an svg's baseline is synthesised. */
+  align-items: baseline;
+  gap: 6px;
+  color: var(--footer-text-strong);
+  font-weight: 600;
+  white-space: nowrap;
+}
+/* The stamp also writes width/height 16 on the <svg>, so a page whose
+   stylesheet predates the row never draws it at the browser's 300x150. */
+.neo-more__icon {
+  flex: none;
+  align-self: center;
+  width: 1.2em;
+  height: 1.2em;
+}
+
+.neo-more__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2px 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.neo-more__list li { display: inline-flex; align-items: center; }
+/* Names run to two words ("Glass Box", "Prompt Forge"), so the items need a
+   mark between them. A drawn dot, not a "·", because generated text is read
+   aloud; and only while the row sits on one line: on a phone it wraps, and
+   a dot would open the second line. There the gap does the separating. */
+.neo-more__list li + li::before {
+  content: "";
+  flex: none;
+  width: 3px;
+  height: 3px;
+  margin: 0 9px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .45;
+}
+
+/* App mode is the slim one: the row is off unless the site asks for it.
+   Any mode can opt out. The markup stays, hidden, for the header kit. */
+.neo-footer[data-footer-mode="app"]:not([data-footer-more="on"]) .neo-more,
+.neo-footer[data-footer-more="off"] .neo-more { display: none; }
+
+/* Content mode: one more column, headed like the others. */
+.neo-footer[data-footer-mode="content"] .neo-more {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+.neo-footer[data-footer-mode="content"] .neo-more__label {
+  margin: 0 0 2px;
+  font-size: max(12px, .75rem);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.neo-footer[data-footer-mode="content"] .neo-more__list {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 8px;
+}
+.neo-footer[data-footer-mode="content"] .neo-more__list a { line-height: 1.5; }
+.neo-footer[data-footer-mode="content"] .neo-more__list li + li::before { content: none; }
 
 /* ── Theme switcher (opt-in: <meta name="neo-theme-switcher" content="footer">) */
 .neo-footer-theme { position: relative; display: inline-flex; }
@@ -428,6 +549,26 @@ body.neo-footer-root {
   .neo-footer-tagline { max-width: none; }
   .neo-footer-col { align-items: center; }
   .neo-footer[data-footer-mode="content"] .neo-footer-bar { justify-content: center; }
+  /* App mode stacks here instead of sharing a line: a row the site turned on
+     comes after the bar, with the same breathing room the bar has. */
+  .neo-footer[data-footer-mode="app"] > .neo-footer-bar + .neo-more { margin-top: 12px; }
+  /* The row wraps here: the gap separates the names instead of the dots. */
+  .neo-more__list { gap: 2px 16px; }
+  .neo-more__list li + li::before { content: none; }
+  /* Content mode on a phone: a column of six links stacked one per line
+     cost ~180px under the site's own columns, so the row becomes a full-width
+     block that wraps like the minimal one. 8px between lines keeps the links
+     26.7px apart, the same spacing exception the link columns rely on. */
+  .neo-footer[data-footer-mode="content"] .neo-more {
+    grid-column: 1 / -1;
+    align-items: center;
+  }
+  .neo-footer[data-footer-mode="content"] .neo-more__list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 16px;
+  }
 }
 
 /* ── Reduced motion ───────────────────────────────────────────── */
@@ -467,8 +608,8 @@ body.neo-footer-root {
   max-height: min(78dvh, 640px);
   /* Centring is declared, not inherited. showModal() centres via the UA's
      `margin: auto` on inset:0, and any site carrying a `* { margin: 0 }`
-     reset beats the UA sheet and pins the dialog to the top-left — affinity
-     did exactly that. Too site-dependent to leave implicit. */
+     reset beats the UA sheet and pins the dialog to the top-left (affinity
+     did exactly that). Too site-dependent to leave implicit. */
   margin: auto;
   padding: 0;
   border: 1px solid var(--_footer-border-strong);
@@ -534,13 +675,15 @@ body.neo-footer-root {
   .neo-modal { width: calc(100vw - 20px); max-height: 84dvh; }
 }
 
-/* ── Print — the footer is the only place a printed page can show
+/* ── Print: the footer is the only place a printed page can show
    provenance, so expand link URLs and drop the floating control. ── */
 @media print {
-  .neo-top, .neo-footer-theme { display: none !important; }
+  /* The row is navigation, and paper goes nowhere: printed, its six links
+     would each expand into a URL under the provenance it exists beside. */
+  .neo-top, .neo-footer-theme, .neo-more { display: none !important; }
 
   /* Provenance must survive the move into the dialog. On paper there is
-     nothing to click, so the trigger goes and the copy itself comes back —
+     nothing to click, so the trigger goes and the copy itself comes back,
      laid out in flow at the end of the document rather than as an overlay. */
   .neo-footer-disclaimer, .neo-modal-close { display: none !important; }
   .neo-modal {
@@ -566,7 +709,7 @@ body.neo-footer-root {
     page-break-inside: avoid;
   }
   .neo-footer a { color: #000; text-decoration: underline; }
-  /* Paper has no pointers, so the 24px target boxes come off — and they have
+  /* Paper has no pointers, so the 24px target boxes come off, and they have
      to: inside an inline-flex link the expanded href below would be laid out
      as a second flex item beside the label instead of flowing after it. */
   .neo-footer-bar a {

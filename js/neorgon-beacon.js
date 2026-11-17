@@ -26,8 +26,21 @@
   if (window.__neoBeaconInit) return;
   window.__neoBeaconInit = true;
 
-  var VERSION = '1.1.0';
+  var VERSION = '1.2.0';
   var REPORT_URL = 'https://balise.neorgon.com/report/';
+
+  /* The control's words follow <html lang>, English or Spanish, as the
+     footer kit's do: es and es-* read Spanish, anything else English. A page
+     can change its language after load (runcible and rappel do), so the
+     label is drawn again when the attribute changes. */
+  var STRINGS = {
+    en: { title: 'Report an issue', label: 'Report an issue, opens Balise in a new tab' },
+    es: { title: 'Reportar un problema', label: 'Reportar un problema, abre Balise en una pestaña nueva' }
+  };
+  function words() {
+    var lang = document.documentElement.getAttribute('lang') || '';
+    return STRINGS[/^es(?:-|$)/i.test(lang) ? 'es' : 'en'];
+  }
 
   /* CONTRACTS.md C1 lengths, restated as numbers rather than imported,
      because this file ships to sixty repos with no build step. A change here
@@ -293,8 +306,7 @@
        host page URL reaches Balise only inside the fragment, which no server
        is ever sent. Without it that same URL lands in an access log. */
     a.rel = 'noopener noreferrer';
-    a.title = 'Report an issue';
-    a.setAttribute('aria-label', 'Report an issue, opens Balise in a new tab');
+    label(a);
     a.appendChild(ladybug());
 
     /* No inline handlers anywhere in this kit. pointerenter is here so the
@@ -306,6 +318,19 @@
     a.addEventListener('contextmenu', refresh);
     a.addEventListener('click', onClick);
     return a;
+  }
+
+  function label(a) {
+    var w = words();
+    a.title = w.title;
+    a.setAttribute('aria-label', w.label);
+  }
+
+  function watchLanguage() {
+    if (!window.MutationObserver) return;
+    new MutationObserver(function () {
+      if (link) label(link);
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
   }
 
   /* ── Init ───────────────────────────────────────────────────────── */
@@ -328,6 +353,7 @@
     link = buildLink();
     refresh();
     dock();
+    watchLanguage();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

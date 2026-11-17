@@ -1,7 +1,7 @@
 /* ══════════════════════════════════════════════════════════════
-   Neorgon Header Kit — header.css
+   Neorgon Header Kit: header.css
    Canonical source: packages/neorgon-ui/header/
-   Vendored per site as css/neorgon-header.css — do not edit copies.
+   Vendored per site as css/neorgon-header.css; do not edit copies.
    Live CDN: https://cdn.neorgon.org/v1.0.0/header/header.css
    ══════════════════════════════════════════════════════════════ */
 
@@ -18,12 +18,12 @@
   --header-logo-h: 36px;
   --header-logo-h-mobile: 28px;
 
-  /* Palette — themes override these (see themes.css) */
+  /* Palette: themes override these (see themes.css) */
   --header-bg-start: #B015B0;
   --header-bg-mid: #3D0080;
   --header-bg-end: #040714;
   /* Kept here for anything that references the composed gradient, but the
-     authoritative copy is re-declared on .header-bar below — see the note
+     authoritative copy is re-declared on .header-bar below; see the note
      there before changing either. */
   --header-bg: linear-gradient(in oklch 135deg, var(--header-bg-start) 0%, var(--header-bg-mid) 50%, var(--header-bg-end) 100%);
   --header-glass: rgba(0, 9, 18, .35);
@@ -35,7 +35,7 @@
   --header-menu-bg: #10142a;
   --header-menu-hover: rgba(255, 255, 255, .08);
 
-  /* Focus ring — near-white with a whisper of the brand hue so it never
+  /* Focus ring: near-white with a whisper of the brand hue so it never
      reads as a stray browser default. 5.77:1 (bright end) to 17.98:1
      (dark end) against the bar, 16.54:1 on the menu. Themes may override. */
   --header-focus: oklch(0.97 0.02 320);
@@ -54,7 +54,7 @@
 
 /* Colour judgements about the DEFAULT gradient specifically. Scoped to
    html:not([data-theme]) because themes.css sets these per theme at the
-   same specificity as :root — a :root override here would silently
+   same specificity as :root, so a :root override here would silently
    overwrite all five palettes. Every consumer below pairs them with a
    var() fallback to the theme's own token. */
 html:not([data-theme]) {
@@ -68,14 +68,31 @@ html:not([data-theme]) {
   --header-edge-from: rgba(255, 255, 255, .10);
   --header-edge-to: rgba(255, 255, 255, .34);
 
-  /* .72 measures 4.14:1 at the start of the subtitle span — below AA.
+  /* .72 measures 4.14:1 at the start of the subtitle span, below AA.
      Split from the icon colour, which only needs 3:1 as non-text. */
   --header-text-dim: rgba(255, 255, 255, .82);
   --header-icon-color: rgba(255, 255, 255, .78);
 }
 
+/* ── The sticky offset ───────────────────────────────────────────
+   --neo-sticky-top is how much of the viewport's top the header covers
+   right now. header.js keeps it exact (it measures the bar, and drops to 0
+   while auto-hide or the Keys Kit's H toggle has the bar away); these rules
+   are the value before it runs, and with JS off. Rails, scope strips and
+   scroll-margin-top read it instead of hardcoding 56px or 68px:
+
+     .rail { position: sticky; top: var(--neo-sticky-top, 0px); }
+     h2[id] { scroll-margin-top: calc(var(--neo-sticky-top, 0px) + 12px); }
+
+   The kit sets no scroll-padding of its own: many sites already offset
+   their anchors with scroll-margin-top, and the two add up. */
+:root { --neo-sticky-top: 0px; }
+:root:has(.header-bar) { --neo-sticky-top: var(--header-h); }
+:root:has(.header-bar[data-header-mode="app"]) { --neo-sticky-top: var(--header-h-app); }
+:root[data-chrome="off"]:has(.header-bar) { --neo-sticky-top: 0px; }
+
 /* ══════════════════════════════════════════════════════════════
-   SKINS — site-level identity, opt-in per site
+   SKINS: site-level identity, opt-in per site
    ────────────────────────────────────────────────────────────
    A skin replaces the default magenta gradient for ONE site whose
    own palette clashes with it. Set it in the site's markup:
@@ -88,19 +105,19 @@ html:not([data-theme]) {
      visitor choice (?theme= / cookie)  >  season (CDN)  >  skin  >  kit default
 
    A site that should sit out every season keeps its skin with
-   `<html lang="en" data-season="off">` — see season.css. That declines
+   `<html lang="en" data-season="off">` (see season.css). That declines
    the fleet's decoration only; a visitor's ?theme= still wins.
 
    Named skins below are the reusable ones. For a one-off palette no
    other site would share, use `data-header-skin="custom"` and declare
-   the tokens in the site's own CSS — contract at the end of this block.
+   the tokens in the site's own CSS; contract at the end of this block.
 
    Two cascade facts make that ordering work, and both are easy to
    get wrong:
 
    1. A declaration ON .header-bar beats a value INHERITED from
       <html>, whatever the specificity. Visitor themes declare on
-      <html>, so every skin is scoped `html:not([data-theme])` —
+      <html>, so every skin is scoped `html:not([data-theme])`:
       the moment a visitor picks a theme, all skins stop matching.
    2. Season rules in season.css carry a matching
       `[data-header-skin]` selector one step more specific than the
@@ -125,11 +142,11 @@ html:not([data-theme]) {
    pink on a skinned site.
 
    Each skin re-tunes the edge ramp and control border for its own
-   surface — those defaults are calibrated to the magenta gradient
+   surface; those defaults are calibrated to the magenta gradient
    and are wrong on a black bar.
    ══════════════════════════════════════════════════════════════ */
 
-/* ink — near-black neutral. The default choice for a site whose
+/* ink: near-black neutral. The default choice for a site whose
    palette the magenta gradient fights. */
 html:not([data-theme]) .header-bar[data-header-skin="ink"],
 :is(html:not([data-theme]):has(:where(.header-bar[data-header-skin="ink"])) :is(.neo-footer, .neo-top, .neo-modal, .neo-beacon-link)) {
@@ -153,7 +170,7 @@ html:not([data-theme]) .header-bar[data-header-skin="ink"],
   --header-edge-to: rgba(255, 255, 255, .26);
 }
 
-/* carbon — flat true black, no gradient. The most restrained option;
+/* carbon: flat true black, no gradient. The most restrained option;
    the hairline does all the separating. */
 html:not([data-theme]) .header-bar[data-header-skin="carbon"],
 :is(html:not([data-theme]):has(:where(.header-bar[data-header-skin="carbon"])) :is(.neo-footer, .neo-top, .neo-modal, .neo-beacon-link)) {
@@ -175,7 +192,7 @@ html:not([data-theme]) .header-bar[data-header-skin="carbon"],
   --header-edge-to: rgba(255, 255, 255, .3);
 }
 
-/* brass — warm dark, tuned to incident-runbook's #b8935f / #d8b280
+/* brass: warm dark, tuned to incident-runbook's #b8935f / #d8b280
    accents and its #040714 page background. */
 html:not([data-theme]) .header-bar[data-header-skin="brass"],
 :is(html:not([data-theme]):has(:where(.header-bar[data-header-skin="brass"])) :is(.neo-footer, .neo-top, .neo-modal, .neo-beacon-link)) {
@@ -197,7 +214,7 @@ html:not([data-theme]) .header-bar[data-header-skin="brass"],
   --header-edge-to: rgba(216, 178, 128, .34);
 }
 
-/* slate — cool blue-grey. Neutral without going fully black. */
+/* slate: cool blue-grey. Neutral without going fully black. */
 html:not([data-theme]) .header-bar[data-header-skin="slate"],
 :is(html:not([data-theme]):has(:where(.header-bar[data-header-skin="slate"])) :is(.neo-footer, .neo-top, .neo-modal, .neo-beacon-link)) {
   --header-focus: oklch(0.97 0.02 230);
@@ -218,7 +235,7 @@ html:not([data-theme]) .header-bar[data-header-skin="slate"],
   --header-edge-to: rgba(148, 163, 184, .34);
 }
 
-/* aurora — deep teal into cyan. For data/monitoring surfaces. */
+/* aurora: deep teal into cyan. For data/monitoring surfaces. */
 html:not([data-theme]) .header-bar[data-header-skin="aurora"],
 :is(html:not([data-theme]):has(:where(.header-bar[data-header-skin="aurora"])) :is(.neo-footer, .neo-top, .neo-modal, .neo-beacon-link)) {
   --header-focus: oklch(0.97 0.02 205);
@@ -239,7 +256,7 @@ html:not([data-theme]) .header-bar[data-header-skin="aurora"],
   --header-edge-to: rgba(103, 232, 249, .32);
 }
 
-/* ember — warm amber into rust. For alert/ops surfaces that want
+/* ember: warm amber into rust. For alert/ops surfaces that want
    warmth without reading as the danger theme. */
 html:not([data-theme]) .header-bar[data-header-skin="ember"],
 :is(html:not([data-theme]):has(:where(.header-bar[data-header-skin="ember"])) :is(.neo-footer, .neo-top, .neo-modal, .neo-beacon-link)) {
@@ -261,7 +278,7 @@ html:not([data-theme]) .header-bar[data-header-skin="ember"],
   --header-edge-to: rgba(251, 191, 36, .32);
 }
 
-/* jade — clinical emerald. Tuned to headpain-site's #059669 / #10b981
+/* jade: clinical emerald. Tuned to headpain-site's #059669 / #10b981
    accents on its #040714 page. For calm medical/health surfaces where
    both the magenta default and ember's warning-warmth read wrong. */
 html:not([data-theme]) .header-bar[data-header-skin="jade"],
@@ -284,14 +301,36 @@ html:not([data-theme]) .header-bar[data-header-skin="jade"],
   --header-edge-to: rgba(110, 231, 183, .32);
 }
 
-/* ── custom — a site-authored skin ────────────────────────────────
+/* The named skins compose their gradient in oklab, not oklch.
+   oklch carries a hue, and a stop with almost no chroma has a hue that is
+   "powerless": the browser borrows the neighbouring stop's hue instead,
+   from each side. brass's near-neutral mid (#16120c) took the brown hue on
+   its left and the navy hue on its right, so the bar changed colour in one
+   step along the 50% line: the brown-to-navy diagonal near x=700 on
+   Releve's and apps-site's headers. Measured on a 1440px bar: the largest
+   one-step change in OKLab a/b was 24.4 (x1000) in oklch and 1.8 in oklab;
+   every other skin measures 0.7 to 3.2 either way, and oklab lowers it for
+   aurora, ember and jade too. These skins are dark, low-chroma ramps with
+   no hue sweep to keep. The default gradient and the visitor themes stay
+   in oklch, where the sweep is the design.
+   Scope: (0,3,1), the skins' own weight. An armed season's skinned rule
+   re-asserts its oklch gradient at (0,4,2), so seasons look the same on a
+   skinned site as anywhere else. `custom` is left alone: the site chose
+   those stops under oklch. */
+html:not([data-theme]) .header-bar:is([data-header-skin="ink"], [data-header-skin="carbon"],
+  [data-header-skin="brass"], [data-header-skin="slate"], [data-header-skin="aurora"],
+  [data-header-skin="ember"], [data-header-skin="jade"]) {
+  --header-bg: linear-gradient(in oklab 135deg, var(--header-bg-start) 0%, var(--header-bg-mid) 50%, var(--header-bg-end) 100%);
+}
+
+/* ── custom: a site-authored skin ────────────────────────────────
    For a one-off palette that no named skin fits and that no other
    site would reuse. The kit deliberately ships NO tokens for this
    value: the site supplies them, and the kit stays out of the way.
 
      <header class="header-bar" data-header-skin="custom">
 
-   In the site's own css/style.css, copy this selector EXACTLY — the
+   In the site's own css/style.css, copy this selector EXACTLY: the
    scoping and the specificity are the whole contract:
 
      html:not([data-theme]) .header-bar[data-header-skin="custom"],
@@ -307,7 +346,7 @@ html:not([data-theme]) .header-bar[data-header-skin="jade"],
    Why that exact selector, and nothing shorter:
      · `html:not([data-theme])` makes the skin collapse the instant a
        visitor picks a theme. Drop it and the site ignores ?theme=.
-     · `[data-header-skin="custom"]` puts it at (0,3,1) — above the
+     · `[data-header-skin="custom"]` puts it at (0,3,1), above the
        kit default, below an armed season's (0,4,2) skin variant. A
        bare `.header-bar { --header-bg-start: … }` is only (0,1,0)
        and the kit's own defaults would beat it.
@@ -319,7 +358,7 @@ html:not([data-theme]) .header-bar[data-header-skin="jade"],
        page with no footer can leave it out.
    Set only the three gradient stops if that is all that clashes; the
    bar re-composes --header-bg from them (see .header-bar below).
-   Only the three stops + accent are usually enough — but re-tune the
+   Only the three stops + accent are usually enough, but re-tune the
    edge ramp too if the bar is much darker or lighter than the default
    magenta, which those values are calibrated against. */
 
@@ -357,21 +396,21 @@ html:not([data-theme]) .header-bar {
     var(--header-edge-to, rgba(255, 255, 255, .34))
   ) 1;
 }
-/* Hub is a floating glass plate, not a band welded to the page — the
+/* Hub is a floating glass plate, not a band welded to the page; the
    ramp would read as a seam. */
 html:not([data-theme]) .header-bar[data-header-mode="hub"] {
   border-image: none;
   border-bottom-color: var(--header-border);
 }
 
-/* Mode: hub — transparent cozy glass, no gradient */
+/* Mode: hub, transparent cozy glass, no gradient */
 .header-bar[data-header-mode="hub"] {
   background: var(--header-glass);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 
-/* Mode: app — slim, auto-hides on scroll down (JS toggles .header-hidden) */
+/* Mode: app, slim, auto-hides on scroll down (JS toggles .header-hidden) */
 .header-bar[data-header-mode="app"] {
   height: var(--header-h-app);
   --header-h-cur: var(--header-h-app);
@@ -448,7 +487,7 @@ svg.header-logo-mark { color: var(--header-text); fill: currentColor; width: aut
 
 /* min-height also fixes a target-size failure: at <=700px the subtitle is
    hidden and this link collapses to 22px, under the 24px WCAG 2.5.8
-   minimum. The parent centres it, so it grows symmetrically — no shift. */
+   minimum. The parent centres it, so it grows symmetrically, with no shift. */
 .header-title-link {
   text-decoration: none;
   color: inherit;
@@ -484,7 +523,7 @@ svg.header-logo-mark { color: var(--header-text); fill: currentColor; width: aut
    `margin: 0` for the same reason, and it is load-bearing: the UA gives h1
    `.67em 0`, which at this size is 12.86px above and below. The kit never
    reset it, so the title block came out 67px inside app mode's fixed 56px
-   bar — the title rode high and the subtitle hung out of the header into the
+   bar: the title rode high and the subtitle hung out of the header into the
    page. It looked fine on most sites only because they link the CDN
    `styles/base.css`, whose `*` reset zeroed it for us; the sites that don't
    (headpain, autopilot, references-api in app mode) showed the real geometry. */
@@ -546,7 +585,7 @@ svg.header-logo-mark { color: var(--header-text); fill: currentColor; width: aut
 }
 /* Uniform control row: direct action children match the icon buttons'
    height so Share / ⋯ / palette / home read as one correlative strip.
-   (Direct-child only — items moved into the ⋯ menu keep menu styling.) */
+   (Direct-child only: items moved into the ⋯ menu keep menu styling.) */
 .header-actions > .btn,
 .header-actions > .nav-link,
 .header-actions > button,
@@ -561,11 +600,11 @@ svg.header-logo-mark { color: var(--header-text); fill: currentColor; width: aut
 /* Same guarantee one level down, for the kit's own grouping idiom.
    header.js already knows .header-btn-group as a unit that travels into the ⋯
    menu whole; the geometry rule above did not, so a grouped button kept its
-   own height and the row went ragged — pathfinder shipped 37px Fit/Clear
+   own height and the row went ragged: pathfinder shipped 37px Fit/Clear
    buttons flanked by 40px icon controls. Scoped to a group still sitting in
    the bar: once the ⋯ menu adopts it the selector stops matching and menu
    styling takes over, which is the same boundary the direct-child rule draws.
-   Deliberately NOT `> div > *` — battlecard's .bc-menu-wrap holds dropdown
+   Deliberately NOT `> div > *`: battlecard's .bc-menu-wrap holds dropdown
    items that are not bar controls and must not be stretched to 40px. */
 .header-actions > .header-btn-group > .btn,
 .header-actions > .header-btn-group > .nav-link,
@@ -583,7 +622,7 @@ svg.header-logo-mark { color: var(--header-text); fill: currentColor; width: aut
    them, so a site that uses the canonical .btn / .nav-link classes without
    defining them renders a raw browser button inside the header
    (incident-runbook hit exactly this). Wrapped in :where() so the whole
-   rule has ZERO specificity — every site's own .btn/.nav-link styling
+   rule has ZERO specificity: every site's own .btn/.nav-link styling
    still wins, and this only shows through where nothing else applies. */
 :where(.header-actions) > :where(.btn, .nav-link, button, a) {
   padding: 0 12px;
@@ -608,11 +647,11 @@ svg.header-logo-mark { color: var(--header-text); fill: currentColor; width: aut
 /* An icon-only control has no label to pad around, and the fallback above
    assumes there is one. Its 12px side padding lands inside a border-box
    control the site already sized square, leaving 40 - 24 - 2 = 14px of
-   content — and an SVG is a flex item that will shrink into it. neorgon-site's
+   content, and an SVG is a flex item that will shrink into it. neorgon-site's
    GitHub mark rendered 14x26 and hiring-pack's 10x24 before this rule.
 
    Specificity note, because it is not what the :where() wrapper suggests:
-   :has() is NOT zero-specificity — it takes the specificity of its most
+   :has() is NOT zero-specificity: it takes the specificity of its most
    specific argument, so `svg:only-child` puts this selector at (0,1,1), the
    same weight as the `.header-actions > a` geometry rule above and ABOVE a
    site's single-class `.header-link { width: 36px }`. That is deliberate and
@@ -628,7 +667,7 @@ svg.header-logo-mark { color: var(--header-text); fill: currentColor; width: aut
 /* …and the fallback's border does not belong on one either. .header-home is
    an unboxed glyph, so a site that styles neither ends up with a boxed icon
    sitting next to an unboxed one in the same row (hiring-pack shipped exactly
-   that pair). Geometry above is kit-owned at (0,1,1); appearance is not — the
+   that pair). Geometry above is kit-owned at (0,1,1); appearance is not: the
    extra :where() flattens this to zero specificity, so pathfinder and
    cartograph, whose icon buttons are deliberately boxed to match the text
    buttons beside them, keep their border on a single class. */
@@ -639,7 +678,7 @@ svg.header-logo-mark { color: var(--header-text); fill: currentColor; width: aut
 
 /* Belt and braces for the same failure: whatever padding a site declares, an
    icon inside a header control is never the thing that gives way. Carries real
-   specificity on purpose — a squeezed icon is always a bug, never a choice. */
+   specificity on purpose: a squeezed icon is always a bug, never a choice. */
 .header-actions > .btn > svg,
 .header-actions > .nav-link > svg,
 .header-actions > button > svg,
@@ -741,7 +780,7 @@ svg.header-logo-mark { color: var(--header-text); fill: currentColor; width: aut
    clip the viewBox, and none of it is needed once the arms sit outside the
    mark instead of crossing it. */
 
-/* ── Overflow toggle (⋯) — injected by header.js ─────────────── */
+/* ── Overflow toggle (⋯), injected by header.js ─────────────── */
 .header-overflow { position: relative; display: flex; }
 .header-overflow[hidden] { display: none; }
 .header-overflow-toggle {
@@ -765,7 +804,7 @@ svg.header-logo-mark { color: var(--header-text); fill: currentColor; width: aut
 .header-overflow-toggle:hover,
 .header-overflow-toggle[aria-expanded="true"] { background: var(--header-menu-hover); }
 
-/* Shared press feedback — these three controls are kit-owned, so the kit
+/* Shared press feedback: these three controls are kit-owned, so the kit
    owns their states (sites style their own .btn). */
 .header-overflow-toggle:active,
 .header-theme-toggle:active,
@@ -913,6 +952,190 @@ svg.header-logo-mark { color: var(--header-text); fill: currentColor; width: aut
   color: var(--header-accent);
 }
 
+/* ── Category chip and panel (built by header.js from
+   <meta name="neo-category">) ──────────────────────────────────
+   Bar tokens only: the chip follows the skin, an armed season and the
+   visitor's theme like every other control, and names its category by
+   icon and label, never by a category colour. The panel hangs inside
+   .header-bar, so it inherits the same tokens and needs no skin hand-off.
+
+   The wrapper is display: contents: no flex item, no extra gap. The panel
+   is positioned against the bar; header.js measures --neo-cat-right so its
+   right edge meets the chip's. */
+.header-category { display: contents; }
+.header-category__icon { width: 18px; height: 18px; flex: none; display: block; }
+.header-category__chev { width: 14px; height: 14px; flex: none; display: block; }
+
+.header-category__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+  height: var(--header-control-h);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0 14px 0 11px;
+  border: 1px solid var(--header-border-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--header-text);
+  font: inherit;
+  font-size: .8125rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: .01em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .2s var(--header-ease, ease),
+              border-color .2s var(--header-ease, ease);
+}
+.header-category__chip:hover,
+.header-category__chip[aria-expanded="true"] {
+  background: var(--header-menu-hover);
+  border-color: var(--header-control-border, var(--header-border-strong));
+}
+.header-category__chip:focus-visible {
+  outline: var(--header-focus-w) solid var(--header-focus);
+  outline-offset: 2px;
+}
+/* Icon only: a phone with no ⋯ menu, or a desktop bar too narrow for the
+   label. Unboxed, like every other icon-only control in the bar; the label
+   stays in the accessible name. */
+.header-bar[data-neo-category="icon"] .header-category__chip {
+  width: var(--header-control-h);
+  padding: 0;
+  justify-content: center;
+  border-color: transparent;
+  border-radius: 6px;
+}
+.header-bar[data-neo-category="icon"] .header-category__chip .header-category__icon {
+  width: var(--header-icon, 22px);
+  height: var(--header-icon, 22px);
+}
+.header-bar[data-neo-category="icon"] .header-category__label {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* menu: the chip is the ⋯ menu's first row; none: no room even for an
+   icon (a title too long for the bar), so the footer row carries it. */
+.header-bar:is([data-neo-category="menu"], [data-neo-category="none"]) .header-category__chip { display: none; }
+
+.header-menu.header-category__menu {
+  top: calc(100% + 8px);
+  right: var(--neo-cat-right, var(--space-6, 24px));
+  width: 320px;
+  min-width: 0;
+  max-width: calc(100vw - 16px);
+  max-height: min(calc(100vh - var(--header-h-cur, 68px) - 24px), 640px);
+  max-height: min(calc(100dvh - var(--header-h-cur, 68px) - 24px), 640px);
+  padding: 8px;
+}
+/* Sections: siblings, the jump, the twelve, home. */
+.header-menu.header-category__menu > * + * {
+  border-top: 1px solid var(--header-border);
+  margin-top: 6px;
+  padding-top: 6px;
+}
+.header-menu.header-category__menu a,
+.header-menu.header-category__menu button { min-height: 36px; }
+.header-category__title {
+  margin: 6px 12px 4px;
+  font-size: max(12px, .75rem);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--header-text-dim);
+}
+.header-category__menu a span { overflow: hidden; text-overflow: ellipsis; }
+.header-menu .header-category__all { color: var(--header-accent); }
+.header-category__jump kbd {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  box-sizing: border-box;
+  padding: 0 6px;
+  border: 1px solid var(--header-border-strong);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  font: 600 max(12px, .75rem)/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--header-text);
+}
+.header-category__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px;
+}
+.header-menu .header-category__grid a { padding: 0 10px; }
+/* The current category: a filled row with a rule on its leading edge, and
+   aria-current; never colour alone. */
+.header-menu .header-category__grid a[aria-current="true"] {
+  background: var(--header-menu-hover);
+  box-shadow: inset 2px 0 0 var(--header-accent);
+  font-weight: 650;
+}
+
+/* The phone row in the ⋯ menu that opens the same panel. */
+.header-menu .header-category-row { font-weight: 600; }
+.header-menu .header-category-row .header-category__chev { margin-left: auto; width: 16px; height: 16px; }
+.header-overflow-menu > .header-category-row {
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--header-border);
+  border-radius: 8px 8px 0 0;
+}
+
+@media (pointer: coarse) {
+  .header-menu.header-category__menu a,
+  .header-menu.header-category__menu button { min-height: 44px; }
+  /* Touch: no keycap to press. */
+  .header-category__jump kbd { display: none; }
+}
+
+/* ── Fit (header.js) ────────────────────────────────────────────
+   measure: a moment's state while header.js asks whether the bar needs
+     more width than it has; nothing may shrink, so a squeezed row cannot
+     pass for a row that fits.
+   fit: set once the kit has arranged the bar. The right cluster keeps its
+     size, so a control can never slide under the home icon.
+   tight: nothing is left to move into ⋯ and it still does not fit; the
+     title gives way with an ellipsis instead of a control. */
+.header-bar[data-neo-measure] .header-logo,
+.header-bar[data-neo-measure] .header-right,
+.header-bar[data-neo-measure] .header-right > *,
+.header-bar[data-neo-measure] .header-actions > * { flex-shrink: 0 !important; }
+/* A scroll strip (overflow-x: auto, a row of tabs) is measured at its floor
+   and then shrinks into what is left, scrolling the rest. header.js sets
+   --neo-scroll-floor (its content width, at most 112px). */
+.header-bar[data-neo-measure] .header-actions > [data-neo-scroll] {
+  flex: 0 0 var(--neo-scroll-floor, 112px) !important;
+  width: var(--neo-scroll-floor, 112px) !important;
+  min-width: 0 !important;
+}
+.header-bar[data-neo-fit] .header-actions > [data-neo-scroll] { flex-shrink: 1; min-width: var(--neo-scroll-floor, 112px); }
+.header-bar[data-neo-fit]:not([data-neo-scroller]) .header-right { flex-shrink: 0; }
+/* A control a site positioned out of the row (absolute or fixed) is put
+   back in it, so it cannot sit on top of another one; header.js warns. */
+.header-actions > [data-neo-flow],
+.header-overflow-menu > [data-neo-flow] { position: static !important; transform: none !important; }
+.header-bar[data-neo-tight] .header-logo { flex-shrink: 1; min-width: 0; }
+.header-bar[data-neo-tight] .header-logo > *,
+.header-bar[data-neo-tight] .header-title-link,
+.header-bar[data-neo-tight] .header-title-wrap { min-width: 0; }
+.header-bar[data-neo-tight] .header-logo h1,
+.header-bar[data-neo-tight] .header-subtitle { overflow: hidden; text-overflow: ellipsis; }
+
+/* ── One positioning line ───────────────────────────────────────
+   A page whose masthead carries the line (.neo-masthead__line) does not
+   say it again in the bar (design-pass AP7). */
+body:has(.neo-masthead__line) .header-subtitle { display: none; }
+
 /* ── Mobile (≤700px): shrink, hide subtitle, JS moves non-kept
    action buttons into the ⋯ overflow menu ────────────────────── */
 @media (max-width: 700px) {
@@ -923,6 +1146,17 @@ svg.header-logo-mark { color: var(--header-text); fill: currentColor; width: aut
   }
   .header-bar { padding: 0 var(--space-4, 16px); gap: var(--space-2, 8px); }
   .header-subtitle { display: none; }
+  /* Shown again only where header.js found room for the whole line beside
+     the controls (data-neo-sub); it never takes a control's place or the
+     bar's height. The ellipsis is a guard for a line that grows after the
+     measure (an epigraph mid-churn), not the plan. */
+  .header-bar[data-neo-sub] .header-subtitle {
+    display: block;
+    margin-top: 1px;
+    font-size: max(12px, .75rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .header-logo h1 { font-size: 1rem; }
   .header-logo-img { height: var(--header-logo-h-mobile, 28px); }
   .header-right { gap: 6px; }
@@ -930,6 +1164,16 @@ svg.header-logo-mark { color: var(--header-text); fill: currentColor; width: aut
   .header-menu {
     min-width: min(260px, calc(100vw - 32px));
     max-width: calc(100vw - 32px);
+  }
+  /* The category panel is a sheet across the bar on a phone, whichever
+     control opened it (the ⋯ menu's row, or the icon in the bar). */
+  .header-menu.header-category__menu {
+    top: calc(100% + 6px);
+    left: 8px;
+    right: 8px;
+    width: auto;
+    max-width: none;
+    transform-origin: top center;
   }
 }
 
@@ -960,8 +1204,13 @@ svg.header-logo-mark { color: var(--header-text); fill: currentColor; width: aut
     border-bottom: 1px solid CanvasText;
   }
   .header-overflow-toggle,
-  .header-theme-toggle { border-color: ButtonBorder; }
+  .header-theme-toggle,
+  .header-category__chip { border-color: ButtonBorder; }
   .header-menu { border: 1px solid CanvasText; }
+  /* box-shadow is dropped in forced colours, so the current category
+     keeps an outline instead. */
+  .header-menu .header-category__grid a[aria-current="true"] { outline: 2px solid Highlight; outline-offset: -2px; }
+  .header-category__chip:focus-visible,
   .header-logo a:focus-visible,
   .header-title-link:focus-visible,
   .header-actions > a:focus-visible,

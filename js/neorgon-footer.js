@@ -1,9 +1,9 @@
 /* ══════════════════════════════════════════════════════════════
-   Neorgon Footer Kit — footer.js
+   Neorgon Footer Kit: footer.js
    Behavior harness: structure normalisation, meta bar (Neorgon /
-   source / version / updated), back-to-top, optional theme menu,
-   bottom-pinning guard for wrapped layouts.
-   Vendored per site as js/neorgon-footer.js — do not edit copies.
+   code / version), the "More in <category>" row, back-to-top,
+   optional theme menu, bottom-pinning guard for wrapped layouts.
+   Vendored per site as js/neorgon-footer.js. Do not edit copies.
    No dependencies. Load with `defer`.
    ══════════════════════════════════════════════════════════════ */
 (function () {
@@ -21,9 +21,74 @@
     return el ? el.content.trim() : '';
   }
 
+  /* ── Language ────────────────────────────────────────────────────────
+     Every word the kit draws comes from <html lang>, English or Spanish, as
+     the Auth Kit does: es and es-* read Spanish, anything else English. A
+     Spanish page used to carry "Part of Neorgon", "Code" and "Back to top"
+     in English under a Spanish voice (AP17: apps, parla, playbook, pieza).
+
+     The page can change its language after load (runcible and rappel set
+     document.documentElement.lang from script), so every label is drawn
+     by a painter, and a change to the attribute repaints them all. Words a
+     site authored itself (a disclaimer's data-label, a hand-written row)
+     are the site's, in the site's language, and are left alone. ──────── */
+  var STRINGS = {
+    en: {
+      hub: 'Part of Neorgon',
+      code: 'Code',
+      newTab: function (label) { return label + ' (opens in a new tab)'; },
+      top: 'Back to top',
+      disclaimer: 'Disclaimer',
+      close: 'Close',
+      theme: 'Theme',
+      moreIn: function (name) { return 'More in ' + name; },
+      allIn: function (name) { return 'All ' + name + ' tools'; }
+    },
+    es: {
+      hub: 'Parte de Neorgon',
+      code: 'Código',
+      newTab: function (label) { return label + ' (se abre en una pestaña nueva)'; },
+      top: 'Volver arriba',
+      disclaimer: 'Aviso',
+      close: 'Cerrar',
+      theme: 'Tema',
+      moreIn: function (name) { return 'Más en ' + name; },
+      allIn: function (name) { return 'Todo en ' + name; }
+    }
+  };
+
+  function localeFor(lang) {
+    return /^es(?:-|$)/i.test(String(lang || '')) ? 'es' : 'en';
+  }
+  function locale() { return localeFor(document.documentElement.getAttribute('lang')); }
+
+  var painters = [];
+  /* Draw now, and again whenever the page changes language. */
+  function paint(fn) {
+    painters.push(fn);
+    var loc = locale();
+    fn(STRINGS[loc], loc);
+  }
+  function repaint() {
+    var loc = locale();
+    for (var i = 0; i < painters.length; i++) painters[i](STRINGS[loc], loc);
+  }
+  var watching = false;
+  function watchLanguage() {
+    if (watching || !window.MutationObserver) return;
+    watching = true;
+    var last = locale();
+    new MutationObserver(function () {
+      var next = locale();
+      if (next === last) return;
+      last = next;
+      repaint();
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  }
+
   /* ── Live flag: ?footer=live or <meta name="neo-footer-source" content="live">
      appends the CDN stylesheet after the vendored one (CDN wins). Mirrors
-     the header kit — JS harness always stays vendored. ────────────────── */
+     the header kit: the JS harness always stays vendored. ─────────────── */
   (function liveFlag() {
     var live = new URLSearchParams(location.search).get('footer') === 'live' ||
                meta('neo-footer-source') === 'live';
@@ -42,9 +107,13 @@
     if (text != null) node.textContent = text;
     return node;
   }
-  function link(href, text, external) {
-    var a = el('a', null, text);
+  /* A link whose words are the kit's: `key` names its label in STRINGS, so
+     it follows the page's language. */
+  function link(href, key, external) {
+    var a = el('a');
     a.href = href;
+    var label = document.createTextNode('');
+    a.appendChild(label);
     if (external) {
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
@@ -54,8 +123,11 @@
          aria-hidden because the link already announces itself as opening a new
          tab through the title; the arrow is for the eye. */
       a.appendChild(arrow());
-      a.title = text + ' (opens in a new tab)';
     }
+    paint(function (s) {
+      label.nodeValue = s[key];
+      if (external) a.title = s.newTab(s[key]);
+    });
     return a;
   }
   function arrow() {
@@ -114,8 +186,8 @@
     document.body.classList.add('neo-footer-root');
   }
 
-  /* ── Theme menu — reuses the header kit's registry so themes are
-     defined in exactly one place. No header kit on the page → no menu. ─ */
+  /* ── Theme menu: reuses the header kit's registry so themes are
+     defined in exactly one place. No header kit on the page, no menu. ── */
   var PALETTE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
     'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
     '<path d="M12 22a10 10 0 1 1 10-10c0 1.66-1.34 3-3 3h-2.5a2.5 2.5 0 0 0-1.8 4.2c.4.43.3 1.05-.13 1.42A9.9 9.9 0 0 1 12 22z"/>' +
@@ -126,7 +198,7 @@
     var api = window.NeoHeader;
     if (!api) return null;
     if (api.list && api.list.length) return api.list;
-    /* Older vendored header.js exposes ids only — derive a usable label. */
+    /* Older vendored header.js exposes ids only, so derive a usable label. */
     return (api.themes || []).map(function (id) {
       return { id: id, label: id.charAt(0).toUpperCase() + id.slice(1), swatch: 'transparent' };
     });
@@ -141,7 +213,10 @@
     toggle.type = 'button';
     toggle.setAttribute('aria-haspopup', 'menu');
     toggle.setAttribute('aria-expanded', 'false');
-    toggle.innerHTML = PALETTE_SVG + '<span>Theme</span>';
+    toggle.innerHTML = PALETTE_SVG;
+    var word = el('span');
+    toggle.appendChild(word);
+    paint(function (s) { word.textContent = s.theme; });
 
     var menu = el('div', 'neo-footer-menu');
     menu.setAttribute('role', 'menu');
@@ -199,14 +274,14 @@
   }
 
   /* ── Meta bar ────────────────────────────────────────────────────────
-     "Part of Neorgon · Source · v1.2.0 · updated Aug 2026 [· Theme]".
+     "Fin. · Part of Neorgon · Code · v1.2.0 [· Theme]".
      The hub link is skipped when the site already links neorgon.com, so
-     retrofitting an existing footer never produces a duplicate. ─────── */
-  function formatUpdated(raw) {
-    var d = new Date(raw);
-    if (isNaN(d)) return raw;
-    return 'updated ' + d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' });
-  }
+     retrofitting an existing footer never produces a duplicate.
+
+     No "updated" stamp (decision D26, 2026-11-14). A date typed into a meta
+     tag went stale on 22 of 24 sites, and one derived from git would read
+     "this month" after every kit sync, since syncs are most of the commits.
+     A neo-updated meta still on a page is ignored. ──────────────────── */
 
   /* The hub, not merely something hosted on it. This used to be the selector
      a[href*="neorgon.com"], which a "you might also like" line pointing at a
@@ -214,37 +289,42 @@
      likely to link their neighbours: client-says-site lost it that way, and
      incident-runbook-site and runcible-site were doing the same silently. A
      resolved .href is compared, so a relative link reads as this site's own
-     origin (which is what it is) rather than matching on a substring. */
+     origin (which is what it is) rather than matching on a substring.
+
+     The "More in <category>" row is skipped: its "All AI tools" link goes to
+     neorgon.com/ai/, a page on the hub, and counting it would drop the
+     attribution from every stamped site, the same regression a second time.
+     The row is lifted out of the copy before this runs, so this guards a row
+     a site wrote by hand somewhere deeper. */
   function linksHub(inner) {
     var links = inner.querySelectorAll('a[href]');
     for (var i = 0; i < links.length; i++) {
+      if (links[i].closest && links[i].closest('.neo-more')) continue;
       if (/^https?:\/\/(www\.)?neorgon\.com(\/|$)/i.test(links[i].href)) return true;
     }
     return false;
   }
 
-  function buildBar(footer, inner, disclaimer) {
-    var items = [];
-    if (disclaimer) items.push(disclaimer);
+  function buildBar(footer, inner, disclaimers) {
+    var items = disclaimers.slice();
 
-    /* Only add the hub link when the site's own copy doesn't already
-       carry one — retrofits keep their hand-written "Part of Neorgon". */
+    /* Only add the hub link when the site's own copy doesn't already carry
+       one: retrofits keep their hand-written "Part of Neorgon". */
     if (!linksHub(inner)) {
       /* The hub is a different site, so it opens in a new tab and says so with
          the same arrow every other outbound link here uses. It used to replace
          the page you were on, which on a game mid-run is a door you did not
-         mean to walk through. */
-      items.push(link(HUB, 'Part of Neorgon', true));
+         mean to walk through. It goes to the hub's front door; the category
+         page is the "More in" row's last link. */
+      items.push(link(HUB, 'hub', true));
     }
 
     var repo = meta('neo-repo');
-    if (repo) items.push(link(/^https?:/.test(repo) ? repo : GH + '/' + repo, 'Code', true));
+    if (repo) items.push(link(/^https?:/.test(repo) ? repo : GH + '/' + repo, 'code', true));
 
+    /* Only where the site keeps a changelog the number refers to. */
     var version = meta('neo-version');
     if (version) items.push(el('span', 'neo-footer-stamp', /^v/i.test(version) ? version : 'v' + version));
-
-    var updated = meta('neo-updated');
-    if (updated) items.push(el('span', 'neo-footer-stamp', formatUpdated(updated)));
 
     if (meta('neo-theme-switcher') === 'footer') {
       var theme = buildThemeMenu();
@@ -254,9 +334,10 @@
     if (!items.length) return null;
 
     /* The end mark leads the bar, so it reads as a colophon: "Fin. · Part of
-       Neorgon · Source". Added only when a bar already exists, so a site that
+       Neorgon · Code". Added only when a bar already exists, so a site that
        renders no bar today does not grow one (and its height budget holds).
-       lang="fr" or a screen reader says the English word for a fish's fin. */
+       lang="fr", or a screen reader says the English word for a fish's fin.
+       Ornament, so it is never translated; data-fin="off" removes it. */
     if (footer.getAttribute('data-fin') !== 'off') {
       var fin = el('span', 'neo-footer-fin', 'Fin.');
       fin.lang = 'fr';
@@ -279,13 +360,70 @@
     return bar;
   }
 
+  /* ── More in <category> ──────────────────────────────────────────────
+     A row of sibling tools, stamped into the page by scripts/fleet_stamp.py
+     between <!-- neo-fleet:more --> markers, from the registry's group and
+     related fields. The markup is the page's, so it reads without script and
+     search engines see the links. The kit only moves it and words it:
+
+       <nav class="neo-more" aria-label="More in AI" data-category="ai"
+            data-label-en="AI" data-label-es="IA">
+         <span class="neo-more__label" aria-hidden="true"><svg ...></svg><span
+           class="neo-more__title">More in AI</span></span>
+         <ul class="neo-more__list">
+           <li><a href="https://glassbox.neorgon.com/">Glass Box</a></li>
+           <li><a class="neo-more__all" href="https://neorgon.com/ai/">All AI tools</a></li>
+         </ul>
+       </nav>
+
+     Lifted out before ensureInner, like the disclaimer template, so it is
+     never swept into the note it follows. Then placed by mode: between the
+     copy and the bar in minimal mode, as one more column in content mode, and
+     after the bar in app mode, whose one slim line (note left, bar right) it
+     must not split; the stylesheet hides it there unless the site sets
+     data-footer-more="on", and then it is the next line. DOM order is the
+     order on screen in every mode, so the tab order reads the same way.
+     The sibling links stay in this tab: a reader who picked one from a list
+     headed "More in" meant to go there. */
+  function liftMore(footer) {
+    var row = footer.querySelector('.neo-more');
+    if (!row) return null;
+    row.parentNode.removeChild(row);
+    return row;
+  }
+
+  function placeMore(footer, inner, bar, row) {
+    var mode = footer.getAttribute('data-footer-mode');
+    if (mode === 'content') {
+      var cols = inner.querySelector(':scope > .neo-footer-cols');
+      (cols || inner).appendChild(row);
+    } else if (mode === 'app') {
+      footer.appendChild(row);
+    } else {
+      footer.insertBefore(row, bar && bar.parentNode === footer ? bar : null);
+    }
+
+    /* A row without both names was written by hand: its words are the site's. */
+    var name = { en: row.getAttribute('data-label-en'), es: row.getAttribute('data-label-es') };
+    if (!name.en) return;
+    var title = row.querySelector('.neo-more__title');
+    var all = row.querySelector('.neo-more__all');
+    paint(function (s, loc) {
+      var n = name[loc] || name.en;
+      row.setAttribute('aria-label', s.moreIn(n));
+      if (title) title.textContent = s.moreIn(n);
+      if (all) all.textContent = s.allIn(n);
+    });
+  }
+
   /* ── Disclaimer dialog ───────────────────────────────────────────────
-     Long-form copy — provenance, licensing, "this is not advice" — is worth
+     Long-form copy (provenance, licensing, "this is not advice") is worth
      keeping and worth reading once. Stacked above the footer bar it is
      neither: it pushes the bar down the page and nobody reads a 99-word
      paragraph in 12px grey (affinity ran 99 words, glassbox 57, headpain 51).
      So the site authors it inside a <template> and the kit turns it into one
-     bar link plus a modal.
+     bar link plus a modal. A page may carry more than one (a disclaimer and
+     the page's one privacy statement, say): each becomes its own link.
 
      Native <dialog> on purpose: showModal() brings the focus trap, the Esc
      handler, the inert background and ::backdrop with it. A hand-rolled
@@ -300,12 +438,17 @@
        </footer> ───────────────────────────────────────────────────────── */
   var dialogSeq = 0;
 
-  function buildDisclaimer(footer) {
-    var tpl = footer.querySelector(':scope > template[data-neo-disclaimer]');
-    if (!tpl) return null;
+  function buildDisclaimers(footer) {
+    var tpls = Array.prototype.slice.call(footer.querySelectorAll(':scope > template[data-neo-disclaimer]'));
+    return tpls.map(buildDisclaimer);
+  }
+
+  function buildDisclaimer(tpl) {
     tpl.parentNode.removeChild(tpl);
 
-    var label = tpl.getAttribute('data-label') || 'Disclaimer';
+    /* A site's own label is copy in the site's language; only the kit's
+       fallback word follows the page. */
+    var label = tpl.getAttribute('data-label') || '';
     var title = tpl.getAttribute('data-title') || label;
     var titleId = 'neo-disclaimer-title-' + (++dialogSeq);
 
@@ -317,7 +460,6 @@
     h.id = titleId;
     var close = el('button', 'neo-modal-close');
     close.type = 'button';
-    close.setAttribute('aria-label', 'Close');
     close.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
       'stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>';
     head.appendChild(h);
@@ -338,7 +480,7 @@
        and several sites in the fleet already bind Esc at document level for
        their own panels. Closing here and stopping propagation means exactly
        one thing closes per press, and it is the thing on top. Harmless when
-       the UA also handles it — close() on a closed dialog is a no-op. */
+       the UA also handles it: close() on a closed dialog is a no-op. */
     dlg.addEventListener('keydown', function (e) {
       if (e.key !== 'Escape' || !dlg.open) return;
       e.stopPropagation();
@@ -353,6 +495,12 @@
     trigger.addEventListener('click', function () {
       if (typeof dlg.showModal === 'function') dlg.showModal();
       else dlg.setAttribute('open', '');
+    });
+
+    paint(function (s) {
+      close.setAttribute('aria-label', s.close);
+      if (!label) trigger.textContent = s.disclaimer;
+      if (!title) h.textContent = s.disclaimer;
     });
     return trigger;
   }
@@ -448,10 +596,12 @@
 
     var btn = el('button', 'neo-top');
     btn.type = 'button';
-    btn.title = 'Back to top';
-    btn.setAttribute('aria-label', 'Back to top');
     btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" ' +
       'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+    paint(function (s) {
+      btn.title = s.top;
+      btn.setAttribute('aria-label', s.top);
+    });
 
     btn.addEventListener('click', function () {
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -554,13 +704,16 @@
       if (footer.__neoDone) return;
       footer.__neoDone = true;
       if (!footer.hasAttribute('data-footer-mode')) footer.setAttribute('data-footer-mode', 'minimal');
-      /* Lift the template out before ensureInner sweeps loose children into
-         .neo-footer-inner — otherwise the dialog's source ends up nested in
-         the visible note it exists to replace. */
-      var disclaimer = buildDisclaimer(footer);
+      /* Lift the templates and the row out before ensureInner sweeps loose
+         children into .neo-footer-inner: otherwise the dialog's source ends
+         up nested in the visible note it exists to replace, and the row
+         inside the copy it follows. */
+      var disclaimers = buildDisclaimers(footer);
+      var more = liftMore(footer);
       var inner = ensureInner(footer);
-      var bar = buildBar(footer, inner, disclaimer);
+      var bar = buildBar(footer, inner, disclaimers);
       if (bar) footer.appendChild(bar);
+      if (more) placeMore(footer, inner, bar, more);
     });
 
     /* The page's real footer is the last one under <body> (previews and
@@ -571,6 +724,7 @@
     if (!primary.hasAttribute('role')) primary.setAttribute('role', 'contentinfo');
     ensurePinning(primary);
     buildBackToTop(primary);
+    watchLanguage();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
