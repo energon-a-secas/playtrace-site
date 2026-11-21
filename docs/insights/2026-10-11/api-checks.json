@@ -1,0 +1,83 @@
+{
+  "purpose": "Small read-only connectivity and field-availability checks for the enrichment plan. No access tokens, review bodies, or production writes.",
+  "checks": [
+    {
+      "source": "archive_posts",
+      "httpStatus": 200,
+      "checkedAt": "2026-10-11T19:01:38.525600+00:00",
+      "records": [
+        {
+          "id": "1x376pc",
+          "bodyCharacters": 885,
+          "titleCharacters": 64
+        },
+        {
+          "id": "1x36ues",
+          "bodyCharacters": 364,
+          "titleCharacters": 46
+        },
+        {
+          "id": "1wxpc76",
+          "bodyCharacters": 3547,
+          "titleCharacters": 81
+        }
+      ]
+    },
+    {
+      "source": "steam_app",
+      "httpStatus": 200,
+      "checkedAt": "2026-10-11T19:01:36.862832+00:00",
+      "success": true,
+      "appType": "demo",
+      "title": "Wayward Crown Demo",
+      "parent": {
+        "appid": "4609640",
+        "name": "Wayward Crown"
+      },
+      "platforms": {
+        "windows": true,
+        "mac": false,
+        "linux": false
+      },
+      "release": {
+        "coming_soon": false,
+        "date": "May 15, 2026"
+      },
+      "screenshots": 5,
+      "trailers": 1
+    },
+    {
+      "source": "github_repo",
+      "httpStatus": 200,
+      "checkedAt": "2026-10-11T19:01:36.894740+00:00",
+      "fullName": "goldsziggy/z-ark-digivice",
+      "archived": false,
+      "license": null,
+      "hasPages": true,
+      "homepage": "https://goldsziggy.github.io/z-ark-digivice/"
+    },
+    {
+      "source": "steam_reviews",
+      "httpStatus": 200,
+      "checkedAt": "2026-10-11T19:01:37.116669+00:00",
+      "topFields": [
+        "response"
+      ],
+      "responseFields": [
+        "cursor",
+        "query_summary",
+        "total_matching"
+      ],
+      "reviewCount": 0,
+      "summary": {
+        "num_reviews": 0,
+        "review_score": 0,
+        "review_score_desc": "No user reviews",
+        "total_positive": 0,
+        "total_negative": 0,
+        "total_reviews": 0
+      },
+      "hasCursor": true
+    }
+  ]
+}

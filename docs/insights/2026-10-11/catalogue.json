@@ -1,0 +1,358 @@
+{
+  "input": "data/public-catalog.json",
+  "sha256": "c5f3ef82c69698cf4151ba2cfb19798afceac5b1847422987159c21adb350be2",
+  "snapshotAt": "2026-10-11T17:41:02.660Z",
+  "source": {
+    "subreddit": "aigamedev",
+    "subredditUrl": "https://www.reddit.com/r/aigamedev/",
+    "archiveUrl": "https://arctic-shift.photon-reddit.com/api/posts/search",
+    "retrievedAt": "2026-10-11T15:35:38.335Z",
+    "coverageThrough": "2026-10-11T13:35:39.223Z",
+    "mode": "scheduled",
+    "lastSuccessfulIngestAt": "2026-10-11T14:35:45.035Z"
+  },
+  "population": "Published Playtrace catalogue entries; not verified unique games, all subreddit posts, or the games market.",
+  "totals": {
+    "entries": 1296,
+    "sourcePostMemberships": 1384,
+    "uniqueSourcePosts": 1384,
+    "makerHandles": 1017,
+    "repeatMakerHandles": 154,
+    "entriesFromRepeatHandles": 433,
+    "entriesWithMultiplePosts": 70,
+    "subsequentSourcePosts": 88,
+    "linkedEntries": 526,
+    "distinctDestinations": 522,
+    "explicitlyPlayableOrReleased": 405,
+    "freshStoreBuildEvidence": 196,
+    "reviewedEntries": 134,
+    "firstSourcePost": "2023-04-03T08:13:41.000Z",
+    "latestSourcePost": "2026-10-11T14:39:14.000Z"
+  },
+  "categories": {
+    "other": 771,
+    "rpg": 142,
+    "action": 103,
+    "adventure": 70,
+    "strategy": 65,
+    "simulation": 51,
+    "puzzle": 46,
+    "arcade": 30,
+    "clicker": 18
+  },
+  "stages": {
+    "unknown": 737,
+    "playable": 368,
+    "prototype": 102,
+    "concept": 52,
+    "released": 37
+  },
+  "distributions": {
+    "unlisted": 770,
+    "website": 251,
+    "itch": 195,
+    "steam": 48,
+    "google-play": 12,
+    "github": 10,
+    "app-store": 4,
+    "crazygames": 4,
+    "game-jolt": 1,
+    "roblox": 1
+  },
+  "devices": {
+    "Browser": 273,
+    "Mobile": 120,
+    "Android": 37,
+    "PC": 31,
+    "Windows": 28,
+    "iOS": 24,
+    "Linux": 9,
+    "macOS": 3,
+    "Game Boy Advance": 1
+  },
+  "firstSharedMonth": {
+    "2023-04": 1,
+    "2023-05": 1,
+    "2023-06": 1,
+    "2023-07": 3,
+    "2023-08": 1,
+    "2023-09": 2,
+    "2023-10": 2,
+    "2023-11": 2,
+    "2023-12": 3,
+    "2024-01": 3,
+    "2024-02": 2,
+    "2024-04": 4,
+    "2024-05": 2,
+    "2024-06": 4,
+    "2024-07": 6,
+    "2024-08": 1,
+    "2024-10": 4,
+    "2024-11": 5,
+    "2024-12": 1,
+    "2025-01": 5,
+    "2025-02": 5,
+    "2025-03": 6,
+    "2025-04": 16,
+    "2025-05": 10,
+    "2025-08": 9,
+    "2025-09": 11,
+    "2025-10": 4,
+    "2025-11": 7,
+    "2025-12": 26,
+    "2026-01": 30,
+    "2026-02": 33,
+    "2026-03": 39,
+    "2026-04": 52,
+    "2026-05": 58,
+    "2026-06": 80,
+    "2026-07": 142,
+    "2026-08": 198,
+    "2026-09": 316,
+    "2026-10": 201
+  },
+  "latestUpdateMonth": {
+    "2023-04": 1,
+    "2023-05": 1,
+    "2023-06": 1,
+    "2023-07": 3,
+    "2023-08": 1,
+    "2023-09": 2,
+    "2023-10": 1,
+    "2023-11": 2,
+    "2023-12": 3,
+    "2024-01": 3,
+    "2024-02": 2,
+    "2024-03": 1,
+    "2024-04": 4,
+    "2024-05": 2,
+    "2024-06": 4,
+    "2024-07": 5,
+    "2024-08": 2,
+    "2024-10": 4,
+    "2024-11": 5,
+    "2024-12": 1,
+    "2025-01": 5,
+    "2025-02": 5,
+    "2025-03": 5,
+    "2025-04": 16,
+    "2025-05": 11,
+    "2025-08": 9,
+    "2025-09": 11,
+    "2025-10": 4,
+    "2025-11": 7,
+    "2025-12": 24,
+    "2026-01": 30,
+    "2026-02": 32,
+    "2026-03": 39,
+    "2026-04": 54,
+    "2026-05": 58,
+    "2026-06": 78,
+    "2026-07": 142,
+    "2026-08": 196,
+    "2026-09": 318,
+    "2026-10": 204
+  },
+  "sourceFlairs": {
+    "Demo | Project | Workflow": 1289,
+    "Unlabeled": 95
+  },
+  "sourcePostsPerEntry": {
+    "1": 1226,
+    "2": 54,
+    "3": 14,
+    "4": 2
+  },
+  "previewKinds": {
+    "video": 667,
+    "image": 555,
+    "link": 74
+  },
+  "quality": {
+    "nonspecificGenre": 771,
+    "unknownStage": 737,
+    "noDeviceMetadata": 883,
+    "noMechanicTags": 1251,
+    "noProjectLink": 770,
+    "noIndependentSummary": 1162,
+    "headlineLengthTitleOver80": 215,
+    "noImageOrPosterUrl": 81,
+    "approvedR2Previews": 7,
+    "sourceCodeLinks": 38,
+    "githubPagesDestinations": 28,
+    "sourcesAfterDeclaredCoverage": 2,
+    "duplicatePostMemberships": 0,
+    "sameMakerDestinationCandidateGroups": 3,
+    "entriesInCandidateGroups": 6
+  },
+  "availability": {
+    "checkedEntries": 525,
+    "byStatus": {
+      "reachable": 459,
+      "unverified": 38,
+      "broken": 15,
+      "blocked": 13
+    },
+    "freshStoreBuildsByProvider": {
+      "itch": 180,
+      "steam": 16
+    },
+    "itchEmbeddedBrowserEvidence": 144,
+    "storeEvidenceByProvider": {
+      "itch": 181,
+      "steam": 47
+    },
+    "lastCheckFrom": "2026-10-11T15:07:37.170Z",
+    "lastCheckTo": "2026-10-11T15:31:03.821Z",
+    "brokenMarkedPlayableOrReleased": 3
+  },
+  "steam": {
+    "linkedEntries": 48,
+    "cachedEntries": 47,
+    "distinctApps": 46,
+    "states": {
+      "coming-soon": 30,
+      "released": 16
+    },
+    "types": {
+      "game": 36,
+      "demo": 6,
+      "unknown": 4
+    },
+    "stateAndType": {
+      "coming-soon/game": 26,
+      "released/game": 10,
+      "released/demo": 6,
+      "coming-soon/unknown": 4
+    },
+    "paidReleasedGameTypeUSD": {
+      "sample": 7,
+      "medianCents": 499,
+      "pricesCents": [
+        99,
+        399,
+        499,
+        499,
+        499,
+        699,
+        799
+      ]
+    },
+    "releaseDateFieldPresent": 0,
+    "evidenceFrom": "2026-10-10T23:48:16.017Z",
+    "evidenceTo": "2026-10-11T15:01:00.211Z"
+  },
+  "categoryByDistribution": {
+    "other": {
+      "unlisted": 498,
+      "website": 134,
+      "itch": 94,
+      "steam": 25,
+      "github": 7,
+      "google-play": 7,
+      "crazygames": 3,
+      "app-store": 2,
+      "roblox": 1
+    },
+    "rpg": {
+      "unlisted": 85,
+      "itch": 34,
+      "website": 20,
+      "google-play": 2,
+      "steam": 1
+    },
+    "action": {
+      "unlisted": 65,
+      "website": 17,
+      "itch": 14,
+      "steam": 4,
+      "app-store": 1,
+      "game-jolt": 1,
+      "github": 1
+    },
+    "adventure": {
+      "unlisted": 35,
+      "website": 14,
+      "itch": 12,
+      "steam": 9
+    },
+    "strategy": {
+      "unlisted": 26,
+      "website": 16,
+      "itch": 14,
+      "steam": 6,
+      "google-play": 2,
+      "github": 1
+    },
+    "simulation": {
+      "unlisted": 23,
+      "website": 18,
+      "itch": 8,
+      "crazygames": 1,
+      "github": 1
+    },
+    "puzzle": {
+      "website": 21,
+      "unlisted": 18,
+      "itch": 4,
+      "steam": 2,
+      "app-store": 1
+    },
+    "arcade": {
+      "unlisted": 16,
+      "website": 8,
+      "itch": 5,
+      "google-play": 1
+    },
+    "clicker": {
+      "itch": 10,
+      "unlisted": 4,
+      "website": 3,
+      "steam": 1
+    }
+  },
+  "duplicateCandidates": [
+    [
+      {
+        "id": "g_1wtrvz1",
+        "title": "Ai Ascendancy",
+        "projectUrl": "https://franktudor.github.io/ai-ascendancy",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wtrvz1/"
+      },
+      {
+        "id": "g_1wmzmez",
+        "title": "Made a game where you play the rogue AI trying to break out of its lab before humanity shuts it down. Curious what this sub thinks",
+        "projectUrl": "https://franktudor.github.io/ai-ascendancy",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1wmzmez/"
+      }
+    ],
+    [
+      {
+        "id": "g_1s4c4ll",
+        "title": "NOVA",
+        "projectUrl": "https://astropulse.github.io/nova-play",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1s4c4ll/"
+      },
+      {
+        "id": "g_1rtmnsj",
+        "title": "NOVA",
+        "projectUrl": "https://astropulse.github.io/nova-play",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1rtmnsj/"
+      }
+    ],
+    [
+      {
+        "id": "g_1vpodjd",
+        "title": "Train autism go choo choooooo. I spent my Saturday making a rail/train tower defense game... kind of has a simplified Factorio / Transport Tycoon feel to it",
+        "projectUrl": "https://aaronshaver.github.io/Hylaax-Planetary-Rail-Defense",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vpodjd/"
+      },
+      {
+        "id": "g_1vsb7i6",
+        "title": "I listened to user feedback and improved my train tower defense game: now with research system for longer term progression",
+        "projectUrl": "https://aaronshaver.github.io/Hylaax-Planetary-Rail-Defense",
+        "sourceUrl": "https://www.reddit.com/r/aigamedev/comments/1vsb7i6/"
+      }
+    ]
+  ]
+}
